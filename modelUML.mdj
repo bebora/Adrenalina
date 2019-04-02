@@ -2697,13 +2697,30 @@
 											"height": 13,
 											"text": "-direction: Direction",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAFp3rqSuCt4zmc=",
+											"_parent": {
+												"$ref": "AAAAAAFpyi1Qnix2kEc="
+											},
+											"model": {
+												"$ref": "AAAAAAFp3rqSXyt1+1I="
+											},
+											"font": "Arial;13;0",
+											"left": 2213,
+											"top": 1510,
+											"width": 382,
+											"height": 13,
+											"text": "-desc: String",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 2208,
 									"top": 1385,
 									"width": 392,
-									"height": 128
+									"height": 143
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -2716,7 +2733,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 2208,
-									"top": 1513,
+									"top": 1528,
 									"width": 392,
 									"height": 10
 								},
@@ -13872,7 +13889,7 @@
 								"$ref": "AAAAAAFpyhxTuB9vc6E="
 							},
 							"name": "self",
-							"documentation": "True if move affects current player, else move another player",
+							"documentation": "If true move current player, else move targetSource player",
 							"visibility": "private",
 							"type": "Boolean"
 						},
@@ -14131,6 +14148,16 @@
 							"documentation": "Direction for linear effects",
 							"visibility": "private",
 							"type": "Direction"
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAFp3rqSXyt1+1I=",
+							"_parent": {
+								"$ref": "AAAAAAFpyi1QnSxu2k0="
+							},
+							"name": "desc",
+							"visibility": "private",
+							"type": "String"
 						}
 					]
 				},
