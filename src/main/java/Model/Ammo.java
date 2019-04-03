@@ -3,8 +3,25 @@ package Model;
 
 public enum Ammo {
 	RED,
-	BLU,
+	BLUE,
 	YELLOW,
 	ANY,
-	POWERUP
+	POWERUP;
+
+	public static Ammo stringToAmmo(String input){
+		switch(input){
+			case "red":
+				return RED;
+			case "blue":
+				return BLUE;
+			case "yellow":
+				return YELLOW;
+			case "any":
+				return ANY;
+			case "powerup":
+				return POWERUP;
+			default:
+				return null;
+		}
+	}
 }

@@ -1,10 +1,23 @@
 package Model;
 
+import static Model.ThreeState.OPTIONAL;
 
 public class Target {
 
 
 	public Target() {
+		visibility = OPTIONAL;
+		maxTargets=-1;
+		minDistance=0;
+		maxDistance=-1;
+		areaDamage=Area.SINGLE;
+		cardinal=OPTIONAL;
+		checkTargetList=OPTIONAL;
+		differentSquare=OPTIONAL;
+		samePlayerRoom=OPTIONAL;
+		throughWalls=OPTIONAL;
+		pointOfView=PointOfView.OWN;
+		checkBlackList=OPTIONAL;
 	}
 
 	/**
