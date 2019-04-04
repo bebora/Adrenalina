@@ -20,9 +20,8 @@ public class Board {
 
 	private List<Player> killShotTrack;
 
-
-	public void existDoor(Tile tile1, Tile tile2) {
-		//CHECK IF TWO TILES ARE LINKED BY DOOR
+	public boolean isLinked(Tile tile1,Tile tile2) {
+		return doors.contains(new Door(tile1,tile2)) || (tile1.getRoom() == tile2.getRoom() && Tile.cabDistance(tile1,tile2) == 1);
 	}
 
 	public List<List<Tile>> getTiles() {

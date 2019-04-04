@@ -54,4 +54,17 @@ public class Tile {
 	public Color getRoom() {
 		return room;
 	}
+
+	public int getPosy() {
+		return posy;
+	}
+
+	public int getPosx() {
+		return posx;
+	}
+
+	public static int cabDistance(Tile tile1, Tile tile2) {
+		return Math.abs(tile1.getPosx() - tile2.getPosx()) + Math.abs(tile1.getPosy() - tile2.getPosy());
+	}
+
 }
