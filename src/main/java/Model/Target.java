@@ -20,6 +20,7 @@ public class Target {
 		checkBlackList=OPTIONAL;
 	}
 
+
 	/**
 	 * TRUE: target must be visible from POV
 	 * FALSE: target must not be visible from POV
@@ -95,6 +96,101 @@ public class Target {
 	private ThreeState checkBlackList;
 
 
+	public ThreeState getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(ThreeState visibility) {
+		this.visibility = visibility;
+	}
+
+	public int getMaxTargets() {
+		return maxTargets;
+	}
+
+	public void setMaxTargets(int maxTargets) {
+		this.maxTargets = maxTargets;
+	}
+
+	public int getMinDistance() {
+		return minDistance;
+	}
+
+	public void setMinDistance(int minDistance) {
+		this.minDistance = minDistance;
+	}
+
+	public int getMaxDistance() {
+		return maxDistance;
+	}
+
+	public void setMaxDistance(int maxDistance) {
+		this.maxDistance = maxDistance;
+	}
+
+	public Area getAreaDamage() {
+		return areaDamage;
+	}
+
+	public void setAreaDamage(Area areaDamage) {
+		this.areaDamage = areaDamage;
+	}
+
+	public ThreeState getCardinal() {
+		return cardinal;
+	}
+
+	public void setCardinal(ThreeState cardinal) {
+		this.cardinal = cardinal;
+	}
+
+	public ThreeState getCheckTargetList() {
+		return checkTargetList;
+	}
+
+	public void setCheckTargetList(ThreeState checkTargetList) {
+		this.checkTargetList = checkTargetList;
+	}
+
+	public ThreeState getDifferentSquare() {
+		return differentSquare;
+	}
+
+	public void setDifferentSquare(ThreeState differentSquare) {
+		this.differentSquare = differentSquare;
+	}
+
+	public ThreeState getSamePlayerRoom() {
+		return samePlayerRoom;
+	}
+
+	public void setSamePlayerRoom(ThreeState samePlayerRoom) {
+		this.samePlayerRoom = samePlayerRoom;
+	}
+
+	public ThreeState getThroughWalls() {
+		return throughWalls;
+	}
+
+	public void setThroughWalls(ThreeState throughWalls) {
+		this.throughWalls = throughWalls;
+	}
+
+	public PointOfView getPointOfView() {
+		return pointOfView;
+	}
+
+	public void setPointOfView(PointOfView pointOfView) {
+		this.pointOfView = pointOfView;
+	}
+
+	public ThreeState getCheckBlackList() {
+		return checkBlackList;
+	}
+
+	public void setCheckBlackList(ThreeState checkBlackList) {
+		this.checkBlackList = checkBlackList;
+	}
 
 
 

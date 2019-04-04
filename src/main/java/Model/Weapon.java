@@ -31,7 +31,51 @@ public class Weapon {
 
 	private Boolean loaded;
 
+	public ArrayList<Effect> getEffects() {
+		return effects;
+	}
 
+	public void setEffects(ArrayList<Effect> effects) {
+		this.effects = effects;
+	}
 
+	public ArrayList<Ammo> getCost() {
+		return cost;
+	}
 
+	public void setCost(ArrayList<Ammo> cost) {
+		this.cost = cost;
+	}
+
+	public ArrayList<Player> getTargetPlayers() {
+		return targetPlayers;
+	}
+
+	public void setTargetPlayers(ArrayList<Player> targetPlayers) {
+		this.targetPlayers = targetPlayers;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public ArrayList<Player> getBlackListPlayers() {
+		return blackListPlayers;
+	}
+
+	public void setBlackListPlayers(ArrayList<Player> blackListPlayers) {
+		this.blackListPlayers = blackListPlayers;
+	}
+
+	public Boolean getLoaded() {
+		return loaded;
+	}
+
+	public void setLoaded(Boolean loaded) {
+		this.loaded = loaded;
+	}
 }
