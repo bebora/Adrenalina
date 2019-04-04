@@ -1,11 +1,7 @@
-package Model;
+package model;
 
 
 public class PowerUp {
-
-
-	public PowerUp() {
-	}
 
 	/**
 	 * Ammo type that can be obtained by discarding the PowerUp to pay a cost

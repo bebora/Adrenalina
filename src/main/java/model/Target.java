@@ -1,6 +1,6 @@
-package Model;
+package model;
 
-import static Model.ThreeState.OPTIONAL;
+import static model.ThreeState.OPTIONAL;
 
 public class Target {
 

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.*;
 
@@ -81,21 +81,9 @@ public class Player {
 	private Boolean turnEnd;
 
 
-
-
-
-
-
-
-	/**
-	 * @param idPlayer
-	 */
 	public void convertMarks(int idPlayer) {
 }
 
-	/**
-	 * @param weapon
-	 */
 	public void reload(Weapon weapon) {
 }
 

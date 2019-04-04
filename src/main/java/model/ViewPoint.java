@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 
 public enum ViewPoint {
@@ -6,7 +6,7 @@ public enum ViewPoint {
 	LASTPLAYER;
 
 	public static ViewPoint stringToViewPoint(String input){
-		switch(input){
+		switch(input.toLowerCase()){
 			case "own":
 				return OWN;
 			case "lastplayer":

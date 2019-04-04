@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 
 public enum ThreeState {
@@ -7,7 +7,7 @@ public enum ThreeState {
 	OPTIONAL;
 
 	public static ThreeState stringToThreeState(String input){
-		switch(input){
+		switch(input.toLowerCase()){
 			case "optional":
 				return OPTIONAL;
 			case "false":

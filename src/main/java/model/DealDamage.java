@@ -1,11 +1,8 @@
-package Model;
+package model;
 
 
 public class DealDamage {
 
-
-	public DealDamage() {
-	}
 
 	private int damagesAmount;
 

@@ -1,11 +1,8 @@
-package Model;
-
+package model;
 
 public class Door {
 
 	private Tile tile1;
-
-
 	private Tile tile2;
 
 
@@ -13,10 +10,5 @@ public class Door {
 		this.tile1 = tile1;
 		this.tile2 = tile2;
 	}
-
-
-
-
-
 
 }

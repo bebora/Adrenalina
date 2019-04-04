@@ -1,11 +1,7 @@
-package Model;
+package model;
 
 
 public class Move {
-
-
-	public Move() {
-	}
 
 	/**
 	 * If true move current player, else move targetSource player

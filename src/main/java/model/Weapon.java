@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.*;
 
@@ -7,18 +7,17 @@ public class Weapon {
 
 
 	public Weapon() {
+
 	}
 
+	private List<Effect> effects;
 
-	private ArrayList<Effect> effects;
-
-
-	private ArrayList<Ammo> cost;
+	private List<Ammo> cost;
 
 	/**
 	 * Stores players that have received some effects and must be kept to select them to receive other effects
 	 */
-	private ArrayList<Player> targetPlayers;
+	private List<Player> targetPlayers;
 
 
 	private String name;
@@ -26,32 +25,32 @@ public class Weapon {
 	/**
 	 * Stores players that have received some effects and must be kept to prevent them to receive some other effects
 	 */
-	private ArrayList<Player> blackListPlayers;
+	private List<Player> blackListPlayers;
 
 
 	private Boolean loaded;
 
-	public ArrayList<Effect> getEffects() {
+	public List<Effect> getEffects() {
 		return effects;
 	}
 
-	public void setEffects(ArrayList<Effect> effects) {
+	public void setEffects(List<Effect> effects) {
 		this.effects = effects;
 	}
 
-	public ArrayList<Ammo> getCost() {
+	public List<Ammo> getCost() {
 		return cost;
 	}
 
-	public void setCost(ArrayList<Ammo> cost) {
+	public void setCost(List<Ammo> cost) {
 		this.cost = cost;
 	}
 
-	public ArrayList<Player> getTargetPlayers() {
+	public List<Player> getTargetPlayers() {
 		return targetPlayers;
 	}
 
-	public void setTargetPlayers(ArrayList<Player> targetPlayers) {
+	public void setTargetPlayers(List<Player> targetPlayers) {
 		this.targetPlayers = targetPlayers;
 	}
 
@@ -63,11 +62,11 @@ public class Weapon {
 		this.name = name;
 	}
 
-	public ArrayList<Player> getBlackListPlayers() {
+	public List<Player> getBlackListPlayers() {
 		return blackListPlayers;
 	}
 
-	public void setBlackListPlayers(ArrayList<Player> blackListPlayers) {
+	public void setBlackListPlayers(List<Player> blackListPlayers) {
 		this.blackListPlayers = blackListPlayers;
 	}
 

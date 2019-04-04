@@ -1,14 +1,9 @@
-package Model;
+package model;
 
 import java.util.*;
 
 
 public class Match {
-
-
-	public Match() {
-	}
-
 
 	private Board board;
 
@@ -24,8 +19,5 @@ public class Match {
 
 	private Mode mode;
 
-
-	private void Match(Board board, ArrayList<Player> players, Mode mode) {
-}
 
 }

@@ -1,4 +1,4 @@
-package Model;
+package model;
 
 import java.util.*;
 
@@ -10,13 +10,13 @@ public class Effect {
 	}
 
 
-	private ArrayList <Move> moves;
+	private List <Move> moves;
 
 
-	private ArrayList<DealDamage> damages;
+	private List<DealDamage> damages;
 
 
-	private ArrayList<ActionType> order;
+	private List<ActionType> order;
 
 
 	private Boolean activated;
@@ -24,7 +24,7 @@ public class Effect {
 	/**
 	 * Ammo cost to use the effect
 	 */
-	private ArrayList<Ammo> cost;
+	private List<Ammo> cost;
 
 
 	private Priority priority;
@@ -40,27 +40,27 @@ public class Effect {
 
 	private String desc;
 
-	public ArrayList<Move> getMoves() {
+	public List<Move> getMoves() {
 		return moves;
 	}
 
-	public void setMoves(ArrayList<Move> moves) {
+	public void setMoves(List<Move> moves) {
 		this.moves = moves;
 	}
 
-	public ArrayList<DealDamage> getDamages() {
+	public List<DealDamage> getDamages() {
 		return damages;
 	}
 
-	public void setDamages(ArrayList<DealDamage> damages) {
+	public void setDamages(List<DealDamage> damages) {
 		this.damages = damages;
 	}
 
-	public ArrayList<ActionType> getOrder() {
+	public List<ActionType> getOrder() {
 		return order;
 	}
 
-	public void setOrder(ArrayList<ActionType> order) {
+	public void setOrder(List<ActionType> order) {
 		this.order = order;
 	}
 
@@ -72,11 +72,11 @@ public class Effect {
 		this.activated = activated;
 	}
 
-	public ArrayList<Ammo> getCost() {
+	public List<Ammo> getCost() {
 		return cost;
 	}
 
-	public void setCost(ArrayList<Ammo> cost) {
+	public void setCost(List<Ammo> cost) {
 		this.cost = cost;
 	}
 

@@ -1,11 +1,7 @@
-package Model;
+package model;
 
 
 public class Action {
-
-
-	public Action() {
-	}
 
 
 	private int movements;
