@@ -8,6 +8,8 @@ public enum ThreeState {
 
 	/**
 	 * Get ThreeState given an input string
+	 * @param input string parsed from a configuration file
+	 * @return the ThreeState related to the input
 	 */
 	public static ThreeState stringToThreeState(String input){
 		switch(input.toLowerCase()){
