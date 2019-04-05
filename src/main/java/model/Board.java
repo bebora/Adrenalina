@@ -5,15 +5,9 @@ import java.util.*;
 
 public class Board {
 
-
 	private List<List<Tile>> tiles;
-
-
 	private List<Door> doors;
-
-
 	private int skulls;
-
 
 	private List<Weapon> weaponsDeck;
 

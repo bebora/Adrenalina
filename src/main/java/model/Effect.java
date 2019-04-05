@@ -26,10 +26,6 @@ public class Effect {
 	 */
 	private List<Ammo> cost;
 
-
-	private Priority priority;
-
-
 	private String name;
 
 	/**
@@ -39,6 +35,18 @@ public class Effect {
 
 
 	private String desc;
+
+	/**
+	 * Represent the order (absolute) in which the Effect need to be activated.
+	 */
+	private int absolutePriority;
+
+	/**
+	 * Represent the order (relative) in which the Effect need to be activated. Number can be positive or negative:
+	 * Positive: must be after the n° effect, considering for the n-order the order used in the weapons List
+	 * Negative: must be before the n° effect, considering for the n-order the order used in the weapons List
+	 */
+	private List<Integer> relativePriority;
 
 	public List<Move> getMoves() {
 		return moves;
@@ -78,14 +86,6 @@ public class Effect {
 
 	public void setCost(List<Ammo> cost) {
 		this.cost = cost;
-	}
-
-	public Priority getPriority() {
-		return priority;
-	}
-
-	public void setPriority(Priority priority) {
-		this.priority = priority;
 	}
 
 	public String getName() {

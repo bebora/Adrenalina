@@ -6,6 +6,9 @@ import java.util.*;
 public class Tile {
 
 	public static class Builder {
+		/**
+		 *
+		 */
 		private Color sRoom;
 		private int sPosx;
 		private int sPosy;

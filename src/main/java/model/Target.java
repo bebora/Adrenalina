@@ -46,6 +46,12 @@ public class Target {
 	private int maxDistance;
 
 
+	/**
+	 * Select the Area of the damage:
+	 * SINGLE: all the targets (to maxtargets) get selected
+	 * TILE: all the targets in the selected tile
+	 * ROOM: all the target in the selected room get selected
+	 */
 	private Area areaDamage;
 
 	/**
@@ -56,11 +62,37 @@ public class Target {
 	private ThreeState cardinal;
 
 	/**
+	 * If used in DealDamage:
 	 * TRUE: targets must be in targetPlayers
 	 * FALSE: targets must not be in targetPlayers
 	 * OPTIONAL: not relevant
+	 *
+	 * If used in Move:
+	 * TRUE: targets are the last $maxTargets of targetPlayers
+	 * FALSE: targets must not be in targetPlayers
+	 * OPTIONAL: not relevant
+	 *
+	 * In PowerUp:
+	 * TRUE: target is the Player in player
+	 * FALSE: target must not be the Player in player
+	 * OPTIONAL: not relevant
 	 */
 	private ThreeState checkTargetList;
+
+	/**
+	 * If used in DealDamage:
+	 * TRUE: targets must be in blackListPlayers
+	 * FALSE: targets must not be in blackListPlayers
+	 * OPTIONAL: not relevant
+	 *
+	 * If used in Move:
+	 * TRUE: targets are the last $maxTargets of blackListPlayers
+	 * FALSE: targets must not be in blackListPlayers
+	 * OPTIONAL: not relevant
+	 *
+	 * In PowerUp, not relevant
+	 */
+	private ThreeState checkBlackList;
 
 	/**
 	 * TRUE: targets must be in different Tile
@@ -87,13 +119,6 @@ public class Target {
 	 * Point of view from where the matching targets are selected
 	 */
 	private PointOfView pointOfView;
-
-	/**
-	 * TRUE: targets must be in blackListPlayers
-	 * FALSE: targets must not be in blackListPlayers
-	 * OPTIONAL: not relevant
-	 */
-	private ThreeState checkBlackList;
 
 
 	public ThreeState getVisibility() {

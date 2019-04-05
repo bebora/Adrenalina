@@ -4,9 +4,12 @@ package model;
 public class Move {
 
 	/**
-	 * If true move current player, else move targetSource player
+	 * Select the Object to move:
+	 * 	SELF: move the current player
+	 * 	PERSPECTIVE: move the perspective of the current player
+	 * 	TARGETSOURCE: move the player(s) selected with targetSource
 	 */
-	private Boolean self;
+	private Boolean toMoveObject;
 
 	/**
 	 * Specify where selected players can go
@@ -24,14 +27,6 @@ public class Move {
 	 * Select players that can be selected to be moved
 	 */
 	private Target targetSource;
-
-	public Boolean getSelf() {
-		return self;
-	}
-
-	public void setSelf(Boolean self) {
-		this.self = self;
-	}
 
 	public Target getTargetDestination() {
 		return targetDestination;

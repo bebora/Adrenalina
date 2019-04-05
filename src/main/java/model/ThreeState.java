@@ -6,6 +6,9 @@ public enum ThreeState {
 	FALSE,
 	OPTIONAL;
 
+	/**
+	 * Get ThreeState given an input string
+	 */
 	public static ThreeState stringToThreeState(String input){
 		switch(input.toLowerCase()){
 			case "optional":
