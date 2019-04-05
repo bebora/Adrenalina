@@ -111,4 +111,12 @@ public class Effect {
 	public void setDesc(String desc) {
 		this.desc = desc;
 	}
+
+	public void setAbsolutePriority(int absolutePriority) {
+		this.absolutePriority = absolutePriority;
+	}
+
+	public void setRelativePriority(List<Integer> relativePriority) {
+		this.relativePriority = relativePriority;
+	}
 }

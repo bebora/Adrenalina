@@ -9,7 +9,7 @@ public class Move {
 	 * 	PERSPECTIVE: move the perspective of the current player
 	 * 	TARGETSOURCE: move the player(s) selected with targetSource
 	 */
-	private Boolean toMoveObject;
+	private ObjectToMove objectToMove;
 
 	/**
 	 * Specify where selected players can go
@@ -50,5 +50,9 @@ public class Move {
 
 	public void setTargetSource(Target targetSource) {
 		this.targetSource = targetSource;
+	}
+
+	public void setObjectToMove(ObjectToMove objectToMove) {
+		this.objectToMove = objectToMove;
 	}
 }
