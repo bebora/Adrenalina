@@ -6,35 +6,40 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeaponCreator {
-    public Weapon parseWeapon(String fileName) throws IOException {
+public class CardCreator {
+    public Weapon parseWeapon(String fileName) throws IOException{
         ClassLoader classLoader = getClass().getClassLoader();
-
-        FileReader input = new FileReader(classLoader.getResource(fileName).getFile()   );
-        BufferedReader bufRead = new BufferedReader(input);
-
-        Weapon tempWeapon = new Weapon();
-
-        String curLine = null;
-        String[] splitLine = null;
-        while((curLine = bufRead.readLine()) !=  null){
-            splitLine = curLine.trim().split(":");
-            switch(splitLine[0]){
-                case "name":
-                    tempWeapon.setName(splitLine[1]);
-                    break;
-                case "cost":
-                    tempWeapon.setCost(parseCost(bufRead));
-                    break;
-                case "effects":
-                    tempWeapon.setEffects(parseEffects(bufRead));
-                    break;
-                default:
-                    break;
+        String tempName = null;
+        List<Ammo> tempCost = null;
+        List<Effect> tempEffects = null;
+        try (FileReader input = new FileReader(classLoader.getResource(fileName).getFile());
+             BufferedReader bufRead = new BufferedReader(input)
+        ){
+            String curLine = null;
+            String[] splitLine = null;
+            while ((curLine = bufRead.readLine()) != null) {
+                splitLine = curLine.trim().split(":");
+                switch (splitLine[0]) {
+                    case "name":
+                        tempName = splitLine[1];
+                        break;
+                    case "cost":
+                        tempCost = parseCost(bufRead);
+                        break;
+                    case "effects":
+                        tempEffects = parseEffects(bufRead);
+                        break;
+                    default:
+                        break;
+                }
             }
+        } catch (IOException e) {
+            return null;
         }
-        bufRead.close();
-        return tempWeapon;
+        return new Weapon.Builder(tempEffects).
+                setCost(tempCost).
+                setName(tempName).
+                build();
     }
 
     private List<Effect> parseEffects(BufferedReader bufRead) throws IOException{
@@ -72,8 +77,11 @@ public class WeaponCreator {
                 case "order":
                     tempEffect.setOrder(parseOrder(bufRead));
                     break;
-                case "priority":
-                    tempEffect.setPriority(Priority.stringToPriority(splitLine[1]));
+                case "absolutePriority":
+                    tempEffect.setAbsolutePriority((Integer.parseInt(splitLine[1])));
+                    break;
+                case "relativePriority":
+                    tempEffect.setRelativePriority(parseRelativePriority(bufRead));
                     break;
                 case "direction":
                     tempEffect.setDirection(Direction.stringToDirection(splitLine[1]));
@@ -86,6 +94,19 @@ public class WeaponCreator {
         }
     }
 
+    private List<Integer> parseRelativePriority (BufferedReader bufRead) throws IOException{
+        List<Integer> temp= new ArrayList<>();
+        String curLine = bufRead.readLine().trim();
+        while (!curLine.contains(":")) {
+            temp.add(Integer.parseInt(curLine));
+            bufRead.mark(20);
+            curLine = bufRead.readLine().trim();
+        }
+        bufRead.reset();
+        return temp;
+
+
+    }
     private ArrayList<Ammo> parseCost(BufferedReader bufRead) throws IOException{
         ArrayList<Ammo> temp = new ArrayList<>();
         String curLine;
@@ -214,8 +235,9 @@ public class WeaponCreator {
                     if(tempMove != null)
                         moves.add(tempMove);
                     tempMove = new Move();
-                case "self":
-                    tempMove.setSelf(Boolean.valueOf(splitLine[1]));
+                    break;
+                case "objectToMove":
+                    tempMove.setObjectToMove(ObjectToMove.stringToObjectToMove(splitLine[1]));
                     break;
                 case "targetDestination":
                     tempMove.setTargetDestination(parseTarget(bufRead));

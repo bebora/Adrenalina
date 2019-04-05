@@ -1,5 +1,4 @@
 package model;
-
 import java.util.*;
 
 
@@ -8,6 +7,53 @@ public class Weapon {
 
 	public Weapon() {
 
+	}
+
+	public static class Builder {
+
+		private List<Effect> effects;
+		private List<Ammo> cost;
+		private List<Player> targetPlayers = new ArrayList<>();
+		private List<Player> blackListPlayers = new ArrayList<>();
+		private Boolean loaded = false;
+		private String name;
+
+
+
+		public Builder(List<Effect> effects) {
+			this.effects = effects;
+		}
+
+		public Builder setCost(List<Ammo> cost) {
+			this.cost = cost;
+			return this;
+
+		}
+
+		public Builder setLoaded(Boolean loaded) {
+			this.loaded = loaded;
+			return this;
+
+		}
+
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+
+		public Weapon build() {
+			return new Weapon(this);
+		}
+	}
+
+	public Weapon(Builder builder) {
+		effects = builder.effects;
+		cost = builder.cost;
+		targetPlayers = builder.targetPlayers;
+		blackListPlayers = builder.blackListPlayers;
+		name = builder.name;
+		loaded = builder.loaded;
 	}
 
 	private List<Effect> effects;
@@ -34,16 +80,8 @@ public class Weapon {
 		return effects;
 	}
 
-	public void setEffects(List<Effect> effects) {
-		this.effects = effects;
-	}
-
 	public List<Ammo> getCost() {
 		return cost;
-	}
-
-	public void setCost(List<Ammo> cost) {
-		this.cost = cost;
 	}
 
 	public List<Player> getTargetPlayers() {
@@ -56,10 +94,6 @@ public class Weapon {
 
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Player> getBlackListPlayers() {

@@ -2330,7 +2330,7 @@
 											"top": 1886,
 											"width": 311,
 											"height": 13,
-											"text": "-toMoveObject: ToMoveObject",
+											"text": "-objectToMove: ObjectToMove",
 											"horizontalAlignment": 0
 										},
 										{
@@ -11739,7 +11739,7 @@
 											"top": 1876,
 											"width": 294,
 											"height": 13,
-											"text": "ToMoveObject"
+											"text": "ObjectToMove"
 										},
 										{
 											"_type": "LabelView",
@@ -13558,10 +13558,12 @@
 							"_parent": {
 								"$ref": "AAAAAAFpyhxTuB9vc6E="
 							},
-							"name": "toMoveObject",
+							"name": "objectToMove",
 							"documentation": "If true move current player, else move targetSource player",
 							"visibility": "private",
-							"type": "ToMoveObject"
+							"type": {
+								"$ref": "AAAAAAFp7gNoeZ+kj+E="
+							}
 						},
 						{
 							"_type": "UMLAttribute",
@@ -14620,7 +14622,8 @@
 							},
 							"name": "effect",
 							"documentation": "Effect obtained by using the PowerUp",
-							"visibility": "private"
+							"visibility": "private",
+							"type": ""
 						},
 						{
 							"_type": "UMLAttribute",
@@ -14927,7 +14930,7 @@
 					"_parent": {
 						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
 					},
-					"name": "ToMoveObject",
+					"name": "ObjectToMove",
 					"literals": [
 						{
 							"_type": "UMLEnumerationLiteral",
