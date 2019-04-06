@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardCreator {
-    public Board parseBoard(String filename, int skulls) throws IOException {
+    public Board parseBoard(String filename, int skulls) {
         ClassLoader classLoader = getClass().getClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
@@ -16,38 +16,34 @@ public class BoardCreator {
         try (FileReader input = new FileReader(classLoader.getResource(filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ) {
-            String curLine = null;
+            String curLine;
             int line = 0;
             int section = 0;
             while ((curLine = bufRead.readLine()) != null) {
-                if (!curLine.contains(":")) {
-                    switch (section) {
-                        case 0:
-                            temp = new ArrayList<>();
-                            for (int i = 0; i < curLine.length(); i++) {
-                                if (curLine.charAt(i) == ' ')
-                                    temp.add(null);
-                                temp.add(new Tile.Builder().
-                                        setpos(i,line).
-                                        setRoom(Color.initialToColor(curLine.charAt(i))).
-                                        setspawn(Character.isUpperCase(curLine.charAt(i))).
-                                        build());
-                            }
-                            line = line + 1;
-                            tiles.add(temp);
-                            break;
-                        case 1:
-                            String firstTile = curLine.split(":")[0];
-                            String secondTile = curLine.split(":")[1];
-                            doors.add(new Door(tiles.get(Character.getNumericValue(firstTile.charAt(0))).
-                                    get(Character.getNumericValue(firstTile.charAt(2))),
-                                    tiles.get(Character.getNumericValue(secondTile.charAt(0))).
-                                    get(Character.getNumericValue(secondTile.charAt(2)))));
-                            break;
+                if (curLine.contains(":"))
+                    section += 1;
+                else if (section == 0) {
+                    temp = new ArrayList<>();
+                    for (int i = 0; i < curLine.length(); i++) {
+                        if (curLine.charAt(i) == ' ')
+                            temp.add(null);
+                        temp.add(new Tile.Builder().
+                                setpos(i, line).
+                                setRoom(Color.initialToColor(curLine.charAt(i))).
+                                setspawn(Character.isUpperCase(curLine.charAt(i))).
+                                build());
                     }
+                    line = line + 1;
+                    tiles.add(temp);
                 }
-                else {
-                    section = section +1;
+                else if (section == 1) {
+                    String firstTile = curLine.split("\\+")[0];
+                    String secondTile = curLine.split("\\+")[1];
+                    doors.add(new Door(tiles.get(Character.getNumericValue(firstTile.charAt(0))).
+                            get(Character.getNumericValue(firstTile.charAt(2))),
+                            tiles.get(Character.getNumericValue(secondTile.charAt(0))).
+                            get(Character.getNumericValue(secondTile.charAt(2)))));
+                                break;
                 }
             }
         } catch (IOException e) {
