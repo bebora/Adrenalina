@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static model.ThreeState.OPTIONAL;
 
 /**
  * Parser used for reading configuration files for PowerUps and Weapons
@@ -12,8 +15,40 @@ import java.util.List;
 public class CardCreator {
 
     public PowerUp parsePowerUp(String filename) {
-        //TODO parse powerup using same parsereffects of parseweapon
-        return null;
+        ClassLoader classLoader = getClass().getClassLoader();
+        Ammo discardAward = null;
+        Moment applicability = null;
+        Effect effect = null;
+        String name = null;
+        try (FileReader input = new FileReader(classLoader.getResource(filename).getFile());
+             BufferedReader bufRead = new BufferedReader(input)
+        ){
+            String curLine = null;
+            String[] splitLine = null;
+            while ((curLine = bufRead.readLine()) != null) {
+                splitLine = curLine.trim().split(":");
+                switch (splitLine[0]) {
+                    case "name":
+                        name = splitLine[1];
+                        break;
+                    case "discardAward":
+                        discardAward = Ammo.valueOf(splitLine[1].toUpperCase());
+                    case "applicability":
+                        applicability = Moment.valueOf(splitLine[1].toUpperCase());
+                        break;
+                    case "effects":
+                        effect = parseEffects(bufRead).get(0);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+        return new PowerUp.Builder().setApplicability(applicability).
+                setName(name).setDiscardAward(discardAward).setEffect(effect).
+                build();
     }
 
     public Weapon parseWeapon(String fileName){
@@ -54,50 +89,75 @@ public class CardCreator {
     private List<Effect> parseEffects(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
-
         List<Effect> effects = new ArrayList<>();
-        Effect tempEffect = null;
-
+        List <Move> moves = new ArrayList<>();
+        List<DealDamage> damages = new ArrayList<>();
+        List<ActionType> order = new ArrayList<>();
+        List<Ammo> cost = new ArrayList<>();
+        String name = null;
+        Direction direction = null;
+        String desc = null;
+        int absolutePriority = 0;
+        List<Integer> relativePriority = null;
+        Boolean empty = Boolean.TRUE;
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
             if(curLine != null)
                 splitLine = curLine.trim().split(":");
             else {
-                effects.add(tempEffect);
+                effects.add(new Effect.Builder().setName(name).
+                        setDirection(direction).setDesc(desc).setAbsolutePriority(absolutePriority).
+                        setRelativePriority(relativePriority).setMoves(moves).
+                        setDamages(damages).setOrder(order).setCost(cost).build());
                 return effects;
             }
             switch(splitLine[0]){
                 case "name":
-                    if(tempEffect != null)
-                        effects.add(tempEffect);
-                    tempEffect = new Effect();
-                    tempEffect.setName(splitLine[1]);
+                    if(empty == Boolean.FALSE)
+                        effects.add(new Effect.Builder().setName(name).
+                                setDirection(direction).setDesc(desc).setAbsolutePriority(absolutePriority).
+                                setRelativePriority(relativePriority).setMoves(moves).
+                                setDamages(damages).setOrder(order).setCost(cost).build());
+                    empty = Boolean.FALSE;
+                    name = splitLine[1];
+                    effects = new ArrayList<>();
+                    moves = new ArrayList<>();
+                    damages = new ArrayList<>();
+                    order = new ArrayList<>();
+                    cost = new ArrayList<>();
+                    direction = null;
+                    desc = null;
+                    absolutePriority = 0;
+                    relativePriority = null;
                     break;
                 case "cost":
-                    tempEffect.setCost(parseCost(bufRead));
+                    cost = parseCost(bufRead);
                     break;
                 case "damages":
-                    tempEffect.setDamages(parseDamages(bufRead));
+                    damages = parseDamages(bufRead);
                     break;
                 case "moves":
-                    tempEffect.setMoves(parseMoves(bufRead));
+                    moves = parseMoves(bufRead);
                     break;
                 case "order":
-                    tempEffect.setOrder(parseOrder(bufRead));
+                    order = parseOrder(bufRead);
                     break;
                 case "absolutePriority":
-                    tempEffect.setAbsolutePriority((Integer.parseInt(splitLine[1])));
+                    absolutePriority = Integer.parseInt(splitLine[1]);
                     break;
                 case "relativePriority":
-                    tempEffect.setRelativePriority(parseRelativePriority(bufRead));
+                    relativePriority = parseRelativePriority(bufRead);
                     break;
                 case "direction":
-                    tempEffect.setDirection(Direction.stringToDirection(splitLine[1]));
+                    direction = Direction.stringToDirection(splitLine[1]);
                     break;
                 default:
                     bufRead.reset();
-                    effects.add(tempEffect);
+                    effects.add(new Effect.Builder().setName(name).
+                            setDirection(direction).setDesc(desc).setAbsolutePriority(absolutePriority).
+                            setRelativePriority(relativePriority).setMoves(moves).
+                            setDamages(damages).setOrder(order).setCost(cost).build());
                     return effects;
             }
         }
@@ -132,35 +192,46 @@ public class CardCreator {
     private List<DealDamage> parseDamages(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
-
-        DealDamage tempDamage = null;
-        ArrayList<DealDamage> damages = new ArrayList<>();
+        Boolean empty = Boolean.TRUE;
+        List<DealDamage> damages = new ArrayList<>();
+        int damagesAmount = 0;
+        int marksAmount = 0;
+        ThreeState targeting = OPTIONAL;
+        Target target = new Target.Builder().build();
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
             splitLine = curLine.trim().split(":");
             switch(splitLine[0]){
                 case "damage":
-                    if(tempDamage != null){
-                        damages.add(tempDamage);
+                    if(empty == Boolean.FALSE){
+                        damages.add(new DealDamage.Builder().setDamagesAmount(damagesAmount).
+                                setMarksAmount(marksAmount).setTarget(target).setTargeting(targeting).
+                                build());
                     }
-                    tempDamage = new DealDamage();
+                    empty = Boolean.FALSE;
+                    targeting = OPTIONAL;
+                    target = new Target.Builder().build();
+                    marksAmount = 0;
+                    damagesAmount = 0;
                     break;
                 case "target":
-                    tempDamage.setTarget(parseTarget(bufRead));
+                    target = parseTarget(bufRead);
                     break;
                 case "damagesAmount":
-                    tempDamage.setDamagesAmount(Integer.parseInt(splitLine[1]));
+                    damagesAmount = Integer.parseInt(splitLine[1]);
                     break;
                 case "marksAmount":
-                    tempDamage.setMarksAmount(Integer.parseInt(splitLine[1]));
+                    marksAmount = Integer.parseInt(splitLine[1]);
                     break;
                 case "targeting":
-                    tempDamage.setTargeting(ThreeState.stringToThreeState(splitLine[1]));
+                    targeting = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 default:
                     bufRead.reset();
-                    damages.add(tempDamage);
+                    damages.add(new DealDamage.Builder().setDamagesAmount(damagesAmount).
+                            setMarksAmount(marksAmount).setTarget(target).setTargeting(targeting).
+                            build());
                     return damages;
             }
         }
@@ -179,51 +250,70 @@ public class CardCreator {
     private Target parseTarget(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
-        Target temp = new Target();
+        ThreeState visibility = OPTIONAL;
+        int maxTargets = -1;
+        int minDistance = 0;
+        int maxDistance = -1;
+        Area areaDamage = Area.SINGLE;
+        ThreeState cardinal = OPTIONAL;
+        ThreeState checkTargetList = OPTIONAL;
+        ThreeState differentSquare = OPTIONAL;
+        ThreeState samePlayerRoom = OPTIONAL;
+        ThreeState throughWalls = OPTIONAL;
+        PointOfView pointOfView = PointOfView.OWN;
+        ThreeState checkBlackList = OPTIONAL;
+
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
             splitLine = curLine.trim().split(":");
             switch(splitLine[0]){
                 case "visibility":
-                    temp.setVisibility(ThreeState.stringToThreeState(splitLine[1]));
+                    visibility = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "maxTargets":
-                    temp.setMaxTargets(Integer.parseInt(splitLine[1]));
+                    maxTargets = Integer.parseInt(splitLine[1]);
                     break;
                 case "minDistance":
-                    temp.setMinDistance(Integer.parseInt(splitLine[1]));
+                    minDistance = Integer.parseInt(splitLine[1]);
                     break;
                 case "maxDistance":
-                    temp.setMaxDistance(Integer.parseInt(splitLine[1]));
+                    maxDistance = Integer.parseInt(splitLine[1]);
                     break;
                 case "areaDamage":
-                    temp.setAreaDamage(Area.stringToArea(splitLine[1]));
+                    areaDamage = Area.stringToArea(splitLine[1]);
                     break;
                 case "cardinal":
-                    temp.setCardinal(ThreeState.stringToThreeState(splitLine[1]));
+                    cardinal = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "checkTargetList":
-                    temp.setCheckTargetList(ThreeState.stringToThreeState(splitLine[1]));
+                    checkTargetList = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "differentSquare":
-                    temp.setDifferentSquare(ThreeState.stringToThreeState(splitLine[1]));
+                    differentSquare = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "samePlayerRoom":
-                    temp.setSamePlayerRoom(ThreeState.stringToThreeState(splitLine[1]));
+                    samePlayerRoom = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "throughWalls":
-                    temp.setThroughWalls(ThreeState.stringToThreeState(splitLine[1]));
+                    throughWalls = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "pointOfView":
-                    temp.setPointOfView(PointOfView.stringToPointOfView(splitLine[1]));
+                    pointOfView = PointOfView.stringToPointOfView(splitLine[1]);
                     break;
                 case "checkBlackList":
-                    temp.setCheckBlackList(ThreeState.stringToThreeState(splitLine[1]));
+                    checkBlackList = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 default:
                     bufRead.reset();
-                    return temp;
+                    return new Target.Builder().setAreaDamage(areaDamage).
+                            setCardinal(cardinal).setCheckBlackList(checkBlackList).
+                            setCheckTargetList(checkTargetList).setVisibility(visibility).
+                            setMaxDistance(maxDistance).setMinDistance(minDistance).setMaxTargets(maxTargets).
+                            setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).setThroughWalls(throughWalls).
+                            setPointOfView(pointOfView).build();
+
+
             }
         }
     }
@@ -231,34 +321,45 @@ public class CardCreator {
     private List<Move> parseMoves(BufferedReader bufRead) throws IOException{
         String curLine;
         String [] splitLine;
-
         List<Move> moves = new ArrayList<>();
-        Move tempMove = null;
-
+        ObjectToMove objectToMove = ObjectToMove.SELF;
+        Target targetDestination = new Target.Builder().build();
+        ThreeState targeting = ThreeState.OPTIONAL;
+        Target targetSource = new Target.Builder().build();
+        Boolean empty = Boolean.TRUE;
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
             splitLine = curLine.trim().split(":");
             switch(splitLine[0]){
-                case "move":
-                    if(tempMove != null)
-                        moves.add(tempMove);
-                    tempMove = new Move();
-                    break;
                 case "objectToMove":
-                    tempMove.setObjectToMove(ObjectToMove.stringToObjectToMove(splitLine[1]));
+                    if(empty == Boolean.FALSE) {
+                        moves.add(new Move.Builder().setTargetSource(targetSource).
+                                setObjectToMove(objectToMove).
+                                setTargetDestination(targetDestination).
+                                setTargeting(targeting).build());
+                    }
+                    objectToMove = ObjectToMove.stringToObjectToMove(splitLine[1]);
+                    empty = Boolean.FALSE;
+                    targetDestination = new Target.Builder().build();
+                    targeting = ThreeState.OPTIONAL;
+                    targetSource = new Target.Builder().build();
                     break;
                 case "targetDestination":
-                    tempMove.setTargetDestination(parseTarget(bufRead));
+                    targetDestination = parseTarget(bufRead);
                     break;
                 case "targeting":
-                    tempMove.setTargeting(ThreeState.stringToThreeState(splitLine[1]));
+                    targeting = ThreeState.stringToThreeState(splitLine[1]);
                     break;
                 case "targetSource":
-                    tempMove.setTargetSource(parseTarget(bufRead));
+                    targetSource = parseTarget(bufRead);
                     break;
                 default:
-                    moves.add(tempMove);
+                    bufRead.reset();
+                    moves.add(new Move.Builder().setTargetSource(targetSource).
+                            setObjectToMove(objectToMove).
+                            setTargetDestination(targetDestination).
+                            setTargeting(targeting).build());
                     return moves;
             }
         }
