@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Board {
@@ -94,8 +95,55 @@ public class Board {
 		return doors.contains(new Door(tile1,tile2)) || (tile1.getRoom() == tile2.getRoom() && Tile.cabDistance(tile1,tile2) == 1);
 	}
 
+	/**
+	 * Visible tiles by the pointOfView
+	 * All tiles that are or in the same room, or in the same room of a tile connected by a Door to POV are visible
+	 * @param pointOfView square used to calculate visibility
+	 * @return a set containing visible tiles
+	 */
+	public Set<Tile> visible(Tile pointOfView) {
+		Set<Color> visibleColors = tiles.stream().
+				flatMap(List::stream).
+				filter(t -> isLinked(t, pointOfView)).
+				map(Tile::getRoom).
+				collect(Collectors.toSet());
+		return tiles.stream().
+				flatMap(List::stream).
+				filter(t -> visibleColors.contains(t.getRoom())).
+				collect(Collectors.toSet());
+	}
 
-	public List<List<Tile>> getTiles() {
+	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance) {
+		Set<Tile> totalTiles = tiles.stream().
+				flatMap(List::stream).collect(Collectors.toSet());
+		List<Set<Tile>> reachableTiles= new ArrayList<>();
+		Set<Tile> tempTiles = new HashSet<>();
+		tempTiles.add(pointOfView);
+		Set<Tile> currTile = new HashSet<>();
+		tempTiles.forEach(currTile::add);
+		reachableTiles.add(new HashSet<>(currTile));
+		for (int i = 0; i < maxDistance; i++) {
+			for (Tile t1 : totalTiles) {
+				for (Tile t2 : tempTiles)
+					if (isLinked(t1, t2))
+						tempTiles.add(t1);
+			}
+			currTile = new HashSet<>();
+			tempTiles.forEach(currTile::add);
+			reachableTiles.add(currTile);
+		}
+		reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance));
+		return reachableTiles.get(maxDistance);
+	}
+    @Override
+    public String toString() {
+	    //TODO print string with format 3x3 each, 9 spaces means to have space for 5 players, 1 color, 3 ammos
+		return "";
+    }
+
+
+
+    public List<List<Tile>> getTiles() {
 		return tiles;
 	}
 
