@@ -1,6 +1,7 @@
 package model;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Player {
@@ -102,19 +103,29 @@ public class Player {
 	private int trackSkulls;
 
 	public void convertMarks(Player player) {
-		//TODO
+		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id != player.id).collect(Collectors.toList());
+		for (int i = 0; i < this.marks.size() - unrelatedMarks.size(); i++) {
+		    damages.add(player);
+        }
+        marks = unrelatedMarks;
+		//TODO add notify to Observers related classes
 	}
 	public void shoot(Player shooter, int damage, int marks) {
-		//TODO
+        //TODO add damages, marks, notify for added damages and added marks (first player need to be scored), rest at end of turn
 	}
 	public void updateActions() {
-		//TODO
-		// Create Resources file for according action and parse those according to the number of skulls remaining
+		//TODO Create Resources file for according action and parse those according to the number of skulls remaining
 	}
 
 	public void reload(Weapon weapon) {
-		//TODO
-		//Complete the method, create an exception according to the examples and make it throw that
-		//If for example the player doesn't have enough $$ to reload.
+		//TODO Complete the method, create an exception according to the examples and make it throw an Exception if for example the player doesn't have enough $$ to reload.
 	}
+
+    public List<Player> getMarks() {
+        return marks;
+    }
+
+    public int getId() {
+        return id;
+    }
 }
