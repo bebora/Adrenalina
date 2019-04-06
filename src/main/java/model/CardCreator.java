@@ -12,7 +12,14 @@ import static model.ThreeState.OPTIONAL;
  * Parser used for reading configuration files for PowerUps and Weapons
  */
 public class CardCreator {
-
+    /**
+     * Returns a PowerUp object after parsing its configuration from a btl file.
+     * The file must be in the resource folder.
+     * The param filename must include the file extension.
+     * @param filename name of the file to read the configuration from
+     * @return a PowerUp built according to the given configuration
+     * @see PowerUp
+     */
     public static PowerUp parsePowerUp(String filename) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Ammo discardAward = null;
@@ -51,6 +58,14 @@ public class CardCreator {
                 build();
     }
 
+    /**
+     *Returns a Weapon object after parsing a weapon configuration from a btl file.
+     * The configuration file must be in the resource folder, preferably in the weapon subfolder.
+     * The parameter filename must include the file extension.
+     * @param fileName name of the file to read the configuration from
+     * @return a Weapon built according to the given configuration
+     * @see Weapon
+     */
     public Weapon parseWeapon(String fileName){
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String tempName = null;
@@ -86,6 +101,15 @@ public class CardCreator {
                 build();
     }
 
+    /**
+     * Returns an ArrayList of Effect to be used in a Weapon or PowerUp.
+     * The Effects are parsed from a btl file and bufRead must be a BufferedReader at
+     * the position where the first effect configuration starts.
+     * @param bufRead a BufferedReader buffering input from a btl file
+     * @return an ArrayList of Effect
+     * @throws IOException If an I/O error occurs
+     * @see Effect
+     */
     private static List<Effect> parseEffects(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
@@ -163,6 +187,14 @@ public class CardCreator {
         }
     }
 
+    /**
+     * Returns an ArrayList of Integers representing the relative priority of an effect.
+     * bufRead must be a BufferedReader buffering a btl file at the position where the
+     * priority configuration starts.
+     * @param bufRead a BufferedReader buffering an input stream from a btl file
+     * @return an ArrayList of Integer
+     * @throws IOException If an I/O error occurs
+     */
     private static List<Integer> parseRelativePriority (BufferedReader bufRead) throws IOException{
         List<Integer> temp= new ArrayList<>();
         String curLine = bufRead.readLine().trim();
@@ -189,6 +221,14 @@ public class CardCreator {
         return temp;
     }
 
+    /**
+     * Returns an ArrayList of DealDamage to be used in a Weapon or PowerUp.
+     * bufRead is a BufferedReader at the position where the first DealDamage config start.
+     * @param bufRead a BufferedReader buffering input stream from a btl file
+     * @return an ArrayList of DealDamage
+     * @throws IOException If an I/O error occurs
+     * @see DealDamage
+     */
     private static List<DealDamage> parseDamages(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
@@ -242,10 +282,10 @@ public class CardCreator {
      * bufRead must be a BufferedReader at the position where the target configuration starts.
      * The final position of bufRead is the beginning end of the last line of the Target
      * configuration.
-     * @param bufRead a BufferedReader buffering input from a btl file
+     * @param bufRead a BufferedReader buffering an input stream from a btl file
      * @return a target object initialized with the specified btl config
      * @see Target
-     * @throws IOException
+     * @throws IOException If an I/O error occurs
      */
     private static Target parseTarget(BufferedReader bufRead) throws IOException{
         String curLine;
@@ -318,6 +358,14 @@ public class CardCreator {
         }
     }
 
+    /**
+     * Returns an ArrayList of Moves to be used in a Weapon or PowerUp.
+     * bufRead must be a BufferedReader at the position where the first Move config starts.
+     * @param bufRead a BufferedReader buffering an input stream from a btl file
+     * @return an ArrayList of Move
+     * @throws IOException If an I/O error occurs
+     * @see Move
+     */
     private static List<Move> parseMoves(BufferedReader bufRead) throws IOException{
         String curLine;
         String [] splitLine;
@@ -365,6 +413,15 @@ public class CardCreator {
         }
     }
 
+    /**
+     * Returns an ArrayList of ActionType representing the absolute order of
+     * effects in a Weapon.
+     * bufRead must be a BufferedReader at the position where the first ActionType config starts.
+     * @param bufRead a BufferedReader buffering an input stream from a btl file
+     * @return an ArrayList of ActionType
+     * @throws IOException If an I/O error occurs
+     * @see ActionType
+     */
     private static List<ActionType> parseOrder(BufferedReader bufRead) throws IOException{
         List<ActionType> order = new ArrayList<>();
 
