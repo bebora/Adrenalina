@@ -103,12 +103,12 @@ public class Board {
 	 */
 	public Set<Tile> visibleTiles(Tile pointOfView) {
 		Set<Color> visibleColors = tiles.stream().
-				flatMap(List::stream).filter(t -> t != null).
+				flatMap(List::stream).filter(Objects::nonNull).
 				filter(t -> isLinked(t, pointOfView)).
 				map(Tile::getRoom).
 				collect(Collectors.toSet());
 		return tiles.stream().
-				flatMap(List::stream).filter(t -> t != null).
+				flatMap(List::stream).filter(Objects::nonNull).
 				filter(t -> visibleColors.contains(t.getRoom())).
 				collect(Collectors.toSet());
 	}
@@ -122,7 +122,7 @@ public class Board {
 	 */
 	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance) {
 	    Set<Tile> totalTiles = tiles.stream().
-				flatMap(List::stream).filter(t -> t != null).collect(Collectors.toSet());
+				flatMap(List::stream).filter(Objects::nonNull).collect(Collectors.toSet());
 		List<Set<Tile>> reachableTiles= new ArrayList<>();
 		Set<Tile> tempTiles = new HashSet<>();
         tempTiles.add(pointOfView);
