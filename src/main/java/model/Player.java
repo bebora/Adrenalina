@@ -102,6 +102,10 @@ public class Player {
 	 */
 	private int trackSkulls;
 
+	/**
+	 * Convert the marks of the shooting player in damages
+	 * @param player user who is shooting
+	 */
 	public void convertMarks(Player player) {
 		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id != player.id).collect(Collectors.toList());
 		for (int i = 0; i < this.marks.size() - unrelatedMarks.size(); i++) {

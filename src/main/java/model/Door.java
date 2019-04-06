@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Represent a connection between two adjacent tile
+ */
 public class Door {
 
 	private Tile tile1;
@@ -11,6 +14,11 @@ public class Door {
 		this.tile2 = tile2;
 	}
 
+	/**
+	 * Overriding equals being the door bidirectional.
+	 * @param p object to compare
+	 * @return equality
+	 */
 	@Override
 	public boolean equals(Object p) {
 		boolean returnValue = false;
@@ -20,7 +28,10 @@ public class Door {
 		}
 		return returnValue;
 	}
-
+	/**
+	 * Overriding hashcode being the door bidirectional.
+	 * @return equality
+	 */
 	@Override
 	public int hashCode() {
 		return this.tile1.hashCode() * this.tile2.hashCode();

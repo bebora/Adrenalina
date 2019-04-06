@@ -3,13 +3,19 @@ package model;
 
 public class DealDamage {
 
-
+	/**
+	 * Amount of damages to give to the targets
+	 */
 	private int damagesAmount;
 
-
+	/**
+	 * Amount of marks to give to the targets
+	 */
 	private int marksAmount;
 
-
+	/**
+	 * Select what player(s) can be shot
+	 */
 	private Target target;
 
 	/**

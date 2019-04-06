@@ -6,8 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parser used for reading configuration files for PowerUps and Weapons
+ */
 public class CardCreator {
-    public Weapon parseWeapon(String fileName) throws IOException{
+
+    public PowerUp parsePowerUp(String filename) {
+        //TODO parse powerup using same parsereffects of parseweapon
+        return null;
+    }
+
+    public Weapon parseWeapon(String fileName){
         ClassLoader classLoader = getClass().getClassLoader();
         String tempName = null;
         List<Ammo> tempCost = null;
