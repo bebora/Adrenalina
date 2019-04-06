@@ -14,8 +14,8 @@ import static model.ThreeState.OPTIONAL;
  */
 public class CardCreator {
 
-    public PowerUp parsePowerUp(String filename) {
-        ClassLoader classLoader = getClass().getClassLoader();
+    public static PowerUp parsePowerUp(String filename) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Ammo discardAward = null;
         Moment applicability = null;
         Effect effect = null;
@@ -53,7 +53,7 @@ public class CardCreator {
     }
 
     public Weapon parseWeapon(String fileName){
-        ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String tempName = null;
         List<Ammo> tempCost = null;
         List<Effect> tempEffects = null;
@@ -87,7 +87,7 @@ public class CardCreator {
                 build();
     }
 
-    private List<Effect> parseEffects(BufferedReader bufRead) throws IOException{
+    private static List<Effect> parseEffects(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
         List<Effect> effects = new ArrayList<>();
@@ -164,7 +164,7 @@ public class CardCreator {
         }
     }
 
-    private List<Integer> parseRelativePriority (BufferedReader bufRead) throws IOException{
+    private static List<Integer> parseRelativePriority (BufferedReader bufRead) throws IOException{
         List<Integer> temp= new ArrayList<>();
         String curLine = bufRead.readLine().trim();
         while (!curLine.contains(":")) {
@@ -177,7 +177,7 @@ public class CardCreator {
 
 
     }
-    private ArrayList<Ammo> parseCost(BufferedReader bufRead) throws IOException{
+    private static ArrayList<Ammo> parseCost(BufferedReader bufRead) throws IOException{
         ArrayList<Ammo> temp = new ArrayList<>();
         String curLine;
         curLine = bufRead.readLine().trim();
@@ -190,7 +190,7 @@ public class CardCreator {
         return temp;
     }
 
-    private List<DealDamage> parseDamages(BufferedReader bufRead) throws IOException{
+    private static List<DealDamage> parseDamages(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
         Boolean empty = Boolean.TRUE;
@@ -248,7 +248,7 @@ public class CardCreator {
      * @see Target
      * @throws IOException
      */
-    private Target parseTarget(BufferedReader bufRead) throws IOException{
+    private static Target parseTarget(BufferedReader bufRead) throws IOException{
         String curLine;
         String[] splitLine;
         ThreeState visibility = OPTIONAL;
@@ -319,7 +319,7 @@ public class CardCreator {
         }
     }
 
-    private List<Move> parseMoves(BufferedReader bufRead) throws IOException{
+    private static List<Move> parseMoves(BufferedReader bufRead) throws IOException{
         String curLine;
         String [] splitLine;
         List<Move> moves = new ArrayList<>();
@@ -366,7 +366,7 @@ public class CardCreator {
         }
     }
 
-    private List<ActionType> parseOrder(BufferedReader bufRead) throws IOException{
+    private static List<ActionType> parseOrder(BufferedReader bufRead) throws IOException{
         List<ActionType> order = new ArrayList<>();
 
         String curLine = bufRead.readLine().trim();

@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardCreator {
-    public Board parseBoard(String filename, int skulls) {
-        ClassLoader classLoader = getClass().getClassLoader();
+    public static Board parseBoard(String filename, int skulls) {
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Weapon> weaponsDeck = new ArrayList<>();
         List<Tile> temp;
-        try (FileReader input = new FileReader(classLoader.getResource(filename).getFile());
+        try (FileReader input = new FileReader(classloader.getResource(filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ) {
             String curLine;
@@ -25,13 +25,15 @@ public class BoardCreator {
                 else if (section == 0) {
                     temp = new ArrayList<>();
                     for (int i = 0; i < curLine.length(); i++) {
-                        if (curLine.charAt(i) == ' ')
+                        if (curLine.charAt(i) == '-')
                             temp.add(null);
-                        temp.add(new Tile.Builder().
-                                setpos(i, line).
-                                setRoom(Color.initialToColor(curLine.charAt(i))).
-                                setspawn(Character.isUpperCase(curLine.charAt(i))).
-                                build());
+                        else {
+                            temp.add(new Tile.Builder().
+                                    setpos(i, line).
+                                    setRoom(Color.initialToColor(curLine.charAt(i))).
+                                    setspawn(Character.isUpperCase(curLine.charAt(i))).
+                                    build());
+                        }
                     }
                     line = line + 1;
                     tiles.add(temp);
