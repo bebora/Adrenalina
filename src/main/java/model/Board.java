@@ -113,6 +113,13 @@ public class Board {
 				collect(Collectors.toSet());
 	}
 
+	/**
+	 * Get the reachable tiles given a starting Tile
+	 * @param pointOfView starting Tile
+	 * @param minDistance minimum distance that can be reached
+	 * @param maxDistance maximum distance that can be reached
+	 * @return set of tiles that can be reached
+	 */
 	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance) {
 	    Set<Tile> totalTiles = tiles.stream().
 				flatMap(List::stream).filter(t -> t != null).collect(Collectors.toSet());
