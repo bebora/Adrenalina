@@ -97,34 +97,34 @@ public class Board {
 
 	/**
 	 * Visible tiles by the pointOfView
-	 * All tiles that are or in the same room, or in the same room of a tile connected by a Door to POV are visible
+	 * All tiles that are or in the same room, or in the same room of a tile connected by a Door to POV are visibleTiles
 	 * @param pointOfView square used to calculate visibility
-	 * @return a set containing visible tiles
+	 * @return a set containing visibleTiles tiles
 	 */
-	public Set<Tile> visible(Tile pointOfView) {
+	public Set<Tile> visibleTiles(Tile pointOfView) {
 		Set<Color> visibleColors = tiles.stream().
-				flatMap(List::stream).
+				flatMap(List::stream).filter(t -> t != null).
 				filter(t -> isLinked(t, pointOfView)).
 				map(Tile::getRoom).
 				collect(Collectors.toSet());
 		return tiles.stream().
-				flatMap(List::stream).
+				flatMap(List::stream).filter(t -> t != null).
 				filter(t -> visibleColors.contains(t.getRoom())).
 				collect(Collectors.toSet());
 	}
 
 	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance) {
-		Set<Tile> totalTiles = tiles.stream().
-				flatMap(List::stream).collect(Collectors.toSet());
+	    Set<Tile> totalTiles = tiles.stream().
+				flatMap(List::stream).filter(t -> t != null).collect(Collectors.toSet());
 		List<Set<Tile>> reachableTiles= new ArrayList<>();
 		Set<Tile> tempTiles = new HashSet<>();
-		tempTiles.add(pointOfView);
+        tempTiles.add(pointOfView);
 		Set<Tile> currTile = new HashSet<>();
 		tempTiles.forEach(currTile::add);
 		reachableTiles.add(new HashSet<>(currTile));
 		for (int i = 0; i < maxDistance; i++) {
 			for (Tile t1 : totalTiles) {
-				for (Tile t2 : tempTiles)
+				for (Tile t2 : currTile)
 					if (isLinked(t1, t2))
 						tempTiles.add(t1);
 			}
@@ -132,7 +132,8 @@ public class Board {
 			tempTiles.forEach(currTile::add);
 			reachableTiles.add(currTile);
 		}
-		reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance));
+		if (minDistance > 0)
+		    reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance-1));
 		return reachableTiles.get(maxDistance);
 	}
     @Override
@@ -141,38 +142,16 @@ public class Board {
 		return "";
     }
 
-
+    public Tile getTile(int posy, int posx) {
+	    return tiles.get(posy).get(posx);
+    }
 
     public List<List<Tile>> getTiles() {
 		return tiles;
 	}
 
-	public void setTiles(List<List<Tile>> tiles) {
-		this.tiles = tiles;
-	}
-
-	public List<Door> getDoors() {
-		return doors;
-	}
-
-	public void setDoors(List<Door> doors) {
-		this.doors = doors;
-	}
-
 	public int getSkulls() {
 		return skulls;
-	}
-
-	public void setSkulls(int skulls) {
-		this.skulls = skulls;
-	}
-
-	public List<Weapon> getWeaponsDeck() {
-		return weaponsDeck;
-	}
-
-	public void setWeaponsDeck(List<Weapon> weaponsDeck) {
-		this.weaponsDeck = weaponsDeck;
 	}
 
 	public List<Player> getKillShotTrack() {

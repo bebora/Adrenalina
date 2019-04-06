@@ -45,7 +45,7 @@ public class BoardCreator {
                             get(Character.getNumericValue(firstTile.charAt(2))),
                             tiles.get(Character.getNumericValue(secondTile.charAt(0))).
                             get(Character.getNumericValue(secondTile.charAt(2)))));
-                                break;
+
                 }
             }
         } catch (IOException e) {
