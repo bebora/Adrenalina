@@ -19,11 +19,9 @@ name:lanciarazzi
          visibility:TRUE
          minDistance:1
    moves:
-     move:
        objectToMove:PERSPECTIVE
        targetDestination:
          checkTargetList:TRUE
-     move:
        objectToMove:TARGETSOURCE
        targetSource:
          checkTargetList:TRUE
@@ -34,20 +32,23 @@ name:lanciarazzi
          pointOfView:LASTPLAYER
    name:razzi portatili
    desc:Muovi di 1 o 2 quadrati. Questo effetto può essere usato prima o dopo l'effetto base.
-   relativePriority:-1,+1,+3
+   relativePriority:
+   -1
+   +1
+   +3
    order:
      MOVE
    cost:
      blue
    moves:
-     move:
        objectToMove:SELF
        targetDestination:
          minDistance:1
          maxDistance:2
    name:testata a frammentazione
    desc:Durante l'effetto base, dai 1 danno a ogni giocatore presente nel quadrato in cui si trovava originariamente il bersaglio, incluso il bersaglio, anche se lo hai mosso.
-   relativePriority:+1
+   relativePriority:
+   +1
    order:
      DEALDAMAGE
      DEALDAMAGE

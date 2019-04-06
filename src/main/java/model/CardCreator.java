@@ -33,7 +33,7 @@ public class CardCreator {
             String[] splitLine = null;
             while ((curLine = bufRead.readLine()) != null) {
                 splitLine = curLine.trim().split(":");
-                switch (splitLine[0]) {
+                switch (splitLine[0].toLowerCase()) {
                     case "name":
                         name = splitLine[1];
                         break;
@@ -66,7 +66,7 @@ public class CardCreator {
      * @return a Weapon built according to the given configuration
      * @see Weapon
      */
-    public Weapon parseWeapon(String fileName){
+    public static Weapon parseWeapon(String fileName){
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String tempName = null;
         List<Ammo> tempCost = null;
@@ -78,7 +78,7 @@ public class CardCreator {
             String[] splitLine = null;
             while ((curLine = bufRead.readLine()) != null) {
                 splitLine = curLine.trim().split(":");
-                switch (splitLine[0]) {
+                switch (splitLine[0].toLowerCase()) {
                     case "name":
                         tempName = splitLine[1];
                         break;
@@ -136,7 +136,7 @@ public class CardCreator {
                         setDamages(damages).setOrder(order).setCost(cost).build());
                 return effects;
             }
-            switch(splitLine[0]){
+            switch(splitLine[0].toLowerCase()){
                 case "name":
                     if(empty == Boolean.FALSE)
                         effects.add(new Effect.Builder().setName(name).
@@ -145,7 +145,6 @@ public class CardCreator {
                                 setDamages(damages).setOrder(order).setCost(cost).build());
                     empty = Boolean.FALSE;
                     name = splitLine[1];
-                    effects = new ArrayList<>();
                     moves = new ArrayList<>();
                     damages = new ArrayList<>();
                     order = new ArrayList<>();
@@ -167,14 +166,17 @@ public class CardCreator {
                 case "order":
                     order = parseOrder(bufRead);
                     break;
-                case "absolutePriority":
+                case "absolutepriority":
                     absolutePriority = Integer.parseInt(splitLine[1]);
                     break;
-                case "relativePriority":
+                case "relativepriority":
                     relativePriority = parseRelativePriority(bufRead);
                     break;
                 case "direction":
                     direction = Direction.valueOf(splitLine[1].toUpperCase());
+                    break;
+                case "desc":
+                    desc = splitLine[1];
                     break;
                 default:
                     bufRead.reset();
@@ -241,8 +243,16 @@ public class CardCreator {
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
-            splitLine = curLine.trim().split(":");
-            switch(splitLine[0]){
+            if(curLine != null)
+                splitLine = curLine.trim().split(":");
+            else {
+                bufRead.reset();
+                damages.add(new DealDamage.Builder().setDamagesAmount(damagesAmount).
+                        setMarksAmount(marksAmount).setTarget(target).setTargeting(targeting).
+                        build());
+                return damages;
+            }
+            switch(splitLine[0].toLowerCase()){
                 case "damage":
                     if(empty == Boolean.FALSE){
                         damages.add(new DealDamage.Builder().setDamagesAmount(damagesAmount).
@@ -258,10 +268,10 @@ public class CardCreator {
                 case "target":
                     target = parseTarget(bufRead);
                     break;
-                case "damagesAmount":
+                case "damagesamount":
                     damagesAmount = Integer.parseInt(splitLine[1]);
                     break;
-                case "marksAmount":
+                case "marksamount":
                     marksAmount = Integer.parseInt(splitLine[1]);
                     break;
                 case "targeting":
@@ -306,42 +316,52 @@ public class CardCreator {
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
-            splitLine = curLine.trim().split(":");
-            switch(splitLine[0]){
+            if(curLine != null)
+                splitLine = curLine.trim().split(":");
+            else {
+                bufRead.reset();
+                return new Target.Builder().setAreaDamage(areaDamage).
+                        setCardinal(cardinal).setCheckBlackList(checkBlackList).
+                        setCheckTargetList(checkTargetList).setVisibility(visibility).
+                        setMaxDistance(maxDistance).setMinDistance(minDistance).setMaxTargets(maxTargets).
+                        setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).setThroughWalls(throughWalls).
+                        setPointOfView(pointOfView).build();
+            }
+            switch(splitLine[0].toLowerCase()){
                 case "visibility":
                     visibility = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "maxTargets":
+                case "maxtargets":
                     maxTargets = Integer.parseInt(splitLine[1]);
                     break;
-                case "minDistance":
+                case "mindistance":
                     minDistance = Integer.parseInt(splitLine[1]);
                     break;
-                case "maxDistance":
+                case "maxdistance":
                     maxDistance = Integer.parseInt(splitLine[1]);
                     break;
-                case "areaDamage":
+                case "areadamage":
                     areaDamage = Area.valueOf(splitLine[1].toUpperCase());
                     break;
                 case "cardinal":
                     cardinal = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "checkTargetList":
+                case "checktargetlist":
                     checkTargetList = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "differentSquare":
+                case "differentsquare":
                     differentSquare = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "samePlayerRoom":
+                case "sameplayerroom":
                     samePlayerRoom = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "throughWalls":
+                case "throughwalls":
                     throughWalls = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "pointOfView":
+                case "pointofview":
                     pointOfView = PointOfView.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "checkBlackList":
+                case "checkblacklist":
                     checkBlackList = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
                 default:
@@ -378,9 +398,19 @@ public class CardCreator {
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
+            if(curLine != null)
+                splitLine = curLine.trim().split(":");
+            else {
+                bufRead.reset();
+                moves.add(new Move.Builder().setTargetSource(targetSource).
+                        setObjectToMove(objectToMove).
+                        setTargetDestination(targetDestination).
+                        setTargeting(targeting).build());
+                return moves;
+            }
             splitLine = curLine.trim().split(":");
-            switch(splitLine[0]){
-                case "objectToMove":
+            switch(splitLine[0].toLowerCase()){
+                case "objecttomove":
                     if(empty == Boolean.FALSE) {
                         moves.add(new Move.Builder().setTargetSource(targetSource).
                                 setObjectToMove(objectToMove).
@@ -393,13 +423,13 @@ public class CardCreator {
                     targeting = ThreeState.OPTIONAL;
                     targetSource = new Target.Builder().build();
                     break;
-                case "targetDestination":
+                case "targetdestination":
                     targetDestination = parseTarget(bufRead);
                     break;
                 case "targeting":
                     targeting = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
-                case "targetSource":
+                case "targetsource":
                     targetSource = parseTarget(bufRead);
                     break;
                 default:
@@ -429,6 +459,7 @@ public class CardCreator {
         while(!curLine.contains(":")) {
             order.add(ActionType.valueOf(curLine.toUpperCase()));
             bufRead.mark(20);
+            curLine = bufRead.readLine().trim();
         }
         bufRead.reset();
         return order;
