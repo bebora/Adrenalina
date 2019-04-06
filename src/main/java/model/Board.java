@@ -34,6 +34,50 @@ public class Board {
 	 */
 	private List<Player> killShotTrack;
 
+
+
+	public static class Builder {
+
+		private List<List<Tile>> tiles;
+		private List<Door> doors;
+		private int skulls;
+		private List<Weapon> weaponsDeck;
+		private List<Player> killShotTrack = new ArrayList<>();
+
+		public Builder(int skulls) {
+			this.skulls = skulls;
+		}
+
+		public Builder setDoors(List<Door> doors) {
+			this.doors = doors;
+			return this;
+
+		}
+
+		public Builder setTiles(List<List<Tile>> tiles) {
+			this.tiles = tiles;
+			return this;
+
+		}
+
+		public Builder setWeapon(List<Weapon> weaponsDeck) {
+			this.weaponsDeck = weaponsDeck;
+			return this;
+		}
+
+		public Board build() {
+			return new Board(this);
+		}
+	}
+
+	public Board(Builder builder) {
+		this.tiles = builder.tiles;
+		this.doors = builder.doors;
+		this.skulls = builder.skulls;
+		this.weaponsDeck = builder.weaponsDeck;
+		this.killShotTrack = builder.killShotTrack;
+	}
+
 	/**
 	 * Check if two tiles are linked by:
 	 * <li>

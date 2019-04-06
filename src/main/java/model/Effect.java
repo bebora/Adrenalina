@@ -63,6 +63,81 @@ public class Effect {
 	 */
 	private List<Integer> relativePriority;
 
+
+
+
+	public static class Builder {
+		private List <Move> moves;
+		private List<DealDamage> damages;
+		private List<ActionType> order;
+		private List<Ammo> cost;
+		private String name;
+		private Direction direction;
+		private String desc;
+		private int absolutePriority;
+		private List<Integer> relativePriority;
+
+		public Builder setMoves(List<Move> moves) {
+			this.moves = moves;
+			return this;
+		}
+
+		public Builder setDamages(List<DealDamage> damages) {
+			this.damages = damages;
+			return this;
+		}
+
+		public Builder setOrder(List<ActionType> order) {
+			this.order = order;
+			return this;
+		}
+
+		public Builder setCost(List<Ammo> cost) {
+			this.cost = cost;
+			return this;
+		}
+
+		public Builder setName(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder setDirection(Direction direction) {
+			this.direction = direction;
+			return this;
+		}
+
+		public Builder setDesc(String desc) {
+			this.desc = desc;
+			return this;
+		}
+
+		public Builder setAbsolutePriority(int absolutePriority) {
+			this.absolutePriority = absolutePriority;
+			return this;
+		}
+
+		public Builder setRelativePriority(List<Integer> relativePriority) {
+			this.relativePriority = relativePriority;
+			return this;
+		}
+		public Effect build() {
+			return new Effect(this);
+		}
+	}
+
+	public Effect(Builder builder) {
+		this.moves = builder.moves;
+		this.damages = builder.damages;
+		this.order = builder.order;
+		this.cost = builder.cost;
+		this.name = builder.name;
+		this.direction = builder.direction;
+		this.desc = builder.desc;
+		this.absolutePriority = builder.absolutePriority;
+		this.relativePriority = builder.relativePriority;
+	}
+
 	public List<Move> getMoves() {
 		return moves;
 	}

@@ -26,6 +26,43 @@ public class DealDamage {
 	 */
 	private ThreeState targeting;
 
+	public static class Builder{
+		private int damagesAmount;
+		private int marksAmount;
+		private ThreeState targeting;
+		private Target target = new Target.Builder().build();
+
+		public Builder setDamagesAmount(int damagesAmount) {
+			this.damagesAmount = damagesAmount;
+			return this;
+		}
+
+		public Builder setMarksAmount(int marksAmount) {
+			this.marksAmount = marksAmount;
+			return this;
+		}
+
+		public Builder setTargeting(ThreeState targeting) {
+			this.targeting = targeting;
+			return this;
+		}
+
+		public Builder setTarget(Target target) {
+			this.target = target;
+			return this;
+		}
+		public DealDamage build() {
+			return new DealDamage(this);
+		}
+	}
+
+	public DealDamage(Builder builder) {
+		this.damagesAmount = builder.damagesAmount;
+		this.marksAmount = builder.marksAmount;
+		this.targeting = builder.targeting;
+		this.target = builder.target;
+	}
+
 	public int getDamagesAmount() {
 		return damagesAmount;
 	}
