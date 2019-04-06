@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardCreator {
+    private BoardCreator() {}
     public static Board parseBoard(String filename, int skulls) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();

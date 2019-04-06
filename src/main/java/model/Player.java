@@ -8,6 +8,7 @@ public class Player {
 
 
 	public Player() {
+		//TODO choose how to create player and when
 	}
 
 	/**
