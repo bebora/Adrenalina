@@ -19,9 +19,11 @@ name:lanciarazzi
          visibility:TRUE
          minDistance:1
    moves:
+    move:
        objectToMove:PERSPECTIVE
        targetDestination:
          checkTargetList:TRUE
+    move:
        objectToMove:TARGETSOURCE
        targetSource:
          checkTargetList:TRUE
@@ -41,6 +43,7 @@ name:lanciarazzi
    cost:
      blue
    moves:
+    move:
        objectToMove:SELF
        targetDestination:
          minDistance:1

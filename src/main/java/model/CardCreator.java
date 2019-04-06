@@ -410,18 +410,21 @@ public class CardCreator {
             }
             splitLine = curLine.trim().split(":");
             switch(splitLine[0].toLowerCase()){
-                case "objecttomove":
+                case "move":
                     if(empty == Boolean.FALSE) {
                         moves.add(new Move.Builder().setTargetSource(targetSource).
                                 setObjectToMove(objectToMove).
                                 setTargetDestination(targetDestination).
                                 setTargeting(targeting).build());
                     }
-                    objectToMove = ObjectToMove.valueOf(splitLine[1].toUpperCase());
                     empty = Boolean.FALSE;
+                    objectToMove = ObjectToMove.SELF;
                     targetDestination = new Target.Builder().build();
                     targeting = ThreeState.OPTIONAL;
                     targetSource = new Target.Builder().build();
+                    break;
+                case "objecttomove":
+                    objectToMove = ObjectToMove.valueOf(splitLine[1].toUpperCase());
                     break;
                 case "targetdestination":
                     targetDestination = parseTarget(bufRead);
