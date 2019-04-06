@@ -5,21 +5,98 @@ import static model.ThreeState.OPTIONAL;
 public class Target {
 
 
-	public Target() {
-		visibility = OPTIONAL;
-		maxTargets=-1;
-		minDistance=0;
-		maxDistance=-1;
-		areaDamage=Area.SINGLE;
-		cardinal=OPTIONAL;
-		checkTargetList=OPTIONAL;
-		differentSquare=OPTIONAL;
-		samePlayerRoom=OPTIONAL;
-		throughWalls=OPTIONAL;
-		pointOfView=PointOfView.OWN;
-		checkBlackList=OPTIONAL;
+	public static class Builder {
+		ThreeState visibility = OPTIONAL;
+		int maxTargets = -1;
+		int minDistance = 0;
+		int maxDistance = -1;
+		Area areaDamage = Area.SINGLE;
+		ThreeState cardinal = OPTIONAL;
+		ThreeState checkTargetList = OPTIONAL;
+		ThreeState differentSquare = OPTIONAL;
+		ThreeState samePlayerRoom = OPTIONAL;
+		ThreeState throughWalls = OPTIONAL;
+		PointOfView pointOfView = PointOfView.OWN;
+		ThreeState checkBlackList = OPTIONAL;
+
+		public Builder setVisibility(ThreeState visibility) {
+			this.visibility = visibility;
+			return this;
+		}
+
+		public Builder setMaxTargets(int maxTargets) {
+			this.maxTargets = maxTargets;
+			return this;
+		}
+
+		public Builder setMinDistance(int minDistance) {
+			this.minDistance = minDistance;
+			return this;
+		}
+
+		public Builder setMaxDistance(int maxDistance) {
+			this.maxDistance = maxDistance;
+			return this;
+		}
+
+		public Builder setAreaDamage(Area areaDamage) {
+			this.areaDamage = areaDamage;
+			return this;
+		}
+
+		public Builder setCardinal(ThreeState cardinal) {
+			this.cardinal = cardinal;
+			return this;
+		}
+
+		public Builder setCheckTargetList(ThreeState checkTargetList) {
+			this.checkTargetList = checkTargetList;
+			return this;
+		}
+
+		public Builder setDifferentSquare(ThreeState differentSquare) {
+			this.differentSquare = differentSquare;
+			return this;
+		}
+
+		public Builder setSamePlayerRoom(ThreeState samePlayerRoom) {
+			this.samePlayerRoom = samePlayerRoom;
+			return this;
+		}
+
+		public Builder setThroughWalls(ThreeState throughWalls) {
+			this.throughWalls = throughWalls;
+			return this;
+		}
+
+		public Builder setPointOfView(PointOfView pointOfView) {
+			this.pointOfView = pointOfView;
+			return this;
+		}
+
+		public Builder setCheckBlackList(ThreeState checkBlackList) {
+			this.checkBlackList = checkBlackList;
+			return this;
+		}
+		public Target build() {
+			return new Target(this);
+		}
 	}
 
+	public Target(Builder builder) {
+		this.visibility = builder.visibility;
+		this.maxDistance = builder.maxDistance;
+		this.minDistance = builder.minDistance;
+		this.maxTargets = builder.maxTargets;
+		this.areaDamage = builder.areaDamage;
+		this.cardinal = builder.cardinal;
+		this.checkTargetList = builder.checkTargetList;
+		this.checkBlackList = builder.checkBlackList;
+		this.differentSquare = builder.differentSquare;
+		this.samePlayerRoom = builder.samePlayerRoom;
+		this.throughWalls = builder.throughWalls;
+		this. pointOfView = builder.pointOfView;
+	}
 
 	/**
 	 * TRUE: target must be visible from POV
@@ -63,7 +140,7 @@ public class Target {
 
 	/**
 	 * If used in DealDamage:
-	 * TRUE: targets must be in targetPlayers
+	 * TRUE: targets must be in tar getPlayers
 	 * FALSE: targets must not be in targetPlayers
 	 * OPTIONAL: not relevant
 	 *
