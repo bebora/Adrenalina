@@ -129,7 +129,7 @@ public class Board {
 		Set<Tile> currTile = new HashSet<>();
 		tempTiles.forEach(currTile::add);
 		reachableTiles.add(new HashSet<>(currTile));
-		for (int i = 0; i < maxDistance; i++) {
+		for (int i = 0; i < Math.max(maxDistance,minDistance); i++) {
 			for (Tile t1 : totalTiles) {
 				for (Tile t2 : currTile)
 					if (isLinked(t1, t2))
@@ -139,7 +139,10 @@ public class Board {
 			tempTiles.forEach(currTile::add);
 			reachableTiles.add(currTile);
 		}
-		if (minDistance > 0)
+		if (maxDistance == -1) {
+		    return totalTiles;
+        }
+		else if (minDistance > 0)
 		    reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance-1));
 		return reachableTiles.get(maxDistance);
 	}
