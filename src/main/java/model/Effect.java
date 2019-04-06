@@ -2,23 +2,33 @@ package model;
 
 import java.util.*;
 
-
+/**
+ * Represent the actions that can be activated shooting with a Weapon
+ */
 public class Effect {
 
 
 	public Effect() {
 	}
 
-
+	/**
+	 * List of moves that make up the Effect
+	 */
 	private List <Move> moves;
 
-
+	/**
+	 * List of damages that make up the effect
+	 */
 	private List<DealDamage> damages;
 
-
+	/**
+	 * Order in which moves and damages need to be executed
+	 */
 	private List<ActionType> order;
 
-
+	/**
+	 * If True, the effect has already been activated.
+	 */
 	private Boolean activated;
 
 	/**
@@ -26,6 +36,9 @@ public class Effect {
 	 */
 	private List<Ammo> cost;
 
+	/**
+	 * Name of the effect
+	 */
 	private String name;
 
 	/**
@@ -33,7 +46,9 @@ public class Effect {
 	 */
 	private Direction direction;
 
-
+	/**
+	 * Textual description of the effect
+	 */
 	private String desc;
 
 	/**
