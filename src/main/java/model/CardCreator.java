@@ -33,6 +33,7 @@ public class CardCreator {
                         break;
                     case "discardAward":
                         discardAward = Ammo.valueOf(splitLine[1].toUpperCase());
+                        break;
                     case "applicability":
                         applicability = Moment.valueOf(splitLine[1].toUpperCase());
                         break;
