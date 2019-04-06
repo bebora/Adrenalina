@@ -17,7 +17,7 @@ public enum Color {
 	 * @return Color related to the input char
 	 */
 	public static Color initialToColor(char input){
-		switch(input){
+		switch(Character.toLowerCase(input)){
 			case 'r':
 				return RED;
 			case 'b':
