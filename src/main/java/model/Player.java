@@ -6,9 +6,16 @@ import java.util.stream.Collectors;
 
 public class Player {
 
-
-	public Player() {
-		//TODO choose how to create player and when
+	public Player(boolean spawnPlayer) {
+		id = UUID.randomUUID().toString();
+		alive = ThreeState.TRUE;
+		dominationSpawn = spawnPlayer;
+		marks = new ArrayList<>();
+		damages = new ArrayList<>();
+		ammos = new ArrayList<>();
+		rewardPoints = new ArrayList<>();
+		weapons = new ArrayList<>();
+		powerUps = new ArrayList<>();
 	}
 
 	/**
@@ -19,7 +26,7 @@ public class Player {
 	/**
 	 * Unique identifier of the Player
 	 */
-	private int id;
+	private String id;
 
 	/**
 	 * Ordered list of damage tokens received, represented by players who gave them
@@ -109,35 +116,46 @@ public class Player {
 	 */
 	public void convertMarks(Player player) {
 		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id != player.id).collect(Collectors.toList());
-		for (int i = 0; i < this.marks.size() - unrelatedMarks.size(); i++) {
+		for (int i = 0; i < this.marks.size() - unrelatedMarks.size() && damages.size() < 13; i++) {
 		    damages.add(player);
         }
         marks = unrelatedMarks;
-		//TODO add notify to Observers related classes
 	}
-	public void getShot(Player shooter, int damage, int marks) {
-		while(damage > 0 && damages.size() < 12){
+
+	public void receiveShot(Player shooter, int damage, int marks) {
+		while(damage > 0 && damages.size() < 13){
 			damages.add(shooter);
 			damage--;
 		}
 		convertMarks(shooter);
 		while(marks > 0){
-			addMark(shooter);
+			receiveMark(shooter);
 			marks--;
 		}
 	}
-	public void updateActions() {
-		//TODO Create Resources file for according action and parse those according to the number of skulls remaining
+
+	public Player setActions(ArrayList<Action> actions) {
+		this.actions = actions;
+		return this;
+	}
+
+	public Player addWeapon(Weapon weapon) {
+		weapons.add(weapon);
+		return this;
+	}
+
+	public ArrayList<Weapon> getWeapons() {
+		return weapons;
 	}
 
 	/**
-	 * Check if player has enough ammo to recharge the parameter weapon
-	 * and removes the ammos from the player.
+	 * Recharge the parameter weapon
+	 * and set the weapon as loaded.
 	 * @param weapon Weapon to be recharged
 	 */
 	public void reload(Weapon weapon) {
-		if(checkForAmmos(weapon.getCost()))
-			weapon.getCost().forEach(cost->ammos.remove(cost));
+		weapon.getCost().forEach(cost->ammos.remove(cost));
+		weapon.setLoaded(true);
 	}
 
 	/**
@@ -147,31 +165,29 @@ public class Player {
 	 * 		   <cose>false</cose> otherwise
 	 */
 	public Boolean checkForAmmos(List<Ammo> cost){
-		ArrayList<Ammo> duplicate = new ArrayList<>();
-		for(Ammo a: cost) {
-			if (ammos.contains(a)) {
-				ammos.remove(a);
-				duplicate.add(a);
-			} else
+		for (Ammo c : cost) {
+			if (! (Collections.frequency(cost,c) == Collections.frequency(ammos,c)))
 				return false;
 		}
-		cost.addAll(duplicate);
 		return true;
 	}
+
     public List<Player> getMarks() {
         return marks;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    private void addMark(Player shooter){
-		int counter = 0;
-		for(Player mark: marks)
-			if(mark.equals(shooter))
-				counter++;
+    public void receiveMark(Player shooter){
+		int counter = Collections.frequency(marks,shooter);
 		if(counter<3)
 			marks.add(shooter);
 	}
+
+	public void addAmmo(Ammo ammo) {
+		ammos.add(ammo);
+	}
+
 }
