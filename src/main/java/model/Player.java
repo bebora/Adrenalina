@@ -123,9 +123,16 @@ public class Player {
 	}
 
 	public void reload(Weapon weapon) {
-		//TODO Complete the method, create an exception according to the examples and make it throw an Exception if for example the player doesn't have enough $$ to reload.
-	}
+		if(checkForAmmos(weapon.getCost()))
+			weapon.getCost().forEach(cost->ammos.remove(cost));
 
+	}
+	public Boolean checkForAmmos(List<Ammo> cost){
+		for(Ammo a: cost)
+			if(!ammos.contains(a))
+				return false;
+		return true;
+	}
     public List<Player> getMarks() {
         return marks;
     }
