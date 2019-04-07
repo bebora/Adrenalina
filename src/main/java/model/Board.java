@@ -152,7 +152,11 @@ public class Board {
 		return "";
     }
 
-    public Tile getTile(int posy, int posx) {
+	public List<Weapon> getWeaponsDeck() {
+		return weaponsDeck;
+	}
+
+	public Tile getTile(int posy, int posx) {
 	    return tiles.get(posy).get(posx);
     }
 

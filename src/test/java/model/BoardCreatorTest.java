@@ -9,7 +9,7 @@ class BoardCreatorTest {
 
     @Test
     void parseBoard() {
-        Board test = BoardCreator.parseBoard("boards/board1.btlb",8);
+        Board test = BoardCreator.parseBoard("board1.btlb",8);
         // Test skull setter
         assertEquals(test.getSkulls(),8);
 
@@ -26,5 +26,9 @@ class BoardCreatorTest {
         // Test spawn points as capital letters
         assertEquals(test.getTiles().get(0).get(2).isSpawn(), Boolean.TRUE);
         assertEquals(test.getTiles().get(0).get(1).isSpawn(), Boolean.FALSE);
+
+        // Test weapons parsing in the deck
+        assertEquals(test.getWeaponsDeck().get(0).getName(), "lanciarazzi");
+
     }
 }

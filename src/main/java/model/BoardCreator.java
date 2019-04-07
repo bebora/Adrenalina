@@ -5,6 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+
 
 public class BoardCreator {
     private BoardCreator() {}
@@ -14,7 +16,7 @@ public class BoardCreator {
         List<Door> doors = new ArrayList<>();
         List<Weapon> weaponsDeck = new ArrayList<>();
         List<Tile> temp;
-        try (FileReader input = new FileReader(classloader.getResource(filename).getFile());
+        try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ) {
             String curLine;
@@ -52,7 +54,16 @@ public class BoardCreator {
         } catch (IOException e) {
             return null;
         }
-        //TODO looping through files for weapons
+
+        //looping through weapons to add to weapons deck
+        String nameDir = classloader.getResource("weapons").getPath();
+        File dir = new File(nameDir);
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+            for (File weapon : directoryListing) {
+                weaponsDeck.add(CardCreator.parseWeapon("weapons/"+weapon.getName()));
+            }
+        }
         return new Board.Builder(skulls).
                 setDoors(doors).
                 setTiles(tiles).

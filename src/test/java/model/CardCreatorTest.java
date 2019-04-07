@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CardCreatorTest {
 
-    @Test
+    /*@Test
     void parsePowerUp() {
-        
-    }
+
+    }*/
 
     @Test
     void parseWeapon() {
