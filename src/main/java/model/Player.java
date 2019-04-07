@@ -35,7 +35,7 @@ public class Player {
 	 * Owned ammos by the Player; there can't be more than three for each color
 	 * No Ammo.POWERUP is allowed into the Set
 	 */
-	private Set<Ammo> ammos;
+	private ArrayList<Ammo> ammos;
 
 	/**
 	 * If True, the Player is the first player.
@@ -125,12 +125,17 @@ public class Player {
 	public void reload(Weapon weapon) {
 		if(checkForAmmos(weapon.getCost()))
 			weapon.getCost().forEach(cost->ammos.remove(cost));
-
 	}
 	public Boolean checkForAmmos(List<Ammo> cost){
-		for(Ammo a: cost)
-			if(!ammos.contains(a))
+		ArrayList<Ammo> duplicate = new ArrayList<>();
+		for(Ammo a: cost) {
+			if (ammos.contains(a)) {
+				ammos.remove(a);
+				duplicate.add(a);
+			} else
 				return false;
+		}
+		cost.addAll(duplicate);
 		return true;
 	}
     public List<Player> getMarks() {
