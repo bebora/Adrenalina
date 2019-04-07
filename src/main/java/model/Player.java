@@ -122,10 +122,22 @@ public class Player {
 		//TODO Create Resources file for according action and parse those according to the number of skulls remaining
 	}
 
+	/**
+	 * Check if player has enough ammo to recharge the parameter weapon
+	 * and removes the ammos from the player.
+	 * @param weapon Weapon to be recharged
+	 */
 	public void reload(Weapon weapon) {
 		if(checkForAmmos(weapon.getCost()))
 			weapon.getCost().forEach(cost->ammos.remove(cost));
 	}
+
+	/**
+	 * Return true if the player has enough ammo.
+	 * @param cost list of Ammo to pay
+	 * @return <code>true</code> if the player has enough ammo
+	 * 		   <cose>false</cose> otherwise
+	 */
 	public Boolean checkForAmmos(List<Ammo> cost){
 		ArrayList<Ammo> duplicate = new ArrayList<>();
 		for(Ammo a: cost) {
