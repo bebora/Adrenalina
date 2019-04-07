@@ -115,8 +115,16 @@ public class Player {
         marks = unrelatedMarks;
 		//TODO add notify to Observers related classes
 	}
-	public void shoot(Player shooter, int damage, int marks) {
-        //TODO add damages, marks, notify for added damages and added marks (first player need to be scored), rest at end of turn
+	public void getShot(Player shooter, int damage, int marks) {
+		while(damage > 0 && damages.size() < 12){
+			damages.add(shooter);
+			damage--;
+		}
+		convertMarks(shooter);
+		while(marks > 0){
+			addMark(shooter);
+			marks--;
+		}
 	}
 	public void updateActions() {
 		//TODO Create Resources file for according action and parse those according to the number of skulls remaining
@@ -157,4 +165,13 @@ public class Player {
     public int getId() {
         return id;
     }
+
+    private void addMark(Player shooter){
+		int counter = 0;
+		for(Player mark: marks)
+			if(mark.equals(shooter))
+				counter++;
+		if(counter<3)
+			marks.add(shooter);
+	}
 }
