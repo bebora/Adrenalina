@@ -6,6 +6,13 @@ package model;
  */
 public class Action {
 
+
+	public Action(int movements, Boolean grab, Boolean shoot, Boolean reload) {
+		this.movements = movements;
+		this.grab = grab;
+		this.shoot = shoot;
+		this.reload = reload;
+	}
 	/**
 	 * Maximum number of movements that the player can do
 	 */
@@ -25,7 +32,7 @@ public class Action {
 	 * If True, the player can reload the weapon before shooting.
 	 */
 	private Boolean reload;
-
+	//TODO remove setters and getters if useless
 	public int getMovements() {
 		return movements;
 	}

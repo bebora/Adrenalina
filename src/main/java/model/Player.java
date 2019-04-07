@@ -178,6 +178,10 @@ public class Player {
 		return true;
 	}
 
+	public int getDamagesCount() {
+		return damages.size();
+	}
+
     public List<Player> getMarks() {
         return marks;
     }
