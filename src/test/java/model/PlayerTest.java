@@ -3,25 +3,42 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
-    Player testPlayer, enemyPlayer;
+    Player testPlayer, enemyPlayer, thirdPlayer;
 
     @BeforeEach
     void setUp() {
         testPlayer = new Player(false);
         enemyPlayer = new Player(false);
+        thirdPlayer = new Player(false);
 
         // Check UUID reliability
         assertNotEquals(testPlayer.getId(), enemyPlayer.getId());
     }
-    @Test
-    void convertMarks() {
-    }
 
+
+    /**
+     * Check if the logic rules of the game (first add damages, convert marks, then add marks) stands
+     */
     @Test
-    void receiveShot() {
+    void receiveShotandMarks() {
+        for (int i = 0; i < 2; i++) {
+            testPlayer.receiveMark(enemyPlayer);
+            testPlayer.receiveMark(thirdPlayer);
+        }
+        testPlayer.receiveShot(enemyPlayer, 9,1);
+
+        // Test order and correct marks selection
+        assertTrue(testPlayer.getDamages().size() == 11);
+        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId() == enemyPlayer.getId()).collect(Collectors.toList()).size() == 1);
+        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId() == thirdPlayer.getId()).collect(Collectors.toList()).size() == 2);
+
+
     }
 
     @Test
