@@ -30,5 +30,9 @@ class BoardCreatorTest {
         // Test weapons parsing in the deck
         assertEquals(test.getWeaponsDeck().get(0).getName(), "lanciarazzi");
 
+        // Test powerups parsing in the deck
+        assertEquals(test.getPowerUps().get(0).getDiscardAward(), Ammo.BLUE);
+        assertEquals(test.getPowerUps().get(1).getDiscardAward(), Ammo.RED);
+
     }
 }

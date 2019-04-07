@@ -2,19 +2,26 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CardCreatorTest {
-
-    /*@Test
+    @Test
     void parsePowerUp() {
+        PowerUp test = CardCreator.parsePowerUp("mirino.btl", Ammo.RED);
 
-    }*/
+        // Test various elements of the parser
+        assertEquals(test.getEffect().getDamages().get(0).getDamagesAmount(), 1);
+        assertEquals(test.getEffect().getCost().get(0), Ammo.ANY);
+        assertEquals(test.getApplicability(),Moment.DAMAGING);
+        assertEquals(test.getName(),"mirino");
+        assertEquals(test.getDiscardAward(),Ammo.RED);
+    }
 
     @Test
     void parseWeapon() {
-        Weapon test = CardCreator.parseWeapon("weapons/lanciarazzi.btl");
+        Weapon test = CardCreator.parseWeapon("lanciarazzi.btl");
 
         // Test various elements of the parser
         assertEquals(test.getEffects().get(2).getDamages().get(1).getDamagesAmount(), 1);

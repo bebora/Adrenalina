@@ -76,6 +76,7 @@ public class Effect {
 		private String desc;
 		private int absolutePriority;
 		private List<Integer> relativePriority;
+		private Boolean activated = false;
 
 		public Builder setMoves(List<Move> moves) {
 			this.moves = moves;
@@ -136,6 +137,7 @@ public class Effect {
 		this.desc = builder.desc;
 		this.absolutePriority = builder.absolutePriority;
 		this.relativePriority = builder.relativePriority;
+		this.activated = builder.activated;
 	}
 
 	public List<Move> getMoves() {

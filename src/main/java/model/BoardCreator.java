@@ -15,6 +15,7 @@ public class BoardCreator {
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
         List<Weapon> weaponsDeck = new ArrayList<>();
+        List<PowerUp> powerUps = new ArrayList<>();
         List<Tile> temp;
         try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
@@ -55,19 +56,31 @@ public class BoardCreator {
             return null;
         }
 
-        //looping through weapons to add to weapons deck
+        // Looping through weapons to add to weapons deck
         String nameDir = classloader.getResource("weapons").getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File weapon : directoryListing) {
-                weaponsDeck.add(CardCreator.parseWeapon("weapons/"+weapon.getName()));
+                weaponsDeck.add(CardCreator.parseWeapon(weapon.getName()));
             }
         }
+
+        nameDir = classloader.getResource("powerups").getPath();
+        dir = new File(nameDir);
+        directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+            for (File powerUp : directoryListing) {
+                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
+                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.RED));
+                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
+            }
+        }
+
         return new Board.Builder(skulls).
                 setDoors(doors).
                 setTiles(tiles).
                 setWeapon(weaponsDeck).
-                build();
+                setPowerUps(powerUps).build();
     }
 }

@@ -23,6 +23,11 @@ public class Board {
 	 */
 	private List<Weapon> weaponsDeck;
 
+    /**
+     * List of powerUps to randomly draw
+     */
+	private List<PowerUp> powerUps;
+
 	/**
 	 * List of players that got a Kill and an Overkill
 	 * Every kill is composed by two elements added to the list:
@@ -37,6 +42,7 @@ public class Board {
 
 
 
+
 	public static class Builder {
 
 		private List<List<Tile>> tiles;
@@ -44,6 +50,13 @@ public class Board {
 		private int skulls;
 		private List<Weapon> weaponsDeck;
 		private List<Player> killShotTrack = new ArrayList<>();
+
+        public Builder setPowerUps(List<PowerUp> powerUps) {
+            this.powerUps = powerUps;
+            return this;
+        }
+
+        private List<PowerUp> powerUps;
 
 		public Builder(int skulls) {
 			this.skulls = skulls;
@@ -77,6 +90,7 @@ public class Board {
 		this.skulls = builder.skulls;
 		this.weaponsDeck = builder.weaponsDeck;
 		this.killShotTrack = builder.killShotTrack;
+		this.powerUps = builder.powerUps;
 	}
 
 	/**
@@ -168,7 +182,11 @@ public class Board {
 		return skulls;
 	}
 
-	public List<Player> getKillShotTrack() {
+    public List<PowerUp> getPowerUps() {
+        return powerUps;
+    }
+
+    public List<Player> getKillShotTrack() {
 		return killShotTrack;
 	}
 

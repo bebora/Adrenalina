@@ -1,0 +1,16 @@
+name:mirino
+applicability:damaging
+effect:
+   name:effetto base
+   desc:Puoi giocare questa carta quando stai dando danno a uno o più bersagli. Paga 1 cubo munizioni di qualsiasi colore. Scegli 1 dei bersagli e dagli 1 segnalino danno aggiuntivo. Nota: non puoi usare questo potenziamento per dare 1 danno a un bersaglio che sta solo ricevendo marchi. Puoi giocare questa carta nel tuo turno prima o dopo aver svolto qualsiasi azione. Scegli la miniatura di un altro giocatore e muovila di 1 o 2 quadrati in una direzione. (Non puoi usare questo potenziamento per muovere una miniatura dopo che è stata rigenerata alla fine del tuo turno, è troppo tardi.
+   absolutePriority:1
+   cost:
+	ANY
+   order:
+     DEALDAMAGE
+   damages:
+     damage:
+       damagesAmount:1
+       target:
+	maxtargets:1
+	checktargetList:TRUE

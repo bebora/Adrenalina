@@ -20,13 +20,12 @@ public class CardCreator {
      * @return a PowerUp built according to the given configuration
      * @see PowerUp
      */
-    public static PowerUp parsePowerUp(String filename) {
+    public static PowerUp parsePowerUp(String filename, Ammo discardAward) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Ammo discardAward = null;
         Moment applicability = null;
         Effect effect = null;
         String name = null;
-        try (FileReader input = new FileReader(classLoader.getResource(filename).getFile());
+        try (FileReader input = new FileReader(classLoader.getResource("powerups/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ){
             String curLine = null;
@@ -37,13 +36,10 @@ public class CardCreator {
                     case "name":
                         name = splitLine[1];
                         break;
-                    case "discardAward":
-                        discardAward = Ammo.valueOf(splitLine[1].toUpperCase());
-                        break;
                     case "applicability":
                         applicability = Moment.valueOf(splitLine[1].toUpperCase());
                         break;
-                    case "effects":
+                    case "effect":
                         effect = parseEffects(bufRead).get(0);
                         break;
                     default:
@@ -71,7 +67,7 @@ public class CardCreator {
         String tempName = null;
         List<Ammo> tempCost = null;
         List<Effect> tempEffects = null;
-        try (FileReader input = new FileReader(classLoader.getResource(fileName).getFile());
+        try (FileReader input = new FileReader(classLoader.getResource("weapons/"+fileName).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ){
             String curLine = null;

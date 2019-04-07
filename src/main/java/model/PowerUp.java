@@ -65,6 +65,19 @@ public class PowerUp {
 		this.name = builder.name;
 	}
 
+	public Effect getEffect() {
+		return effect;
+	}
 
+	public Ammo getDiscardAward() {
+		return discardAward;
+	}
 
+	public Moment getApplicability() {
+		return applicability;
+	}
+
+	public String getName() {
+		return name;
+	}
 }
