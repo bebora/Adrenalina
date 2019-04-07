@@ -9,6 +9,7 @@ class CardCreatorTest {
 
     @Test
     void parsePowerUp() {
+        
     }
 
     @Test
@@ -19,6 +20,5 @@ class CardCreatorTest {
         assertEquals(test.getEffects().get(2).getDamages().get(1).getDamagesAmount(), 1);
         assertEquals(test.getEffects().get(2).getDamages().get(1).getTarget().getMaxDistance(), 0);
         assertEquals(test.getEffects().get(2).getDamages().get(1).getDamagesAmount(), 1);
-
     }
 }
