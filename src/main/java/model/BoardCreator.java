@@ -57,18 +57,36 @@ public class BoardCreator {
         }
 
         // Looping through weapons to add to weapons deck
-        String nameDir = classloader.getResource("weapons").getPath();
+        weaponsDeck = parseWeapon(classloader, "weapons");
+        powerUps = parsePowerUps(classloader, "powerups");
+
+
+        return new Board.Builder(skulls).
+                setDoors(doors).
+                setTiles(tiles).
+                setWeapon(weaponsDeck).
+                setPowerUps(powerUps).build();
+    }
+
+    public static List parseWeapon(ClassLoader classloader, String weaponPath) {
+        List <Weapon> weapons = new ArrayList<>();
+        String nameDir = classloader.getResource(weaponPath).getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File weapon : directoryListing) {
-                weaponsDeck.add(CardCreator.parseWeapon(weapon.getName()));
+                weapons.add(CardCreator.parseWeapon(weapon.getName()));
             }
         }
 
-        nameDir = classloader.getResource("powerups").getPath();
-        dir = new File(nameDir);
-        directoryListing = dir.listFiles();
+        return weapons;
+    }
+
+    public static List parsePowerUps(ClassLoader classloader, String powerUpsPath) {
+        List<PowerUp> powerUps = new ArrayList<>();
+        String nameDir = classloader.getResource(powerUpsPath).getPath();
+        File dir = new File(nameDir);
+        File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File powerUp : directoryListing) {
                 powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
@@ -76,11 +94,6 @@ public class BoardCreator {
                 powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
             }
         }
-
-        return new Board.Builder(skulls).
-                setDoors(doors).
-                setTiles(tiles).
-                setWeapon(weaponsDeck).
-                setPowerUps(powerUps).build();
+        return powerUps;
     }
 }
