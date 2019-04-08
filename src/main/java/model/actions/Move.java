@@ -14,4 +14,9 @@ public class Move extends Action {
         if(!afterFirst)
             movements = 4;
     }
+
+    @Override
+    public void updateOnHealth(int damage) {
+        super.updateOnHealth(damage);
+    }
 }

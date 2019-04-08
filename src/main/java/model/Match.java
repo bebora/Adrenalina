@@ -20,7 +20,7 @@ public class Match {
 	/**
 	 * Index of the player whose turn is the current
 	 */
-	private int currentTurn;
+	private int currentPlayer;
 
 	/**
 	 * Index of the firstPlayer
@@ -38,4 +38,25 @@ public class Match {
 	 * <li> Domination Mode</li>
 	 */
 	private Mode mode;
+
+	public void startFrenzy() {
+		if (firstPlayer < currentPlayer) {
+			for (Player p : players) {
+				if (players.indexOf(p) >= currentPlayer || players.indexOf(p) < firstPlayer)
+					p.notifyFrenzy(false);
+				else
+					p.notifyFrenzy(true);
+			}
+		} else if (firstPlayer > currentPlayer)
+			for (Player p : players) {
+				if (players.indexOf(p) >= currentPlayer && players.indexOf(p) < firstPlayer)
+					p.notifyFrenzy(false);
+				else
+					p.notifyFrenzy(true);
+			}
+		else {
+			for (Player p : players)
+				p.notifyFrenzy(true);
+		}
+	}
 }

@@ -16,7 +16,7 @@ public abstract class Action {
 	 */
 	protected List<SubAction> subActions;
 
-	public void updateOnHealth(){};
+	public void updateOnHealth(int damage){};
 
 	public void updateOnFrenzy(Boolean afterFirst){};
 }

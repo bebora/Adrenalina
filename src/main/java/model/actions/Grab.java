@@ -11,8 +11,9 @@ public class Grab extends Action {
     }
 
     @Override
-    public void updateOnHealth() {
-        movements = 2;
+    public void updateOnHealth(int damage) {
+        if(damage > 2)
+            movements = 2;
     }
 
     @Override

@@ -197,4 +197,13 @@ public class Player {
 		ammos.add(ammo);
 	}
 
+	public void notifyFrenzy(Boolean afterFirst){
+		for(Action a: actions)
+			a.updateOnFrenzy(afterFirst);
+	}
+
+	public void notifyHealthChange(){
+		for(Action a: actions)
+			a.updateOnHealth(damages.size());
+	}
 }

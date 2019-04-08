@@ -10,9 +10,11 @@ public class Attack extends Action {
     }
 
     @Override
-    public void updateOnHealth() {
-        subActions.add(0,SubAction.MOVE);
-        movements = 1;
+    public void updateOnHealth(int damage) {
+        if(damage > 5) {
+            subActions.add(0, SubAction.MOVE);
+            movements = 1;
+        }
     }
 
     @Override
