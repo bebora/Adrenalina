@@ -40,20 +40,18 @@ public class Match {
 	private Mode mode;
 
 	public void startFrenzy() {
+		Boolean afterFirst;
 		if (firstPlayer < currentPlayer) {
 			for (Player p : players) {
-				if (players.indexOf(p) >= currentPlayer || players.indexOf(p) < firstPlayer)
-					p.notifyFrenzy(false);
-				else
-					p.notifyFrenzy(true);
+				afterFirst = !(players.indexOf(p) >= currentPlayer || players.indexOf(p) < firstPlayer);
+				p.notifyFrenzy(afterFirst);
 			}
-		} else if (firstPlayer > currentPlayer)
+		} else if (firstPlayer > currentPlayer) {
 			for (Player p : players) {
-				if (players.indexOf(p) >= currentPlayer && players.indexOf(p) < firstPlayer)
-					p.notifyFrenzy(false);
-				else
-					p.notifyFrenzy(true);
+				afterFirst = !(players.indexOf(p) >= currentPlayer && players.indexOf(p) < firstPlayer);
+				p.notifyFrenzy(afterFirst);
 			}
+		}
 		else {
 			for (Player p : players)
 				p.notifyFrenzy(true);

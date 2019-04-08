@@ -13,5 +13,7 @@ public class Move extends Action {
     public void updateOnFrenzy(Boolean afterFirst) {
         if (!afterFirst)
             movements = 4;
+        else
+            subActions = new ArrayList<>();
     }
 }
