@@ -61,6 +61,7 @@ public class BoardCreator {
         powerUps = parsePowerUps(classloader, "powerups");
 
 
+
         return new Board.Builder(skulls).
                 setDoors(doors).
                 setTiles(tiles).

@@ -13,6 +13,8 @@ public class Tile {
 		private int sPosx;
 		private int sPosy;
 		private Boolean sSpawn;
+		private List<Weapon> weapons = new ArrayList<>();
+		private List<Ammo> ammoCard = new ArrayList<>();
 
 		public Builder setRoom(Color room) {
 			sRoom = room;
@@ -41,6 +43,8 @@ public class Tile {
 		posx = builder.sPosx;
 		posy = builder.sPosy;
 		spawn = builder.sSpawn;
+		weapons = builder.weapons;
+		ammoCard = builder.ammoCard;
 	}
 
 	private Color room;
@@ -69,5 +73,10 @@ public class Tile {
 	public static int cabDistance(Tile tile1, Tile tile2) {
 		return Math.abs(tile1.getPosx() - tile2.getPosx()) + Math.abs(tile1.getPosy() - tile2.getPosy());
 	}
+
+	public void addWeapon(Weapon weapon) {
+		weapons.add(weapon);
+	}
+
 
 }

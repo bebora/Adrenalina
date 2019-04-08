@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 //TODO add 3 weapons to each spawn Tile while building
 public class Board {
+
+    Random rand = new Random();
+
 	/**
 	 * List of tiles that make up the Board
 	 */
@@ -91,6 +94,15 @@ public class Board {
 		this.weaponsDeck = builder.weaponsDeck;
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
+
+        for (int i = 0; i < 3; i++) {
+            tiles.stream().
+                    flatMap(List::stream).
+                    filter(t -> t.isSpawn()).
+                    forEach(tile -> tile.addWeapon(drawWeapon()));
+        }
+
+
 	}
 
 	/**
@@ -167,10 +179,16 @@ public class Board {
     }
 
     public PowerUp drawPowerUp() {
-		Random rand = new Random();
 		return powerUps.get(rand.nextInt(powerUps.size()));
 	}
 
+
+    public Weapon drawWeapon() {
+        int indexWeaponToPop = rand.nextInt(powerUps.size());
+        Weapon weapon = weaponsDeck.get(indexWeaponToPop);
+        weaponsDeck.remove(indexWeaponToPop);
+        return weapon;
+	}
 
 
 	public List<Weapon> getWeaponsDeck() {
