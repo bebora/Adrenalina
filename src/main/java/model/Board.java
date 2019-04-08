@@ -3,7 +3,7 @@ package model;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+//TODO add 3 weapons to each spawn Tile while building
 public class Board {
 	/**
 	 * List of tiles that make up the Board
@@ -166,6 +166,13 @@ public class Board {
 		return "";
     }
 
+    public PowerUp drawPowerUp() {
+		Random rand = new Random();
+		return powerUps.get(rand.nextInt(powerUps.size()));
+	}
+
+
+
 	public List<Weapon> getWeaponsDeck() {
 		return weaponsDeck;
 	}
@@ -192,5 +199,9 @@ public class Board {
 
 	public void setKillShotTrack(List<Player> killShotTrack) {
 		this.killShotTrack = killShotTrack;
+	}
+
+	public void updateWeapons() {
+		//TODO refill tiles with less than three weapons
 	}
 }

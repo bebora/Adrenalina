@@ -103,11 +103,6 @@ public class Player {
 	private Boolean dominationSpawn;
 
 	/**
-	 * True if player turn has ended
-	 */
-	private Boolean turnEnd;
-
-	/**
 	 * Number of time that the player has been killed before FinalFrenzy
 	 */
 	private int trackSkulls;
@@ -144,6 +139,7 @@ public class Player {
 			receiveMark(shooter);
 			marks--;
 		}
+		notifyHealthChange();
 	}
 
 	public void setActions(List<Action> actions) {
@@ -215,4 +211,11 @@ public class Player {
 		for(Action a: actions)
 			a.updateOnHealth(damages.size());
 	}
+
+	public void discardPowerUp(PowerUp powerUp) {
+		powerUps.remove(powerUp);
+		ammos.add(powerUp.getDiscardAward());
+	}
+
+
 }

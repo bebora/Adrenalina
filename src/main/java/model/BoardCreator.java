@@ -14,8 +14,8 @@ public class BoardCreator {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        List<Weapon> weaponsDeck = new ArrayList<>();
-        List<PowerUp> powerUps = new ArrayList<>();
+        List<Weapon> weaponsDeck;
+        List<PowerUp> powerUps;
         List<Tile> temp;
         try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
