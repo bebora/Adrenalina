@@ -21,6 +21,10 @@ public class Player {
 	}
 
 	/**
+	 * Max number of actions
+	 */
+	private int maxActions;
+	/**
 	 * Real position of the Player
 	 */
 	private Tile tile;
@@ -44,7 +48,7 @@ public class Player {
 	 * Owned ammos by the Player; there can't be more than three for each color
 	 * No Ammo.POWERUP is allowed into the Set
 	 */
-	private ArrayList<Ammo> ammos;
+	private List<Ammo> ammos;
 
 	/**
 	 * Current total score
@@ -54,7 +58,7 @@ public class Player {
 	/**
 	 * List of available actions the player can choose
 	 */
-	private ArrayList<Action> actions;
+	private List<Action> actions;
 
 	/**
 	 * Ordered list of reward points given to other players if player dies
@@ -107,6 +111,11 @@ public class Player {
 	 */
 	private int trackSkulls;
 
+	public Player setMaxActions(int maxActions) {
+		this.maxActions = maxActions;
+		return this;
+	}
+
 	public List<Player> getDamages() {
 		return damages;
 	}
@@ -137,7 +146,7 @@ public class Player {
 		}
 	}
 
-	public Player setActions(ArrayList<Action> actions) {
+	public Player setActions(List<Action> actions) {
 		this.actions = actions;
 		return this;
 	}
@@ -147,7 +156,7 @@ public class Player {
 		return this;
 	}
 
-	public ArrayList<Weapon> getWeapons() {
+	public List<Weapon> getWeapons() {
 		return weapons;
 	}
 
@@ -168,10 +177,9 @@ public class Player {
 	 * 		   <cose>false</cose> otherwise
 	 */
 	public Boolean checkForAmmos(List<Ammo> cost){
-		for (Ammo c : cost) {
-			if (! (Collections.frequency(cost,c) == Collections.frequency(ammos,c)))
+		for (Ammo c : cost)
+			if (Collections.frequency(cost,c) > Collections.frequency(ammos,c))
 				return false;
-		}
 		return true;
 	}
 

@@ -12,6 +12,9 @@ import static model.ThreeState.OPTIONAL;
  * Parser used for reading configuration files for PowerUps and Weapons
  */
 public class CardCreator {
+    private CardCreator() {
+        throw new IllegalStateException("Utility class");
+    }
     /**
      * Returns a PowerUp object after parsing its configuration from a btl file.
      * The file must be in the resource folder.
@@ -394,9 +397,7 @@ public class CardCreator {
         while(true){
             bufRead.mark(20);
             curLine = bufRead.readLine();
-            if(curLine != null)
-                splitLine = curLine.trim().split(":");
-            else {
+            if(curLine == null) {
                 bufRead.reset();
                 moves.add(new Move.Builder().setTargetSource(targetSource).
                         setObjectToMove(objectToMove).
