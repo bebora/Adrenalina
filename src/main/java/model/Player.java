@@ -47,11 +47,6 @@ public class Player {
 	private ArrayList<Ammo> ammos;
 
 	/**
-	 * If True, the Player is the first player.
-	 */
-	private Boolean firstPlayer;
-
-	/**
 	 * Current total score
 	 */
 	private int points;

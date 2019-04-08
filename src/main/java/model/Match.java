@@ -23,6 +23,11 @@ public class Match {
 	private int currentTurn;
 
 	/**
+	 * Index of the firstPlayer
+	 */
+	private int firstPlayer;
+
+	/**
 	 * If True, the activated mode is finalFrenzy
 	 */
 	private Boolean finalFrenzy;
@@ -33,5 +38,4 @@ public class Match {
 	 * <li> Domination Mode</li>
 	 */
 	private Mode mode;
-
 }
