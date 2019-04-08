@@ -18,6 +18,7 @@ public class Player {
 		rewardPoints = new ArrayList<>();
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
+		this.setMaxActions(3);
 	}
 
 	/**
@@ -111,9 +112,8 @@ public class Player {
 	 */
 	private int trackSkulls;
 
-	public Player setMaxActions(int maxActions) {
+	public void setMaxActions(int maxActions) {
 		this.maxActions = maxActions;
-		return this;
 	}
 
 	public List<Player> getDamages() {
@@ -146,14 +146,12 @@ public class Player {
 		}
 	}
 
-	public Player setActions(List<Action> actions) {
+	public void setActions(List<Action> actions) {
 		this.actions = actions;
-		return this;
 	}
 
-	public Player addWeapon(Weapon weapon) {
+	public void addWeapon(Weapon weapon) {
 		weapons.add(weapon);
-		return this;
 	}
 
 	public List<Weapon> getWeapons() {
@@ -208,6 +206,9 @@ public class Player {
 	public void notifyFrenzy(Boolean afterFirst){
 		for(Action a: actions)
 			a.updateOnFrenzy(afterFirst);
+		if (afterFirst) {
+			this.setMaxActions(2);
+		}
 	}
 
 	public void notifyHealthChange(){
