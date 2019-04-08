@@ -1,5 +1,7 @@
 package model;
 
+import model.actions.Action;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
