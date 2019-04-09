@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-//TODO add 3 weapons to each spawn Tile while building
 public class Board {
 
     Random rand = new Random();
