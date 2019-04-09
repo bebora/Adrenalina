@@ -1,0 +1,32 @@
+name:distruttore
+cost:
+  blue
+  blue
+effects:
+  name:effetto base
+  desc:Dai 2 danni e 1 marchio a 1 bersaglio che puoi vedere.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:2
+      marksAmount:1
+      targeting:FALSE
+      target:
+        maxTargets:1
+        visibility:TRUE
+  name:secondo aggancio
+  desc:Dai 1 marchio a un altro bersaglio che puoi vedere.
+  absolutePriority:2
+  order:
+    DEALDAMAGE
+  cost:
+    red
+  damages:
+    damage:
+      marksAmount:1
+      target:
+        maxTargets:1
+        visibility:TRUE
+        checkBlackList:FALSE

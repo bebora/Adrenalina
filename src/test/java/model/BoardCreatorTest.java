@@ -31,11 +31,10 @@ class BoardCreatorTest {
         assertEquals(test.getTiles().get(0).get(1).isSpawn(), Boolean.FALSE);
 
         // Test weapons parsing in the deck
-        assertEquals(test.getWeaponsDeck().get(0).getName(), "lanciarazzi");
+        assertNotNull(test.getWeaponsDeck().get(0).getName());
 
         // Test powerups parsing in the deck
         assertEquals(test.getPowerUps().get(0).getDiscardAward(), Ammo.BLUE);
         assertEquals(test.getPowerUps().get(1).getDiscardAward(), Ammo.RED);
-
     }
 }
