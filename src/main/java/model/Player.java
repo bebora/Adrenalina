@@ -116,6 +116,9 @@ public class Player {
 		this.maxActions = maxActions;
 	}
 
+	public int getMaxActions() {
+		return maxActions;
+	}
 	public List<Player> getDamages() {
 		return damages;
 	}

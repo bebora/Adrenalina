@@ -78,4 +78,14 @@ class PlayerTest {
         assert(testPlayer.getMarks().size() == 3);
         assert(testPlayer.getMarks().contains(enemyPlayer));
     }
+
+    @Test
+    void checkMaxActions() {
+        assert(testPlayer.getMaxActions() == 3);
+        assert(enemyPlayer.getMaxActions() == 3);
+        testPlayer.notifyFrenzy(false);
+        enemyPlayer.notifyFrenzy(true);
+        assert(testPlayer.getMaxActions() == 3);
+        assert(enemyPlayer.getMaxActions() == 2);
+    }
 }
