@@ -139,7 +139,7 @@ public class CardCreator {
             }
             switch(splitLine[0].toLowerCase()){
                 case "name":
-                    if(empty == Boolean.FALSE)
+                    if(empty.equals(Boolean.FALSE))
                         effects.add(new Effect.Builder().setName(name).
                                 setDirection(direction).setDesc(desc).setAbsolutePriority(absolutePriority).
                                 setRelativePriority(relativePriority).setMoves(moves).
@@ -255,7 +255,7 @@ public class CardCreator {
             }
             switch(splitLine[0].toLowerCase()){
                 case "damage":
-                    if(empty == Boolean.FALSE){
+                    if(empty.equals(Boolean.FALSE)) {
                         damages.add(new DealDamage.Builder().setDamagesAmount(damagesAmount).
                                 setMarksAmount(marksAmount).setTarget(target).setTargeting(targeting).
                                 build());
@@ -410,7 +410,7 @@ public class CardCreator {
             splitLine = curLine.trim().split(":");
             switch(splitLine[0].toLowerCase()){
                 case "move":
-                    if(empty == Boolean.FALSE) {
+                    if(empty.equals(Boolean.FALSE)) {
                         moves.add(new Move.Builder().setTargetSource(targetSource).
                                 setObjectToMove(objectToMove).
                                 setTargetDestination(targetDestination).

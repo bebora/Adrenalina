@@ -130,7 +130,7 @@ public class Player {
 
 
 	public void convertMarks(Player player) {
-		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id != player.id).collect(Collectors.toList());
+		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id.equals(player.id)).collect(Collectors.toList());
 		for (int i = 0; i < this.marks.size() - unrelatedMarks.size() && damages.size() < 13; i++) {
 		    damages.add(player);
         }
