@@ -1,6 +1,9 @@
 package model;
 
 import model.actions.Action;
+import model.actions.Attack;
+import model.actions.Grab;
+import model.actions.Move;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,6 +21,7 @@ public class Player {
 		rewardPoints = new ArrayList<>();
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
+		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(3);
 	}
 
