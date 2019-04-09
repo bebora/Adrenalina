@@ -1,11 +1,16 @@
 package model;
 
+import model.ammos.Ammo;
+import model.ammos.AmmoCard;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.io.File;
+import java.util.stream.Collectors;
 
 
 public class BoardCreator {
@@ -17,6 +22,7 @@ public class BoardCreator {
         List<Weapon> weaponsDeck;
         List<PowerUp> powerUps;
         List<Tile> temp;
+        List <AmmoCard> ammoCards;
         try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ) {
@@ -59,14 +65,16 @@ public class BoardCreator {
         // Looping through weapons to add to weapons deck
         weaponsDeck = parseWeapon(classloader, "weapons");
         powerUps = parsePowerUps(classloader, "powerups");
-
+        ammoCards = generateAmmos();
 
 
         return new Board.Builder(skulls).
                 setDoors(doors).
                 setTiles(tiles).
                 setWeapon(weaponsDeck).
-                setPowerUps(powerUps).build();
+                setPowerUps(powerUps).
+                setAmmoCards(ammoCards).
+                build();
     }
 
     public static List parseWeapon(ClassLoader classloader, String weaponPath) {
@@ -96,5 +104,24 @@ public class BoardCreator {
             }
         }
         return powerUps;
+    }
+
+    public static List generateAmmos() {
+        List <AmmoCard> ammoCards = new ArrayList<>();
+        List <Ammo> ammosColor = new ArrayList<>(Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW));
+        // Create ammosCards according to the game mechanics
+        for (int i = 0; i < 3; i++) {
+            int finalI = i;
+            List <Ammo> otherAmmos = ammosColor.stream().
+                    filter( a -> !(a.equals(ammosColor.get(finalI)))).
+                    collect(Collectors.toList());
+            ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(0)));
+            ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(1)));
+            ammoCards.add(new AmmoCard(Ammo.POWERUP,  ammosColor.get(i), ammosColor.get(i)));
+        }
+        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.YELLOW));
+        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.BLUE));
+        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.BLUE, Ammo.YELLOW));
+        return ammoCards;
     }
 }

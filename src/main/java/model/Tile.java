@@ -1,5 +1,7 @@
 package model;
 
+import model.ammos.Ammo;
+
 import java.util.*;
 
 
@@ -78,5 +80,8 @@ public class Tile {
 		weapons.add(weapon);
 	}
 
+	public int getWeaponsNumber() {
+		return weapons.size();
+	}
 
 }

@@ -1,12 +1,17 @@
 package model;
 
+import model.ammos.*;
+
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 //TODO add 3 weapons to each spawn Tile while building
 public class Board {
 
     Random rand = new Random();
+
+
 
 	/**
 	 * List of tiles that make up the Board
@@ -26,6 +31,10 @@ public class Board {
 	 */
 	private List<Weapon> weaponsDeck;
 
+	/**
+	 * List of possible ammos to randomly appear on non-spawn Tiles
+	 */
+	private List<AmmoCard> ammoCards;
     /**
      * List of powerUps to randomly draw
      */
@@ -53,6 +62,7 @@ public class Board {
 		private int skulls;
 		private List<Weapon> weaponsDeck;
 		private List<Player> killShotTrack = new ArrayList<>();
+		private List<AmmoCard> ammoCards = new ArrayList<>();
 
         public Builder setPowerUps(List<PowerUp> powerUps) {
             this.powerUps = powerUps;
@@ -63,6 +73,11 @@ public class Board {
 
 		public Builder(int skulls) {
 			this.skulls = skulls;
+		}
+
+		public Builder setAmmoCards(List<AmmoCard> ammoCards) {
+			this.ammoCards = ammoCards;
+			return this;
 		}
 
 		public Builder setDoors(List<Door> doors) {
@@ -94,13 +109,16 @@ public class Board {
 		this.weaponsDeck = builder.weaponsDeck;
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
-
-        for (int i = 0; i < 3; i++) {
+		this.ammoCards = builder.ammoCards;
+		for (int i = 0; i < 3; i++) {
             tiles.stream().
                     flatMap(List::stream).
-                    filter(t -> t.isSpawn()).
+                    filter(Tile::isSpawn).
                     forEach(tile -> tile.addWeapon(drawWeapon()));
         }
+
+
+
 
 
 	}
@@ -221,5 +239,14 @@ public class Board {
 
 	public void updateWeapons() {
 		//TODO refill tiles with less than three weapons
+	}
+
+	public void refreshSpawnTiles() {
+		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Tile::isSpawn).collect(Collectors.toList());
+		for (Tile t : spawnTiles) {
+			int numberWeapons = t.getWeaponsNumber();
+			for (int i = 0; i < 3 - numberWeapons; i++)
+				t.addWeapon(drawWeapon());
+		}
 	}
 }
