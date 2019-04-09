@@ -31,6 +31,7 @@ class BoardCreatorTest {
         assertEquals(test.getTiles().get(0).get(1).isSpawn(), Boolean.FALSE);
 
         // Test weapons parsing in the deck
+        //TODO fix wrong weapon parsing
         assertNotNull(test.getWeaponsDeck().get(0).getName());
 
         // Test powerups parsing in the deck
