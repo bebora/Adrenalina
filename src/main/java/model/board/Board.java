@@ -1,6 +1,9 @@
-package model;
+package model.board;
 
+import model.Player;
 import model.ammos.*;
+import model.cards.PowerUp;
+import model.cards.Weapon;
 
 import java.util.*;
 import java.util.stream.Collectors;

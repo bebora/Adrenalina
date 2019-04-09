@@ -1,4 +1,4 @@
-package model;
+package model.board;
 
 /**
  * Represent the possible colors of Rooms in the Board

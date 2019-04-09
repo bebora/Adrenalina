@@ -1,4 +1,4 @@
-package model;
+package model.cards;
 
 /**
  * Represent the possible direction in which the Weapon is shooting

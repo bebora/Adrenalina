@@ -1,7 +1,10 @@
-package model;
+package model.board;
 
 import model.ammos.Ammo;
 import model.ammos.AmmoCard;
+import model.cards.CardCreator;
+import model.cards.PowerUp;
+import model.cards.Weapon;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

@@ -1,5 +1,7 @@
-package model;
+package model.cards;
 
+
+import model.ThreeState;
 
 public class DealDamage {
 

@@ -1,6 +1,7 @@
-package model;
+package model.board;
 
 import model.ammos.Ammo;
+import model.cards.Weapon;
 
 import java.util.*;
 

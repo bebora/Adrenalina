@@ -1,6 +1,8 @@
 package model;
 
 import model.ammos.Ammo;
+import model.cards.CardCreator;
+import model.cards.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,8 +37,8 @@ class PlayerTest {
 
         // Test order and correct marks selection
         assertTrue(testPlayer.getDamages().size() == 11);
-        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId() == enemyPlayer.getId()).collect(Collectors.toList()).size() == 1);
-        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId() == thirdPlayer.getId()).collect(Collectors.toList()).size() == 2);
+        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId().equals(enemyPlayer.getId())).collect(Collectors.toList()).size() == 1);
+        assertTrue(testPlayer.getMarks().stream().filter(p->p.getId().equals(thirdPlayer.getId())).collect(Collectors.toList()).size() == 2);
 
 
     }

@@ -1,6 +1,9 @@
 package model;
 
 import model.ammos.Ammo;
+import model.board.Board;
+import model.board.BoardCreator;
+import model.board.Color;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

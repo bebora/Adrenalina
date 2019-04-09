@@ -1,6 +1,10 @@
 package model;
 
 import model.ammos.Ammo;
+import model.cards.CardCreator;
+import model.cards.Moment;
+import model.cards.PowerUp;
+import model.cards.Weapon;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -13,7 +17,7 @@ class CardCreatorTest {
         // Test various elements of the parser
         assertEquals(test.getEffect().getDamages().get(0).getDamagesAmount(), 1);
         assertEquals(test.getEffect().getCost().get(0), Ammo.ANY);
-        assertEquals(test.getApplicability(),Moment.DAMAGING);
+        assertEquals(test.getApplicability(), Moment.DAMAGING);
         assertEquals(test.getName(),"mirino");
         assertEquals(test.getDiscardAward(),Ammo.RED);
     }

@@ -1,4 +1,4 @@
-package model;
+package model.board;
 
 /**
  * Represent a connection between two adjacent tile

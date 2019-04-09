@@ -1,4 +1,5 @@
-package model;
+package model.cards;
+import model.Player;
 import model.ammos.Ammo;
 
 import java.util.*;

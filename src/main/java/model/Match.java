@@ -1,5 +1,8 @@
 package model;
 
+import model.board.Board;
+import model.board.BoardCreator;
+
 import java.util.*;
 
 /**

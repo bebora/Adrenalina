@@ -5,6 +5,9 @@ import model.actions.Attack;
 import model.actions.Grab;
 import model.actions.Move;
 import model.ammos.Ammo;
+import model.board.Tile;
+import model.cards.PowerUp;
+import model.cards.Weapon;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -130,7 +133,9 @@ public class Player {
 
 
 	public void convertMarks(Player player) {
-		List<Player> unrelatedMarks = this.marks.stream().filter(m -> m.id.equals(player.id)).collect(Collectors.toList());
+		List<Player> unrelatedMarks = this.marks.stream().
+                filter(m -> !m.getId().equals(player.getId())).
+                collect(Collectors.toList());
 		for (int i = 0; i < this.marks.size() - unrelatedMarks.size() && damages.size() < 13; i++) {
 		    damages.add(player);
         }

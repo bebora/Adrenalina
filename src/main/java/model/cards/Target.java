@@ -1,6 +1,6 @@
-package model;
+package model.cards;
 
-import static model.ThreeState.OPTIONAL;
+import model.ThreeState;
 
 public class Target {
 

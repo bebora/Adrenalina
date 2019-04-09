@@ -1,6 +1,9 @@
 package model;
 import java.util.*;
 
+import model.board.Board;
+import model.board.BoardCreator;
+import model.board.Tile;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

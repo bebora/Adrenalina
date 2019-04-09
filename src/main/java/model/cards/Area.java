@@ -1,4 +1,4 @@
-package model;
+package model.cards;
 
 /**
  * Represent the different areas targeted by a Target

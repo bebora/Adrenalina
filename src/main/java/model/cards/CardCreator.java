@@ -1,5 +1,6 @@
-package model;
+package model.cards;
 
+import model.ThreeState;
 import model.ammos.Ammo;
 
 import java.io.BufferedReader;
