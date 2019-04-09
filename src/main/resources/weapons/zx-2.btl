@@ -3,7 +3,6 @@ cost:
   yellow
   red
 effects:
-  effect:
     name:modalità base
     absolutePriority:1
     desc:Dai 1 danno e 2 marchi a 1 bersaglio che puoi vedere.
@@ -16,7 +15,6 @@ effects:
         target:
           maxTargets:1
           visibility:TRUE
-  effect:
     name:modalità scanner
     absolutePriority:1
     desc:Scegli fino a 3 bersagli che puoi vedere e dai 1 marchio a ciascuno.

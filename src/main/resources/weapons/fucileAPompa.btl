@@ -3,7 +3,6 @@ cost:
   yellow
   yellow
 effects:
-  effect:
     name:modalità base
     desc:Dai 3 danni a 1 bersaglio nel quadrato in cui ti trovi. Se vuoi puoi muovere quel bersaglio di 1 quadrato.
     absolutePriority:1
@@ -24,7 +23,6 @@ effects:
           checkTargetList:TRUE
         targetDestination:
           maxDistance:1
-  effect:
     name:modalità canna lunga
     desc:Dai 2 danni a 1 bersaglio in un quadrato distante esattamente 1 movimento.
     absolutePriority:1

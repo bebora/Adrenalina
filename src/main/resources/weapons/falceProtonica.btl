@@ -2,7 +2,6 @@ name:falce protonica
 cost:
 	blue
 effects:
-	effect:
 		name:modalità base
 		absolutePriority:1
 		desc:Dai 1 danno a ogni altro giocatore presente nel quadrato in cui ti trovi.
@@ -14,7 +13,6 @@ effects:
 				target:
 					maxDistance:0
 					areaDamage:tile
-	effect:
 		name:modalità mietitore
 		absolutePriority:1
 		desc:Dai 2 danni a ogni altro giocatore presente nel quadrato in cui ti trovi.
