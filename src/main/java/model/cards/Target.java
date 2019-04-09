@@ -15,7 +15,7 @@ public class Target {
 		ThreeState checkTargetList;
 		ThreeState differentSquare;
 		ThreeState samePlayerRoom;
-		ThreeState throughWalls;
+		boolean throughWalls;
 		PointOfView pointOfView;
 		ThreeState checkBlackList;
 
@@ -64,7 +64,7 @@ public class Target {
 			return this;
 		}
 
-		public Builder setThroughWalls(ThreeState throughWalls) {
+		public Builder setThroughWalls(boolean throughWalls) {
 			this.throughWalls = throughWalls;
 			return this;
 		}
@@ -190,7 +190,7 @@ public class Target {
 	 * FALSE: 
 	 * OPTIONAL: not relevant
 	 */
-	private ThreeState throughWalls;
+	private boolean throughWalls;
 
 	/**
 	 * Point of view from where the matching targets are selected
@@ -234,7 +234,7 @@ public class Target {
 		return samePlayerRoom;
 	}
 
-	public ThreeState getThroughWalls() {
+	public boolean getThroughWalls() {
 		return throughWalls;
 	}
 

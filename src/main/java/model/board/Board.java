@@ -161,7 +161,7 @@ public class Board {
 	}
 
 	/**
-	 * Get the reachable tiles given a starting Tile
+	 * Get the reachable tiles given a starting Tile, without going through walls
 	 * @param pointOfView starting Tile
 	 * @param minDistance minimum distance that can be reached
 	 * @param maxDistance maximum distance that can be reached
@@ -187,7 +187,12 @@ public class Board {
 			reachableTiles.add(currTile);
 		}
 		if (maxDistance == -1) {
-		    return totalTiles;
+		    if (minDistance > 0) {
+				reachableTiles.removeAll(reachableTiles.get(minDistance - 1));
+				return reachableTiles.get(minDistance);
+			} else {
+				return totalTiles;
+			}
         }
 		else if (minDistance > 0)
 		    reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance-1));

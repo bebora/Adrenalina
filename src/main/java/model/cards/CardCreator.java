@@ -311,7 +311,7 @@ public class CardCreator {
         ThreeState checkTargetList = OPTIONAL;
         ThreeState differentSquare = OPTIONAL;
         ThreeState samePlayerRoom = OPTIONAL;
-        ThreeState throughWalls = OPTIONAL;
+        boolean throughWalls = true;
         PointOfView pointOfView = PointOfView.OWN;
         ThreeState checkBlackList = OPTIONAL;
 
@@ -358,7 +358,7 @@ public class CardCreator {
                     samePlayerRoom = ThreeState.valueOf(splitLine[1].toUpperCase());
                     break;
                 case "throughwalls":
-                    throughWalls = ThreeState.valueOf(splitLine[1].toUpperCase());
+                    throughWalls = Boolean.valueOf(splitLine[1].toUpperCase());
                     break;
                 case "pointofview":
                     pointOfView = PointOfView.valueOf(splitLine[1].toUpperCase());
