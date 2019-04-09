@@ -1,6 +1,8 @@
 package model;
 
 
+import model.ammos.Ammo;
+
 public class PowerUp {
 
 	/**

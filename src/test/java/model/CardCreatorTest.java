@@ -1,8 +1,7 @@
 package model;
 
-import org.junit.jupiter.api.BeforeEach;
+import model.ammos.Ammo;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
