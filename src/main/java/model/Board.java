@@ -98,7 +98,7 @@ public class Board {
         for (int i = 0; i < 3; i++) {
             tiles.stream().
                     flatMap(List::stream).
-                    filter(t -> t.isSpawn()).
+                    filter(Tile::isSpawn).
                     forEach(tile -> tile.addWeapon(drawWeapon()));
         }
 
@@ -221,5 +221,14 @@ public class Board {
 
 	public void updateWeapons() {
 		//TODO refill tiles with less than three weapons
+	}
+
+	public void refreshSpawnTiles() {
+		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Tile::isSpawn).collect(Collectors.toList());
+		for (Tile t : spawnTiles) {
+			int numberWeapons = t.getWeaponsNumber();
+			for (int i = 0; i < 3 - numberWeapons; i++)
+				t.addWeapon(drawWeapon());
+		}
 	}
 }

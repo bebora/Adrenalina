@@ -78,5 +78,7 @@ public class Tile {
 		weapons.add(weapon);
 	}
 
-
+	public int getWeaponsNumber() {
+		return weapons.size();
+	}
 }
