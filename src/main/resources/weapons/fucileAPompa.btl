@@ -1,0 +1,39 @@
+name:fucile a pompa
+cost:
+  yellow
+  yellow
+effects:
+  effect:
+    name:modalità base
+    desc:Dai 3 danni a 1 bersaglio nel quadrato in cui ti trovi. Se vuoi puoi muovere quel bersaglio di 1 quadrato.
+    absolutePriority:1
+    order:
+      DEALDAMAGE
+      MOVE
+    damages:
+      damage:
+        damagesAmount:3
+        targeting:TRUE
+        target:
+          maxTargets:1
+          maxDistance:0
+    moves:
+      move:
+        objectToMove:TARGETSOURCE
+        targetSource:
+          checkTargetList:TRUE
+        targetDestination:
+          maxDistance:1
+  effect:
+    name:modalità canna lunga
+    desc:Dai 2 danni a 1 bersaglio in un quadrato distante esattamente 1 movimento.
+    absolutePriority:1
+    order:
+      DEALDAMAGE
+    damages:
+      damage:
+        damagesAmount:2
+        target:
+            maxDistance:1
+            minDistance:1
+
