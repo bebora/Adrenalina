@@ -18,7 +18,7 @@ public class Weapon {
 		private List<Ammo> cost;
 		private List<Player> targetPlayers = new ArrayList<>();
 		private List<Player> blackListPlayers = new ArrayList<>();
-		private Boolean loaded = false;
+		private Boolean loaded = true;
 		private String name;
 
 

@@ -1,0 +1,31 @@
+name:falce protonica
+cost:
+	blue
+effects:
+	effect:
+		name:modalità base
+		absolutePriority:1
+		desc:Dai 1 danno a ogni altro giocatore presente nel quadrato in cui ti trovi.
+		order:
+			DEALDAMAGE
+		damages:
+			damage:
+				damagesAmount:1
+				target:
+					maxDistance:0
+					areaDamage:tile
+	effect:
+		name:modalità mietitore
+		absolutePriority:1
+		desc:Dai 2 danni a ogni altro giocatore presente nel quadrato in cui ti trovi.
+		order:
+			DEALDAMAGE
+		cost:
+			blue
+			red
+		damages:
+			damage:
+				damagesAmount:2
+				target:
+					maxDistance:0
+					areaDamage:tile
