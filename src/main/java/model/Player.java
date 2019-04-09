@@ -204,7 +204,8 @@ public class Player {
 	}
 
 	public void addAmmo(Ammo ammo) {
-		ammos.add(ammo);
+		if (Collections.frequency(ammos, ammo) < 3)
+			ammos.add(ammo);
 	}
 
 	public void notifyFrenzy(Boolean afterFirst){
@@ -222,7 +223,7 @@ public class Player {
 
 	public void discardPowerUp(PowerUp powerUp) {
 		powerUps.remove(powerUp);
-		ammos.add(powerUp.getDiscardAward());
+		addAmmo(powerUp.getDiscardAward());
 	}
 
 

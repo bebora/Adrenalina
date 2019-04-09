@@ -110,12 +110,13 @@ public class Board {
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
-		for (int i = 0; i < 3; i++) {
+		// draw cards when we create corresponding weapons
+		/*for (int i = 0; i < 3; i++) {
             tiles.stream().
                     flatMap(List::stream).
                     filter(Tile::isSpawn).
                     forEach(tile -> tile.addWeapon(drawWeapon()));
-        }
+        }*/
 
 
 

@@ -115,13 +115,18 @@ public class BoardCreator {
             List <Ammo> otherAmmos = ammosColor.stream().
                     filter( a -> !(a.equals(ammosColor.get(finalI)))).
                     collect(Collectors.toList());
-            ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(0)));
-            ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(1)));
-            ammoCards.add(new AmmoCard(Ammo.POWERUP,  ammosColor.get(i), ammosColor.get(i)));
+            for (int j = 0; j < 3; j++) {
+                ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(0)));
+                ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(1)));
+                if (j >= 1)
+                    ammoCards.add(new AmmoCard(Ammo.POWERUP,  ammosColor.get(i), ammosColor.get(i)));
+            }
         }
-        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.YELLOW));
-        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.BLUE));
-        ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.BLUE, Ammo.YELLOW));
+        for (int i = 0; i < 3; i++) {
+            ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.YELLOW));
+            ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.BLUE));
+            ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.BLUE, Ammo.YELLOW));
+        }
         return ammoCards;
     }
 }
