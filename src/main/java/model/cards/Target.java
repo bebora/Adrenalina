@@ -106,7 +106,10 @@ public class Target {
 	private ThreeState visibility;
 
 	/**
-	 * How many players can be selected
+	 * How many targets can be selected
+	 * -1:no limit on maximum targets
+	 * 0:every target that satisfies the condition must be selected
+	 * n:select up to n targets
 	 */
 	private int maxTargets;
 
