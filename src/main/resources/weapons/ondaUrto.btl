@@ -1,0 +1,28 @@
+name:onda d'urto
+cost:
+  yellow
+effects:
+  name:modalità base
+  desc:Scegli fino a 3 bersagli su quadrati differenti, ognuno distante esattamente 1 movimento. Dai 1 danno a ogni bersaglio.
+  absolutePriority:1
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        maxDistance:1
+        minDistance:1
+        differentSquare:TRUE
+        maxTargets:3
+  name:modalità tsunami
+  desc:Dai 1 danno a tutti i bersagli che sono distanti esattamente 1 movimento.
+  absolutePriority:1
+  cost:
+    yellow
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        minDistance:1
+        maxDistance:1
+        maxTargets:0
+        areaDamage:TILE
