@@ -1,0 +1,36 @@
+name:martello ionico
+cost:
+  yellow
+effects:
+  name:modalità base
+  desc:Dai 2 danni a 1 bersaglio nel quadrato in cui ti trovi.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:2
+      target:
+        maxDistance:0
+        maxTargets:1
+  name:modalità polverizzare
+  desc:Dai 3 danni a 1 bersaglio nel quadrato in cui ti trovi, poi muovi quel bersaglio di 0, 1 o 2 quadrati in una direzione.
+  cost:
+    red
+  order:
+    DEALDAMAGE
+    MOVE
+  damages:
+    damage:
+      damagesAmount:3
+      targeting:TRUE
+      target:
+        maxDistance:0
+  moves:
+    move:
+      objectToMove:TARGETSOURCE
+      targetDestination:
+        checkTargetList:TRUE
+        cardinal:TRUE
+        maxTargets:0
+        maxDistance:2
