@@ -7,6 +7,8 @@ effects:
   name:modalità base
   desc:Scegli una direzione cardinale e 1 bersaglio in quella direzione. Dagli 3 danni.
   absolutePriority:1
+  order:
+    DEALDAMAGE
   damages:
     damage:
       damagesAmount:3
@@ -16,6 +18,8 @@ effects:
   name:modalità perforazione
   desc:Scegli una direzione cardinale e 1 o 2 bersagli in quella direzione. Dai 2 danni a ciascuno.
   absolutePriority:1
+  order:
+    DEALDAMAGE
   damages:
     damage:
       damagesAmount:2

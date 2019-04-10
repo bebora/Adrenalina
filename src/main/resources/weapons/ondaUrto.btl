@@ -5,6 +5,8 @@ effects:
   name:modalità base
   desc:Scegli fino a 3 bersagli su quadrati differenti, ognuno distante esattamente 1 movimento. Dai 1 danno a ogni bersaglio.
   absolutePriority:1
+  order:
+    DEALDAMAGE
   damages:
     damage:
       damagesAmount:1
@@ -16,6 +18,8 @@ effects:
   name:modalità tsunami
   desc:Dai 1 danno a tutti i bersagli che sono distanti esattamente 1 movimento.
   absolutePriority:1
+  order:
+    DEALDAMAGE
   cost:
     yellow
   damages:
