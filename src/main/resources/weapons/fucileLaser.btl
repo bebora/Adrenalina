@@ -15,6 +15,7 @@ effects:
       target:
         cardinal:TRUE
         maxTargets:1
+        throughWalls:TRUE
   name:modalità perforazione
   desc:Scegli una direzione cardinale e 1 o 2 bersagli in quella direzione. Dai 2 danni a ciascuno.
   absolutePriority:1
@@ -24,5 +25,6 @@ effects:
     damage:
       damagesAmount:2
       target:
+        troughWalls:TRUE
         cardinal:TRUE
         maxTargets:2
