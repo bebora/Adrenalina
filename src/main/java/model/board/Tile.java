@@ -1,6 +1,5 @@
 package model.board;
 
-import model.ammos.Ammo;
 import model.ammos.AmmoCard;
 import model.cards.Weapon;
 
@@ -92,6 +91,15 @@ public class Tile {
 
 	public int getWeaponsNumber() {
 		return weapons.size();
+	}
+
+	public List<Weapon> getWeapons() {
+		return weapons;
+	}
+
+	public Weapon takeWeapon(Weapon weapon) {
+		weapons.remove(weapon);
+		return weapon;
 	}
 
 }

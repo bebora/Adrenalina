@@ -1,9 +1,11 @@
 package model;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import model.board.Board;
 import model.board.BoardCreator;
 import model.board.Tile;
+import model.cards.PowerUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -76,5 +78,40 @@ class BoardTest {
         // Test if all ond only the assertTiles are the reachableTiles
         assertTrue(assertTiles.containsAll(reachableTiles));
         assertTrue(assertTiles.size() == reachableTiles.size());
+    }
+
+    /**
+     * Tests the weapons refresher mechanism, as well as the UnlimitedDeck functionality
+     */
+    @Test
+    void refreshWeapons() {
+        //Tests that weapons refreshes only when needed
+        test.refreshWeapons();
+        for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList())) {
+            assertEquals(t.getWeaponsNumber(),3);
+        }
+
+        //Tests that weapons get refreshed correctly
+        test.getTile(0,2).getWeapons().remove(0);
+        test.refreshWeapons();
+        for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList())) {
+            assertEquals(t.getWeaponsNumber(),3);
+        }
+
+        //TODO add test for checking if weapons are really limited
+    }
+
+    @Test
+    void drawPowerUp() {
+        for (int i = 0; i < 100; i++) {
+            PowerUp testPowerUp = test.drawPowerUp();
+            test.discardPowerUp(testPowerUp);
+            assertNotNull(testPowerUp);
+        }
+    }
+
+    @Test
+    void refreshAmmos() {
+        //TODO check if refreshing ammos works
     }
 }

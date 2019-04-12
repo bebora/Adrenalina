@@ -112,7 +112,7 @@ public class Board {
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
 		// put weapons on spawn tiles
-		refreshSpawnTiles();
+		refreshWeapons();
 		refreshAmmos();
 	}
 
@@ -203,6 +203,9 @@ public class Board {
         return weaponsDeck.draw();
 	}
 
+    public void discardPowerUp(PowerUp powerUp) {
+	    powerUps.addToDiscard(powerUp);
+    }
 
 	public Deck<Weapon> getWeaponsDeck() {
 		return weaponsDeck;
@@ -232,11 +235,7 @@ public class Board {
 		this.killShotTrack = killShotTrack;
 	}
 
-	public void updateWeapons() {
-		//TODO refill tiles with less than three weapons
-	}
-
-	public void refreshSpawnTiles() {
+	public void refreshWeapons() {
 		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList());
 		for (Tile t : spawnTiles) {
 			int numberWeapons = t.getWeaponsNumber();
