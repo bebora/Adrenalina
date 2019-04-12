@@ -112,6 +112,18 @@ class BoardTest {
 
     @Test
     void refreshAmmos() {
-        //TODO check if refreshing ammos works
-    }
+            test.getTiles().stream().
+                    flatMap(List::stream).
+                    filter(Objects::nonNull).
+                    filter(t -> !(t.isSpawn())).
+                    forEach(Tile::grabAmmoCard);
+            test.refreshAmmos();
+            for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(t -> !(t.isSpawn())).collect(Collectors.toList())) {
+                assertNotNull(t.getAmmoCard());
+            }
+
+
+
+        }
+
 }

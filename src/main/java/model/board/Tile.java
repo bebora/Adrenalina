@@ -1,6 +1,8 @@
 package model.board;
 
+import model.ammos.Ammo;
 import model.ammos.AmmoCard;
+import model.cards.PowerUp;
 import model.cards.Weapon;
 
 import java.util.*;
@@ -97,9 +99,22 @@ public class Tile {
 		return weapons;
 	}
 
-	public Weapon takeWeapon(Weapon weapon) {
-		weapons.remove(weapon);
+	public Weapon grabWeapon(Weapon weapon) {
+		if (isSpawn())
+			weapons.remove(weapon);
+		else throw new UnsupportedOperationException();
 		return weapon;
 	}
 
+	public AmmoCard grabAmmoCard() {
+		AmmoCard grabbed;
+		if (!isSpawn()) {
+			grabbed = ammoCard;
+			ammoCard = null;
+			return grabbed;
+		}
+		else {
+			throw new UnsupportedOperationException();
+		}
+	}
 }
