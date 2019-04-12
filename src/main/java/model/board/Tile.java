@@ -81,7 +81,7 @@ public class Tile {
 		weapons.add(weapon);
 	}
 
-	public void addAmmo(AmmoCard ammo) {
+	public void addAmmo(AmmoCard ammoCard) {
 		this.ammoCard = ammoCard;
 	}
 
