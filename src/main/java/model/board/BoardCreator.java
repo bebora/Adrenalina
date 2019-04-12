@@ -22,10 +22,10 @@ public class BoardCreator {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
-        List<Weapon> weaponsDeck;
-        List<PowerUp> powerUps;
+        Deck<Weapon> weaponsDeck;
+        Deck<PowerUp> powerUps;
         List<Tile> temp;
-        List <AmmoCard> ammoCards;
+        Deck <AmmoCard> ammoCards;
         try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
              BufferedReader bufRead = new BufferedReader(input)
         ) {
@@ -80,8 +80,8 @@ public class BoardCreator {
                 build();
     }
 
-    public static List parseWeapon(ClassLoader classloader, String weaponPath) {
-        List <Weapon> weapons = new ArrayList<>();
+    public static Deck parseWeapon(ClassLoader classloader, String weaponPath) {
+        Deck<Weapon> weapons = new LimitedDeck<>();
         String nameDir = classloader.getResource(weaponPath).getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
@@ -94,8 +94,8 @@ public class BoardCreator {
         return weapons;
     }
 
-    public static List parsePowerUps(ClassLoader classloader, String powerUpsPath) {
-        List<PowerUp> powerUps = new ArrayList<>();
+    public static Deck parsePowerUps(ClassLoader classloader, String powerUpsPath) {
+        Deck<PowerUp> powerUps = new UnlimitedDeck<>();
         String nameDir = classloader.getResource(powerUpsPath).getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
@@ -109,8 +109,8 @@ public class BoardCreator {
         return powerUps;
     }
 
-    public static List generateAmmos() {
-        List <AmmoCard> ammoCards = new ArrayList<>();
+    public static Deck generateAmmos() {
+        Deck <AmmoCard> ammoCards = new UnlimitedDeck<>();
         List <Ammo> ammosColor = new ArrayList<>(Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW));
         // Create ammosCards according to the game mechanics
         for (int i = 0; i < 3; i++) {

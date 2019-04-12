@@ -12,9 +12,6 @@ import java.util.stream.Collectors;
 public class Board {
 
     Random rand = new Random();
-
-
-
 	/**
 	 * List of tiles that make up the Board
 	 */
@@ -31,16 +28,17 @@ public class Board {
 	/**
 	 * List of weapons remaining to be drawn
 	 */
-	private List<Weapon> weaponsDeck;
+	private Deck<Weapon> weaponsDeck;
+
 
 	/**
 	 * List of possible ammos to randomly appear on non-spawn Tiles
 	 */
-	private List<AmmoCard> ammoCards;
+	private Deck<AmmoCard> ammoCards;
     /**
      * List of powerUps to randomly draw
      */
-	private List<PowerUp> powerUps;
+	private Deck<PowerUp> powerUps;
 
 	/**
 	 * List of players that got a Kill and an Overkill
@@ -62,22 +60,23 @@ public class Board {
 		private List<List<Tile>> tiles;
 		private List<Door> doors;
 		private int skulls;
-		private List<Weapon> weaponsDeck;
 		private List<Player> killShotTrack = new ArrayList<>();
-		private List<AmmoCard> ammoCards = new ArrayList<>();
+		private Deck<Weapon> weaponsDeck = new LimitedDeck<>();
+		private Deck<AmmoCard> ammoCards = new UnlimitedDeck<>();
+		private Deck<PowerUp> powerUps = new UnlimitedDeck<>();
 
-        public Builder setPowerUps(List<PowerUp> powerUps) {
+
+		public Builder setPowerUps(Deck<PowerUp> powerUps) {
             this.powerUps = powerUps;
             return this;
         }
 
-        private List<PowerUp> powerUps;
 
 		public Builder(int skulls) {
 			this.skulls = skulls;
 		}
 
-		public Builder setAmmoCards(List<AmmoCard> ammoCards) {
+		public Builder setAmmoCards(Deck<AmmoCard> ammoCards) {
 			this.ammoCards = ammoCards;
 			return this;
 		}
@@ -94,7 +93,7 @@ public class Board {
 
 		}
 
-		public Builder setWeapon(List<Weapon> weaponsDeck) {
+		public Builder setWeapon(Deck<Weapon> weaponsDeck) {
 			this.weaponsDeck = weaponsDeck;
 			return this;
 		}
@@ -201,19 +200,16 @@ public class Board {
     }
 
     public PowerUp drawPowerUp() {
-		return powerUps.get(rand.nextInt(powerUps.size()));
+		return powerUps.draw();
 	}
 
 
-    public Weapon drawWeapon() {
-        int indexWeaponToPop = rand.nextInt(weaponsDeck.size());
-        Weapon weapon = weaponsDeck.get(indexWeaponToPop);
-        weaponsDeck.remove(indexWeaponToPop);
-        return weapon;
+    public Weapon drawWeapon() throws FinishedCardsException{
+        return weaponsDeck.draw();
 	}
 
 
-	public List<Weapon> getWeaponsDeck() {
+	public Deck<Weapon> getWeaponsDeck() {
 		return weaponsDeck;
 	}
 
@@ -229,7 +225,7 @@ public class Board {
 		return skulls;
 	}
 
-    public List<PowerUp> getPowerUps() {
+    public Deck<PowerUp> getPowerUps() {
         return powerUps;
     }
 
