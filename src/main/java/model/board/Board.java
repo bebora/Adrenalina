@@ -112,18 +112,14 @@ public class Board {
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
-		// draw cards when we create corresponding weapons
-		/*for (int i = 0; i < 3; i++) {
+		// put weapons on spawn tiles
+		for (int i = 0; i < 3; i++) {
             tiles.stream().
                     flatMap(List::stream).
+					filter(Objects::nonNull).
                     filter(Tile::isSpawn).
                     forEach(tile -> tile.addWeapon(drawWeapon()));
-        }*/
-
-
-
-
-
+        }
 	}
 
 	/**
@@ -210,7 +206,7 @@ public class Board {
 
 
     public Weapon drawWeapon() {
-        int indexWeaponToPop = rand.nextInt(powerUps.size());
+        int indexWeaponToPop = rand.nextInt(weaponsDeck.size());
         Weapon weapon = weaponsDeck.get(indexWeaponToPop);
         weaponsDeck.remove(indexWeaponToPop);
         return weapon;
