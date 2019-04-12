@@ -1,6 +1,7 @@
 package model.board;
 
 import model.ammos.Ammo;
+import model.ammos.AmmoCard;
 import model.cards.Weapon;
 
 import java.util.*;
@@ -17,7 +18,7 @@ public class Tile {
 		private int sPosy;
 		private Boolean sSpawn;
 		private List<Weapon> weapons = new ArrayList<>();
-		private List<Ammo> ammoCard = new ArrayList<>();
+		private AmmoCard ammoCard;
 
 		public Builder setRoom(Color room) {
 			sRoom = room;
@@ -56,7 +57,7 @@ public class Tile {
 	private Boolean spawn;
 
 	private List<Weapon> weapons;
-	private List<Ammo> ammoCard;
+	private AmmoCard ammoCard;
 	public Boolean isSpawn() {
 		return spawn;
 	}
@@ -79,6 +80,14 @@ public class Tile {
 
 	public void addWeapon(Weapon weapon) {
 		weapons.add(weapon);
+	}
+
+	public void addAmmo(AmmoCard ammo) {
+		ammoCard = ammoCard;
+	}
+
+	public AmmoCard getAmmoCard() {
+		return ammoCard;
 	}
 
 	public int getWeaponsNumber() {

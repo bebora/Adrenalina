@@ -26,7 +26,7 @@ public class Board {
 	private int skulls;
 
 	/**
-	 * List of weapons remaining to be drawn
+	 * Deck containing the remaining weapons
 	 */
 	private Deck<Weapon> weaponsDeck;
 
@@ -112,13 +112,8 @@ public class Board {
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
 		// put weapons on spawn tiles
-		for (int i = 0; i < 3; i++) {
-            tiles.stream().
-                    flatMap(List::stream).
-					filter(Objects::nonNull).
-                    filter(Tile::isSpawn).
-                    forEach(tile -> tile.addWeapon(drawWeapon()));
-        }
+		refreshSpawnTiles();
+		refreshAmmos();
 	}
 
 	/**
@@ -204,7 +199,7 @@ public class Board {
 	}
 
 
-    public Weapon drawWeapon() throws FinishedCardsException{
+    public Weapon drawWeapon(){
         return weaponsDeck.draw();
 	}
 
@@ -242,11 +237,23 @@ public class Board {
 	}
 
 	public void refreshSpawnTiles() {
-		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Tile::isSpawn).collect(Collectors.toList());
+		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList());
 		for (Tile t : spawnTiles) {
 			int numberWeapons = t.getWeaponsNumber();
 			for (int i = 0; i < 3 - numberWeapons; i++)
-				t.addWeapon(drawWeapon());
+			    t.addWeapon(drawWeapon());
 		}
 	}
+
+	public void refreshAmmos() {
+        List <Tile> emptyAmmosTiles = tiles.stream().
+                flatMap(List::stream).
+                filter(Objects::nonNull).
+                filter(t-> !(t.isSpawn())).
+                filter(t -> t.getAmmoCard() == null).collect(Collectors.toList());
+        for (Tile t : emptyAmmosTiles) {
+            t.addAmmo(ammoCards.draw());
+        }
+    }
+
 }

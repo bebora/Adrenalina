@@ -17,9 +17,9 @@ public class LimitedDeck<T> implements Deck<T> {
     }
 
     @Override
-    public T draw() throws FinishedCardsException {
-        if (remainingCards.size() == 0)
-            throw new FinishedCardsException("Finished cards");
-        else return remainingCards.poll();
+    public T draw() {
+        if (!remainingCards.isEmpty())
+            return remainingCards.poll();
+        else return null;
     }
 }
