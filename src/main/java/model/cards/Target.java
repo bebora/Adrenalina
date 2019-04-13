@@ -191,8 +191,8 @@ public class Target {
 	private ThreeState samePlayerRoom;
 
 	/**
-	 * TRUE: 
-	 * FALSE: 
+	 * TRUE: movements can be done through walls
+	 * FALSE: movements can't be done through walls
 	 */
 	private boolean throughWalls;
 
@@ -250,6 +250,12 @@ public class Target {
 		return checkBlackList;
 	}
 
+    /**
+     * Get a Predicate for visibility option regarding the target
+     * @param board the corresponding board where analyze visibility
+     * @param tile the point of view Tile
+     * @return Predicate to filter a list of Tiles
+     */
 	public Predicate<Tile> getVisibilityFilter(Board board, Tile tile) {
 		switch (visibility) {
 			case OPTIONAL: return x-> true;
@@ -259,18 +265,11 @@ public class Target {
 		}
 	}
 
-	public Predicate<Tile> getCardinalFilter(Tile tile) {
-        //TODO fix cardinal filter, adding current direction support and adding throughwalls support (optional)
-	    switch (cardinal) {
-            case OPTIONAL: return x-> true;
-            case TRUE: return t -> (t.getPosx() == tile.getPosx() ||
-                    t.getPosy() == tile.getPosy());
-            case FALSE: return t -> !(t.getPosx() == tile.getPosx() ||
-                    t.getPosy() == tile.getPosy());
-            default: throw new UnsupportedOperationException();
-        }
-    }
-
+    /**
+     * Get a Predicate for same player room option
+     * @param tile the point of view Tile
+     * @return Predicate to filter a list of Tiles
+     */
     public Predicate<Tile> getSamePlayerFilter(Tile tile) {
         switch (samePlayerRoom) {
             case OPTIONAL: return x-> true;
@@ -280,13 +279,22 @@ public class Target {
         }
     }
 
-
+    /**
+     * List of predicates to reduce in and and used to filtering the tiles
+     * Uses the following
+     * <li>visibility</li>
+	 * <li>maxDistance and minDistance</li>
+	 * <li>samePlayerRoom</li>
+	 * <li>throughWalls</li>
+     * @param board the board that is being used
+     * @param tile the point of view Tile
+     * @return List of predicates to use in stream()
+     */
 	public List<Predicate<Tile>> getFilterTiles(Board board, Tile tile) {
 		List<Predicate<Tile>> allFilters = new ArrayList<>();
 		allFilters.add(getVisibilityFilter(board, tile));
 		allFilters.add(getSamePlayerFilter(tile));
         allFilters.add(t -> board.reachable(tile,minDistance,maxDistance,throughWalls).contains(t));
-        allFilters.add(getCardinalFilter(tile));
 		return allFilters;
 	}
 }
