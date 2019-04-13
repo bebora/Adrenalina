@@ -1,6 +1,9 @@
 package model.cards;
 
 import model.ThreeState;
+import java.util.function.*;
+import model.board.*;
+import java.util.*;
 
 public class Target {
 
@@ -248,6 +251,24 @@ public class Target {
 	public ThreeState getCheckBlackList() {
 		return checkBlackList;
 	}
+
+	public Predicate<Tile> getVisibilityFilter(Board board, Tile tile) {
+		switch (visibility) {
+			case OPTIONAL: return x-> true;
+			case TRUE: return t -> board.visibleTiles(tile).contains(t);
+			case FALSE: return t -> !(board.visibleTiles(tile).contains(t));
+			default: throw new UnsupportedOperationException();
+		}
+	}
+
+
+	public List<Predicate<Tile>> getFilterTiles(Board board, Tile tile) {
+		List<Predicate<Tile>> allFilters = new ArrayList<>();
+		allFilters.add(getVisibilityFilter(board, tile));
+
+		return allFilters;
+	}
+
 
 
 

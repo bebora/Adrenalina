@@ -18,7 +18,7 @@ public class UnlimitedDeck<T> implements Deck<T>{
     }
 
     @Override
-    public void addToDiscard(T t) {
+    public void addToDiscarded(T t) {
         discardedCards.add(t);
     }
 

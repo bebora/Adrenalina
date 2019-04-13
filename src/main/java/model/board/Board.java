@@ -204,7 +204,7 @@ public class Board {
 	}
 
     public void discardPowerUp(PowerUp powerUp) {
-	    powerUps.addToDiscard(powerUp);
+	    powerUps.addToDiscarded(powerUp);
     }
 
 	public Deck<Weapon> getWeaponsDeck() {
@@ -255,7 +255,9 @@ public class Board {
         }
     }
 
-    public Tile getSpawnPointFromAmmo(Ammo ammo) {
+    public Tile getSpawningPoint(PowerUp powerUp) {
+		Ammo ammo = powerUp.getDiscardAward();
+		powerUps.addToDiscarded(powerUp);
 		return tiles.stream().
 				flatMap(List::stream).
 				filter(Objects::nonNull).

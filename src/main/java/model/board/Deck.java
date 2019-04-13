@@ -5,5 +5,5 @@ public interface Deck<T>{
 
     public void add(T t);
 
-    public void addToDiscard(T t);
+    public void addToDiscarded(T t);
 }

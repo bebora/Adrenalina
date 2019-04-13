@@ -17,7 +17,7 @@ public class Player {
 
 	public Player(boolean spawnPlayer) {
 		id = UUID.randomUUID().toString();
-		alive = ThreeState.TRUE;
+		alive = ThreeState.OPTIONAL;
 		dominationSpawn = spawnPlayer;
 		marks = new ArrayList<>();
 		damages = new ArrayList<>();

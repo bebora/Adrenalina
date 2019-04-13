@@ -9,7 +9,7 @@ public class LimitedDeck<T> implements Deck<T> {
     }
 
     @Override
-    public void addToDiscard(T t) { throw new UnsupportedOperationException();}
+    public void addToDiscarded(T t) { throw new UnsupportedOperationException();}
 
     @Override
     public void add(T t) {
