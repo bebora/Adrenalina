@@ -118,7 +118,6 @@ public class Target {
 
 	/**
 	 * Minimum distance from POV
-	 * Ignored if -1
 	 */
 	private int minDistance;
 
@@ -194,7 +193,6 @@ public class Target {
 	/**
 	 * TRUE: 
 	 * FALSE: 
-	 * OPTIONAL: not relevant
 	 */
 	private boolean throughWalls;
 
@@ -261,16 +259,34 @@ public class Target {
 		}
 	}
 
+	public Predicate<Tile> getCardinalFilter(Tile tile) {
+        //TODO fix cardinal filter, adding current direction support and adding throughwalls support (optional)
+	    switch (cardinal) {
+            case OPTIONAL: return x-> true;
+            case TRUE: return t -> (t.getPosx() == tile.getPosx() ||
+                    t.getPosy() == tile.getPosy());
+            case FALSE: return t -> !(t.getPosx() == tile.getPosx() ||
+                    t.getPosy() == tile.getPosy());
+            default: throw new UnsupportedOperationException();
+        }
+    }
+
+    public Predicate<Tile> getSamePlayerFilter(Tile tile) {
+        switch (samePlayerRoom) {
+            case OPTIONAL: return x-> true;
+            case TRUE: return t -> t.getRoom().equals(tile.getRoom());
+            case FALSE: return t -> !(t.getRoom().equals(tile.getRoom()));
+            default: throw new UnsupportedOperationException();
+        }
+    }
+
 
 	public List<Predicate<Tile>> getFilterTiles(Board board, Tile tile) {
 		List<Predicate<Tile>> allFilters = new ArrayList<>();
 		allFilters.add(getVisibilityFilter(board, tile));
-
+		allFilters.add(getSamePlayerFilter(tile));
+        allFilters.add(t -> board.reachable(tile,minDistance,maxDistance,throughWalls).contains(t));
+        allFilters.add(getCardinalFilter(tile));
 		return allFilters;
 	}
-
-
-
-
-
 }

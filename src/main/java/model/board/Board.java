@@ -128,8 +128,10 @@ public class Board {
 	 * @param tile2 second tile
 	 * @return true if the tiles are connected
 	 */
-	public boolean isLinked(Tile tile1,Tile tile2) {
-		return doors.contains(new Door(tile1,tile2)) || (tile1.getRoom() == tile2.getRoom() && Tile.cabDistance(tile1,tile2) == 1);
+	public boolean isLinked(Tile tile1,Tile tile2, boolean throughWalls) {
+		if (!throughWalls)
+			return doors.contains(new Door(tile1,tile2)) || (tile1.getRoom() == tile2.getRoom() && Tile.cabDistance(tile1,tile2) == 1);
+		else return Tile.cabDistance(tile1,tile2) == 1;
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class Board {
 	public Set<Tile> visibleTiles(Tile pointOfView) {
 		Set<Color> visibleColors = tiles.stream().
 				flatMap(List::stream).filter(Objects::nonNull).
-				filter(t -> isLinked(t, pointOfView)).
+				filter(t -> isLinked(t, pointOfView, false)).
 				map(Tile::getRoom).
 				collect(Collectors.toSet());
 		return tiles.stream().
@@ -157,7 +159,7 @@ public class Board {
 	 * @param maxDistance maximum distance that can be reached
 	 * @return set of tiles that can be reached
 	 */
-	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance) {
+	public Set<Tile> reachable(Tile pointOfView, int minDistance, int maxDistance, boolean throughWalls) {
 	    Set<Tile> totalTiles = tiles.stream().
 				flatMap(List::stream).filter(Objects::nonNull).collect(Collectors.toSet());
 		List<Set<Tile>> reachableTiles= new ArrayList<>();
@@ -169,7 +171,7 @@ public class Board {
 		for (int i = 0; i < Math.max(maxDistance,minDistance); i++) {
 			for (Tile t1 : totalTiles) {
 				for (Tile t2 : currTile)
-					if (isLinked(t1, t2))
+					if (isLinked(t1, t2, throughWalls))
 						tempTiles.add(t1);
 			}
 			currTile = new HashSet<>();

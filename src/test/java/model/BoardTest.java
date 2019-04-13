@@ -7,6 +7,7 @@ import model.board.Board;
 import model.board.BoardCreator;
 import model.board.Color;
 import model.board.Tile;
+import model.cards.CardCreator;
 import model.cards.PowerUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,18 +24,19 @@ class BoardTest {
     @Test
     void isLinked() {
         // Test bidirectionaly, given the override of equals for Door Class
-        assertEquals(test.isLinked(test.getTile(0,0), test.getTile(0,1)), true);
-        assertEquals(test.isLinked(test.getTile(0,1), test.getTile(0,0)), true);
-        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(2,1)), true);
-        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(2,1)), true);
-        assertEquals(test.isLinked(test.getTile(1,0), test.getTile(2,1)), false);
-        assertEquals(test.isLinked(test.getTile(1,0), test.getTile(1,1)), false);
+        assertEquals(test.isLinked(test.getTile(0,0), test.getTile(0,1),false), true);
+        assertEquals(test.isLinked(test.getTile(0,1), test.getTile(0,0), false), true);
+        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(2,1), false), true);
+        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(2,1), false), true);
+        assertEquals(test.isLinked(test.getTile(1,0), test.getTile(2,1), false), false);
+        assertEquals(test.isLinked(test.getTile(1,0), test.getTile(1,1), false), false);
 
 
 
         // Test same rooms and close tiles
-        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(1,2)), true);
-        assertEquals(test.isLinked(test.getTile(2,2), test.getTile(2,3)), false);
+        assertEquals(test.isLinked(test.getTile(1,1), test.getTile(1,2), false), true);
+        assertEquals(test.isLinked(test.getTile(2,2), test.getTile(2,3), false), false);
+        assertEquals(test.isLinked(test.getTile(2,2), test.getTile(2,3), true), true);
     }
 
     @Test
@@ -57,7 +59,7 @@ class BoardTest {
 
     @Test
     void reachable() {
-        Set<Tile> reachableTiles = test.reachable(test.getTile(1,1), 2, 2);
+        Set<Tile> reachableTiles = test.reachable(test.getTile(1,1), 2, 2, false);
 
         Set<Tile> assertTiles = new HashSet<>();
         assertTiles.add(test.getTile(0,2));
@@ -70,7 +72,7 @@ class BoardTest {
         assertTrue(assertTiles.size() == reachableTiles.size());
 
 
-        reachableTiles = test.reachable(test.getTile(1,1), 0, 1);
+        reachableTiles = test.reachable(test.getTile(1,1), 0, 1, false);
         assertTiles = new HashSet<>();
         assertTiles.add(test.getTile(0,1));
         assertTiles.add(test.getTile(1,2));
@@ -128,7 +130,7 @@ class BoardTest {
     @Test
     void getSpawnPointFromAmmo() {
         Ammo ammo = Ammo.RED;
-        assertEquals(test.getTile(1,0), test.getSpawnPointFromAmmo(ammo));
+        assertEquals(test.getTile(1,0), test.getSpawningPoint(CardCreator.parsePowerUp("mirino.btl", Ammo.RED)));
     //TODO insert assert for thrown exception
     }
 }
