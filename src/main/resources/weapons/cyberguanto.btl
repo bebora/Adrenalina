@@ -12,7 +12,6 @@ effects:
     moves:
       move:
         objectToMove:SELF
-        targeting:TRUE
         targetDestination:
           maxTargets:1
           maxDistance:1
@@ -22,7 +21,8 @@ effects:
         damagesAmount:1
         marksAmount:2
         target:
-          checkTargetList:TRUE
+          maxTargets:1
+          maxDistance:0
     name:modalità cento pugni
     desc:Scegli un quadrato distante esattamente 1 movimento. Muovi in quel quadrato. Puoi dare 2 danni a 1 bersaglio in quel quadrato. Se vuoi puoi muovere ancora di 1 quadrato nella stessa direzione (ma solo se è un movimento valido). Puoi dare 2 danni a un bersaglio anche in quel quadrato.
     cost:
@@ -35,13 +35,13 @@ effects:
       DEALDAMAGE
     moves:
       move:
-        objectToMove:self
+        objectToMove:SELF
         targetDestination:
           maxDistance:1
           minDistance:1
           cardinal:TRUE
       move:
-        objectToMove:self
+        objectToMove:SELF
         targetDestination:
           maxDistance:1
           minDistance:1
@@ -51,9 +51,11 @@ effects:
         damagesAmount:2
         target:
           maxDistance:0
+          minTargets:0
           maxTargets:1
       damage:
         damagesAmount:2
         target:
           maxDistance:0
+          minTargets:0
           maxTargets:1

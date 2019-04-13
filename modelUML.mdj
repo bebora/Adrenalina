@@ -3410,6 +3410,23 @@
 										},
 										{
 											"_type": "UMLAttributeView",
+											"_id": "AAAAAAFqGMP7YkDeokY=",
+											"_parent": {
+												"$ref": "AAAAAAFpykkJw1++Gbk="
+											},
+											"model": {
+												"$ref": "AAAAAAFqGMP7MUDbsd0="
+											},
+											"font": "Arial;13;0",
+											"left": 2229,
+											"top": 2413,
+											"width": 350.4287109375,
+											"height": 13,
+											"text": "-minTargets: int",
+											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLAttributeView",
 											"_id": "AAAAAAFpylLvBHwYiqo=",
 											"_parent": {
 												"$ref": "AAAAAAFpykkJw1++Gbk="
@@ -3419,7 +3436,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2413,
+											"top": 2428,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-maxTargets: int",
@@ -3436,7 +3453,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2428,
+											"top": 2443,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-minDistance: int",
@@ -3453,7 +3470,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2443,
+											"top": 2458,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-maxDistance: int",
@@ -3470,7 +3487,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2458,
+											"top": 2473,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-areaDamage: Area",
@@ -3487,7 +3504,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2473,
+											"top": 2488,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-cardinal: ThreeState",
@@ -3504,7 +3521,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2488,
+											"top": 2503,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-checkTargetList: ThreeState",
@@ -3521,7 +3538,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2503,
+											"top": 2518,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-differentSquare: ThreeState",
@@ -3538,7 +3555,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2518,
+											"top": 2533,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-samePlayerRoom: ThreeState",
@@ -3555,7 +3572,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2533,
+											"top": 2548,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-throughWalls: ThreeState",
@@ -3572,7 +3589,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2548,
+											"top": 2563,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-pointOfView: PointOfView",
@@ -3589,7 +3606,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 2229,
-											"top": 2563,
+											"top": 2578,
 											"width": 350.4287109375,
 											"height": 13,
 											"text": "-checkBlackList: ThreeState",
@@ -3600,7 +3617,7 @@
 									"left": 2224,
 									"top": 2393,
 									"width": 360.4287109375,
-									"height": 188
+									"height": 203
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -3613,7 +3630,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 2224,
-									"top": 2581,
+									"top": 2596,
 									"width": 360.4287109375,
 									"height": 10
 								},
@@ -14199,6 +14216,16 @@
 							"type": {
 								"$ref": "AAAAAAFpzkMDRijOI50="
 							}
+						},
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAFqGMP7MUDbsd0=",
+							"_parent": {
+								"$ref": "AAAAAAFpykkJwl+21V4="
+							},
+							"name": "minTargets",
+							"visibility": "private",
+							"type": "int"
 						},
 						{
 							"_type": "UMLAttribute",

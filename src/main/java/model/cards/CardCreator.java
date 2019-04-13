@@ -304,6 +304,7 @@ public class CardCreator {
         String[] splitLine;
         ThreeState visibility = OPTIONAL;
         int maxTargets = -1;
+        int minTargets = 1;
         int minDistance = 0;
         int maxDistance = -1;
         Area areaDamage = Area.SINGLE;
@@ -326,12 +327,15 @@ public class CardCreator {
                         setCardinal(cardinal).setCheckBlackList(checkBlackList).
                         setCheckTargetList(checkTargetList).setVisibility(visibility).
                         setMaxDistance(maxDistance).setMinDistance(minDistance).setMaxTargets(maxTargets).
-                        setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).setThroughWalls(throughWalls).
-                        setPointOfView(pointOfView).build();
+                        setMinTargets(minTargets).setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).
+                        setThroughWalls(throughWalls).setPointOfView(pointOfView).build();
             }
             switch(splitLine[0].toLowerCase()){
                 case "visibility":
                     visibility = ThreeState.valueOf(splitLine[1].toUpperCase());
+                    break;
+                case "mintargets":
+                    minTargets = Integer.parseInt(splitLine[1]);
                     break;
                 case "maxtargets":
                     maxTargets = Integer.parseInt(splitLine[1]);
@@ -371,9 +375,9 @@ public class CardCreator {
                     return new Target.Builder().setAreaDamage(areaDamage).
                             setCardinal(cardinal).setCheckBlackList(checkBlackList).
                             setCheckTargetList(checkTargetList).setVisibility(visibility).
-                            setMaxDistance(maxDistance).setMinDistance(minDistance).setMaxTargets(maxTargets).
-                            setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).setThroughWalls(throughWalls).
-                            setPointOfView(pointOfView).build();
+                            setMaxDistance(maxDistance).setMinDistance(minDistance).setMinTargets(minTargets).
+                            setMaxTargets(maxTargets).setDifferentSquare(differentSquare).setSamePlayerRoom(samePlayerRoom).
+                            setThroughWalls(throughWalls).setPointOfView(pointOfView).build();
 
 
             }

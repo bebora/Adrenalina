@@ -10,6 +10,7 @@ public class Target {
 
 	public static class Builder {
 		ThreeState visibility;
+		int minTargets;
 		int maxTargets;
 		int minDistance;
 		int maxDistance = -1;
@@ -24,6 +25,11 @@ public class Target {
 
 		public Builder setVisibility(ThreeState visibility) {
 			this.visibility = visibility;
+			return this;
+		}
+
+		public Builder setMinTargets(int minTargets) {
+			this.minTargets = minTargets;
 			return this;
 		}
 
@@ -90,6 +96,7 @@ public class Target {
 		this.visibility = builder.visibility;
 		this.maxDistance = builder.maxDistance;
 		this.minDistance = builder.minDistance;
+		this.minTargets = builder.minTargets;
 		this.maxTargets = builder.maxTargets;
 		this.areaDamage = builder.areaDamage;
 		this.cardinal = builder.cardinal;
@@ -107,6 +114,11 @@ public class Target {
 	 * OPTIONAL: target can be anywhere
 	 */
 	private ThreeState visibility;
+
+	/**
+	 * Minimum amount of targets to be selected if possible
+	 */
+	private int minTargets;
 
 	/**
 	 * How many targets can be selected
@@ -137,7 +149,9 @@ public class Target {
 	private Area areaDamage;
 
 	/**
-	 * TRUE: target must be in same xcord or ycord of POV
+	 * TRUE: target must be in same xcord or ycord of POV. Direction is saved
+	 *   and other moves/dealdamages in the same effect with cardinal=TRUE should use
+	 *   the same direction of the first move/dealdamage with cardinal active
 	 * FALSE: target must not be in same xcord or ycord of POV
 	 * OPTIONAL: not relevant
 	 */
@@ -204,6 +218,10 @@ public class Target {
 
 	public ThreeState getVisibility() {
 		return visibility;
+	}
+
+	public int getMinTargets() {
+		return minTargets;
 	}
 
 	public int getMaxTargets() {
