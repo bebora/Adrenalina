@@ -129,5 +129,6 @@ class BoardTest {
     void getSpawnPointFromAmmo() {
         Ammo ammo = Ammo.RED;
         assertEquals(test.getTile(1,0), test.getSpawnPointFromAmmo(ammo));
+    //TODO insert assert for thrown exception
     }
 }
