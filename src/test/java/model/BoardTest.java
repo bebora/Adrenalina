@@ -1,9 +1,11 @@
 package model;
 import java.util.*;
 import java.util.stream.Collectors;
+import model.ammos.*;
 
 import model.board.Board;
 import model.board.BoardCreator;
+import model.board.Color;
 import model.board.Tile;
 import model.cards.PowerUp;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,9 +123,11 @@ class BoardTest {
             for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(t -> !(t.isSpawn())).collect(Collectors.toList())) {
                 assertNotNull(t.getAmmoCard());
             }
+    }
 
-
-
-        }
-
+    @Test
+    void getSpawnPointFromAmmo() {
+        Ammo ammo = Ammo.RED;
+        assertEquals(test.getTile(1,0), test.getSpawnPointFromAmmo(ammo));
+    }
 }

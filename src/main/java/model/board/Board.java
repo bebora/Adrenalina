@@ -255,4 +255,12 @@ public class Board {
         }
     }
 
+    public Tile getSpawnPointFromAmmo(Ammo ammo) {
+		return tiles.stream().
+				flatMap(List::stream).
+				filter(Objects::nonNull).
+				filter(Tile::isSpawn).
+				filter(t->t.getRoom() == Color.valueOf(ammo.toString())).
+				findFirst().orElse(null);
+	}
 }
