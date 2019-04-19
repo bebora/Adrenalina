@@ -7,7 +7,6 @@ import java.util.*;
 
 public class Target {
 
-
 	public static class Builder {
 		ThreeState visibility;
 		int minTargets;

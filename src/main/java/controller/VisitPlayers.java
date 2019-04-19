@@ -1,13 +1,17 @@
 package controller;
 
 import controller.events.*;
+import model.actions.Action;
+
+import java.util.List;
 
 public class VisitPlayers implements Visitor{
     @Override
-    public void visit(SelectPlayers event) {
+    public List<String> visit(SelectPlayers event) {
         //TODO DO corresponding action in controller related to the players
+        return null;
     }
-    public void visit(SelectAction event) {
-        //TODO DO select action and set the player to do the first sub-action of the action
+    public List<Action> visit(SelectAction event) {
+        throw new IncorrectEvent();
     }
 }
