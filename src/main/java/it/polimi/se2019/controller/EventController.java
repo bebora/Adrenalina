@@ -1,13 +1,13 @@
 package it.polimi.se2019.controller;
 
 public class EventController {
-    private Visitor curVisitor = null;
+    private EventVisitor curVisitor = null;
 
-    public void setCurVisitor(Visitor visitor){
+    public void setCurVisitor(EventVisitor visitor){
         curVisitor=visitor;
     }
 
-    public Visitor getCurVisitor(){
+    public EventVisitor getCurVisitor(){
         return curVisitor;
     }
 }

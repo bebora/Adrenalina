@@ -1,6 +1,6 @@
 package it.polimi.se2019.controller;
 
 
-public interface Visitable {
+public interface EventVisitable {
     void accept(EventVisitor visitor);
 }
