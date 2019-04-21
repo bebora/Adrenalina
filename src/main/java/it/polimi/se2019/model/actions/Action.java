@@ -16,7 +16,15 @@ public abstract class Action {
 	 */
 	protected List<SubAction> subActions;
 
+	/**
+	 * Update action properties based on damage
+	 * @param damage
+	 */
 	public void updateOnHealth(int damage){}
 
+	/**
+	 * Update action properties when entering frenzy mode
+	 * @param afterFirst
+	 */
 	public void updateOnFrenzy(Boolean afterFirst){}
 }

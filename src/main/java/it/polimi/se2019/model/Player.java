@@ -30,7 +30,7 @@ public class Player {
 	}
 
 	/**
-	 * Max number of actions
+	 * Max number of actions that the player can use in its turn
 	 */
 	private int maxActions;
 	/**
@@ -213,14 +213,26 @@ public class Player {
 			ammos.add(ammo);
 	}
 
+	/**
+	 * Update available actions when entering frenzy mode
+	 * @param afterFirst
+	 */
 	public void notifyFrenzy(Boolean afterFirst){
-		for(Action a: actions)
-			a.updateOnFrenzy(afterFirst);
 		if (afterFirst) {
+			this.setMaxActions(1);
+			//Remove one of the actions as by rules
+			actions.remove(0);
+		}
+		else {
 			this.setMaxActions(2);
 		}
+		for(Action a: actions)
+			a.updateOnFrenzy(afterFirst);
 	}
 
+	/**
+	 * Update available actions based on current health
+	 */
 	public void notifyHealthChange(){
 		for(Action a: actions)
 			a.updateOnHealth(damages.size());
