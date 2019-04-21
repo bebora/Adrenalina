@@ -30,7 +30,7 @@ public class Player {
 	}
 
 	/**
-	 * Max number of actions
+	 * Max number of actions that the player can use in its turn
 	 */
 	private int maxActions;
 	/**

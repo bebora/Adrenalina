@@ -87,7 +87,7 @@ class PlayerTest {
         assert(enemyPlayer.getMaxActions() == 3);
         testPlayer.notifyFrenzy(false);
         enemyPlayer.notifyFrenzy(true);
-        assert(testPlayer.getMaxActions() == 3);
-        assert(enemyPlayer.getMaxActions() == 2);
+        assert(testPlayer.getMaxActions() == 2);
+        assert(enemyPlayer.getMaxActions() == 1);
     }
 }
