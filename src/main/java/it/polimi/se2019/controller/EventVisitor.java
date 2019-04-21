@@ -6,7 +6,7 @@ import it.polimi.se2019.model.actions.Action;
 
 import java.util.List;
 
-public interface Visitor {
+public interface EventVisitor {
     List<String> visit(SelectPlayers event);
     List<Action> visit(SelectAction event);
 }
