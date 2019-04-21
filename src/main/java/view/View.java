@@ -1,7 +1,7 @@
 package view;
 import java.util.*;
 
-public class View {
+public abstract class View {
 
 	private ViewBoard board;
 
