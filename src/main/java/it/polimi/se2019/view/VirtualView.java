@@ -9,14 +9,21 @@ public class VirtualView extends View  {
      * Debug view used to test events without the server
      */
     private View debugView = null;
+    private final String username;
+    private final String encodedPassword;
 
-    public VirtualView (ServerInterface virtualClient) {
+    public VirtualView (ServerInterface virtualClient, String username, String encodedPassword) {
+        this.username = username;
+        this.encodedPassword = encodedPassword;
         this.virtualClient = virtualClient;
     }
 
-    public VirtualView (View debugView) {
+    public VirtualView (View debugView, String username, String encodedPassword) {
+        this.username = username;
+        this.encodedPassword = encodedPassword;
         this.debugView = debugView;
     }
+
     //TODO Observer class, the controller update the model, the model update the VirtualView passing a message with info on update needed, and the virtualview using the server interface updates the corresponding views
 
     /**

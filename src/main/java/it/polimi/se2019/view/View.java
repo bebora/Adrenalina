@@ -4,7 +4,7 @@ import it.polimi.se2019.model.UpdateMessage.Update;
 import java.util.*;
 
 public abstract class View {
-
+	private String username;
 	private ViewBoard board;
 
 	private List<ViewPlayer> players;
