@@ -7,6 +7,6 @@ import it.polimi.se2019.model.actions.Action;
 import java.util.List;
 
 public interface EventVisitor {
-    List<String> visit(SelectPlayers event);
-    List<Action> visit(SelectAction event);
+    public abstract void visit(SelectPlayers event);
+    public abstract List<Action> visit(SelectAction event);
 }

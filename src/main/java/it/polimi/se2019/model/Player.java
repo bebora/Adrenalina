@@ -8,6 +8,7 @@ import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +29,20 @@ public class Player {
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(3);
 	}
+
+	public VirtualView getVirtualView() {
+		return virtualView;
+	}
+
+	public Player setVirtualView(VirtualView virtualView) {
+		this.virtualView = virtualView;
+		return this;
+	}
+
+	/**
+	 * Virtual View of the player
+	 */
+	private VirtualView virtualView;
 
 	/**
 	 * Max number of actions that the player can use in its turn

@@ -1,17 +1,23 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.*;
 import it.polimi.se2019.model.actions.Action;
 
 import java.util.List;
 
 public class VisitPlayers implements EventVisitor {
+    Observer currentObserver;
     @Override
-    public List<String> visit(SelectPlayers event) {
-        //TODO DO corresponding action in it.polimi.se2019.controller related to the players
-        return null;
+    public void visit(SelectPlayers event) {
+        EventVisitable currentEvent = event;
+        currentObserver.update(event);
     }
     public List<Action> visit(SelectAction event) {
         throw new IncorrectEvent();
+    }
+
+    public VisitPlayers(Observer currentObserver) {
+        this.currentObserver = currentObserver;
     }
 }
