@@ -78,4 +78,6 @@ public class Match {
 				p.notifyFrenzy(true);
 		}
 	}
+
+	public List<Player> getPlayers(){ return players;}
 }

@@ -210,7 +210,11 @@ public class Effect {
 		this.absolutePriority = absolutePriority;
 	}
 
+	public int getAbsolutePriority(){ return absolutePriority; }
+
 	public void setRelativePriority(List<Integer> relativePriority) {
 		this.relativePriority = relativePriority;
 	}
+
+	public List<Integer> getRelativePriority(){ return this.relativePriority;}
 }
