@@ -80,4 +80,5 @@ public class Match {
 	}
 
 	public List<Player> getPlayers(){ return players;}
+	public int getCurrentPlayer(){return currentPlayer;}
 }
