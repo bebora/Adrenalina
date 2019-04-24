@@ -1,5 +1,5 @@
 package it.polimi.se2019.view;
-import it.polimi.se2019.model.UpdateMessage.Update;
+import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
 
 import java.util.*;
 
@@ -17,7 +17,9 @@ public abstract class View {
 
 	private List<String> loadedWeapons;
 
-	public void update(Update u) {
-		//TODO implements the update parsing (command pattern)
+	private UpdateVisitor visitor;
+
+	public void update(UpdateVisitable u) {
+		//TODO implements the update parsing (visitor pattern)
 	}
 }

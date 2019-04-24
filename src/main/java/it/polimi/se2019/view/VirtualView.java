@@ -1,6 +1,6 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.UpdateMessage.Update;
+import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
 import it.polimi.se2019.network.ServerInterface;
 
 public class VirtualView extends View  {
@@ -30,7 +30,7 @@ public class VirtualView extends View  {
      * //TODO used by model to update, passing updates to do to the virtualview
      * @param u
      */
-    public void update(Update u) {
+    public void update(UpdateVisitable u) {
         if (virtualClient != null) {
             virtualClient.update(u);
         }

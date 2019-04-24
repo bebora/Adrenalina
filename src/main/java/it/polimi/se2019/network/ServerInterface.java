@@ -1,6 +1,6 @@
 package it.polimi.se2019.network;
 
-import it.polimi.se2019.model.UpdateMessage.Update;
+import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
 
 public interface ServerInterface {
     //TODO used from the it.polimi.se2019.controller for possible choices and type of choice, needs to create different messages accordingly
@@ -9,8 +9,8 @@ public interface ServerInterface {
 
 
     /**
-     * Updates the client related to the interface with an Update type message
+     * Updates the client related to the interface with an UpdateVisitable type message
      * @param u
      */
-    void update(Update u);
+    void update(UpdateVisitable u);
 }
