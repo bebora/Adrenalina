@@ -36,5 +36,15 @@ public class ViewPlayer {
 
 	private int maxActions;
 
+	public String getId() {
+		return id;
+	}
 
+	public void setAmmos(List<String> ammos) {
+		this.ammos = ammos;
+	}
+
+	public ViewTile getTile() {
+		return tile;
+	}
 }

@@ -18,4 +18,12 @@ public class AmmosTakenUpdate {
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
     }
+
+    public String getPlayer() {
+        return player;
+    }
+
+    public List<String> getNewAmmos() {
+        return newAmmos;
+    }
 }

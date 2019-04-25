@@ -22,4 +22,24 @@ public abstract class View {
 	public void update(UpdateVisitable u) {
 		//TODO implements the update parsing (visitor pattern)
 	}
+
+	public List<ViewPlayer> getPlayers() {
+		return players;
+	}
+
+	public int getPoints() {
+		return points;
+	}
+
+	public List<String> getPowerUps() {
+		return powerUps;
+	}
+
+	public List<String> getLoadedWeapons() {
+		return loadedWeapons;
+	}
+
+	public ViewBoard getBoard() {
+		return board;
+	}
 }

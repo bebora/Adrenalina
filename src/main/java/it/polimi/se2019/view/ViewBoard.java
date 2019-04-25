@@ -14,5 +14,7 @@ public class ViewBoard {
 
 	private int skulls;
 
-
+	public List<List<ViewTile>> getTiles() {
+		return tiles;
+	}
 }
