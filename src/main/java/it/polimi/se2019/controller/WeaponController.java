@@ -48,13 +48,15 @@ public class WeaponController extends Thread {
 
         Stream<String> checkRelativeBefore = possiblyUsableEffects
                 .filter(effect -> effect.getAbsolutePriority() == 0)
-                .filter(effect -> effect.getRelativePriority().stream().filter(i -> i<0).anyMatch(i->notUsedIndexes.contains(-i)))
+                .filter(effect -> effect.getRelativePriority().stream().filter(i -> i<0).anyMatch(i->notUsedIndexes.contains(-i-1)))
                 .map(Effect::getName);
 
         Stream<String> checkRelative = Stream.concat(checkRelativeAfter,checkRelativeBefore).distinct();
 
         return Stream.concat(checkAbsolute,checkRelative).collect(Collectors.toList());
     }
+
+
     void update(EventWrapper e) {
         //TODO will update when the data will be avaiable, notifying the process that is waiting
     }
