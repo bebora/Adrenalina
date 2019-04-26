@@ -1,4 +1,4 @@
-package it.polimi.se2019.model.UpdateMessage;
+package it.polimi.se2019.model.updatemessage;
 
 import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.ViewAction;

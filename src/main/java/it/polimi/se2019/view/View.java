@@ -1,5 +1,5 @@
 package it.polimi.se2019.view;
-import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 
 import java.util.*;
 

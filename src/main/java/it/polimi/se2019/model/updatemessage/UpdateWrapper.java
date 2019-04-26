@@ -1,4 +1,4 @@
-package it.polimi.se2019.model.UpdateMessage;
+package it.polimi.se2019.model.updatemessage;
 
 public class UpdateWrapper {
     //TODO wraps the object responsible for the updates needed to the views, created by the model, updates VirtualView through Observer

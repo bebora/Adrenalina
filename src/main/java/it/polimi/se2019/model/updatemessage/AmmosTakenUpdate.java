@@ -1,4 +1,4 @@
-package it.polimi.se2019.model.UpdateMessage;
+package it.polimi.se2019.model.updatemessage;
 
 import java.util.List;
 import it.polimi.se2019.view.UpdateVisitor;
@@ -12,9 +12,9 @@ public class AmmosTakenUpdate {
      */
     private String player;
     /**
-     * List of the ammos in the new card that replaces the one just taken
+     * List of the ammos the player has after taking the ones on the tile where it stands
      */
-    private List<String> newAmmos;
+    private List<String> playerAmmos;
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
     }
@@ -23,7 +23,7 @@ public class AmmosTakenUpdate {
         return player;
     }
 
-    public List<String> getNewAmmos() {
-        return newAmmos;
+    public List<String> getPlayerAmmos() {
+        return playerAmmos;
     }
 }
