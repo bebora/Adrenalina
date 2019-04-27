@@ -46,4 +46,6 @@ public abstract class View {
 	public String getUsername() {
 		return username;
 	}
+
+
 }

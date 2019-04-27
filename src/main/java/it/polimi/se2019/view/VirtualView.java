@@ -38,4 +38,8 @@ public class VirtualView extends View  {
             debugView.update(u);
         }
     }
+
+    public String getUsername() {
+        return username;
+    }
 }

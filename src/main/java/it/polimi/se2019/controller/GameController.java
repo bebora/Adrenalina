@@ -12,4 +12,10 @@ public class GameController extends Thread {
 
     public void playTurn() {
     }
+
+    public Match getMatch() {
+        return match;
+    }
+
+
 }
