@@ -42,7 +42,7 @@ public class TileUpdate {
     }
 
     /**
-     * Constructor
+     * Constructor from Tile, which should have been updated already
      * @param tile
      */
     public TileUpdate(Tile tile) {

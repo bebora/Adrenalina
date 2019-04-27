@@ -21,7 +21,7 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
      */
     @Override
     public void visit(AmmosTakenUpdate update) {
-        ViewPlayer player = helper.getPlayerFromId(update.getPlayer());
+        ViewPlayer player = helper.getPlayerFromId(update.getPlayerId());
         player.setAmmos(update.getPlayerAmmos());
     }
 
@@ -52,12 +52,18 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
      */
     @Override
     public void visit(AvailableActionsUpdate update) {
-        ViewPlayer player = helper.getPlayerFromId(update.getPlayer());
+        ViewPlayer player = helper.getPlayerFromId(update.getPlayerId());
         player.setActions(update.getActions());
     }
+
+    /**
+     * Move player by changing its tile
+     * @param update
+     */
     @Override
     public void visit(MovePlayerUpdate update) {
-        throw new UnsupportedOperationException();
+        ViewPlayer player = helper.getPlayerFromId(update.getPlayerId());
+        player.setTile(helper.getTileFromCoords(update.getPosx(), update.getPosy()));
     }
 
     /**
@@ -71,9 +77,26 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         tile.setWeapons(update.getWeapons());
     }
 
+    /**
+     * Remove weapon from tile and add it to the loaded player weapons.
+     * Throws exception if applying update would go against weapon number limit
+     * @param update
+     */
     @Override
     public void visit(WeaponTakenUpdate update) {
-        throw new UnsupportedOperationException();
+        //TODO tell clients that a player has taken the weapon
+        ViewTile tile = helper.getTileFromCoords(update.getPosx(), update.getPosy());
+        ViewPlayer player = helper.getPlayerFromId(update.getPlayerId());
+        if (!tile.getWeapons().contains(update.getTakenWeapon()))
+            throw new InvalidUpdateException("Taken weapon does not exist in selected tile");
+        tile.getWeapons().remove(update.getTakenWeapon());
+        if (view.getUsername().equals(update.getPlayerId())) {
+            if (update.getDiscardedWeapon() != null)
+                view.getLoadedWeapons().remove(update.getDiscardedWeapon());
+            view.getLoadedWeapons().add(update.getTakenWeapon());
+            if (view.getLoadedWeapons().size() + player.getUnloadedWeapons().size() > 3)
+                throw new InvalidUpdateException("Player would have too many weapons");
+        }
     }
 
 }

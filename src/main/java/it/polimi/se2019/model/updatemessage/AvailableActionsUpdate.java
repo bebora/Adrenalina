@@ -21,7 +21,7 @@ public class AvailableActionsUpdate implements UpdateVisitable {
     /**
      * Player whose actions have been updated
      */
-    private String player;
+    private String playerId;
 
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
@@ -31,8 +31,8 @@ public class AvailableActionsUpdate implements UpdateVisitable {
         return actions;
     }
 
-    public String getPlayer() {
-        return player;
+    public String getPlayerId() {
+        return playerId;
     }
 
     /**
@@ -50,6 +50,6 @@ public class AvailableActionsUpdate implements UpdateVisitable {
                     subActions.contains(SubAction.GRAB),
                     subActions.contains(SubAction.SHOOT)));
         }
-        this.player = player.getId();
+        this.playerId = player.getId();
     }
 }

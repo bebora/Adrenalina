@@ -221,7 +221,15 @@ public class Player {
         return id;
     }
 
-    public void receiveMark(Player shooter){
+	public Tile getTile() {
+		return tile;
+	}
+
+	public List<Ammo> getAmmos() {
+		return ammos;
+	}
+
+	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);
 		if(counter<3)
 			marks.add(shooter);

@@ -42,4 +42,8 @@ public abstract class View {
 	public ViewBoard getBoard() {
 		return board;
 	}
+
+	public String getUsername() {
+		return username;
+	}
 }
