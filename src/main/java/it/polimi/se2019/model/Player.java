@@ -130,6 +130,7 @@ public class Player {
 	 */
 	private ArrayList<PowerUp> powerUps;
 
+
 	/**
 	 * Virtual position of the player, used to make some effects possible
 	 */
@@ -249,6 +250,8 @@ public class Player {
 	public List<Ammo> getAmmos() {
 		return ammos;
 	}
+
+	public Tile getPerspective() { return perspective; }
 
 	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);

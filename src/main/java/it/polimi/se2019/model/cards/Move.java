@@ -93,4 +93,6 @@ public class Move {
 	public void setObjectToMove(ObjectToMove objectToMove) {
 		this.objectToMove = objectToMove;
 	}
+
+	public ObjectToMove getObjectToMove(){ return this.objectToMove; }
 }
