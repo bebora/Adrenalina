@@ -21,7 +21,7 @@ public class ConcreteUpdateVisitorHelper {
         return view.getPlayers().stream().
             filter(m -> m.getId().equals(id)).
             findAny().
-            orElseThrow(()-> new RuntimeException("Invalid update"));
+            orElseThrow(()-> new InvalidUpdateException("Player with given id does not exist"));
     }
 
     /**
@@ -35,6 +35,6 @@ public class ConcreteUpdateVisitorHelper {
             flatMap(List::stream).
             filter(m -> m.getPosx() == posx && m.getPosy() == posy).
             findAny().
-            orElseThrow(()-> new RuntimeException("Invalid update"));
+            orElseThrow(()-> new InvalidUpdateException("Tile with given coords does not exist"));
     }
 }

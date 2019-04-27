@@ -174,6 +174,10 @@ public class Player {
 		this.actions = actions;
 	}
 
+	public List<Action> getActions() {
+		return actions;
+	}
+
 	public void addWeapon(Weapon weapon) {
 		weapons.add(weapon);
 	}

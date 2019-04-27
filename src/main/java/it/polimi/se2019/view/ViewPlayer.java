@@ -47,4 +47,16 @@ public class ViewPlayer {
 	public ViewTile getTile() {
 		return tile;
 	}
+
+	public List<ViewPlayer> getMarks() {
+		return marks;
+	}
+
+	public List<ViewPlayer> getDamages() {
+		return damages;
+	}
+
+	public void setActions(List<ViewAction> actions) {
+		this.actions = actions;
+	}
 }
