@@ -47,4 +47,24 @@ public class ViewPlayer {
 	public ViewTile getTile() {
 		return tile;
 	}
+
+	public void setTile(ViewTile tile) {
+		this.tile = tile;
+	}
+
+	public List<ViewPlayer> getMarks() {
+		return marks;
+	}
+
+	public List<ViewPlayer> getDamages() {
+		return damages;
+	}
+
+	public void setActions(List<ViewAction> actions) {
+		this.actions = actions;
+	}
+
+	public List<String> getUnloadedWeapons() {
+		return unloadedWeapons;
+	}
 }

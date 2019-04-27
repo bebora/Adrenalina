@@ -1,5 +1,6 @@
-package it.polimi.se2019.model.UpdateMessage;
+package it.polimi.se2019.model.updatemessage;
 
+import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.UpdateVisitor;
 
 /**
@@ -28,5 +29,12 @@ public class AttackPlayerUpdate implements UpdateVisitable {
 
     public int getMarksAmount() {
         return marksAmount;
+    }
+
+    public AttackPlayerUpdate(Player attacker, Player receiver, int damageAmount, int marksAmount){
+        this.attackerId = attacker.getId();
+        this.receiverId = receiver.getId();
+        this.damageAmount = damageAmount;
+        this.marksAmount = marksAmount;
     }
 }

@@ -1,6 +1,6 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 
 public class ClientView extends View {
     private UpdateVisitor visitor = new ConcreteUpdateVisitor(this);

@@ -16,6 +16,14 @@ public abstract class Action {
 	 */
 	protected List<SubAction> subActions;
 
+	public int getMovements() {
+		return movements;
+	}
+
+	public List<SubAction> getSubActions() {
+		return subActions;
+	}
+
 	/**
 	 * Update action properties based on damage
 	 * @param damage

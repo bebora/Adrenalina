@@ -60,6 +60,10 @@ public class Match {
 	 */
 	private Mode mode;
 
+
+	public void addPlayer(Player player) {
+		players.add(player);
+	}
 	public void startFrenzy() {
 		Boolean afterFirst;
 		if (firstPlayer < currentPlayer) {

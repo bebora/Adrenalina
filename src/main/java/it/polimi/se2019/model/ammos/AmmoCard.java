@@ -7,4 +7,8 @@ public class AmmoCard {
     public AmmoCard(Ammo a, Ammo b, Ammo c) {
         ammos = new ArrayList<>(Arrays.asList(a,b,c));
     }
+
+    public List<Ammo> getAmmos() {
+        return ammos;
+    }
 }

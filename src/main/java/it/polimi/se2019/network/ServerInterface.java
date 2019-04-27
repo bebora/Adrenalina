@@ -1,6 +1,6 @@
 package it.polimi.se2019.network;
 
-import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 
 public interface ServerInterface {
     //TODO used from the it.polimi.se2019.controller for possible choices and type of choice, needs to create different messages accordingly

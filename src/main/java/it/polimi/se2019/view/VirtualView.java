@@ -1,6 +1,6 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.network.ServerInterface;
 
 public class VirtualView extends View  {
@@ -37,5 +37,9 @@ public class VirtualView extends View  {
         else if (debugView != null) {
             debugView.update(u);
         }
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

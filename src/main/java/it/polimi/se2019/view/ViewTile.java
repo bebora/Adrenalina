@@ -21,7 +21,16 @@ public class ViewTile {
         return ammos;
     }
 
+    public List<String> getWeapons() {
+        return weapons;
+    }
+
+    public void setWeapons(List<String> weapons) {
+        this.weapons = weapons;
+    }
+
     public void setAmmos(List<String> ammos) {
         this.ammos = ammos;
     }
+
 }

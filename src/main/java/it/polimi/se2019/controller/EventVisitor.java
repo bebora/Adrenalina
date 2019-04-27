@@ -4,9 +4,8 @@ import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.SelectAction;
 import it.polimi.se2019.controller.events.SelectPlayers;
-import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.view.VirtualView;
 
-import java.util.List;
 
 public class EventVisitor {
     Observer currentObserver;

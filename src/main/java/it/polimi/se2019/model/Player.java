@@ -8,6 +8,7 @@ import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
@@ -16,7 +17,8 @@ import java.util.stream.Collectors;
 
 public class Player {
 
-	public Player(boolean spawnPlayer) {
+	public Player(boolean spawnPlayer, String username) {
+		this.username = username;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
 		dominationSpawn = spawnPlayer;
@@ -30,19 +32,32 @@ public class Player {
 		this.setMaxActions(3);
 	}
 
-	public VirtualView getVirtualView() {
+	public String getUsername() {
+		return username;
+	}
+
+	public View getVirtualView() {
 		return virtualView;
 	}
 
-	public Player setVirtualView(VirtualView virtualView) {
+	public Player setOnline(Boolean online) {
+		this.online = online;
+		return this;
+	}
+
+	public Player setVirtualView(View virtualView) {
 		this.virtualView = virtualView;
 		return this;
 	}
 
+	String username;
+
 	/**
 	 * Virtual View of the player
 	 */
-	private VirtualView virtualView;
+	private View virtualView;
+
+	private Boolean online;
 
 	/**
 	 * Max number of actions that the player can use in its turn
@@ -130,6 +145,8 @@ public class Player {
 	 */
 	private int trackSkulls;
 
+
+
 	public void setMaxActions(int maxActions) {
 		this.maxActions = maxActions;
 	}
@@ -172,6 +189,10 @@ public class Player {
 
 	public void setActions(List<Action> actions) {
 		this.actions = actions;
+	}
+
+	public List<Action> getActions() {
+		return actions;
 	}
 
 	public void addWeapon(Weapon weapon) {
@@ -217,7 +238,15 @@ public class Player {
         return id;
     }
 
-    public void receiveMark(Player shooter){
+	public Tile getTile() {
+		return tile;
+	}
+
+	public List<Ammo> getAmmos() {
+		return ammos;
+	}
+
+	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);
 		if(counter<3)
 			marks.add(shooter);

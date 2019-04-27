@@ -1,5 +1,5 @@
 package it.polimi.se2019.view;
-import it.polimi.se2019.model.UpdateMessage.UpdateVisitable;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 
 import java.util.*;
 
@@ -42,4 +42,10 @@ public abstract class View {
 	public ViewBoard getBoard() {
 		return board;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+
 }
