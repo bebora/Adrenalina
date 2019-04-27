@@ -10,13 +10,10 @@ import java.util.*;
  */
 public class Match {
 
-	public Match(String boardFilename, int numPlayer, Mode mode, int numSkulls) {
+	public Match(String boardFilename, Mode mode, int numSkulls) {
 		board = BoardCreator.parseBoard(boardFilename, numSkulls);
-		for (int i = 0; i < numPlayer; i++)
-			players.add(new Player(false));
+		players = new ArrayList<>();
 		this.mode = mode;
-		Random r = new Random();
-		firstPlayer = r.ints(0, numPlayer).findFirst().getAsInt();
 		finalFrenzy = false;
 		currentPlayer = firstPlayer;
 		turnEnd = false;

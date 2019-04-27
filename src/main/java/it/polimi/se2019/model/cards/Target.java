@@ -1,5 +1,6 @@
 package it.polimi.se2019.model.cards;
 
+import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import java.util.function.*;
 import it.polimi.se2019.model.board.*;
@@ -287,7 +288,7 @@ public class Target {
      * @param tile the point of it.polimi.se2019.view Tile
      * @return Predicate to filter a list of Tiles
      */
-    public Predicate<Tile> getSamePlayerFilter(Tile tile) {
+    public Predicate<Tile> getSamePlayerRoomFilter(Tile tile) {
         switch (samePlayerRoom) {
             case OPTIONAL: return x-> true;
             case TRUE: return t -> t.getRoom().equals(tile.getRoom());
@@ -295,6 +296,25 @@ public class Target {
             default: throw new UnsupportedOperationException();
         }
     }
+
+	/**
+	 * Get a Predicate for given direction
+	 * @param tile the point of it.polimi.se2019.view Tile
+	 * @return Predicate to filter a list of Tiles
+	 */
+    public Predicate<Tile> getSameDirectionTile(Tile tile, Direction direction) {
+    	switch(direction) {
+			case EAST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() >= tile.getPosx());
+			case WEST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() <= tile.getPosx());
+			case NORTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() >= tile.getPosy());
+			case SOUTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() <= tile.getPosy());
+			default: throw new UnsupportedOperationException();
+		}
+	}
+
+	public Predicate<Tile> getDistanceFilter(Board board, Tile tile) {
+    	return t -> board.reachable(tile,minDistance,maxDistance,throughWalls).contains(t);
+	}
 
     /**
      * List of predicates to reduce in and and used to filtering the tiles
@@ -307,11 +327,36 @@ public class Target {
      * @param tile the point of it.polimi.se2019.view Tile
      * @return List of predicates to use in stream()
      */
-	public List<Predicate<Tile>> getFilterTiles(Board board, Tile tile) {
+	public Predicate<Tile> getFilterTiles(Board board, Tile tile) {
 		List<Predicate<Tile>> allFilters = new ArrayList<>();
 		allFilters.add(getVisibilityFilter(board, tile));
-		allFilters.add(getSamePlayerFilter(tile));
-        allFilters.add(t -> board.reachable(tile,minDistance,maxDistance,throughWalls).contains(t));
-		return allFilters;
+		allFilters.add(getSamePlayerRoomFilter(tile));
+
+		return getVisibilityFilter(board,tile).and(getSamePlayerRoomFilter(tile)).and(getDistanceFilter(board,tile));
 	}
+
+
+	public Predicate<Player> getPlayerListFilter(Player player, List<Player> targetList, List<Player> blackList) {
+		Predicate<Player> optionalTarget =
+				p -> checkTargetList == ThreeState.OPTIONAL;
+		Predicate<Player> trueTarget =
+				p -> checkTargetList == ThreeState.TRUE &&
+						targetList.contains(p);
+		Predicate<Player> falseTarget =
+				p -> checkTargetList == ThreeState.FALSE &&
+						!targetList.contains(p);
+
+		Predicate<Player> optionalBlack =
+				p -> checkBlackList == ThreeState.OPTIONAL;
+		Predicate<Player> trueBlack =
+				p -> checkBlackList == ThreeState.TRUE &&
+						blackList.contains(p);
+		Predicate<Player> falseBlack =
+				p -> checkBlackList == ThreeState.FALSE &&
+						!blackList.contains(p);
+
+		return (optionalTarget.or(trueTarget).or(falseTarget)).
+				and(optionalBlack.or(trueBlack).or(falseBlack));
+	}
+
 }

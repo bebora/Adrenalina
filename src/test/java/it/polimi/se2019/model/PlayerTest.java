@@ -15,9 +15,9 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        testPlayer = new Player(false);
-        enemyPlayer = new Player(false);
-        thirdPlayer = new Player(false);
+        testPlayer = new Player(false, "prova");
+        enemyPlayer = new Player(false, "prova");
+        thirdPlayer = new Player(false, "prova");
 
         // Check UUID reliability
         assertNotEquals(testPlayer.getId(), enemyPlayer.getId());
