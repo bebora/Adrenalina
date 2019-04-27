@@ -203,6 +203,10 @@ public class Player {
 		return weapons;
 	}
 
+	public Boolean getOnline() {
+		return online;
+	}
+
 	/**
 	 * Recharge the parameter weapon
 	 * and set the weapon as loaded.
