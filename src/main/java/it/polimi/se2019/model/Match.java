@@ -98,7 +98,7 @@ public class Match {
 			resetPlayer(p);
 		}
 
-		if (deadPlayers.size() > 1)
+		if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
 			players.get(currentPlayer).addPoints(1);
 
 		board.refreshWeapons();

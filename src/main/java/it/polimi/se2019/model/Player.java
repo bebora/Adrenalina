@@ -147,6 +147,9 @@ public class Player {
 	private int trackSkulls;
 
 
+	public Boolean getDominationSpawn() {
+		return dominationSpawn;
+	}
 
 	public void setMaxActions(int maxActions) {
 		this.maxActions = maxActions;
@@ -234,6 +237,7 @@ public class Player {
 				return false;
 		return true;
 	}
+
 
 	public int getDamagesCount() {
 		return damages.size();
