@@ -11,7 +11,7 @@ import java.util.List;
 public class EventVisitorHelper {
     private Match match;
 
-    public Player getSinglePlayerFromId(String id){
+    private Player getSinglePlayerFromId(String id){
         return match.getPlayers().stream()
                 .filter(p -> p.getId().equals(id))
                 .findAny()

@@ -2,6 +2,7 @@ package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
+import it.polimi.se2019.model.board.Tile;
 
 import java.util.*;
 import java.util.function.Function;
@@ -152,7 +153,15 @@ public class Match {
 			board.addToKillShot(null);
 		}
 	}
+	public List<Player> getPlayersInTile(Tile tile){
+		return this.getPlayers().stream()
+				.filter(p -> p.getTile() == tile)
+				.collect(Collectors.toList());
+	}
 
 	public List<Player> getPlayers(){ return players;}
 	public int getCurrentPlayer(){return currentPlayer;}
+	public Board getBoard(){return board; }
+
+
 }

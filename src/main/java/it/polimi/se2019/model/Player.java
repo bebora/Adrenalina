@@ -251,6 +251,8 @@ public class Player {
 		return tile;
 	}
 
+	public void setTile(Tile tile){this.tile = tile;}
+
 	public ThreeState getAlive() {
 		return alive;
 	}
