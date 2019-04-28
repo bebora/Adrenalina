@@ -4,7 +4,6 @@ import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 
 public class VisitConnectionRequest extends EventVisitor{
-    Observer currentObserver;
     @Override
     public void visit(ConnectionRequest event) {
         EventVisitable currentEvent = event;

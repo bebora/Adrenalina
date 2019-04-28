@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class LobbyController extends EventVisitor {
     private List<GameController> games;
-    private GameController waitingGame;
+    private List<Player> waitingPlayers;
 
     /**
      * Visit a ConnectionRequest handling the connection of a new user or the reconnection of a current one.
@@ -61,7 +61,7 @@ public class LobbyController extends EventVisitor {
 
 
     /**
-     * Add a player to the waiting game, linking the VirtualView to the Player.
+     * Add a player to the waiting Players list, linking the VirtualView to the Player.
      * Manage the start of the timeout to start the game if enough players are in.
      * @param username
      * @param vv
@@ -69,7 +69,7 @@ public class LobbyController extends EventVisitor {
     public void connectPlayer(String username, View vv) {
         Player player = new Player(false, username);
         player.setVirtualView(vv);
-        waitingGame.getMatch().addPlayer(player);
+        waitingPlayers.add(player);
         //TODO start timer when players are 3
         //TODO send popup update success
     }
