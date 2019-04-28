@@ -328,11 +328,9 @@ public class Target {
      * @return List of predicates to use in stream()
      */
 	public Predicate<Tile> getFilterTiles(Board board, Tile tile) {
-		List<Predicate<Tile>> allFilters = new ArrayList<>();
-		allFilters.add(getVisibilityFilter(board, tile));
-		allFilters.add(getSamePlayerRoomFilter(tile));
-
-		return getVisibilityFilter(board,tile).and(getSamePlayerRoomFilter(tile)).and(getDistanceFilter(board,tile));
+		return getVisibilityFilter(board,tile).
+				and(getSamePlayerRoomFilter(tile)).
+				and(getDistanceFilter(board,tile));
 	}
 
 
