@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
@@ -15,6 +16,7 @@ public class EffectController {
     private Board board;
     private Player player;
     private Weapon curWeapon;
+    private Match curMatch;
 
     private Effect curEffect;
 
@@ -36,18 +38,21 @@ public class EffectController {
 
     private boolean askingForSource;
 
-    public EffectController(Effect curEffect,Board board, Player player, Weapon weapon){
+    public EffectController(Effect curEffect, Weapon weapon,Match match){
+        this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
         this.orderIndex = -1;
         this.dealDamageIndex = 0;
         this.curWeapon = weapon;
-        this.player = player;
-        this.board = board;
+        this.player = match.getPlayers().get(match.getCurrentPlayer());
+        this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
+
     }
 
     public void nextStep(){
+        playersToMove = new ArrayList<>();
         if(orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
             if(curActionType == MOVE) {
@@ -96,7 +101,7 @@ public class EffectController {
     //TODO:complete the update method and add update for others input targets
     public void update(List<Player> players){
         if(curActionType == MOVE && askingForSource){
-                if(checkTargets(curMove.getTargetSource(),players)) {
+                if(checkPlayerTargets(curMove.getTargetSource(),players)) {
                     if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
                         pointOfView = players.get(0).getTile();
                     askingForSource = false;
@@ -107,7 +112,7 @@ public class EffectController {
             }
         }
         else{
-            if(checkTargets(curDealDamage.getTarget(),players)){
+            if(checkPlayerTargets(curDealDamage.getTarget(),players)){
                 players.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
                 if(curDealDamage.getTargeting() == ThreeState.TRUE)
                     curWeapon.setTargetPlayers(players);
@@ -116,6 +121,22 @@ public class EffectController {
             }
             else{
                 //communicate the error to the player
+            }
+        }
+    }
+
+    public void update(ArrayList<Tile> tiles){
+        if(curActionType == MOVE) {
+            if (checkTileTargets(curMove.getTargetDestination(), tiles))
+                playersToMove.forEach(p -> p.setTile(tiles.get(0)));
+            else {
+                //communicate the error to the player
+            }
+        }
+        else{
+            if(checkTileTargets(curDealDamage.getTarget(),tiles)){
+                tiles.forEach(t -> curMatch.getPlayersInTile(t)
+                        .forEach(p -> p.receiveShot(player, curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
             }
         }
     }
@@ -167,9 +188,24 @@ public class EffectController {
         }
     }
 
-    private boolean checkTargets(Target target, List<Player> players){
+    private boolean checkPlayerTargets(Target target, List<Player> players){
         boolean result;
+        checkPointOfView(target);
+        result = players.stream()
+                         .map(Player::getTile)
+                         .allMatch(target.getFilterTiles(board,pointOfView)) &&
+                 players.stream()
+                         .allMatch(target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()));
+        return result;
+    }
 
+    private boolean checkTileTargets(Target target,List<Tile> tiles){
+        checkPointOfView(target);
+        return tiles.stream()
+                .allMatch(target.getFilterTiles(board,pointOfView));
+    }
+
+    private void checkPointOfView(Target target){
         switch(target.getPointOfView()){
             case OWN:
                 pointOfView = player.getTile();
@@ -184,12 +220,6 @@ public class EffectController {
             default:
                 break;
         }
-        result = players.stream()
-                         .map(Player::getTile)
-                         .allMatch(target.getFilterTiles(board,pointOfView)) &&
-                 players.stream()
-                         .allMatch(target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()));
-        return result;
     }
 
 }
