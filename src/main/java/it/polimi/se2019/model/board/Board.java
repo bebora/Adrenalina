@@ -111,7 +111,6 @@ public class Board {
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
-		// put weapons on spawn tiles
 		refreshWeapons();
 		refreshAmmos();
 	}
@@ -266,5 +265,9 @@ public class Board {
 				filter(Tile::isSpawn).
 				filter(t->t.getRoom() == Color.valueOf(ammo.toString())).
 				findFirst().orElseThrow(() -> new UnsupportedOperationException());
+	}
+
+	public void addToKillShot(Player player) {
+		killShotTrack.add(player);
 	}
 }

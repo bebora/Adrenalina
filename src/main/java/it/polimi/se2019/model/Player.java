@@ -208,6 +208,10 @@ public class Player {
 		return online;
 	}
 
+	public ArrayList<Integer> getRewardPoints() {
+		return rewardPoints;
+	}
+
 	/**
 	 * Recharge the parameter weapon
 	 * and set the weapon as loaded.
@@ -247,6 +251,10 @@ public class Player {
 		return tile;
 	}
 
+	public ThreeState getAlive() {
+		return alive;
+	}
+
 	public List<Ammo> getAmmos() {
 		return ammos;
 	}
@@ -282,11 +290,24 @@ public class Player {
 	}
 
 	/**
+	 * Update the current points adding an integer amount
+	 * @param points new points to be added
+	 */
+	public void addPoints(int points) {
+		this.points += points;
+	}
+	/**
 	 * Update available actions based on current health
 	 */
 	public void notifyHealthChange(){
 		for(Action a: actions)
 			a.updateOnHealth(damages.size());
+	}
+
+	public void addPowerUp(PowerUp powerUp, boolean limit) {
+		if (!(limit && powerUps.size() >= 3)) {
+			powerUps.add(powerUp);
+		}
 	}
 
 	public void discardPowerUp(PowerUp powerUp) {
