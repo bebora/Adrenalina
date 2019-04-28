@@ -257,6 +257,10 @@ public class Player {
 		return alive;
 	}
 
+	public int getPoints() {
+		return points;
+	}
+
 	public List<Ammo> getAmmos() {
 		return ammos;
 	}

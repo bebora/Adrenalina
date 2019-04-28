@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public class Board {
 
     Random rand = new Random();
+
+    private List<Integer> killShotReward;
 	/**
 	 * List of tiles that make up the Board
 	 */
@@ -269,5 +271,9 @@ public class Board {
 
 	public void addToKillShot(Player player) {
 		killShotTrack.add(player);
+	}
+
+	public List<Integer> getKillShotReward() {
+		return killShotReward;
 	}
 }
