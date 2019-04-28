@@ -53,11 +53,14 @@ public class EffectController {
             if(curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
-                processMove();
+                if(curMove.getTargetSource() != null)
+                    processDirection(curMove.getTargetSource());
+                else
+                    processDirection(curMove.getTargetDestination());
             }else{
                 dealDamageIndex += 1;
                 curDealDamage = curEffect.getDamages().get(dealDamageIndex);
-                processDealDamage();
+                processDirection(curDealDamage.getTarget());
             }
         }
         else{
@@ -69,6 +72,25 @@ public class EffectController {
             moveIndex = -1;
             orderIndex = 0;
         }
+    }
+
+    private void update(Direction direction){
+        if(curEffect.getDirection() == null){
+            curEffect.setDirection(direction);
+            processStep();
+        }
+        else if(curEffect.getDirection() == direction)
+            processStep();
+        else {
+            //signals that the direction is not the same as the previous step
+        }
+    }
+
+    private void processStep(){
+        if(curActionType == MOVE)
+            processMove();
+        else
+            processDealDamage();
     }
 
     //TODO:complete the update method and add update for others input targets
@@ -96,6 +118,14 @@ public class EffectController {
                 //communicate the error to the player
             }
         }
+    }
+
+    private void processDirection(Target target){
+        if(target.getCardinal() == ThreeState.TRUE || target.getCardinal() == ThreeState.FALSE) {
+            //ask for direction
+        }
+        else
+            processStep();
     }
 
     //TODO: complete processMove and processDealDamage with proper methods to communicate with view
