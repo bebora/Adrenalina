@@ -2,6 +2,7 @@ package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 
 import java.util.*;
@@ -157,6 +158,12 @@ public class Match {
 	public List<Player> getPlayersInTile(Tile tile){
 		return this.getPlayers().stream()
 				.filter(p -> p.getTile() == tile)
+				.collect(Collectors.toList());
+	}
+
+	public List<Player> getPlayersInRoom(Color room){
+		return this.getPlayers().stream()
+				.filter(p -> p.getTile().getRoom() == room)
 				.collect(Collectors.toList());
 	}
 
