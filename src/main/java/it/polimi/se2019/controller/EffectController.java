@@ -4,6 +4,7 @@ import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.*;
 
@@ -43,7 +44,7 @@ public class EffectController {
         this.curEffect = curEffect;
         this.moveIndex = -1;
         this.orderIndex = -1;
-        this.dealDamageIndex = 0;
+        this.dealDamageIndex = -1;
         this.curWeapon = weapon;
         this.player = match.getPlayers().get(match.getCurrentPlayer());
         this.board = match.getBoard();
@@ -52,6 +53,7 @@ public class EffectController {
     }
 
     public void nextStep(){
+        orderIndex+=1;
         playersToMove = new ArrayList<>();
         if(orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
@@ -75,19 +77,7 @@ public class EffectController {
             curActionType = null;
             dealDamageIndex = -1;
             moveIndex = -1;
-            orderIndex = 0;
-        }
-    }
-
-    private void update(Direction direction){
-        if(curEffect.getDirection() == null){
-            curEffect.setDirection(direction);
-            processStep();
-        }
-        else if(curEffect.getDirection() == direction)
-            processStep();
-        else {
-            //signals that the direction is not the same as the previous step
+            orderIndex = -1;
         }
     }
 
@@ -99,6 +89,19 @@ public class EffectController {
     }
 
     //TODO:complete the update method and add update for others input targets
+
+    public void update(Direction direction){
+        if(curEffect.getDirection() == null){
+            curEffect.setDirection(direction);
+            processStep();
+        }
+        else if(curEffect.getDirection() == direction)
+            processStep();
+        else {
+            //signals that the direction is not the same as the previous step
+        }
+    }
+
     public void update(List<Player> players){
         if(curActionType == MOVE && askingForSource){
                 if(checkPlayerTargets(curMove.getTargetSource(),players)) {
@@ -106,6 +109,7 @@ public class EffectController {
                         pointOfView = players.get(0).getTile();
                     askingForSource = false;
                     playersToMove = players;
+                    //ask for targetDestination
                 }
                 else{
                     //communicate the error to the player
@@ -122,7 +126,9 @@ public class EffectController {
             else{
                 //communicate the error to the player
             }
+            nextStep();
         }
+
     }
 
     public void update(ArrayList<Tile> tiles){
@@ -139,6 +145,20 @@ public class EffectController {
                         .forEach(p -> p.receiveShot(player, curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
             }
         }
+        nextStep();
+    }
+
+    public void update(Color room){
+        List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
+        if(possibleTargets.stream()
+                .map(p -> p.getTile())
+                .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
+            possibleTargets.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+        }
+        else{
+            //tells the player that the target is wrong
+        }
+        nextStep();
     }
 
     private void processDirection(Target target){

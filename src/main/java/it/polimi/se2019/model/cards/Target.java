@@ -333,6 +333,11 @@ public class Target {
 				and(getDistanceFilter(board,tile));
 	}
 
+	public Predicate<Tile> getFilterRoom(Board board, Tile tile){
+		return getVisibilityFilter(board,tile)
+				.and(getSamePlayerRoomFilter(tile));
+	}
+
 
 	public Predicate<Player> getPlayerListFilter(Player player, List<Player> targetList, List<Player> blackList) {
 		Predicate<Player> optionalTarget =
