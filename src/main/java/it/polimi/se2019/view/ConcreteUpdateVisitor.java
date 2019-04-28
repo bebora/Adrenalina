@@ -66,6 +66,12 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         player.setTile(helper.getTileFromCoords(update.getPosx(), update.getPosy()));
     }
 
+    @Override
+    public void visit(PopupMessageUpdate update) {
+        //TODO show message to the client, e.g. view.showPopup(message)
+        String message = update.getMessage();
+    }
+
     /**
      * Set tile weapons and ammos to those received in update
      * @param update

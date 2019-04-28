@@ -7,6 +7,7 @@ public interface UpdateVisitor {
     void visit(AttackPlayerUpdate update);
     void visit(AvailableActionsUpdate update);
     void visit(MovePlayerUpdate update);
+    void visit(PopupMessageUpdate update);
     void visit(TileUpdate update);
     void visit(WeaponTakenUpdate update);
 }
