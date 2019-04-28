@@ -33,7 +33,7 @@ public class ConcreteUpdateVisitorHelper {
     public ViewTile getTileFromCoords(int posx, int posy) {
         return view.getBoard().getTiles().stream().
             flatMap(List::stream).
-            filter(m -> m.getPosx() == posx && m.getPosy() == posy).
+            filter(m -> m.getCoords().getPosx() == posx && m.getCoords().getPosy() == posy).
             findAny().
             orElseThrow(()-> new InvalidUpdateException("Tile with given coords does not exist"));
     }

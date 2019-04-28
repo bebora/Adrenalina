@@ -8,6 +8,8 @@ public interface UpdateVisitor {
     void visit(AvailableActionsUpdate update);
     void visit(MovePlayerUpdate update);
     void visit(PopupMessageUpdate update);
+    void visit(SelectFromPlayersUpdate update);
+    void visit(SelectFromTilesUpdate update);
     void visit(TileUpdate update);
     void visit(WeaponTakenUpdate update);
 }

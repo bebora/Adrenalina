@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.updatemessage.PopupMessageUpdate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,6 +24,7 @@ public class EventVisitorHelper {
         temp.removeAll(Collections.singleton(null));
         if(temp.isEmpty()){
             //TODO:tell the player that he didn't send valid targets
+            PopupMessageUpdate message = new PopupMessageUpdate("The targets sent are not valid");
         }
         return temp;
     }

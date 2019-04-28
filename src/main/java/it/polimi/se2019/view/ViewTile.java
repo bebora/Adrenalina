@@ -4,17 +4,12 @@ import java.util.List;
 
 public class ViewTile {
     private String Room;
-    private int posx;
-    private int posy;
+    private ViewTileCoords coords;
     private List<String> weapons;
     private List<String> ammos;
 
-    public int getPosy() {
-        return posy;
-    }
-
-    public int getPosx() {
-        return posx;
+    public ViewTileCoords getCoords() {
+        return coords;
     }
 
     public List<String> getAmmos() {

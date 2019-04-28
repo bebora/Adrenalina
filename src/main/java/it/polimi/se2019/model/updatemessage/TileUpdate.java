@@ -37,8 +37,8 @@ public class TileUpdate {
     public TileUpdate(ViewTile tile) {
         this.ammos = tile.getAmmos();
         this.weapons = tile.getWeapons();
-        this.posx = tile.getPosx();
-        this.posy = tile.getPosy();
+        this.posx = tile.getCoords().getPosx();
+        this.posy = tile.getCoords().getPosy();
     }
 
     /**

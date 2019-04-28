@@ -3,6 +3,8 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.updatemessage.*;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class ConcreteUpdateVisitor implements UpdateVisitor {
@@ -70,6 +72,22 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
     public void visit(PopupMessageUpdate update) {
         //TODO show message to the client, e.g. view.showPopup(message)
         String message = update.getMessage();
+    }
+
+    @Override
+    public void visit(SelectFromPlayersUpdate update) {
+        //TODO show possible players to the receiver player
+        List<ViewPlayer> players = update.getPlayers().stream().
+                map(m->helper.getPlayerFromId(m)).
+                collect(Collectors.toList());
+    }
+
+    @Override
+    public void visit(SelectFromTilesUpdate update) {
+        //TODO show possible tiles to the player
+        List<ViewTile> tiles = update.getCoords().stream().
+                map(m->helper.getTileFromCoords(m.getPosx(), m.getPosy())).
+                collect(Collectors.toList());
     }
 
     /**
