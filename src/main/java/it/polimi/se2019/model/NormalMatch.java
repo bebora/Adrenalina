@@ -7,17 +7,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class NormalMatch extends Match{
-	Random rand = new Random();
 
 	public NormalMatch(List<Player> players, String boardFilename, int numSkulls) {
-		this.players = players;
-		finalFrenzy = false;
-		turnEnd = false;
-		firstPlayer = rand.nextInt(players.size());
-		currentPlayer = firstPlayer;
-		board = BoardCreator.parseBoard(boardFilename, numSkulls);
+		super(players, boardFilename, numSkulls);
 	}
-
 	/**
 	 * True if player turn has ended
 	 */
@@ -47,6 +40,7 @@ public class NormalMatch extends Match{
 	 * If True, the activated mode is finalFrenzy
 	 */
 	private Boolean finalFrenzy;
+
 
 	public void resetPlayer(Player player) {
 		player.addPowerUp(board.drawPowerUp(),false);

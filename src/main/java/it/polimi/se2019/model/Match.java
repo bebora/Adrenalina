@@ -13,7 +13,18 @@ import java.util.stream.Collectors;
  * Container class for all the information of the Match being played
  */
 public abstract class Match {
-	Random rand = new Random();
+
+    public Match(List<Player> players, String boardFilename, int numSkulls) {
+        this.players = players;
+        finalFrenzy = false;
+        turnEnd = false;
+        firstPlayer = rand.nextInt(players.size());
+        currentPlayer = firstPlayer;
+        board = BoardCreator.parseBoard(boardFilename, numSkulls);
+    }
+
+
+    Random rand = new Random();
 
 	/**
 	 * True if player turn has ended
@@ -28,7 +39,7 @@ public abstract class Match {
 	/**
 	 * List of players playing the match
 	 */
-	private ArrayList <Player> players;
+	private List <Player> players;
 
 	/**
 	 * Index of the player whose turn is the current
@@ -143,5 +154,11 @@ public abstract class Match {
 	public int getCurrentPlayer(){return currentPlayer;}
 	public Board getBoard(){return board; }
 
+	public int getFirstPlayer() {
+		return firstPlayer;
+	}
 
+	public Boolean getFinalFrenzy() {
+		return finalFrenzy;
+	}
 }

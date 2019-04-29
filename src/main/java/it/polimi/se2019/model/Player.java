@@ -5,6 +5,7 @@ import it.polimi.se2019.model.actions.Attack;
 import it.polimi.se2019.model.actions.Grab;
 import it.polimi.se2019.model.actions.Move;
 import it.polimi.se2019.model.ammos.Ammo;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -17,21 +18,26 @@ import java.util.stream.Collectors;
 
 public class Player {
 
-	public Player(boolean spawnPlayer, String username) {
+	public Player(String username) {
 		this.username = username;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
-		dominationSpawn = spawnPlayer;
+		dominationSpawn = false;
 		marks = new ArrayList<>();
 		damages = new ArrayList<>();
 		ammos = new ArrayList<>();
-		rewardPoints = new ArrayList<>();
+		rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(3);
 	}
 
+
+	public Player() {
+		this.damages = new ArrayList<>();
+		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+	}
 	public String getUsername() {
 		return username;
 	}

@@ -67,7 +67,7 @@ public class LobbyController extends EventVisitor {
      * @param vv
      */
     public void connectPlayer(String username, View vv) {
-        Player player = new Player(false, username);
+        Player player = new Player("test");
         player.setVirtualView(vv);
         waitingPlayers.add(player);
         //TODO start timer when players are 3
