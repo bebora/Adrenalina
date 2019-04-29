@@ -19,7 +19,6 @@ public class DominationMatch extends Match{
     public void newTurn() {
         Player currentPlayer = super.getPlayers().get(getCurrentPlayer());
 
-
         List<Player> spawnPoints = super.getPlayers().stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
 
         List<Tile> spawnTiles = spawnPoints.stream().map(Player::getTile).collect(Collectors.toList());
@@ -57,11 +56,14 @@ public class DominationMatch extends Match{
 
     @Override
     public void scoreDeadShot(Player player) {
-
+        if (player.getDamages().size() == 12)
+            throw new UserInputRequest("SPAWNPLAYER", (p) -> p.getDamages().add(getPlayers().get(getCurrentPlayer())));
     }
 
     @Override
     public List<Player> getWinners() {
+        //TODO get players that win
         return null;
+
     }
 }
