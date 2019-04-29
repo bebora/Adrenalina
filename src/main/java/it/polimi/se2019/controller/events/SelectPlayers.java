@@ -7,6 +7,7 @@ import java.util.*;
 
 public class SelectPlayers implements EventVisitable {
     List<String> playersIds;
+    public SelectPlayers(List<String> playerIds){this.playersIds = playerIds;}
     public void accept(EventVisitor visitor){
         visitor.visit(this);
     }
