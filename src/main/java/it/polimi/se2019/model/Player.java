@@ -18,7 +18,8 @@ import java.util.stream.Collectors;
 
 public class Player {
 
-	public Player(String username) {
+	public Player(String username, Color color) {
+		this.color = color;
 		this.username = username;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
@@ -55,6 +56,8 @@ public class Player {
 		this.virtualView = virtualView;
 		return this;
 	}
+
+	Color color;
 
 	String username;
 
@@ -154,7 +157,7 @@ public class Player {
 
 
 	public Boolean getDominationSpawn() {
-		return dominationSpawn;
+		return Boolean.FALSE;
 	}
 
 	public void setMaxActions(int maxActions) {
@@ -290,6 +293,15 @@ public class Player {
 			ammos.add(ammo);
 	}
 
+	public void refreshPlayer() {
+		//TODO actions refreshing
+	}
+
+	public void resetPlayer(PowerUp powerUp) {
+		refreshPlayer();
+		addPowerUp(powerUp, false);
+		damages.clear();
+	}
 	/**
 	 * Update available actions when entering frenzy mode
 	 * @param afterFirst

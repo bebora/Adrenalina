@@ -91,7 +91,7 @@ public abstract class Match {
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);
-			resetPlayer(p);
+			p.resetPlayer(board.drawPowerUp());
 		}
 
         if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
@@ -99,11 +99,6 @@ public abstract class Match {
 
 		board.refreshWeapons();
 		board.refreshAmmos();
-	}
-
-	public void resetPlayer(Player player) {
-		player.addPowerUp(board.drawPowerUp(),false);
-		player.getDamages().clear();
 	}
 
 	public void scorePlayerBoard(Player player) {

@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.SelectAction;
 import it.polimi.se2019.controller.events.SelectPlayers;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
@@ -67,7 +68,7 @@ public class LobbyController extends EventVisitor {
      * @param vv
      */
     public void connectPlayer(String username, View vv) {
-        Player player = new Player("test");
+        Player player = new Player("test", Color.RED);
         player.setVirtualView(vv);
         waitingPlayers.add(player);
         //TODO start timer when players are 3

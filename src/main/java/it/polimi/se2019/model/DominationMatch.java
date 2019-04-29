@@ -29,9 +29,12 @@ public class DominationMatch extends Match{
             currentPlayer.receiveShot(currentPlayer,1,0);
             if (getPlayers().
                     stream().
-                    filter(p -> ! p.equals(currentPlayer) && p.getTile().isSpawn()).count() == 0) {
-                //TODO finish method implementation
-
+                    filter(p -> !p.getId().equals(currentPlayer.getId()) && p.getTile() != currentPlayer.getTile()).count()==0) {
+                spawnPoints.
+                        stream().
+                        filter(s -> s.getTile() == currentPlayer.getTile()).findFirst().
+                        orElseThrow(() -> new UnsupportedOperationException()).
+                        receiveShot(currentPlayer, 1, 0);
             }
 
         }
@@ -44,7 +47,7 @@ public class DominationMatch extends Match{
         if (currentTurn == 2) {
             List<Color> colors = new ArrayList<>(Arrays.asList(Color.RED, Color.YELLOW, Color.BLUE));
             for (Color color : colors) {
-                Player temp = new Player();
+                Player temp = new SpawnPlayer(color);
                 temp.setTile(super.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t.isSpawn() && t.getRoom().equals(color)).findFirst().orElseThrow(() -> new UnsupportedOperationException()));
             }
         }

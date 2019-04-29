@@ -1,6 +1,7 @@
 package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.ammos.Ammo;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +16,9 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        testPlayer = new Player("test");
-        enemyPlayer = new Player("test");
-        thirdPlayer = new Player("test");
+        testPlayer = new Player("test", Color.RED);
+        enemyPlayer = new Player("test" ,Color.RED);
+        thirdPlayer = new Player("test", Color.RED);
 
         // Check UUID reliability
         assertNotEquals(testPlayer.getId(), enemyPlayer.getId());
