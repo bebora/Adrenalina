@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.EventWrapper;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.cards.Effect;
@@ -16,6 +15,7 @@ public class WeaponController extends Thread {
     private Weapon weapon;
     private Match match;
     private Player curPlayer;
+    private EffectController effectController;
 
     public WeaponController(Match match, Weapon weapon){
         this.match = match;
@@ -57,7 +57,28 @@ public class WeaponController extends Thread {
     }
 
 
-    void update(EventWrapper e) {
+    void update(Weapon newWeapon) {
+        curPlayer = match.getPlayers().get(match.getCurrentPlayer());
+        if(curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
+            weapon = newWeapon;
+            //tell the player to select the effect
+        }
+        else {
+            //tell the player that the missing weapon is unloaded
+        }
+    }
 
+    void update(Effect effect){
+        curPlayer = match.getPlayers().get(match.getCurrentPlayer());
+        if(getUsableEffects().contains(effect.getName())) {
+            if(effectController == null) {
+                effectController = new EffectController(effect, weapon, match, curPlayer);
+            }
+            else{
+                effectController.setCurEffect(effect);
+                effectController.setCurWeapon(weapon);
+                effectController.setPlayer(curPlayer);
+            }
+        }
     }
 }

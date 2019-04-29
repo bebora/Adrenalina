@@ -39,14 +39,14 @@ public class EffectController {
 
     private boolean askingForSource;
 
-    public EffectController(Effect curEffect, Weapon weapon,Match match){
+    public EffectController(Effect curEffect, Weapon weapon,Match match,Player player){
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
         this.orderIndex = -1;
         this.dealDamageIndex = -1;
         this.curWeapon = weapon;
-        this.player = match.getPlayers().get(match.getCurrentPlayer());
+        this.player = player;
         this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
 
@@ -71,6 +71,7 @@ public class EffectController {
             }
         }
         else{
+            curEffect.setActivated(true);
             curEffect = null;
             curMove = null;
             curDealDamage = null;
@@ -247,4 +248,7 @@ public class EffectController {
         }
     }
 
+    public void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}
+    public void setCurEffect(Effect effect){this.curEffect = effect;}
+    public void setPlayer(Player player){this.player = player;}
 }
