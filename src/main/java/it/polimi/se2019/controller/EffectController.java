@@ -122,11 +122,11 @@ public class EffectController {
                     curWeapon.setTargetPlayers(players);
                 else if(curDealDamage.getTargeting() == ThreeState.FALSE)
                     curWeapon.setBlackListPlayers(players);
+                nextStep();
             }
             else{
                 //communicate the error to the player
             }
-            nextStep();
         }
 
     }
@@ -138,7 +138,7 @@ public class EffectController {
                     playersToMove.forEach(p -> p.setTile(tiles.get(0)));
                 else
                     player.setPerspective(tiles.get(0));
-
+                nextStep();
             }
             else {
                 //communicate the error to the player
@@ -148,22 +148,22 @@ public class EffectController {
             if(checkTileTargets(curDealDamage.getTarget(),tiles)){
                 tiles.forEach(t -> curMatch.getPlayersInTile(t)
                         .forEach(p -> p.receiveShot(player, curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
+                nextStep();
             }
         }
-        nextStep();
     }
 
     public void update(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         if(possibleTargets.stream()
-                .map(p -> p.getTile())
+                .map(Player::getTile)
                 .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
             possibleTargets.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+        nextStep();
         }
         else{
             //tells the player that the target is wrong
         }
-        nextStep();
     }
 
     private void processDirection(Target target){
