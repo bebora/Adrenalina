@@ -133,8 +133,13 @@ public class EffectController {
 
     public void update(ArrayList<Tile> tiles){
         if(curActionType == MOVE) {
-            if (checkTileTargets(curMove.getTargetDestination(), tiles))
-                playersToMove.forEach(p -> p.setTile(tiles.get(0)));
+            if (checkTileTargets(curMove.getTargetDestination(), tiles)){
+                if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
+                    playersToMove.forEach(p -> p.setTile(tiles.get(0)));
+                else
+                    player.setPerspective(tiles.get(0));
+
+            }
             else {
                 //communicate the error to the player
             }

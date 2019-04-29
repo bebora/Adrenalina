@@ -277,6 +277,8 @@ public class Player {
 
 	public Tile getPerspective() { return perspective; }
 
+	public void setPerspective(Tile perspective){this.perspective = perspective;}
+
 	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);
 		if(counter<3)
