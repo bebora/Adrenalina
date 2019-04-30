@@ -27,26 +27,27 @@ public class WeaponController {
     public List<String> getUsableEffects(){
         List<Effect> allEffects = weapon.getEffects();
 
-        Stream<Effect> possiblyUsableEffects = allEffects.stream()
+        List<Effect> possiblyUsableEffects = allEffects.stream()
                 .filter(effect -> !effect.getActivated())
-                .filter(effect -> curPlayer.checkForAmmos(effect.getCost()));
+                .filter(effect -> curPlayer.checkForAmmos(effect.getCost()))
+                .collect(Collectors.toList());
 
-        List<Integer> notUsedIndexes = allEffects.stream()
+        List<Integer> notUsedIndexes = possiblyUsableEffects.stream()
                 .filter(effect -> !effect.getActivated())
                 .map(allEffects::indexOf)
                 .collect(Collectors.toList());
 
-        Stream<String> checkAbsolute = possiblyUsableEffects
+        Stream<String> checkAbsolute = possiblyUsableEffects.stream()
                 .filter(effect -> effect.getAbsolutePriority() != 0)
                 .filter(effect -> effect.getAbsolutePriority() == curEffect)
                 .map(Effect::getName);
 
-        Stream<String> checkRelativeAfter = possiblyUsableEffects
+        Stream<String> checkRelativeAfter = possiblyUsableEffects.stream()
                 .filter(effect-> effect.getAbsolutePriority() == 0)
                 .filter(effect-> effect.getRelativePriority().contains(lastUsedIndex))
                 .map(Effect::getName);
 
-        Stream<String> checkRelativeBefore = possiblyUsableEffects
+        Stream<String> checkRelativeBefore = possiblyUsableEffects.stream()
                 .filter(effect -> effect.getAbsolutePriority() == 0)
                 .filter(effect -> effect.getRelativePriority().stream().filter(i -> i<0).anyMatch(i->notUsedIndexes.contains(-i-1)))
                 .map(Effect::getName);
@@ -73,6 +74,9 @@ public class WeaponController {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(getUsableEffects().contains(effect.getName())) {
             effect.getCost().forEach(ammo -> curPlayer.getAmmos().remove(ammo));
+            curEffect ++;
+            effect.setActivated(true);
+            lastUsedIndex = weapon.getEffects().indexOf(effect) + 1;
             if(effectController == null) {
                 effectController = new EffectController(effect, weapon, match, curPlayer);
             }
