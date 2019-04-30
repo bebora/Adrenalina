@@ -1,9 +1,28 @@
 package it.polimi.se2019.view;
+import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
+import it.polimi.se2019.model.ammos.Ammo;
+import it.polimi.se2019.model.cards.Weapon;
+
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ViewPlayer {
 
-	public ViewPlayer() {
+	public ViewPlayer(Player player) {
+		this.tile = new ViewTile(player.getTile());
+		this.id = player.getId();
+		this.ammos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
+		this.firstPlayer = player.getFirstPlayer();
+		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
+		this.rewardPoints = player.getRewardPoints();
+		this.unloadedWeapons = player.getWeapons().stream().
+				filter(Weapon::getLoaded).map(Weapon::getName).collect(Collectors.toList());
+		this.actionCount = player.getActionCount();
+		this.alive = player.getAlive();
+		this.perspective = new ViewTile(player.getPerspective());
+		this.dominationSpawn = player.getDominationSpawn();
+		this.maxActions = player.getMaxActions();
 	}
 
 	private ViewTile tile;
@@ -20,15 +39,13 @@ public class ViewPlayer {
 
 	private List<ViewAction> actions;
 
-	private List<String> rewardPoints;
+	private List<Integer> rewardPoints;
 
 	private List<String> unloadedWeapons;
 
-	private int kills;
-
 	private int actionCount;
 
-	private Boolean alive;
+	private ThreeState alive;
 
 	private ViewTile perspective;
 
@@ -66,5 +83,13 @@ public class ViewPlayer {
 
 	public List<String> getUnloadedWeapons() {
 		return unloadedWeapons;
+	}
+
+	public void setDamages(List<ViewPlayer> damages) {
+		this.damages = damages;
+	}
+
+	public void setMarks(List<ViewPlayer> marks) {
+		this.marks = marks;
 	}
 }
