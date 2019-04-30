@@ -72,6 +72,7 @@ public class WeaponController {
     void update(Effect effect){
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(getUsableEffects().contains(effect.getName())) {
+            effect.getCost().forEach(ammo -> curPlayer.getAmmos().remove(ammo));
             if(effectController == null) {
                 effectController = new EffectController(effect, weapon, match, curPlayer);
             }
