@@ -266,7 +266,7 @@ public class Board {
 				filter(Objects::nonNull).
 				filter(Tile::isSpawn).
 				filter(t->t.getRoom() == Color.valueOf(ammo.toString())).
-				findFirst().orElseThrow(() -> new UnsupportedOperationException());
+				findFirst().orElseThrow(UnsupportedOperationException::new);
 	}
 
 	public void addToKillShot(Player player) {

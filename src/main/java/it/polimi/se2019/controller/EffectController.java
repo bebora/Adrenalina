@@ -103,7 +103,8 @@ public class EffectController {
         }
     }
 
-    public void update(List<Player> players){
+    //TODO WRONG!!! ;) ;P ;)
+    public void update(ArrayList<Player> players){
         if(curActionType == MOVE && askingForSource){
                 if(checkPlayerTargets(curMove.getTargetSource(),players)) {
                     if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
@@ -132,7 +133,7 @@ public class EffectController {
 
     }
 
-    public void update(ArrayList<Tile> tiles){
+    public void update(List<Tile> tiles){
         if(curActionType == MOVE) {
             if (checkTileTargets(curMove.getTargetDestination(), tiles)){
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)

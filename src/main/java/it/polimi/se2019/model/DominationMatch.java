@@ -2,7 +2,6 @@ package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
-import sun.management.GarbageCollectorImpl;
 
 
 import java.util.*;
@@ -62,7 +61,7 @@ public class DominationMatch extends Match{
     @Override
     public void scoreDeadShot(Player player) {
         if (player.getDamages().size() == 12)
-            throw new UserInputRequest("SPAWNPLAYER", (p) -> p.getDamages().add(getPlayers().get(getCurrentPlayer())));
+            throw new UserInputRequest("SPAWNPLAYER", p -> p.getDamages().add(getPlayers().get(getCurrentPlayer())));
     }
 
     @Override

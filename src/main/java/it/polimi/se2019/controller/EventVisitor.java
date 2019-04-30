@@ -5,10 +5,6 @@ import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.SelectAction;
 import it.polimi.se2019.controller.events.SelectPlayers;
 import it.polimi.se2019.controller.events.SelectWeapon;
-import it.polimi.se2019.view.VirtualView;
-
-import javax.naming.ldap.UnsolicitedNotification;
-
 
 public class EventVisitor {
     Observer currentObserver;

@@ -2,7 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Match;
 //TODO this class will be an observer for events
-public class GameController extends Thread {
+public class GameController {
     private Match match;
     private LobbyController lobbyController;
 
