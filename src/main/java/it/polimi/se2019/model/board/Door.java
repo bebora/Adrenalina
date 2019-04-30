@@ -28,6 +28,15 @@ public class Door {
 		}
 		return returnValue;
 	}
+
+	public Tile getTile1() {
+		return tile1;
+	}
+
+	public Tile getTile2() {
+		return tile2;
+	}
+
 	/**
 	 * Overriding hashcode being the door bidirectional.
 	 * @return equality

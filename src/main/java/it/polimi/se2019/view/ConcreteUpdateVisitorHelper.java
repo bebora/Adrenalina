@@ -31,10 +31,10 @@ public class ConcreteUpdateVisitorHelper {
      * @return
      */
     public ViewTile getTileFromCoords(int posx, int posy) {
-        return view.getBoard().getTiles().stream().
-            flatMap(List::stream).
-            filter(m -> m.getCoords().getPosx() == posx && m.getCoords().getPosy() == posy).
-            findAny().
-            orElseThrow(()-> new InvalidUpdateException("Tile with given coords does not exist"));
+        try {
+            return view.getBoard().getTiles().get(posx).get(posy);
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidUpdateException("Tile with given coords does not exist");
+        }
     }
 }

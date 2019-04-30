@@ -80,6 +80,8 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         List<ViewPlayer> players = update.getPlayers().stream().
                 map(m->helper.getPlayerFromId(m)).
                 collect(Collectors.toList());
+        int minPlayers = update.getMinPlayers();
+        int maxPlayers = update.getMaxPlayers();
     }
 
     @Override
@@ -88,6 +90,8 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         List<ViewTile> tiles = update.getCoords().stream().
                 map(m->helper.getTileFromCoords(m.getPosx(), m.getPosy())).
                 collect(Collectors.toList());
+        int minPlayers = update.getMinPlayers();
+        int maxPlayers = update.getMaxPlayers();
     }
 
     /**
@@ -99,6 +103,24 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         ViewTile tile = helper.getTileFromCoords(update.getPosx(), update.getPosy());
         tile.setAmmos(update.getAmmos());
         tile.setWeapons(update.getWeapons());
+    }
+
+    /**
+     * Set almost all View attributes.
+     * This update should be used when a player join or
+     * rejoin the match after a disconnection
+     * @param update
+     */
+    @Override
+    public void visit(TotalUpdate update) {
+        view.setUsername(update.getUsername());
+        view.setBoard(update.getBoard());
+        view.setPlayers(update.getPlayers());
+        view.setIdView(update.getIdView());
+        view.setPoints(update.getPoints());
+        view.setPowerUps(update.getPowerUps());
+        view.setLoadedWeapons(update.getLoadedWeapons());
+
     }
 
     /**

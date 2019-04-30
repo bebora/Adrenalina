@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class Player {
 
 	public Player(String username, Color color) {
+		this.firstPlayer = false;
 		this.color = color;
 		this.username = username;
 		id = UUID.randomUUID().toString();
@@ -36,6 +37,7 @@ public class Player {
 
 
 	public Player() {
+		this.firstPlayer = false;
 		this.damages = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 	}
@@ -56,7 +58,7 @@ public class Player {
 		this.virtualView = virtualView;
 		return this;
 	}
-
+	private boolean firstPlayer;
 	Color color;
 
 	String username;
@@ -171,6 +173,10 @@ public class Player {
 		return damages;
 	}
 
+	public int getActionCount() {
+		return actionCount;
+	}
+
 	/**
 	 * Convert the marks of the shooting player in damages
 	 * @param player user who is shooting
@@ -266,6 +272,13 @@ public class Player {
 	}
 
 	public void setTile(Tile tile){this.tile = tile;}
+
+	public boolean getFirstPlayer() {
+		return firstPlayer;
+	}
+	public void setFirstPlayer(boolean firstPlayer) {
+		this.firstPlayer = firstPlayer;
+	}
 
 	public ThreeState getAlive() {
 		return alive;

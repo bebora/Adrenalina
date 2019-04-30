@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
  */
 public class SelectFromPlayersUpdate implements UpdateVisitable {
     private List<String> players;
+    private int minPlayers;
+    private int maxPlayers;
     @Override
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
@@ -22,9 +24,19 @@ public class SelectFromPlayersUpdate implements UpdateVisitable {
         return players;
     }
 
-    public SelectFromPlayersUpdate(List<Player> players) {
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public SelectFromPlayersUpdate(List<Player> players, int minPlayers, int maxPlayers) {
         this.players = players.stream().
                 map(Player::getId).
                 collect(Collectors.toList());
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
     }
 }

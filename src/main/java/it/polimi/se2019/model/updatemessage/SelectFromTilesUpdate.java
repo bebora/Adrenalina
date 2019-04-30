@@ -14,9 +14,19 @@ import java.util.stream.Collectors;
  */
 public class SelectFromTilesUpdate implements UpdateVisitable {
     private List<ViewTileCoords> coords;
+    private int minPlayers;
+    private int maxPlayers;
 
     public List<ViewTileCoords> getCoords() {
         return coords;
+    }
+
+    public int getMinPlayers() {
+        return minPlayers;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
     }
 
     @Override
@@ -24,10 +34,12 @@ public class SelectFromTilesUpdate implements UpdateVisitable {
         visitor.visit(this);
     }
 
-    public SelectFromTilesUpdate(List<Tile> tiles) {
+    public SelectFromTilesUpdate(List<Tile> tiles, int minPlayers, int maxPlayers) {
         this.coords = tiles.stream().
                 map(m->new ViewTileCoords(m.getPosx(), m.getPosy())).
                 collect(Collectors.toList());
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
     }
 
 }

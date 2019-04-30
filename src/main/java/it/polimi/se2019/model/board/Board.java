@@ -4,6 +4,8 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.*;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.view.ViewBoard;
+import it.polimi.se2019.view.ViewTile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -226,7 +228,11 @@ public class Board {
 		return skulls;
 	}
 
-    public Deck<PowerUp> getPowerUps() {
+	public List<Door> getDoors() {
+		return doors;
+	}
+
+	public Deck<PowerUp> getPowerUps() {
         return powerUps;
     }
 

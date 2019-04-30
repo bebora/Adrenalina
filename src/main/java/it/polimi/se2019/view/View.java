@@ -47,5 +47,31 @@ public abstract class View {
 		return username;
 	}
 
+	public void setUsername(String username) {
+		this.username = username;
+	}
 
+	public void setBoard(ViewBoard board) {
+		this.board = board;
+	}
+
+	public void setPlayers(List<ViewPlayer> players) {
+		this.players = players;
+	}
+
+	public void setIdView(String idView) {
+		this.idView = idView;
+	}
+
+	public void setPoints(int points) {
+		this.points = points;
+	}
+
+	public void setPowerUps(List<String> powerUps) {
+		this.powerUps = powerUps;
+	}
+
+	public void setLoadedWeapons(List<String> loadedWeapons) {
+		this.loadedWeapons = loadedWeapons;
+	}
 }
