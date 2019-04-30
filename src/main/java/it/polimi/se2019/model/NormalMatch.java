@@ -88,8 +88,9 @@ public class NormalMatch extends Match {
 
 
 		for (Player p : shotOrder) {
-			deadTrackPoints.put(p, frequencyShots.get(p));
-			p.addPoints(board.getKillShotReward().get(currentReward));
+            deadTrackPoints.put(p, frequencyShots.get(p));
+            p.addPoints(board.getKillShotReward().get(currentReward));
+            currentReward++;
 		}
 
 		for (Player p : players) {
@@ -109,6 +110,7 @@ public class NormalMatch extends Match {
 		}
 
 	}
+
 }
 
 

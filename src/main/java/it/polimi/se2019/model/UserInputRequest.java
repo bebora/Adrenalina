@@ -1,14 +1,12 @@
 package it.polimi.se2019.model;
 
-import it.polimi.se2019.ApplyOnPlayer;
-
-import java.util.function.Function;
+import it.polimi.se2019.ApplyOn;
 
 public class UserInputRequest extends RuntimeException{
     String objectNeeded;
-    ApplyOnPlayer applyOnPlayer;
+    ApplyOn applyOnPlayer;
 
-    public UserInputRequest(String objectNeeded, ApplyOnPlayer applyOnPlayer) {
+    public UserInputRequest(String objectNeeded, ApplyOn applyOnPlayer) {
         this.objectNeeded = objectNeeded;
         this.applyOnPlayer = applyOnPlayer;
     }
