@@ -108,7 +108,7 @@ public class EffectController {
      * @param direction the Direction in which the effect is applied
      * @see Direction
      */
-    public void update(Direction direction){
+    public void updateOnDirection(Direction direction){
         if(curEffect.getDirection() == null){
             curEffect.setDirection(direction);
             processStep();
@@ -126,7 +126,7 @@ public class EffectController {
      * @param players a List of Player to which the current subeffect is applied
      * @see Player
      */
-    public void update(List<Player> players){
+    public void updateOnPlayers(List<Player> players){
         if(curActionType == MOVE && askingForSource){
                 if(checkPlayerTargets(curMove.getTargetSource(),players)) {
                     if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
@@ -163,7 +163,7 @@ public class EffectController {
      * @param tiles a target for Move(must contain a single tile) or DealDamage
      * @see Tile
      */
-    public void update(ArrayList<Tile> tiles){
+    public void updateOnTiles(ArrayList<Tile> tiles){
         if(curActionType == MOVE) {
             if (checkTileTargets(curMove.getTargetDestination(), tiles)){
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
@@ -189,7 +189,7 @@ public class EffectController {
      * The
      * @param room
      */
-    public void update(Color room){
+    public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         if(possibleTargets.stream()
                 .map(Player::getTile)
