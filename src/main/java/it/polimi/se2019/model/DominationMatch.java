@@ -2,24 +2,27 @@ package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import sun.management.GarbageCollectorImpl;
 
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DominationMatch extends Match{
 
     int currentTurn = -1;
+    List<Player> spawnPoints;
+
 
     public DominationMatch(List<Player> players, String boardFilename, int numSkulls) {
         super(players,boardFilename,numSkulls);
+        spawnPoints = new ArrayList<>();
     }
 
     @Override
     public void newTurn() {
         Player currentPlayer = super.getPlayers().get(getCurrentPlayer());
-
-        List<Player> spawnPoints = super.getPlayers().stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
 
         List<Tile> spawnTiles = spawnPoints.stream().map(Player::getTile).collect(Collectors.toList());
 
@@ -32,7 +35,7 @@ public class DominationMatch extends Match{
                 spawnPoints.
                         stream().
                         filter(s -> s.getTile() == currentPlayer.getTile()).findFirst().
-                        orElseThrow(() -> new UnsupportedOperationException()).
+                        orElseThrow(UnsupportedOperationException::new).
                         receiveShot(currentPlayer, 1, 0);
             }
 
@@ -47,8 +50,10 @@ public class DominationMatch extends Match{
             List<Color> colors = new ArrayList<>(Arrays.asList(Color.RED, Color.YELLOW, Color.BLUE));
             for (Color color : colors) {
                 Player temp = new SpawnPlayer(color);
-                temp.setTile(super.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t.isSpawn() && t.getRoom().equals(color)).findFirst().orElseThrow(() -> new UnsupportedOperationException()));
+                temp.setTile(super.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t.isSpawn() && t.getRoom().equals(color)).findFirst().orElseThrow(UnsupportedOperationException::new));
             }
+            spawnPoints = getPlayers().stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
+
         }
     }
 
@@ -62,8 +67,46 @@ public class DominationMatch extends Match{
 
     @Override
     public List<Player> getWinners() {
-        //TODO get players that win
-        return null;
+        for (Player p : getPlayers()) {
+            if (!spawnPoints.contains(p))
+                scorePlayerBoard(p);
+            else {
+                scoreSpawnPoint(p);
+            }
+        }
 
+        return getPlayers().
+                stream().
+                filter(s -> s.getPoints() == getPlayers().stream().max(Comparator.comparing(Player::getPoints)).get().getPoints()).
+                collect(Collectors.toList());
     }
+
+    private void scoreSpawnPoint(Player p) {
+        int currentReward = 0;
+        Map<Player, Long> frequencyShots =
+                p.getDamages().
+                        stream().
+                        filter(Objects::nonNull).
+                        collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        Comparator<Player> givenDamages = Comparator.comparing(frequencyShots::get);
+        Comparator<Player> indices = Comparator.comparing(p.getDamages()::indexOf);
+
+        HashSet<Player> shotGiver = new HashSet<>(p.getDamages());
+        List<Player> shotOrder = shotGiver.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
+        int currentSameShots = 1;
+        for (int i = 0; i < shotOrder.size(); i++) {
+            if (i != 0 && frequencyShots.get(shotOrder.get(i)) ==
+                    frequencyShots.get(shotOrder.get(i)) - 1)
+                currentSameShots ++;
+            else {
+                currentReward += currentSameShots;
+                currentSameShots = 1;
+            }
+
+            shotOrder.get(i).addPoints(p.getRewardPoints().get(currentReward));
+        }
+    }
+
+
 }
