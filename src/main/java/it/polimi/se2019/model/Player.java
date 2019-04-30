@@ -209,7 +209,8 @@ public class Player {
 	}
 
 	public void addWeapon(Weapon weapon) {
-		weapons.add(weapon);
+		if(weapons.size()<3)
+			weapons.add(weapon);
 	}
 
 	public List<Weapon> getWeapons() {

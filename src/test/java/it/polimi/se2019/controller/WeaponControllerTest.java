@@ -14,12 +14,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class WeaponControllerTest {
-    List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono", Color.RED),new Player("cattivo",Color.BLUE)));
-    Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
-    Weapon testWeapon = CardCreator.parseWeapon("cannoneVortex.btl");
-    Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
+class WeaponControllerTest {
+    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono", Color.RED),new Player("cattivo",Color.BLUE)));
+    private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
+    private Weapon testWeapon = CardCreator.parseWeapon("cannoneVortex.btl");
+    private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
 
     @Test
     void assignWeapon(){
@@ -29,7 +30,7 @@ public class WeaponControllerTest {
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);
         testMatch.getPlayers().get(testMatch.getCurrentPlayer()).getWeapons().remove(testWeapon);
         weaponControllerTest.update(testWeapon);
-        assertEquals(weaponControllerTest.getWeapon(),null);
+        assertNull(weaponControllerTest.getWeapon());
     }
 
      @Test

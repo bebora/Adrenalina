@@ -39,7 +39,7 @@ public class EffectController {
 
     private boolean askingForSource;
 
-    public EffectController(Effect curEffect, Weapon weapon,Match match,Player player){
+    EffectController(Effect curEffect, Weapon weapon,Match match,Player player){
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
@@ -52,7 +52,13 @@ public class EffectController {
 
     }
 
-    public void nextStep(){
+    /**
+     * Read the next ActionType to be executed and
+     * call the method to check if the effect needs a Direction.
+     * If there is no next ActionType prepare clean the EffectController
+     * for a new input.
+     */
+    private void nextStep(){
         orderIndex+=1;
         playersToMove = new ArrayList<>();
         if(orderIndex < curEffect.getOrder().size()) {
@@ -82,6 +88,10 @@ public class EffectController {
         }
     }
 
+    /**
+     * Check the value of the current ActionType
+     * and call the proper method to prepare for user input
+     */
     private void processStep(){
         if(curActionType == MOVE)
             processMove();
@@ -91,6 +101,13 @@ public class EffectController {
 
     //TODO:complete the update method and add update for others input targets
 
+    /**
+     * direction is the cardinal Direction in which the effect
+     * is applied. If the current value is null memorize the new value,
+     * otherwise tell the user to send another Direction
+     * @param direction the Direction in which the effect is applied
+     * @see Direction
+     */
     public void update(Direction direction){
         if(curEffect.getDirection() == null){
             curEffect.setDirection(direction);
@@ -103,8 +120,13 @@ public class EffectController {
         }
     }
 
-    //TODO WRONG!!! ;) ;P ;)
-    public void update(ArrayList<Player> players){
+    /**
+     * players is a list of players provided from the user to which the
+     * current Move or DealDamage is applied.
+     * @param players a List of Player to which the current subeffect is applied
+     * @see Player
+     */
+    public void update(List<Player> players){
         if(curActionType == MOVE && askingForSource){
                 if(checkPlayerTargets(curMove.getTargetSource(),players)) {
                     if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
@@ -133,7 +155,15 @@ public class EffectController {
 
     }
 
-    public void update(List<Tile> tiles){
+    /**
+     * If the current sub effect is Move tiles contains a single Tile
+     * to which the selected objects must be moved.
+     * If the current sub effect is DealDamage tiles contains
+     * the targets for the area damage.
+     * @param tiles a target for Move(must contain a single tile) or DealDamage
+     * @see Tile
+     */
+    public void update(ArrayList<Tile> tiles){
         if(curActionType == MOVE) {
             if (checkTileTargets(curMove.getTargetDestination(), tiles)){
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
@@ -155,6 +185,10 @@ public class EffectController {
         }
     }
 
+    /**
+     * The
+     * @param room
+     */
     public void update(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         if(possibleTargets.stream()
@@ -249,7 +283,7 @@ public class EffectController {
         }
     }
 
-    public void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}
-    public void setCurEffect(Effect effect){this.curEffect = effect;}
+    void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}
+    void setCurEffect(Effect effect){this.curEffect = effect;}
     public void setPlayer(Player player){this.player = player;}
 }
