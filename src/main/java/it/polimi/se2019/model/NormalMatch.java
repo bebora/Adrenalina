@@ -6,11 +6,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class NormalMatch extends Match{
+public class NormalMatch extends Match {
 
 	public NormalMatch(List<Player> players, String boardFilename, int numSkulls) {
 		super(players, boardFilename, numSkulls);
 	}
+
 	/**
 	 * True if player turn has ended
 	 */
@@ -24,7 +25,7 @@ public class NormalMatch extends Match{
 	/**
 	 * List of players playing the match
 	 */
-	private List <Player> players;
+	private List<Player> players;
 
 	/**
 	 * Index of the player whose turn is the current
@@ -43,7 +44,7 @@ public class NormalMatch extends Match{
 
 
 	public void resetPlayer(Player player) {
-		player.addPowerUp(board.drawPowerUp(),false);
+		player.addPowerUp(board.drawPowerUp(), false);
 		player.getDamages().clear();
 	}
 
@@ -67,11 +68,11 @@ public class NormalMatch extends Match{
 	}
 
 	public List<Player> getWinners() {
-		Map <Player,Long> deadTrackPoints = new HashMap<>();
+		Map<Player, Long> deadTrackPoints = new HashMap<>();
 		for (Player p : players)
 			scorePlayerBoard(p);
 
-        int currentReward = 0;
+		int currentReward = 0;
 
 		Map<Player, Long> frequencyShots =
 				board.getKillShotTrack().
@@ -87,33 +88,27 @@ public class NormalMatch extends Match{
 
 
 		for (Player p : shotOrder) {
-            deadTrackPoints.put(p, frequencyShots.get(p));
-            p.addPoints(board.getKillShotReward().get(currentReward));
+			deadTrackPoints.put(p, frequencyShots.get(p));
+			p.addPoints(board.getKillShotReward().get(currentReward));
 		}
 
 		for (Player p : players) {
-		    if (!deadTrackPoints.keySet().contains(p)) {
-		        deadTrackPoints.put(p,Long.valueOf(0));
-            }
-        }
+			if (!deadTrackPoints.keySet().contains(p)) {
+				deadTrackPoints.put(p, Long.valueOf(0));
+			}
+		}
 
 		List<Player> maxPlayers = players.stream().filter(p -> p.getPoints() == players.stream().max(Comparator.comparing(Player::getPoints)).get().getPoints()).collect(Collectors.toList());
 		if (maxPlayers.size() == 1) {
-		    return maxPlayers;
-        }
-        else {
-            int maxTrack = Collections.max(maxPlayers, Comparator.comparing(deadTrackPoints::get)).getPoints();
-            return maxPlayers.stream().
-                    filter(p -> p.getPoints() == maxTrack).
-                    collect(Collectors.toList());
-        }
+			return maxPlayers;
+		} else {
+			int maxTrack = Collections.max(maxPlayers, Comparator.comparing(deadTrackPoints::get)).getPoints();
+			return maxPlayers.stream().
+					filter(p -> p.getPoints() == maxTrack).
+					collect(Collectors.toList());
+		}
 
 	}
-	public List<Player> getPlayers(){ return players;}
-	public int getCurrentPlayer(){return currentPlayer;}
-	public Board getBoard(){return board; }
-
-
 }
 
 
