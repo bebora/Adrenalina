@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WeaponController extends Thread {
+public class WeaponController {
     private int curEffect;
     private int lastUsedIndex;
     private Weapon weapon;
@@ -64,6 +64,7 @@ public class WeaponController extends Thread {
             //tell the player to select the effect
         }
         else {
+            weapon = null;
             //tell the player that the missing weapon is unloaded
         }
     }
@@ -81,4 +82,6 @@ public class WeaponController extends Thread {
             }
         }
     }
+
+    public Weapon getWeapon(){return weapon; }
 }
