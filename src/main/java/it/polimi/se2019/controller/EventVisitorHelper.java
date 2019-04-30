@@ -2,11 +2,15 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.board.Board;
+import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.updatemessage.PopupMessageUpdate;
+import it.polimi.se2019.view.ViewTile;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EventVisitorHelper {
     private Match match;
@@ -29,6 +33,11 @@ public class EventVisitorHelper {
         return temp;
     }
 
+    public List<Tile> getTilesFromViewTiles(List<ViewTile> viewTiles, Board board){
+        return viewTiles.stream()
+                .map(v -> board.getTile(v.getCoords().getPosy(),v.getCoords().getPosx()))
+                .collect(Collectors.toList());
+    }
 
 
 }

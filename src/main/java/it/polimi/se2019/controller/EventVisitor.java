@@ -1,10 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.ConnectionRequest;
-import it.polimi.se2019.controller.events.SelectAction;
-import it.polimi.se2019.controller.events.SelectPlayers;
-import it.polimi.se2019.controller.events.SelectWeapon;
+import it.polimi.se2019.controller.events.*;
 
 public class EventVisitor {
     Observer currentObserver;
@@ -15,6 +12,7 @@ public class EventVisitor {
         throw new UnsupportedOperationException();
     }
     public void visit(SelectWeapon event){ throw new UnsupportedOperationException();}
+    public void visit(SelectTiles event){throw new UnsupportedOperationException();}
 
 
     public void visit(ConnectionRequest event) {
