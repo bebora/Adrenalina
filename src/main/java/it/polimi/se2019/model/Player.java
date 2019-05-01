@@ -15,6 +15,8 @@ import it.polimi.se2019.view.VirtualView;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.FALSE;
+
 
 public class Player {
 
@@ -33,6 +35,7 @@ public class Player {
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(3);
+		firstShotReward = Boolean.TRUE;
 	}
 
 
@@ -58,6 +61,9 @@ public class Player {
 		this.virtualView = virtualView;
 		return this;
 	}
+
+	private boolean firstShotReward;
+
 	private boolean firstPlayer;
 	Color color;
 
@@ -159,7 +165,7 @@ public class Player {
 
 
 	public Boolean getDominationSpawn() {
-		return Boolean.FALSE;
+		return FALSE;
 	}
 
 	public void setMaxActions(int maxActions) {
@@ -177,10 +183,20 @@ public class Player {
 		return actionCount;
 	}
 
+	public boolean getFirstShotReward() {
+		return firstShotReward;
+	}
+
+	public Player setFirstShotReward(boolean firstShotReward) {
+		this.firstShotReward = firstShotReward;
+		return this;
+	}
+
 	/**
 	 * Convert the marks of the shooting player in damages
 	 * @param player user who is shooting
 	 */
+
 
 
 	public void convertMarks(Player player) {
@@ -271,7 +287,10 @@ public class Player {
 		return tile;
 	}
 
-	public void setTile(Tile tile){this.tile = tile;}
+	public void setTile(Tile tile){
+		this.tile = tile;
+		//TODO update view with new update(tile)
+	}
 
 	public boolean getFirstPlayer() {
 		return firstPlayer;
@@ -311,10 +330,12 @@ public class Player {
 		//TODO actions refreshing
 	}
 
-	public void resetPlayer(PowerUp powerUp) {
+	public void resetPlayer(PowerUp powerUp, boolean frenzy) {
 		refreshPlayer();
 		addPowerUp(powerUp, false);
 		damages.clear();
+		if (frenzy)
+			firstShotReward = FALSE;
 	}
 	/**
 	 * Update available actions when entering frenzy mode

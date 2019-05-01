@@ -7,7 +7,6 @@ public class VisitConnectionRequest extends EventVisitor{
     @Override
     public void visit(ConnectionRequest event) {
         EventVisitable currentEvent = event;
-        currentObserver.update(event);
     }
 
 }

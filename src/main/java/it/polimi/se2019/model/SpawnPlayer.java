@@ -8,6 +8,7 @@ public class SpawnPlayer extends Player{
     public SpawnPlayer(Color color) {
         super(color.toString(), color);
         damaged  = Boolean.FALSE;
+
     }
 
     @Override

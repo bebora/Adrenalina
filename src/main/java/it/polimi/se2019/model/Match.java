@@ -9,6 +9,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.TRUE;
+
 /**
  * Container class for all the information of the Match being played
  */
@@ -91,7 +93,7 @@ public abstract class Match {
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);
-			p.resetPlayer(board.drawPowerUp());
+			p.resetPlayer(board.drawPowerUp(),finalFrenzy);
 		}
 
         if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
@@ -103,7 +105,7 @@ public abstract class Match {
 
 	public void scorePlayerBoard(Player player) {
 		// first blood
-		if (finalFrenzy)
+		if (player.getFirstShotReward() == TRUE)
 			player.getDamages().get(0).addPoints(1);
 		Player maxPlayer = null;
 		int currentReward = 0;
@@ -129,6 +131,9 @@ public abstract class Match {
 			damageOrder.remove(0);
 			currentReward++;
 		}
+		if (player.getDamages().size() >= 11) {
+			scoreDeadShot(player);
+		}
 	}
 
 	public abstract void scoreDeadShot(Player player);
@@ -144,6 +149,10 @@ public abstract class Match {
 				.collect(Collectors.toList());
 	}
 
+	public boolean checkFrenzy() {
+		return getBoard().getKillShotTrack().size() >= getBoard().getSkulls() * 2;
+	}
+
 	public abstract List<Player> getWinners();
 	public List<Player> getPlayers(){ return players;}
 	public int getCurrentPlayer(){return currentPlayer;}
@@ -155,5 +164,12 @@ public abstract class Match {
 
 	public Boolean getFinalFrenzy() {
 		return finalFrenzy;
+	}
+
+	public void updateFrenzy() {
+		finalFrenzy = TRUE;
+		List<Player> toUpdate = players.stream().filter(p->!p.getDominationSpawn()).collect(Collectors.toList());
+
+		//TODO Update Frenzy players
 	}
 }

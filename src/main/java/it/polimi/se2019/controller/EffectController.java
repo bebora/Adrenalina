@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Observer;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -13,7 +14,7 @@ import java.util.List;
 
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
-public class EffectController {
+public class EffectController implements Observer {
     private Board board;
     private Player player;
     private Weapon curWeapon;
@@ -163,7 +164,7 @@ public class EffectController {
      * @param tiles a target for Move(must contain a single tile) or DealDamage
      * @see Tile
      */
-    public void updateOnTiles(ArrayList<Tile> tiles){
+    public void updateOnTiles(List<Tile> tiles){
         if(curActionType == MOVE) {
             if (checkTileTargets(curMove.getTargetDestination(), tiles)){
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)

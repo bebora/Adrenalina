@@ -1,16 +1,25 @@
 package it.polimi.se2019;
 
 import it.polimi.se2019.controller.EventVisitable;
+import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.board.Color;
+import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 
+import java.util.List;
+
 public interface Observer {
-    // Update using an event visitable, method will be implemented by the controllers for receiving events (selection of resources) from the client
-    void update(EventVisitable e);
+
+    void updateOnTiles(List<Tile> tiles);
+
+    void updateOnPlayers(List<Player> players);
+
+    void updateOnDirection(Direction direction);
+
+    void updateOnRoom(Color room);
 
 
-    // Update using an UpdateVisitable describing how the view need to be modified
-    // TODO type may be changed to UpdateWrapper
-    void update(UpdateVisitable update);
 
 
 }

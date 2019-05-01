@@ -282,4 +282,7 @@ public class Board {
 	public List<Integer> getKillShotReward() {
 		return killShotReward;
 	}
+
+
+
 }

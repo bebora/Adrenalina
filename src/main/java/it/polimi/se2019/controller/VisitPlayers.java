@@ -9,7 +9,6 @@ public class VisitPlayers extends EventVisitor {
     @Override
     public void visit(SelectPlayers event) {
         EventVisitable currentEvent = event;
-        currentObserver.update(event);
     }
 
     public void setObserver(Observer currentObserver) {

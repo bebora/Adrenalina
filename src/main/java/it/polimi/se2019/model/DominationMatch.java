@@ -107,5 +107,15 @@ public class DominationMatch extends Match{
         }
     }
 
+    @Override
+    public boolean checkFrenzy() {
+        Long countDeadSpawnPoint = getPlayers().
+                stream().
+                filter(p -> p.getDominationSpawn()).
+                filter(p -> p.getDamages().size() >= 8).
+                count();
+        return super.checkFrenzy() || countDeadSpawnPoint >= 2;
+    }
+
 
 }

@@ -48,14 +48,6 @@ public class NormalMatch extends Match {
 		player.getDamages().clear();
 	}
 
-	public void scorePlayerBoard(Player player) {
-		super.scorePlayerBoard(player);
-		// death shot
-		if (player.getDamages().size() >= 11) {
-			scoreDeadShot(player);
-		}
-	}
-
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));
 		player.getRewardPoints().remove(0);
@@ -110,6 +102,8 @@ public class NormalMatch extends Match {
 		}
 
 	}
+
+
 
 }
 
