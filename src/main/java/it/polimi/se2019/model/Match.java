@@ -70,7 +70,9 @@ public abstract class Match {
 	}
 
 	public void startFrenzy() {
+		finalFrenzy = TRUE;
 		Boolean afterFirst;
+		// Update actions
 		if (firstPlayer < currentPlayer) {
 			for (Player p : players) {
 				afterFirst = !(players.indexOf(p) >= currentPlayer || players.indexOf(p) < firstPlayer);
@@ -86,6 +88,15 @@ public abstract class Match {
 			for (Player p : players)
 				p.notifyFrenzy(true);
 		}
+
+		// Update reward points
+		List<Player> toUpdate = players.stream().filter(p->!p.getDominationSpawn()).collect(Collectors.toList());
+		for (Player p : toUpdate) {
+			p.setFirstShotReward(false);
+			if (!p.getRewardPoints().isEmpty())
+				p.getRewardPoints().subList(1,p.getRewardPoints().size()).clear();
+			p.getRewardPoints().addAll(new ArrayList<Integer>(Arrays.asList(2,1,1,1)));
+		}
 	}
 
 	public void newTurn() {
@@ -93,7 +104,7 @@ public abstract class Match {
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);
-			p.resetPlayer(board.drawPowerUp(),finalFrenzy);
+			p.resetPlayer(board.drawPowerUp());
 		}
 
         if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
@@ -101,7 +112,17 @@ public abstract class Match {
 
 		board.refreshWeapons();
 		board.refreshAmmos();
+
+		currentPlayer = (currentPlayer + 1) %
+				players.
+					stream().
+					filter(p->!p.getDominationSpawn()).
+					collect(Collectors.toList()).
+					size();
+		if (checkFrenzy())
+			startFrenzy();
 	}
+
 
 	public void scorePlayerBoard(Player player) {
 		// first blood
@@ -166,10 +187,4 @@ public abstract class Match {
 		return finalFrenzy;
 	}
 
-	public void updateFrenzy() {
-		finalFrenzy = TRUE;
-		List<Player> toUpdate = players.stream().filter(p->!p.getDominationSpawn()).collect(Collectors.toList());
-
-		//TODO Update Frenzy players
-	}
 }

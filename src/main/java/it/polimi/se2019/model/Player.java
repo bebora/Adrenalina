@@ -330,12 +330,10 @@ public class Player {
 		//TODO actions refreshing
 	}
 
-	public void resetPlayer(PowerUp powerUp, boolean frenzy) {
+	public void resetPlayer(PowerUp powerUp) {
 		refreshPlayer();
 		addPowerUp(powerUp, false);
 		damages.clear();
-		if (frenzy)
-			firstShotReward = FALSE;
 	}
 	/**
 	 * Update available actions when entering frenzy mode

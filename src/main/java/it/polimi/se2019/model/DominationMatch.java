@@ -41,11 +41,12 @@ public class DominationMatch extends Match{
         }
         super.newTurn();
 
+        // TODO refactor this
         if (super.getCurrentPlayer() == super.getFirstPlayer()) {
             currentTurn++;
         }
 
-        if (currentTurn == 2) {
+        if (currentTurn == 1) {
             List<Color> colors = new ArrayList<>(Arrays.asList(Color.RED, Color.YELLOW, Color.BLUE));
             for (Color color : colors) {
                 Player temp = new SpawnPlayer(color);

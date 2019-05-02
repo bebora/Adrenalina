@@ -43,10 +43,7 @@ public class NormalMatch extends Match {
 	private Boolean finalFrenzy;
 
 
-	public void resetPlayer(Player player) {
-		player.addPowerUp(board.drawPowerUp(), false);
-		player.getDamages().clear();
-	}
+
 
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));
