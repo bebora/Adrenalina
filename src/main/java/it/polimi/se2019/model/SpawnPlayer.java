@@ -18,8 +18,12 @@ public class SpawnPlayer extends Player{
         damaged = Boolean.TRUE;
     }
 
+    public void setDamaged(Boolean damaged) {
+        this.damaged = damaged;
+    }
+
     @Override
-    public void refreshPlayer() {
+    public void resetPlayer() {
         damaged = Boolean.TRUE;
     }
 

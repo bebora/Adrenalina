@@ -59,16 +59,10 @@ public abstract class Match {
 	private Boolean finalFrenzy;
 
 	/**
-	 * The game can be played in:
-	 * <li>Normal Mode </li>
-	 * <li> Domination Mode</li>
-	 */
-
-
-	public void addPlayer(Player player) {
-		players.add(player);
-	}
-
+	 * Manage the change to frenzy mode
+	 * Update the actions available for each player
+	 * Update the reward points given by each player
+ 	 */
 	public void startFrenzy() {
 		finalFrenzy = TRUE;
 		Boolean afterFirst;
@@ -99,14 +93,24 @@ public abstract class Match {
 		}
 	}
 
+	/**
+	 * Manage the start of a new turn
+	 * Score the board of dead players
+	 * Add the points for double kill (domination spawn kill doesn't count)
+	 * Refresh {@link Board#weaponsDeck} and {@link Board#ammoCards} on the board
+	 * Start Frenzy if conditions are met
+	 */
 	public void newTurn() {
+		// Dead players
 		List<Player> deadPlayers = players.stream().
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);
-			p.resetPlayer(board.drawPowerUp());
+			p.resetPlayer();
+			p.addPowerUp(board.drawPowerUp(), false);
 		}
 
+		// Point for double shot
         if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
             players.get(currentPlayer).addPoints(1);
 
@@ -119,11 +123,20 @@ public abstract class Match {
 					filter(p->!p.getDominationSpawn()).
 					collect(Collectors.toList()).
 					size();
-		if (checkFrenzy())
+
+		//TODO add checking for winners and end of the game, finding a way to keep count of when it happens!
+
+		if (!finalFrenzy && checkFrenzy())
 			startFrenzy();
 	}
 
-
+	/**
+	 * Score personal Player Board when the corresponding Player is dead or match is ended
+	 * Check and score the first blood if {@link Player#firstShotReward} is TRUE
+	 * Score the damage of each player accordingly to the rules, following the {@link Player#rewardPoints} and giving a minimum of 1 points to every shooter
+	 * Score for overkill
+	 * @param player player to score
+	 */
 	public void scorePlayerBoard(Player player) {
 		// first blood
 		if (player.getFirstShotReward() == TRUE)
@@ -152,32 +165,53 @@ public abstract class Match {
 			damageOrder.remove(0);
 			currentReward++;
 		}
+
+		// Score for overkill
 		if (player.getDamages().size() >= 11) {
 			scoreDeadShot(player);
 		}
 	}
 
 	public abstract void scoreDeadShot(Player player);
+
+	/**
+	 * Get players in {@code tile}
+	 * @param tile tile where to take the players
+	 * @return List of players in Tile
+	 */
 	public List<Player> getPlayersInTile(Tile tile){
 		return this.getPlayers().stream()
 				.filter(p -> p.getTile() == tile)
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Get players in {@code room}
+	 * @param room room where to take the players
+	 * @return List of players in Room
+	 */
 	public List<Player> getPlayersInRoom(Color room){
 		return this.getPlayers().stream()
 				.filter(p -> p.getTile().getRoom() == room)
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Check if conditions for Frenzy are met
+	 * @return True if need to start frenzy, false otherwise
+	 */
 	public boolean checkFrenzy() {
 		return getBoard().getKillShotTrack().size() >= getBoard().getSkulls() * 2;
 	}
 
 	public abstract List<Player> getWinners();
+
 	public List<Player> getPlayers(){ return players;}
+
 	public int getCurrentPlayer(){return currentPlayer;}
+
 	public Board getBoard(){return board; }
+
 
 	public int getFirstPlayer() {
 		return firstPlayer;
@@ -185,6 +219,10 @@ public abstract class Match {
 
 	public Boolean getFinalFrenzy() {
 		return finalFrenzy;
+	}
+
+	public void addPlayer(Player player) {
+		players.add(player);
 	}
 
 }

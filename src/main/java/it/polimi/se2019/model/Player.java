@@ -36,6 +36,7 @@ public class Player {
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(3);
 		firstShotReward = Boolean.TRUE;
+		damagesAllocable = 0;
 	}
 
 
@@ -44,23 +45,12 @@ public class Player {
 		this.damages = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 	}
-	public String getUsername() {
-		return username;
-	}
 
-	public View getVirtualView() {
-		return virtualView;
-	}
-
-	public Player setOnline(Boolean online) {
-		this.online = online;
-		return this;
-	}
-
-	public Player setVirtualView(View virtualView) {
-		this.virtualView = virtualView;
-		return this;
-	}
+	/**
+	 * Tracks how many damages can be allocated in spawnpoints
+	 * Used in Domination Mode
+	 */
+	private int damagesAllocable;
 
 	private boolean firstShotReward;
 
@@ -175,6 +165,7 @@ public class Player {
 	public int getMaxActions() {
 		return maxActions;
 	}
+
 	public List<Player> getDamages() {
 		return damages;
 	}
@@ -187,18 +178,14 @@ public class Player {
 		return firstShotReward;
 	}
 
-	public Player setFirstShotReward(boolean firstShotReward) {
+	public void setFirstShotReward(boolean firstShotReward) {
 		this.firstShotReward = firstShotReward;
-		return this;
 	}
 
 	/**
-	 * Convert the marks of the shooting player in damages
+	 * Convert the marks of the shooting player in damages, discarding the exceeding marks.
 	 * @param player user who is shooting
 	 */
-
-
-
 	public void convertMarks(Player player) {
 		List<Player> unrelatedMarks = this.marks.stream().
                 filter(m -> !m.getId().equals(player.getId())).
@@ -209,6 +196,15 @@ public class Player {
         marks = unrelatedMarks;
 	}
 
+	/**
+	 * Add given number of {@code damage} given by {@code shooter}
+	 * Convert marks related to the shooting player in damages
+	 * Add given number of {@code marks} given by {@code shooter}
+	 * Change avaiable actions of the receiving player accordingly
+	 * @param shooter player who shoots
+	 * @param damage number of damages to add
+	 * @param marks number of marks to add after converting the existing marks
+	 */
 	public void receiveShot(Player shooter, int damage, int marks) {
 		while(damage > 0 && damages.size() < 13){
 			damages.add(shooter);
@@ -230,6 +226,10 @@ public class Player {
 		return actions;
 	}
 
+	/**
+	 * Add weapons to the player, without exceeding the size limit
+	 * @param weapon weapon to add
+	 */
 	public void addWeapon(Weapon weapon) {
 		if(weapons.size()<3)
 			weapons.add(weapon);
@@ -315,29 +315,37 @@ public class Player {
 
 	public void setPerspective(Tile perspective){this.perspective = perspective;}
 
+	/**
+	 * Add mark by {@code shooter}, if there aren't already three marks of the same shooter
+	 * @param shooter player who gives the mark
+	 */
 	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);
 		if(counter<3)
 			marks.add(shooter);
 	}
 
+	/**
+	 * Add ammo, if there aren't already three ammos of the same color
+	 * @param ammo ammo to add in the player's {@link #ammos}
+	 */
 	public void addAmmo(Ammo ammo) {
 		if (Collections.frequency(ammos, ammo) < 3)
 			ammos.add(ammo);
 	}
 
-	public void refreshPlayer() {
-		//TODO actions refreshing
-	}
 
-	public void resetPlayer(PowerUp powerUp) {
-		refreshPlayer();
-		addPowerUp(powerUp, false);
+	/**
+	 * Reset Player when {@link #alive} is False
+	 * Clear the damages and draw a PowerUp, even if already three are present
+	 */
+	public void resetPlayer() {
 		damages.clear();
 	}
+
 	/**
 	 * Update available actions when entering frenzy mode
-	 * @param afterFirst
+	 * @param afterFirst indicates if the current Player has its turn after or before the {@link Match#firstPlayer} in the last turn
 	 */
 	public void notifyFrenzy(Boolean afterFirst){
 		if (afterFirst) {
@@ -367,16 +375,47 @@ public class Player {
 			a.updateOnHealth(damages.size());
 	}
 
+	/**
+	 * Add {@code powerUp} to {@link #powerUps} if:
+	 * <li>{@code limit} if False</li>
+	 * <li>{@link #powerUps} size is less than three</li>
+	 * @param powerUp powerup to add
+	 * @param limit if limiting or not to three the size of {@link #powerUps}
+	 */
 	public void addPowerUp(PowerUp powerUp, boolean limit) {
 		if (!(limit && powerUps.size() >= 3)) {
 			powerUps.add(powerUp);
 		}
 	}
 
+	/**
+	 * Discard the powerUp and add the corresponding ammo
+	 * @param powerUp powerUp to discard from {@link #powerUps}
+	 */
 	public void discardPowerUp(PowerUp powerUp) {
 		powerUps.remove(powerUp);
 		addAmmo(powerUp.getDiscardAward());
 	}
 
+	public String getUsername() {
+		return username;
+	}
 
+	public View getVirtualView() {
+		return virtualView;
+	}
+
+	public Player setOnline(Boolean online) {
+		this.online = online;
+		return this;
+	}
+
+	public Player setVirtualView(View virtualView) {
+		this.virtualView = virtualView;
+		return this;
+	}
+
+	public void addDamagesAllocable() {
+		this.damagesAllocable+=1;
+	}
 }
