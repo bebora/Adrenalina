@@ -371,6 +371,8 @@ public class Player {
 	 * Update available actions based on current health
 	 */
 	public void notifyHealthChange(){
+		if(damages.size() >= 11)
+			alive = ThreeState.FALSE;
 		for(Action a: actions)
 			a.updateOnHealth(damages.size());
 	}

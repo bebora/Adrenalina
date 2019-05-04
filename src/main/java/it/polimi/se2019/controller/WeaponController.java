@@ -79,14 +79,17 @@ public class WeaponController {
             lastUsedIndex = weapon.getEffects().indexOf(effect) + 1;
             if(effectController == null) {
                 effectController = new EffectController(effect, weapon, match, curPlayer);
+                effectController.nextStep();
             }
             else{
                 effectController.setCurEffect(effect);
                 effectController.setCurWeapon(weapon);
                 effectController.setPlayer(curPlayer);
+                effectController.nextStep();
             }
         }
     }
 
     public Weapon getWeapon(){return weapon; }
+    public EffectController getEffectController(){return effectController;}
 }

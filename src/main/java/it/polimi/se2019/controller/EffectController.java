@@ -63,7 +63,7 @@ public class EffectController implements Observer {
      * If there is no next ActionType prepare clean the EffectController
      * for a new input.
      */
-    private void nextStep(){
+     void nextStep(){
         orderIndex+=1;
         playersToMove = new ArrayList<>();
         if(orderIndex < curEffect.getOrder().size()) {
