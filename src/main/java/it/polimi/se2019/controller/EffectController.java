@@ -14,6 +14,10 @@ import java.util.List;
 
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
+/**
+ * This class contains all the logic related to the execution
+ * of an effect after the player has chosen it.
+ */
 public class EffectController implements Observer {
     private Board board;
     private Player player;
@@ -187,8 +191,11 @@ public class EffectController implements Observer {
     }
 
     /**
-     * The
-     * @param room
+     * Checks if the room is valid and apply the current DealDamage
+     * to all the Player in the room. If the room is not a valid target
+     * signals the mistake to the player.
+     * Only check for using samePlayerRoom and Visibility filters.
+     * @param room the color of the target room
      */
     public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
@@ -203,6 +210,11 @@ public class EffectController implements Observer {
         }
     }
 
+    /**
+     * Ask the player for a Direction if the current target requires one,
+     * otherwise go on with the effect
+     * @param target the target of the current subeffect
+     */
     private void processDirection(Target target){
         if(target.getCardinal() == ThreeState.TRUE || target.getCardinal() == ThreeState.FALSE) {
             //ask for direction
@@ -211,6 +223,9 @@ public class EffectController implements Observer {
             processStep();
     }
 
+    /**
+     * Ask the player for the proper target after checking the current Move
+     */
     //TODO: complete processMove and processDealDamage with proper methods to communicate with view
     private void processMove(){
         switch(curMove.getObjectToMove()){
@@ -233,6 +248,9 @@ public class EffectController implements Observer {
 
     }
 
+    /**
+     * Ask the player for the proper target after checking the current DealDamage
+     */
     private void processDealDamage(){
         Area targetType = curDealDamage.getTarget().getAreaDamage();
         switch(targetType){
@@ -250,6 +268,14 @@ public class EffectController implements Observer {
         }
     }
 
+    /**
+     * Returns true if the list of Player respects the parameters
+     * specified in the Target.
+     * @param target the Target to get the filters from
+     * @param players a List of Player to be checked
+     * @return <code>true</code> if every player satisfies the parameters
+     *         <code>false</code> otherwise.
+     */
     private boolean checkPlayerTargets(Target target, List<Player> players){
         boolean result;
         checkPointOfView(target);
@@ -261,12 +287,25 @@ public class EffectController implements Observer {
         return result;
     }
 
+    /**
+     * Return true if the tiles respect the parameters specified
+     * in Target
+     * @param target the Target to get the filters from
+     * @param tiles the tiles to be verified
+     * @return <code>true</code> if the tiles respect the filters
+     *         <code>false</code> otherwise.
+     */
     private boolean checkTileTargets(Target target,List<Tile> tiles){
         checkPointOfView(target);
         return tiles.stream()
                 .allMatch(target.getFilterTiles(board,pointOfView));
     }
 
+    /**
+     * Check the pointOfView required by the target for the
+     * current sub effect and set it accordingly.
+     * @param target
+     */
     private void checkPointOfView(Target target){
         switch(target.getPointOfView()){
             case OWN:
