@@ -41,7 +41,7 @@ effects:
     DEALDAMAGE
   damages:
     damage:
-      damagesAmount:1
+      damagesAmount:2
       target:
         checkBlackList:FALSE
 	maxDistance:0

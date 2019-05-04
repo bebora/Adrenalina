@@ -54,7 +54,6 @@ public class EffectController implements Observer {
         this.player = player;
         this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
-
     }
 
     /**
@@ -82,8 +81,9 @@ public class EffectController implements Observer {
             }
         }
         else{
-            curEffect.setActivated(true);
             curEffect = null;
+            curWeapon = null;
+            player = null;
             curMove = null;
             curDealDamage = null;
             curActionType = null;
