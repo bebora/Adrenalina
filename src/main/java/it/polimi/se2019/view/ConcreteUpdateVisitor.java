@@ -1,5 +1,6 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.updatemessage.*;
 
 import java.util.Collections;
@@ -82,6 +83,14 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
                 collect(Collectors.toList());
         int minPlayers = update.getMinPlayers();
         int maxPlayers = update.getMaxPlayers();
+    }
+
+    @Override
+    public void visit(SelectFromRoomsUpdate update) {
+        //TODO show possible rooms to the player
+        List<Color> rooms = update.getRooms().stream().
+                map(Color::valueOf).
+                collect(Collectors.toList());
     }
 
     @Override
