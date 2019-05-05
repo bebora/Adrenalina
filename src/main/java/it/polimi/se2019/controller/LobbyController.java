@@ -25,20 +25,20 @@ public class LobbyController extends EventVisitor {
      */
     @Override
     public synchronized void visit(ConnectionRequest connectionRequest) {
-        String username = connectionRequest.getUsername();
+        String token = connectionRequest.getToken();
         boolean found = false;
         for (GameController game : games) {
-            List<String> allUsername = game.getMatch().getPlayers().stream().
+            List<String> allTokens = game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
-                    map(Player::getUsername).
+                    map(Player::getToken).
                     collect(Collectors.toList());
-            if (allUsername.contains(username)) {
+            if (allTokens.contains(token)) {
                 found = true;
-                reconnectPlayer(game, username, connectionRequest.getVv());
+                reconnectPlayer(game, token, connectionRequest.getVv());
             }
         }
         if (!found) {
-            connectPlayer(username, connectionRequest.getVv());
+            connectPlayer(token, connectionRequest.getVv());
         }
 
     }
@@ -46,12 +46,12 @@ public class LobbyController extends EventVisitor {
     /**
      * Reconnect a player to the game linking the player to the current VirtualView
      * @param game active game where the username was found
-     * @param username username found in the game
+     * @param token username found in the game
      * @param vv New VirtualView to link to the corresponding player
      */
-    public void reconnectPlayer(GameController game, String username, View vv) {
+    public void reconnectPlayer(GameController game, String token, View vv) {
         Player player = game.getMatch().getPlayers().
-                stream().filter(p -> p.getUsername().equals(username)).findFirst().orElse(null);
+                stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
         if (player != null) {
             player.setVirtualView(vv);
             player.setOnline(true);

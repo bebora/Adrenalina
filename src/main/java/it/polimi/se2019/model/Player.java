@@ -20,10 +20,10 @@ import static java.lang.Boolean.FALSE;
 
 public class Player {
 
-	public Player(String username, Color color) {
+	public Player(String token, Color color) {
 		this.firstPlayer = false;
 		this.color = color;
-		this.username = username;
+		this.token = token;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
 		dominationSpawn = false;
@@ -57,7 +57,10 @@ public class Player {
 	private boolean firstPlayer;
 	Color color;
 
-	String username;
+	/**
+	 * Authentication token saved in this format: {username}${HMAC(password)}
+	 */
+	String token;
 
 	/**
 	 * Virtual View of the player
@@ -399,10 +402,6 @@ public class Player {
 		addAmmo(powerUp.getDiscardAward());
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
 	public View getVirtualView() {
 		return virtualView;
 	}
@@ -419,5 +418,9 @@ public class Player {
 
 	public void addDamagesAllocable() {
 		this.damagesAllocable+=1;
+	}
+
+	public String getToken() {
+		return token;
 	}
 }
