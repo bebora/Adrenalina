@@ -30,9 +30,9 @@ public class ConcreteUpdateVisitorHelper {
      * @param posy
      * @return
      */
-    public ViewTile getTileFromCoords(int posx, int posy) {
+    public ViewTile getTileFromCoords(int posy, int posx) {
         try {
-            return view.getBoard().getTiles().get(posx).get(posy);
+            return view.getBoard().getTiles().get(posy).get(posx);
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidUpdateException("Tile with given coords does not exist");
         }

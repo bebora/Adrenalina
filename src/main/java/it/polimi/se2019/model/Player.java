@@ -55,7 +55,7 @@ public class Player {
 	private boolean firstShotReward;
 
 	private boolean firstPlayer;
-	Color color;
+	private Color color;
 
 	/**
 	 * Authentication token saved in this format: {username}${HMAC(password)}
@@ -285,6 +285,10 @@ public class Player {
     public String getId() {
         return id;
     }
+
+	public Color getColor() {
+		return color;
+	}
 
 	public Tile getTile() {
 		return tile;

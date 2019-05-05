@@ -13,14 +13,17 @@ public abstract class View {
 
 	private int points;
 
-	private List<String> powerUps;
+	private List<ViewPowerUp> powerUps;
 
 	private List<String> loadedWeapons;
 
-	private UpdateVisitor visitor;
+	private ViewTile perspective;
+
+	protected UpdateVisitor visitor;
 
 	public void update(UpdateVisitable u) {
 		//TODO implements the update parsing (visitor pattern)
+		u.accept(visitor);
 	}
 
 	public List<ViewPlayer> getPlayers() {
@@ -31,7 +34,7 @@ public abstract class View {
 		return points;
 	}
 
-	public List<String> getPowerUps() {
+	public List<ViewPowerUp> getPowerUps() {
 		return powerUps;
 	}
 
@@ -41,6 +44,14 @@ public abstract class View {
 
 	public ViewBoard getBoard() {
 		return board;
+	}
+
+	public ViewTile getPerspective() {
+		return perspective;
+	}
+
+	public String getIdView() {
+		return idView;
 	}
 
 	public String getUsername() {
@@ -67,11 +78,15 @@ public abstract class View {
 		this.points = points;
 	}
 
-	public void setPowerUps(List<String> powerUps) {
+	public void setPowerUps(List<ViewPowerUp> powerUps) {
 		this.powerUps = powerUps;
 	}
 
 	public void setLoadedWeapons(List<String> loadedWeapons) {
 		this.loadedWeapons = loadedWeapons;
+	}
+
+	public void setPerspective(ViewTile perspective) {
+		this.perspective = perspective;
 	}
 }

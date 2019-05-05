@@ -15,10 +15,11 @@ import java.util.stream.Collectors;
 public class TotalUpdate implements UpdateVisitable {
     private String username;
     private ViewBoard board;
+    private ViewTileCoords perspective;
     private List<ViewPlayer> players;
     private String idView;
     private int points;
-    private List<String> powerUps;
+    private List<ViewPowerUp> powerUps;
     private List<String> loadedWeapons;
 
     public String getUsername() {
@@ -27,6 +28,10 @@ public class TotalUpdate implements UpdateVisitable {
 
     public ViewBoard getBoard() {
         return board;
+    }
+
+    public ViewTileCoords getPerspective() {
+        return perspective;
     }
 
     public List<ViewPlayer> getPlayers() {
@@ -41,7 +46,7 @@ public class TotalUpdate implements UpdateVisitable {
         return points;
     }
 
-    public List<String> getPowerUps() {
+    public List<ViewPowerUp> getPowerUps() {
         return powerUps;
     }
 
@@ -57,6 +62,8 @@ public class TotalUpdate implements UpdateVisitable {
     /**
      * Build the total upgrade with all the required attributes that
      * the player must have to start or resume the game
+     * Perspective is calculated from username and players:
+     * if no player has that username, an exception will be thrown
      * @param username
      * @param board
      * @param players
@@ -78,9 +85,15 @@ public class TotalUpdate implements UpdateVisitable {
             p.setMarks(UpdateHelper.playersToViewPlayers(realPlayer.getMarks(), this.players));
 
         }
+        Player receivingPlayer = players.stream().
+                filter(p-> p.getToken().equals(username)).
+                findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
+        this.perspective = new ViewTileCoords(
+                receivingPlayer.getTile().getPosy(),
+                receivingPlayer.getTile().getPosx());
         this.idView = idView;
         this.points = points;
-        this.powerUps = powerUps.stream().map(PowerUp::getName).collect(Collectors.toList());
+        this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
         this.loadedWeapons = loadedWeapons.stream().map(Weapon::getName).collect(Collectors.toList());
     }
 

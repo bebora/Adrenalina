@@ -29,7 +29,7 @@ public class ViewBoard {
 	public ViewBoard (Board board){
 		this.tiles = board.getTiles().stream().
 				map(line -> line.stream().
-						map(ViewTile::new).collect(Collectors.toList())).
+						map(t -> t == null ? null : new ViewTile(t)).collect(Collectors.toList())).
 				collect(Collectors.toList());
 		this.killShotTrack = board.getKillShotTrack().stream().map(Player::getId).collect(Collectors.toList());
 		this.doors = board.getDoors().stream().

@@ -16,7 +16,7 @@ public class ViewTileCoords {
         return posy;
     }
 
-    public ViewTileCoords(int posx, int posy) {
+    public ViewTileCoords(int posy, int posx) {
         this.posx = posx;
         this.posy = posy;
     }

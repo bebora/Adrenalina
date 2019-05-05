@@ -11,6 +11,7 @@ public class ViewPlayer {
 
 	public ViewPlayer(Player player) {
 		this.tile = new ViewTile(player.getTile());
+		this.color = player.getColor().name();
 		this.id = player.getId();
 		this.ammos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
 		this.firstPlayer = player.getFirstPlayer();
@@ -20,12 +21,13 @@ public class ViewPlayer {
 				filter(Weapon::getLoaded).map(Weapon::getName).collect(Collectors.toList());
 		this.actionCount = player.getActionCount();
 		this.alive = player.getAlive();
-		this.perspective = new ViewTile(player.getPerspective());
 		this.dominationSpawn = player.getDominationSpawn();
 		this.maxActions = player.getMaxActions();
 	}
 
 	private ViewTile tile;
+
+	private String color;
 
 	private String id;
 
@@ -55,6 +57,10 @@ public class ViewPlayer {
 
 	public String getId() {
 		return id;
+	}
+
+	public String getColor() {
+		return color;
 	}
 
 	public void setAmmos(List<String> ammos) {

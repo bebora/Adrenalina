@@ -4,6 +4,7 @@ import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,10 +35,11 @@ public class ViewTile {
 
     public ViewTile(Tile tile) {
         this.room = tile.getRoom().name();
-        this.coords = new ViewTileCoords(tile.getPosx(), tile.getPosy());
+        this.coords = new ViewTileCoords(tile.getPosy(), tile.getPosx());
         this.weapons = tile.getWeapons().stream().
                 map(Weapon::getName).collect(Collectors.toList());
-        this.ammos = tile.getAmmoCard().getAmmos().stream().
+        //Spawn tiles have a null ammoCard, so getting their ammoCard name would throw a NullPointerException
+        this.ammos = tile.isSpawn() ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
                 map(Ammo::name).collect(Collectors.toList());
     }
 
