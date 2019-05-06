@@ -10,4 +10,8 @@ public class SelectWeapon implements EventVisitable {
     }
     public void accept(EventVisitor visitor) { visitor.visit(this); }
     public String getWeapon() { return weapon; }
+
+    public String toString() {
+        return "weapon";
+    }
 }

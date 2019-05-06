@@ -32,4 +32,8 @@ public class Attack extends Action {
         else
             movements = 1;
     }
+
+    public String toString() {
+        return "ATTACK";
+    }
 }

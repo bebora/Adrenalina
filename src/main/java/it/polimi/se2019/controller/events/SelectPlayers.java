@@ -12,4 +12,9 @@ public class SelectPlayers implements EventVisitable {
         visitor.visit(this);
     }
     public List<String> getPlayerIds(){ return playersIds;}
+
+
+    public String toString() {
+        return "players";
+    }
 }

@@ -7,6 +7,7 @@ import it.polimi.se2019.view.View;
 public class ConnectionRequest implements EventVisitable {
 
     String username;
+    String salt;
     String password;
     View vv;
 
@@ -25,7 +26,7 @@ public class ConnectionRequest implements EventVisitable {
 
     public String getToken() {
         if (!(username.contains("$") || password.contains("$")))
-            return username + "$" + password.hashCode();
+            return username + "$" + salt + "$" + (password+salt).hashCode();
         else
             throw new IllegalArgumentException();
     }

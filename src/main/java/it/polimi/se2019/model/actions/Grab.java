@@ -23,4 +23,8 @@ public class Grab extends Action {
         else
             movements = 2;
     }
+
+    public String toString(){
+        return "GRAB";
+    }
 }

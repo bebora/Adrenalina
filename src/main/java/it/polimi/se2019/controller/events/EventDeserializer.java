@@ -1,0 +1,54 @@
+package it.polimi.se2019.controller.events;
+
+import com.google.gson.*;
+import it.polimi.se2019.controller.EventVisitable;
+import it.polimi.se2019.view.ViewTileCoords;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+public class EventDeserializer implements JsonDeserializer<EventVisitable> {
+    @Override
+    public EventVisitable deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {
+        Gson gson = new Gson();
+        EventVisitable eventVisitable;
+        JsonObject wrapper = jsonElement.getAsJsonObject();
+        String objectType = wrapper.get("type").getAsString();
+        JsonObject event = wrapper.get("event").getAsJsonObject();
+        switch (objectType) {
+            case "action":
+            {
+                eventVisitable = gson.fromJson(jsonElement,SelectAction.class);
+                break;
+            }
+            case "players":
+            {
+                List<String> players= new ArrayList<>();
+                JsonArray jsonPlayers = event.get("players").getAsJsonArray();
+                for (JsonElement player : jsonPlayers) {
+                    players.add(player.getAsString());
+                }
+                eventVisitable = new SelectPlayers(players);
+                break;
+            }
+            case "weapon": {
+                eventVisitable = gson.fromJson(jsonElement, SelectWeapon.class);
+                break;
+            }
+            case "tiles": {
+                List<ViewTileCoords> coords = new ArrayList<>();
+                JsonArray jsonCoords = event.get("tiles").getAsJsonArray();
+                for (JsonElement tileCoord : jsonCoords) {
+                    coords.add(gson.fromJson(tileCoord,ViewTileCoords.class));
+                }
+                eventVisitable = new SelectTiles(coords);
+                break;
+            }
+            default:
+                throw new JsonParseException("WRONG FORMAT");
+        }
+        return eventVisitable;
+    }
+
+}

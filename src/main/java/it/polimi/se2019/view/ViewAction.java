@@ -10,12 +10,13 @@ public class ViewAction {
     boolean reload;
     boolean grab;
     boolean shoot;
-
+    String type;
     public ViewAction(Action a) {
         List<SubAction> subActions = a.getSubActions();
         this.movements = a.getMovements();
         this.reload = subActions.contains(SubAction.RELOAD);
         this.grab = subActions.contains(SubAction.GRAB);
         this.shoot = subActions.contains(SubAction.SHOOT);
+        this.type = a.toString();
     }
 }

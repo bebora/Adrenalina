@@ -14,4 +14,8 @@ public class Move extends Action {
         if (!afterFirst)
             movements = 4;
     }
+
+    public String toString() {
+        return "MOVE";
+    }
 }
