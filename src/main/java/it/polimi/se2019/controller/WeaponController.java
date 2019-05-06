@@ -61,6 +61,8 @@ public class WeaponController {
     void update(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
+            curEffect = 1;
+            lastUsedIndex = -1;
             weapon = newWeapon;
             //tell the player to select the effect
         }
