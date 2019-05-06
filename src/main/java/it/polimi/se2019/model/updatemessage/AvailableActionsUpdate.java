@@ -43,12 +43,7 @@ public class AvailableActionsUpdate implements UpdateVisitable {
         List<Action> realActions = player.getActions();
         this.actions = new ArrayList<>();
         for (Action a : realActions){
-            List<SubAction> subActions = a.getSubActions();
-            this.actions.add(new ViewAction(
-                    a.getMovements(),
-                    subActions.contains(SubAction.RELOAD),
-                    subActions.contains(SubAction.GRAB),
-                    subActions.contains(SubAction.SHOOT)));
+            this.actions.add(new ViewAction(a));
         }
         this.playerId = player.getId();
     }

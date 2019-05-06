@@ -10,12 +10,7 @@ public class ViewAction {
     boolean reload;
     boolean grab;
     boolean shoot;
-    public ViewAction(int movements, boolean reload, boolean grab, boolean shoot) {
-        this.movements = movements;
-        this.reload = reload;
-        this.grab = grab;
-        this.shoot = shoot;
-    }
+
     public ViewAction(Action a) {
         List<SubAction> subActions = a.getSubActions();
         this.movements = a.getMovements();
