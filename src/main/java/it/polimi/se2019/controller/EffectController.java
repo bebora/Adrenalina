@@ -240,6 +240,7 @@ public class EffectController implements Observer {
                 break;
             case TARGETSOURCE:
                 askingForSource = true;
+                processTargetSource(curMove.getTargetSource());
                 //ask for tile destination
                 break;
             default:
@@ -265,6 +266,19 @@ public class EffectController implements Observer {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Checks the current target and select the players to be moved if no input is needed
+     * @param target the current Move target
+     */
+    private void processTargetSource(Target target){
+        if(target.getMaxTargets() == -1 && target.getCheckTargetList() == ThreeState.TRUE){
+                playersToMove = curWeapon.getTargetPlayers();
+        }
+        if(target.getMaxTargets() == -1 && target.getCheckBlackList() == ThreeState.TRUE){
+            playersToMove = curWeapon.getBlackListPlayers();
         }
     }
 

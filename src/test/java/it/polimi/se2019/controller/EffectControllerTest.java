@@ -66,4 +66,25 @@ public class EffectControllerTest {
         wp.getEffectController().updateOnPlayers(Arrays.asList(secondEnemy));
         assertEquals(2,secondEnemy.getDamagesCount());
     }
+
+    @Test
+    void testMove(){
+        //move self
+        wp.update(testWeapon.getEffects().get(1));
+        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
+        wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
+        assertEquals(testMatch.getBoard().getTile(0,1),currentPlayer.getTile());
+        //move opponent
+        testWeapon = CardCreator.parseWeapon("fucileAPompa.btl");
+        Player enemy = new Player("nemico", Color.RED);
+        enemy.setTile(testMatch.getBoard().getTile(0,0));
+        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
+        currentPlayer.addWeapon(testWeapon);
+        wp.update(testWeapon);
+        wp.update(testWeapon.getEffects().get(0));
+        wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
+        wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
+        assertEquals(3,enemy.getDamagesCount());
+        assertEquals(testMatch.getBoard().getTile(0,1),enemy.getTile());
+    }
 }
