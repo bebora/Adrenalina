@@ -23,7 +23,7 @@ public class BoardCreator {
         Deck<PowerUp> powerUps;
         List<Tile> temp;
         Deck <AmmoCard> ammoCards;
-        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("board/"+filename).getFile()), "UTF-8");
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("boards/"+filename).getFile()), "UTF-8");
              BufferedReader bufRead = new BufferedReader(input)
         ) {
             String curLine;

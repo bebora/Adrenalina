@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 class WeaponControllerTest {
-    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono", Color.RED),new Player("cattivo",Color.BLUE)));
+    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono"),new Player("cattivo")));
     private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
     private Weapon testWeapon = CardCreator.parseWeapon("cannoneVortex.btl");
     private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());

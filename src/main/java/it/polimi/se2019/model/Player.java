@@ -22,6 +22,7 @@ public class Player {
 	public Player(String token) {
 		this.firstPlayer = false;
 		this.token = token;
+		this.color = Color.WHITE;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
 		dominationSpawn = false;
