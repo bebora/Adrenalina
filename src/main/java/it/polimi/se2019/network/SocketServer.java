@@ -26,12 +26,15 @@ public class SocketServer extends Thread{
             } catch (IOException e) {
                 throw new RuntimeException("Can't accept connection", e);
             }
-            WorkerServerSocket workerServerSocket = new WorkerServerSocket(clientSocket, lobbyController);
-            //TODO start thread
+            WorkerServerSocket workerServerSocket;
+            try {
+                workerServerSocket = new WorkerServerSocket(clientSocket, lobbyController);
+                workerServerSocket.start();
+            } catch (AuthenticationErrorException e) {
+                //TODO Logger
+            }
         }
-
     }
-
     public void initializeSocket() {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);

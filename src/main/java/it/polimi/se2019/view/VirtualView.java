@@ -9,18 +9,12 @@ public class VirtualView extends View  {
      * Debug view used to test events without the server
      */
     private View debugView = null;
-    private final String username;
-    private final String encodedPassword;
 
-    public VirtualView (ServerInterface virtualClient, String username, String encodedPassword) {
-        this.username = username;
-        this.encodedPassword = encodedPassword;
+    public VirtualView (ServerInterface virtualClient) {
         this.virtualClient = virtualClient;
     }
 
     public VirtualView (View debugView, String username, String encodedPassword) {
-        this.username = username;
-        this.encodedPassword = encodedPassword;
         this.debugView = debugView;
     }
 
@@ -39,7 +33,4 @@ public class VirtualView extends View  {
         }
     }
 
-    public String getUsername() {
-        return username;
-    }
 }

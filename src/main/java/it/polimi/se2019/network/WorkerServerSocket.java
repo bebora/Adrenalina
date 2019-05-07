@@ -1,30 +1,73 @@
 package it.polimi.se2019.network;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import it.polimi.se2019.controller.EventVisitable;
+import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.MessageHandler;
+import it.polimi.se2019.controller.events.EventDeserializer;
+import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.controller.events.VisitorVirtualViewSetter;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.VirtualView;
 
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class WorkerServerSocket extends Thread implements ServerInterface {
     private Socket socket;
-    private ObjectInputStream oos;
+    private ObjectOutputStream oos;
+
     private ObjectInputStream ois;
     private View VirtualView;
     private Player player;
     private LobbyController lobbyController;
     private MessageHandler messageHandler;
+    private GsonBuilder gsonBuilder;
     BlockingQueue queue = new LinkedBlockingDeque();
 
     public WorkerServerSocket(Socket socket, LobbyController lobbyController) {
         this.lobbyController = lobbyController;
         this.socket = socket;
-        //TODO read from socket the connection request and initizialize using lobbyController the Worker
+        this.gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventDeserializer());
+        Gson gson = gsonBuilder.create();
+        String json;
+        try {
+            this.oos = new ObjectOutputStream(socket.getOutputStream());
+            this.ois = new ObjectInputStream(socket.getInputStream());
+            BufferedReader jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            json = jsonReader.readLine();
+        }
+        catch (IOException e) {
+            //TODO LOGGER
+            throw new UnsupportedOperationException();
+        }
+        EventVisitable event = gson.fromJson(json, EventVisitable.class);
+        try {
+            VirtualView virtualView = new VirtualView(this);
+            EventVisitor virtualViewSetter = new VisitorVirtualViewSetter(virtualView);
+            event.accept(virtualViewSetter);
+            event.accept(lobbyController);
+        }
+        catch (IncorrectEvent e){
+            //TODO LOG INCORRECT EVENT
+        }
+        if (event == null) {
+            //TODO send update popup, wrong message
+            try {
+                socket.close();
+            }
+            catch (IOException e) {
+                //TODO LOGGER
+                throw new AuthenticationErrorException();
+            }
+        }
     }
 
 

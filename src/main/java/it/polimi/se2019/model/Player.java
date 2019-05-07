@@ -10,7 +10,6 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.View;
-import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -58,7 +57,7 @@ public class Player {
 	private Color color;
 
 	/**
-	 * Authentication token saved in this format: {username}${HMAC(password)}
+	 * Authentication token saved in this format: {username}$salt${HMAC(password+salt)}
 	 */
 	String token;
 

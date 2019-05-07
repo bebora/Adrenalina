@@ -6,13 +6,10 @@ import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.io.File;
 import java.util.stream.Collectors;
 
 
@@ -26,7 +23,7 @@ public class BoardCreator {
         Deck<PowerUp> powerUps;
         List<Tile> temp;
         Deck <AmmoCard> ammoCards;
-        try (FileReader input = new FileReader(classloader.getResource("boards/"+filename).getFile());
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("board/"+filename).getFile()), "UTF-8");
              BufferedReader bufRead = new BufferedReader(input)
         ) {
             String curLine;
