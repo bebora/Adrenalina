@@ -24,6 +24,15 @@ public abstract class Match {
         currentPlayer = firstPlayer;
         board = BoardCreator.parseBoard(boardFilename, numSkulls);
     }
+    public Match(Match originalMatch){
+    	this.currentPlayer = originalMatch.getCurrentPlayer();
+    	this.finalFrenzy = originalMatch.getFinalFrenzy();
+    	this.firstPlayer = originalMatch.getFirstPlayer();
+    	this.currentPlayer = originalMatch.getCurrentPlayer();
+    	this.board = originalMatch.getBoard();
+    	this.players = originalMatch.getPlayers().stream()
+				.map(Player::new).collect(Collectors.toList());
+	}
 
 
     Random rand = new Random();

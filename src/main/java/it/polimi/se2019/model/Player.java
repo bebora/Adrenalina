@@ -32,9 +32,21 @@ public class Player {
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
-		this.setMaxActions(3);
+		this.setMaxActions(2);
 		firstShotReward = Boolean.TRUE;
 		damagesAllocable = 0;
+	}
+	public Player(Player originalPlayer){
+		this.firstPlayer = originalPlayer.getFirstPlayer();
+		this.alive = originalPlayer.getAlive();
+		this.dominationSpawn = getDominationSpawn();
+		this.marks = new ArrayList<>();
+		this.marks.addAll(originalPlayer.getMarks());
+		this.damages = new ArrayList<>();
+		this.damages.addAll(originalPlayer.getDamages());
+		this.weapons = new ArrayList<>();
+		this.weapons.addAll(originalPlayer.getWeapons());
+		this.setMaxActions(2);
 	}
 
 
