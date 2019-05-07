@@ -24,7 +24,7 @@ public class WorkerServerSocket extends Thread implements ServerInterface {
     private ObjectOutputStream oos;
 
     private ObjectInputStream ois;
-    private View VirtualView;
+    private View virtualView;
     private Player player;
     private LobbyController lobbyController;
     private MessageHandler messageHandler;
@@ -50,12 +50,13 @@ public class WorkerServerSocket extends Thread implements ServerInterface {
         }
         EventVisitable event = gson.fromJson(json, EventVisitable.class);
         try {
-            VirtualView virtualView = new VirtualView(this);
+            virtualView = new VirtualView(this);
             EventVisitor virtualViewSetter = new VisitorVirtualViewSetter(virtualView);
             event.accept(virtualViewSetter);
             event.accept(lobbyController);
         }
         catch (IncorrectEvent e){
+            event = null;
             //TODO LOG INCORRECT EVENT
         }
         if (event == null) {

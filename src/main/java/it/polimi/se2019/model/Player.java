@@ -19,9 +19,8 @@ import static java.lang.Boolean.FALSE;
 
 public class Player {
 
-	public Player(String token, Color color) {
+	public Player(String token) {
 		this.firstPlayer = false;
-		this.color = color;
 		this.token = token;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
@@ -425,5 +424,9 @@ public class Player {
 
 	public String getToken() {
 		return token;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

@@ -1,14 +1,14 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.controller.events.ConnectionRequest;
-import it.polimi.se2019.controller.events.SelectAction;
-import it.polimi.se2019.controller.events.SelectPlayers;
+import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
-import it.polimi.se2019.view.VirtualView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -17,7 +17,14 @@ import java.util.stream.Collectors;
  */
 public class LobbyController extends EventVisitor {
     private List<GameController> games;
-    private List<Player> waitingPlayers;
+    private Map<Mode, List<Player>> waitingPlayers;
+
+    public LobbyController(List<Mode> modes) {
+        for (Mode mode: modes) {
+            waitingPlayers.put(mode, new ArrayList<>());
+        }
+        games = new ArrayList<>();
+    }
 
     /**
      * Visit a ConnectionRequest handling the connection of a new user or the reconnection of a current one.
@@ -27,20 +34,24 @@ public class LobbyController extends EventVisitor {
     public synchronized void visit(ConnectionRequest connectionRequest) {
         String token = connectionRequest.getToken();
         boolean found = false;
-        for (GameController game : games) {
-            List<String> allTokens = game.getMatch().getPlayers().stream().
-                    filter(p -> !p.getOnline()).
-                    map(Player::getToken).
-                    collect(Collectors.toList());
-            if (allTokens.contains(token)) {
-                found = true;
-                reconnectPlayer(game, token, connectionRequest.getVv());
+        if (connectionRequest.getExistingGame()) {
+            for (GameController game : games) {
+                List<String> allTokens = game.getMatch().getPlayers().stream().
+                        filter(p -> !p.getOnline()).
+                        map(Player::getToken).
+                        collect(Collectors.toList());
+                if (allTokens.contains(token)) {
+                    found = true;
+                    reconnectPlayer(game, token, connectionRequest.getVv());
+                }
             }
-        }
-        if (!found) {
-            connectPlayer(token, connectionRequest.getVv());
-        }
+            if (!found)
+                throw new IncorrectEvent();
+        } else {
+            Mode mode = Mode.valueOf(connectionRequest.getMode());
+            connectPlayer(token, connectionRequest.getVv(), mode);
 
+        }
     }
 
     /**
@@ -64,13 +75,20 @@ public class LobbyController extends EventVisitor {
     /**
      * Add a player to the waiting Players list, linking the VirtualView to the Player.
      * Manage the start of the timeout to start the game if enough players are in.
-     * @param username
+     * @param token
      * @param vv
      */
-    public void connectPlayer(String username, View vv) {
-        Player player = new Player("test", Color.RED);
+    public void connectPlayer(String token, View vv, Mode mode) {
+        Player player = new Player(token);
         player.setVirtualView(vv);
-        waitingPlayers.add(player);
+        List<Player> modeWaiting;
+        modeWaiting = waitingPlayers.get(mode);
+        if (modeWaiting == null) {
+            throw new IncorrectEvent();
+        }
+        else
+            modeWaiting.add(player);
+
         //TODO start timer when players are 3
         //TODO send popup update success
     }
