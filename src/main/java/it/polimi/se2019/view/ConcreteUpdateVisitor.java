@@ -103,6 +103,11 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         int maxPlayers = update.getMaxPlayers();
     }
 
+    @Override
+    public void visit(SuccessConnectionUpdate update) {
+        view.setToken(update.getToken());
+    }
+
     /**
      * Set tile weapons and ammos to those received in update
      * @param update

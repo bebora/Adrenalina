@@ -5,13 +5,11 @@ import it.polimi.se2019.controller.EventVisitor;
 
 public class SelectWeapon implements EventVisitable {
     private String weapon;
-    public SelectWeapon(String weapon){
+    String token;
+    public SelectWeapon(String weapon, String token){
         this.weapon = weapon;
+        this.token = token;
     }
     public void accept(EventVisitor visitor) { visitor.visit(this); }
     public String getWeapon() { return weapon; }
-
-    public String toString() {
-        return "weapon";
-    }
 }

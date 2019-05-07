@@ -1,16 +1,16 @@
 package it.polimi.se2019.model.updatemessage;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.view.UpdateVisitor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Represent Ammos Card taken from a tile and replaced with a new one
  */
-public class AmmosTakenUpdate {
+public class AmmosTakenUpdate implements UpdateVisitable{
     /**
      * Id of the player who took the ammos
      */

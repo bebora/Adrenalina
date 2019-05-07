@@ -4,7 +4,6 @@ import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class EffectControllerTest {
-    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo", Color.RED),new Player("roberto",Color.BLUE),new Player("carmelo",Color.WHITE)));
+    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
     private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
     private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
     private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
@@ -42,7 +41,7 @@ public class EffectControllerTest {
 
     @Test
     void testWrongTarget(){
-        Player enemy = new Player("nemico",Color.RED);
+        Player enemy = new Player("nemico");
         testWeapon.getEffects().get(0).setActivated(false);
         enemy.setTile(testMatch.getBoard().getTile(1,0));
         wp.update(testWeapon.getEffects().get(0));
@@ -52,8 +51,8 @@ public class EffectControllerTest {
 
     @Test
     void testMultipleEffects(){
-        Player firstEnemy = new Player("nemico",Color.RED);
-        Player secondEnemy = new Player("nemicoCattivo", Color.RED);
+        Player firstEnemy = new Player("nemico");
+        Player secondEnemy = new Player("nemicoCattivo");
         testWeapon.getEffects().get(0).setActivated(false);
         secondEnemy.setTile(testMatch.getBoard().getTile(1,0));
         currentPlayer.setTile(testMatch.getBoard().getTile(1,0));
@@ -76,7 +75,7 @@ public class EffectControllerTest {
         assertEquals(testMatch.getBoard().getTile(0,1),currentPlayer.getTile());
         //move opponent
         testWeapon = CardCreator.parseWeapon("fucileAPompa.btl");
-        Player enemy = new Player("nemico", Color.RED);
+        Player enemy = new Player("nemico");
         enemy.setTile(testMatch.getBoard().getTile(0,0));
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         currentPlayer.addWeapon(testWeapon);

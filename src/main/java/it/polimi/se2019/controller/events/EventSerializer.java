@@ -11,35 +11,37 @@ public class EventSerializer implements JsonSerializer<EventVisitable> {
     @Override
     public JsonElement serialize(EventVisitable eventVisitable, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject wrapper = new JsonObject();
-        String objectType = eventVisitable.toString();
+        String objectType = eventVisitable.getClass().getSimpleName();
         wrapper.add("type", new JsonPrimitive(objectType));
         String event = "event";
         switch (objectType) {
-            case "action":
+            case "SelectAction":
             {
                 String action = gson.toJson(eventVisitable);
                 wrapper.add(event , new JsonPrimitive(action));
                 break;
             }
-            case "players":
+            case "SelectPlayers":
             {
                 JsonArray jsonArray = new JsonArray();
                 SelectPlayers selectPlayers = (SelectPlayers) eventVisitable;
                 for (String player : selectPlayers.getPlayerIds())
                     jsonArray.add(player);
+                wrapper.add("token", new JsonPrimitive(((SelectPlayers) eventVisitable).token));
                 wrapper.add(event , jsonArray);
                 break;
             }
-            case "tiles": {
+            case "SelectTiles": {
                 JsonArray jsonArray = new JsonArray();
                 SelectTiles selectTiles = (SelectTiles) eventVisitable;
                 for (ViewTileCoords coord : selectTiles.getSelectedTiles()) {
                     jsonArray.add(gson.toJson(coord));
                 }
+                wrapper.add("token", new JsonPrimitive(((SelectTiles) eventVisitable).token));
                 wrapper.add(event, jsonArray);
                 break;
             }
-            case "weapon": {
+            case "SelectWeapon": {
                 String weapon = gson.toJson(eventVisitable);
                 wrapper.add(event, new JsonPrimitive(weapon));
                 break;

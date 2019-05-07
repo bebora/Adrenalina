@@ -7,14 +7,13 @@ import java.util.*;
 
 public class SelectPlayers implements EventVisitable {
     List<String> playersIds;
-    public SelectPlayers(List<String> playerIds){this.playersIds = playerIds;}
+    String token;
+    public SelectPlayers(List<String> playerIds, String token){
+        this.playersIds = playerIds;
+        this.token = token;
+    }
     public void accept(EventVisitor visitor){
         visitor.visit(this);
     }
     public List<String> getPlayerIds(){ return playersIds;}
-
-
-    public String toString() {
-        return "players";
-    }
 }

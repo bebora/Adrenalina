@@ -2,7 +2,6 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.model.updatemessage.TotalUpdate;
@@ -12,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdateVisitorTest {
     static ClientView firstView;
@@ -31,9 +30,9 @@ class UpdateVisitorTest {
         username = "Noobmaster69";
         board = BoardCreator.parseBoard("board1.btlb",8);
         players = Arrays.asList(
-                new Player("Noobmaster69", Color.RED),
-                new Player("Korg" ,Color.YELLOW),
-                new Player("Thor", Color.BLUE)
+                new Player("Noobmaster69"),
+                new Player("Korg"),
+                new Player("Thor")
         );
         for (Player p: players) {
             p.setTile(board.getTile(2,1));
