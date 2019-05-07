@@ -12,6 +12,7 @@ import it.polimi.se2019.model.cards.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.se2019.model.ThreeState.TRUE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
 /**
@@ -133,29 +134,10 @@ public class EffectController implements Observer {
      */
     public void updateOnPlayers(List<Player> players){
         if(curActionType == MOVE && askingForSource){
-                if(checkPlayerTargets(curMove.getTargetSource(),players)) {
-                    if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
-                        pointOfView = players.get(0).getTile();
-                    askingForSource = false;
-                    playersToMove = players;
-                    //ask for targetDestination
-                }
-                else{
-                    //communicate the error to the player
-            }
+            updateMoveOnPlayers(players);
         }
         else{
-            if(checkPlayerTargets(curDealDamage.getTarget(),players)){
-                players.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
-                if(curDealDamage.getTargeting() == ThreeState.TRUE)
-                    curWeapon.setTargetPlayers(players);
-                else if(curDealDamage.getTargeting() == ThreeState.FALSE)
-                    curWeapon.setBlackListPlayers(players);
-                nextStep();
-            }
-            else{
-                //communicate the error to the player
-            }
+            updateDealDamageOnPlayers(players);
         }
 
     }
@@ -216,7 +198,7 @@ public class EffectController implements Observer {
      * @param target the target of the current subeffect
      */
     private void processDirection(Target target){
-        if(target.getCardinal() == ThreeState.TRUE || target.getCardinal() == ThreeState.FALSE) {
+        if(target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) {
             //ask for direction
         }
         else
@@ -274,12 +256,13 @@ public class EffectController implements Observer {
      * @param target the current Move target
      */
     private void processTargetSource(Target target){
-        if(target.getMaxTargets() == -1 && target.getCheckTargetList() == ThreeState.TRUE){
+        if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
                 playersToMove = curWeapon.getTargetPlayers();
         }
-        if(target.getMaxTargets() == -1 && target.getCheckBlackList() == ThreeState.TRUE){
+        if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
             playersToMove = curWeapon.getBlackListPlayers();
         }
+        //set visitor to accept only tiles
     }
 
     /**
@@ -334,6 +317,39 @@ public class EffectController implements Observer {
             //case TARGET is already handled when askingForSource
             default:
                 break;
+        }
+    }
+
+    private void updateMoveOnPlayers(List<Player> players){
+        if(checkPlayerTargets(curMove.getTargetSource(),players)) {
+            if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
+                pointOfView = players.get(0).getTile();
+            askingForSource = false;
+            playersToMove = players;
+            //ask for targetDestination
+        }
+        else{
+            //communicate the error to the player
+        }
+    }
+
+    private void updateDealDamageOnPlayers(List<Player> players){
+        if(curDealDamage.getTarget().getMaxTargets() == 0){
+            if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
+                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            else if(curDealDamage.getTarget().getCheckBlackList() == TRUE)
+                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+        }
+        else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
+            players.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            if(curDealDamage.getTargeting() == TRUE)
+                curWeapon.setTargetPlayers(players);
+            else if(curDealDamage.getTargeting() == ThreeState.FALSE)
+                curWeapon.setBlackListPlayers(players);
+            nextStep();
+        }
+        else{
+            //communicate the error to the player
         }
     }
 
