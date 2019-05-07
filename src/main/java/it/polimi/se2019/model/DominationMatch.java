@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DominationMatch extends Match{
+public class DominationMatch extends Match {
 
     /**
      * Tracks the current turn, used to add the Domination Spawn in the correct moment
@@ -23,14 +23,21 @@ public class DominationMatch extends Match{
     /**
      * Create a Domination Match, using {@link #Match} constructor
      * Initializes {@link #spawnPoints}  with an ArrayList
-     * @param players players to add in the Match
+     *
+     * @param players       players to add in the Match
      * @param boardFilename name of the Board that uses the Match
-     * @param numSkulls number of the skulls to use
+     * @param numSkulls     number of the skulls to use
      */
     public DominationMatch(List<Player> players, String boardFilename, int numSkulls) {
-        super(players,boardFilename,numSkulls);
+        super(players, boardFilename, numSkulls);
         spawnPoints = new ArrayList<>();
     }
+
+    public DominationMatch(Match match){
+        super(match);
+        this.spawnPoints = new ArrayList<>();
+        this.spawnPoints.addAll(match.getSpawnPoints());
+}
 
     /**
      * Initializes a new turn in Domination Mode
@@ -180,7 +187,7 @@ public class DominationMatch extends Match{
         return super.checkFrenzy() || countDeadSpawnPoint >= 2;
     }
 
-
-
+    @Override
+    public List<Player> getSpawnPoints(){ return spawnPoints; }
 
 }

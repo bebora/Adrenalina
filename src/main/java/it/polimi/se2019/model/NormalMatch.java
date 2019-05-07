@@ -11,6 +11,9 @@ public class NormalMatch extends Match {
 	public NormalMatch(List<Player> players, String boardFilename, int numSkulls) {
 		super(players, boardFilename, numSkulls);
 	}
+	public NormalMatch(Match originalMatch){
+		super(originalMatch);
+	}
 
 	/**
 	 * True if player turn has ended

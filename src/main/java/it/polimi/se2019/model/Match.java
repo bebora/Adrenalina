@@ -234,4 +234,6 @@ public abstract class Match {
 		players.add(player);
 	}
 
+	public List<Player> getSpawnPoints(){return null; }
+
 }
