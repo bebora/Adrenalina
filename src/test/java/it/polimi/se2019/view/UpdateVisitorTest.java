@@ -6,7 +6,7 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.model.updatemessage.TotalUpdate;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -15,18 +15,22 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UpdateVisitorTest {
-    ClientView firstView;
-
-    @BeforeEach
-    void setup() {
+    static ClientView firstView;
+    static String username;
+    static Board board;
+    static List<Player> players;
+    static String idView;
+    static int points;
+    static PowerUp powerUp;
+    static Weapon weapon;
+    static List<PowerUp> powerUps;
+    static List<Weapon> loadedWeapons;
+    @BeforeAll
+    static void setup() {
         firstView = new ClientView();
-    }
-
-    @Test
-    void visitTotalUpdate() {
-        String username = "Noobmaster69";
-        Board board = BoardCreator.parseBoard("board1.btlb",8);
-        List<Player> players = Arrays.asList(
+        username = "Noobmaster69";
+        board = BoardCreator.parseBoard("board1.btlb",8);
+        players = Arrays.asList(
                 new Player("Noobmaster69", Color.RED),
                 new Player("Korg" ,Color.YELLOW),
                 new Player("Thor", Color.BLUE)
@@ -34,14 +38,19 @@ class UpdateVisitorTest {
         for (Player p: players) {
             p.setTile(board.getTile(2,1));
         }
-        String idView = "test";
-        int points = 0;
-        PowerUp powerup = board.drawPowerUp();
-        List<PowerUp> powerUps = Arrays.asList(powerup);
-        Weapon weapon = board.drawWeapon();
-        List<Weapon> loadedWeapons = Arrays.asList(weapon);
+        idView = "test";
+        points = 0;
+        powerUp = board.drawPowerUp();
+        powerUps = Arrays.asList(powerUp);
+        weapon = board.drawWeapon();
+        loadedWeapons = Arrays.asList(weapon);
         TotalUpdate update = new TotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons);
         firstView.update(update);
+    }
+
+    @Test
+    void visitTotalUpdate() {
+
 
         assertEquals(username, firstView.getUsername());
         assertEquals(players.size(), firstView.getPlayers().size());
@@ -51,9 +60,10 @@ class UpdateVisitorTest {
         assertEquals(idView, firstView.getIdView());
         assertEquals(points, firstView.getPoints());
         assertEquals(1, firstView.getPowerUps().size());
-        assertEquals(powerup.getDiscardAward().name(), firstView.getPowerUps().get(0).getDiscardAward());
+        assertEquals(powerUp.getDiscardAward().name(), firstView.getPowerUps().get(0).getDiscardAward());
         assertEquals(1, firstView.getLoadedWeapons().size());
         assertEquals(weapon.getName(), firstView.getLoadedWeapons().get(0));
     }
     //TODO add other tests
+
 }

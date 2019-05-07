@@ -44,8 +44,8 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
             throw new InvalidUpdateException("Player can't receive so many damages");
         if (Collections.frequency(receiver.getMarks(), attacker) + update.getMarksAmount() > 3 )
             throw new InvalidUpdateException("Player can't receive so many marks");
-        receiver.getDamages().addAll(Collections.nCopies(update.getDamageAmount(), attacker));
-        receiver.getMarks().addAll(Collections.nCopies(update.getMarksAmount(), attacker));
+        receiver.getDamages().addAll(Collections.nCopies(update.getDamageAmount(), attacker.getId()));
+        receiver.getMarks().addAll(Collections.nCopies(update.getMarksAmount(), attacker.getId()));
 
     }
 

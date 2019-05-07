@@ -13,6 +13,8 @@ public class ViewPlayer {
 		this.tile = new ViewTile(player.getTile());
 		this.color = player.getColor().name();
 		this.id = player.getId();
+		this.damages = player.getDamages().stream().map(Player::getId).collect(Collectors.toList());
+		this.marks = player.getMarks().stream().map(Player::getId).collect(Collectors.toList());
 		this.ammos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
 		this.firstPlayer = player.getFirstPlayer();
 		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
@@ -31,9 +33,9 @@ public class ViewPlayer {
 
 	private String id;
 
-	private List<ViewPlayer> damages;
+	private List<String> damages;
 
-	private List<ViewPlayer> marks;
+	private List<String> marks;
 
 	private List<String> ammos;
 
@@ -48,8 +50,6 @@ public class ViewPlayer {
 	private int actionCount;
 
 	private ThreeState alive;
-
-	private ViewTile perspective;
 
 	private Boolean dominationSpawn;
 
@@ -75,11 +75,11 @@ public class ViewPlayer {
 		this.tile = tile;
 	}
 
-	public List<ViewPlayer> getMarks() {
+	public List<String> getMarks() {
 		return marks;
 	}
 
-	public List<ViewPlayer> getDamages() {
+	public List<String> getDamages() {
 		return damages;
 	}
 
@@ -91,11 +91,11 @@ public class ViewPlayer {
 		return unloadedWeapons;
 	}
 
-	public void setDamages(List<ViewPlayer> damages) {
+	public void setDamages(List<String> damages) {
 		this.damages = damages;
 	}
 
-	public void setMarks(List<ViewPlayer> marks) {
+	public void setMarks(List<String> marks) {
 		this.marks = marks;
 	}
 }
