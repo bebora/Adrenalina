@@ -11,6 +11,7 @@ public interface UpdateVisitor {
     void visit(SelectFromPlayersUpdate update);
     void visit(SelectFromRoomsUpdate update);
     void visit(SelectFromTilesUpdate update);
+    void visit(SuccessConnectionUpdate update);
     void visit(TileUpdate update);
     void visit(TotalUpdate update);
     void visit(WeaponTakenUpdate update);

@@ -2,9 +2,11 @@ package it.polimi.se2019.model.cards;
 
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
-import java.util.function.*;
-import it.polimi.se2019.model.board.*;
-import java.util.*;
+import it.polimi.se2019.model.board.Board;
+import it.polimi.se2019.model.board.Tile;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 public class Target {
 
@@ -361,5 +363,9 @@ public class Target {
 		return (optionalTarget.or(trueTarget).or(falseTarget)).
 				and(optionalBlack.or(trueBlack).or(falseBlack));
 	}
+
+
+
+
 
 }

@@ -21,6 +21,8 @@ public abstract class View {
 
 	protected UpdateVisitor visitor;
 
+	String token;
+
 	public void update(UpdateVisitable u) {
 		//TODO implements the update parsing (visitor pattern)
 		u.accept(visitor);
@@ -88,5 +90,9 @@ public abstract class View {
 
 	public void setPerspective(ViewTile perspective) {
 		this.perspective = perspective;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }
