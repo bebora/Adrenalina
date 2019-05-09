@@ -15,14 +15,13 @@ public class WeaponController {
     private Weapon weapon;
     private Match match;
     private Player curPlayer;
+    private List<Player> originalPlayers;
     private EffectController effectController;
 
-    public WeaponController(Match match, Weapon weapon){
-        this.match = match;
-        this.weapon = weapon;
-        this.curEffect = 1;
-        this.lastUsedIndex = -1;
-        this.curPlayer = match.getPlayers().get(match.getCurrentPlayer());
+    public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers){
+        this.match = sandboxMatch;
+        this.originalPlayers = originalPlayers;
+        update(weapon);
     }
     public List<String> getUsableEffects(){
         List<Effect> allEffects = weapon.getEffects();
@@ -80,7 +79,7 @@ public class WeaponController {
             effect.setActivated(true);
             lastUsedIndex = weapon.getEffects().indexOf(effect) + 1;
             if(effectController == null) {
-                effectController = new EffectController(effect, weapon, match, curPlayer);
+                effectController = new EffectController(effect, weapon, match, curPlayer,originalPlayers);
                 effectController.nextStep();
             }
             else{
@@ -90,6 +89,10 @@ public class WeaponController {
                 effectController.nextStep();
             }
         }
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
     }
 
     public Weapon getWeapon(){return weapon; }

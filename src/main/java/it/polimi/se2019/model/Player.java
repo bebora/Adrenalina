@@ -47,7 +47,7 @@ public class Player {
 		this.damages.addAll(originalPlayer.getDamages());
 		this.weapons = new ArrayList<>();
 		this.weapons.addAll(originalPlayer.getWeapons());
-		this.setMaxActions(2);
+		this.setMaxActions(originalPlayer.getMaxActions());
 	}
 
 
@@ -55,6 +55,17 @@ public class Player {
 		this.firstPlayer = false;
 		this.damages = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+	}
+
+	public void restorePlayer(Player oldPlayer){
+		oldPlayer.alive = this.getAlive();
+		oldPlayer.setTile(this.getTile());
+		for(int i = oldPlayer.getMarks().size(); i < this.getMarks().size(); i++)
+			oldPlayer.marks.add(i,this.getMarks().get(i));
+		for(int i = oldPlayer.getDamages().size();i < this.getDamages().size(); i++)
+			oldPlayer.getDamages().add(i,this.getDamages().get(i));
+		oldPlayer.weapons = this.weapons;
+		oldPlayer.setMaxActions(this.maxActions);
 	}
 
 	/**

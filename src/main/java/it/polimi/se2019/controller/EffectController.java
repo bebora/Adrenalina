@@ -24,6 +24,7 @@ public class EffectController implements Observer {
     private Player player;
     private Weapon curWeapon;
     private Match curMatch;
+    private List<Player> originalPlayers;
 
     private Effect curEffect;
 
@@ -45,7 +46,7 @@ public class EffectController implements Observer {
 
     private boolean askingForSource;
 
-    EffectController(Effect curEffect, Weapon weapon,Match match,Player player){
+    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers){
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
@@ -55,6 +56,7 @@ public class EffectController implements Observer {
         this.player = player;
         this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
+        this.originalPlayers = originalPlayers;
     }
 
     /**
@@ -166,7 +168,7 @@ public class EffectController implements Observer {
         else{
             if(checkTileTargets(curDealDamage.getTarget(),tiles)){
                 tiles.forEach(t -> curMatch.getPlayersInTile(t)
-                        .forEach(p -> p.receiveShot(player, curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
+                        .forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
                 nextStep();
             }
         }
@@ -184,7 +186,7 @@ public class EffectController implements Observer {
         if(possibleTargets.stream()
                 .map(Player::getTile)
                 .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
-            possibleTargets.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
         nextStep();
         }
         else{
@@ -336,12 +338,12 @@ public class EffectController implements Observer {
     private void updateDealDamageOnPlayers(List<Player> players){
         if(curDealDamage.getTarget().getMaxTargets() == 0){
             if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
-                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             else if(curDealDamage.getTarget().getCheckBlackList() == TRUE)
-                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
         }
         else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
-            players.forEach(p -> p.receiveShot(player,curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             if(curDealDamage.getTargeting() == TRUE)
                 curWeapon.setTargetPlayers(players);
             else if(curDealDamage.getTargeting() == ThreeState.FALSE)
@@ -351,6 +353,12 @@ public class EffectController implements Observer {
         else{
             //communicate the error to the player
         }
+    }
+
+    private Player getOriginalPlayer(Player sandboxPlayer){
+        return originalPlayers.stream()
+                .filter(p -> p.getId().equals(sandboxPlayer.getId()))
+                .findAny().orElse(null);
     }
 
     void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}

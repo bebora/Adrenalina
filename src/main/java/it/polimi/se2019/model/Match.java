@@ -34,6 +34,11 @@ public abstract class Match {
 				.map(Player::new).collect(Collectors.toList());
 	}
 
+	public void restoreMatch(Match oldMatch){
+    	for(int i = 0; i < players.size(); i++)
+    		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
+	}
+
 
     Random rand = new Random();
 
