@@ -4,6 +4,7 @@ import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CardCreator {
         Moment applicability = null;
         Effect effect = null;
         String name = null;
-        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classLoader.getResource("powerups/"+filename).getFile()), "UTF-8");
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classLoader.getResource("powerups/"+filename).getFile()), StandardCharsets.UTF_8);
              BufferedReader bufRead = new BufferedReader(input)
         ){
             String curLine = null;
@@ -71,7 +72,7 @@ public class CardCreator {
         String tempName = null;
         List<Ammo> tempCost = null;
         List<Effect> tempEffects = null;
-        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classLoader.getResource("weapons/"+fileName).getFile()), "UTF-8");
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classLoader.getResource("weapons/"+fileName).getFile()), StandardCharsets.UTF_8);
              BufferedReader bufRead = new BufferedReader(input)
         ){
             String curLine = null;

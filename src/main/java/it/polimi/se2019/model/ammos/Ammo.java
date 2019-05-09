@@ -8,5 +8,5 @@ public enum Ammo {
 	BLUE,
 	YELLOW,
 	ANY,
-	POWERUP;
+	POWERUP
 }

@@ -27,7 +27,6 @@ public class EventSerializer implements JsonSerializer<EventVisitable> {
                 SelectPlayers selectPlayers = (SelectPlayers) eventVisitable;
                 for (String player : selectPlayers.getPlayerIds())
                     jsonArray.add(player);
-                wrapper.add("token", new JsonPrimitive(((SelectPlayers) eventVisitable).token));
                 wrapper.add(event , jsonArray);
                 break;
             }
@@ -37,7 +36,6 @@ public class EventSerializer implements JsonSerializer<EventVisitable> {
                 for (ViewTileCoords coord : selectTiles.getSelectedTiles()) {
                     jsonArray.add(gson.toJson(coord));
                 }
-                wrapper.add("token", new JsonPrimitive(((SelectTiles) eventVisitable).token));
                 wrapper.add(event, jsonArray);
                 break;
             }

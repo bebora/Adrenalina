@@ -7,6 +7,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,7 @@ public class BoardCreator {
         Deck<PowerUp> powerUps;
         List<Tile> temp;
         Deck <AmmoCard> ammoCards;
-        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("boards/"+filename).getFile()), "UTF-8");
+        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("boards/"+filename).getFile()), StandardCharsets.UTF_8);
              BufferedReader bufRead = new BufferedReader(input)
         ) {
             String curLine;

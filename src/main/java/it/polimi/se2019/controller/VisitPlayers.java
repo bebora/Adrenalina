@@ -1,7 +1,6 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.*;
+import it.polimi.se2019.controller.events.SelectPlayers;
 
 
 public class VisitPlayers extends EventVisitor {
@@ -10,7 +9,4 @@ public class VisitPlayers extends EventVisitor {
         EventVisitable currentEvent = event;
     }
 
-    public void setObserver(Observer currentObserver) {
-        this.currentObserver = currentObserver;
-    }
 }
