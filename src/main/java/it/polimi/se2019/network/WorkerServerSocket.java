@@ -5,11 +5,9 @@ import com.google.gson.GsonBuilder;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
-import it.polimi.se2019.controller.MessageHandler;
 import it.polimi.se2019.controller.events.EventDeserializer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.controller.events.VisitorVirtualViewSetter;
-import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
@@ -21,26 +19,17 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class WorkerServerSocket extends Thread implements ServerInterface {
     private Socket socket;
-    private ObjectOutputStream oos;
-
-    private ObjectInputStream ois;
     private View virtualView;
-    private Player player;
-    private LobbyController lobbyController;
-    private MessageHandler messageHandler;
     private GsonBuilder gsonBuilder;
     BlockingQueue queue = new LinkedBlockingDeque();
 
     public WorkerServerSocket(Socket socket, LobbyController lobbyController) {
-        this.lobbyController = lobbyController;
         this.socket = socket;
         this.gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventDeserializer());
         Gson gson = gsonBuilder.create();
         String json;
         try {
-            this.oos = new ObjectOutputStream(socket.getOutputStream());
-            this.ois = new ObjectInputStream(socket.getInputStream());
             BufferedReader jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             json = jsonReader.readLine();
         }
@@ -50,7 +39,7 @@ public class WorkerServerSocket extends Thread implements ServerInterface {
         }
         EventVisitable event = gson.fromJson(json, EventVisitable.class);
         try {
-            virtualView = new VirtualView(this);
+            virtualView = new VirtualView(this, lobbyController);
             EventVisitor virtualViewSetter = new VisitorVirtualViewSetter(virtualView);
             event.accept(virtualViewSetter);
             event.accept(lobbyController);

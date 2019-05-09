@@ -1,5 +1,7 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.controller.EventVisitor;
+import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.network.ServerInterface;
 
@@ -9,12 +11,20 @@ public class VirtualView extends View  {
      * Debug view used to test events without the server
      */
     private View debugView = null;
+    private LobbyController lobbyController;
+    private EventVisitor eventVisitor;
 
-    public VirtualView (ServerInterface virtualClient) {
+    public VirtualView (ServerInterface virtualClient, LobbyController lobbyController) {
         this.virtualClient = virtualClient;
+        this.lobbyController = lobbyController;
     }
 
-    public VirtualView (View debugView, String username, String encodedPassword) {
+
+    /**
+     * View used to debug without server
+     * @param debugView client view
+     */
+    public VirtualView (View debugView) {
         this.debugView = debugView;
     }
 
