@@ -32,8 +32,7 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
                 for (JsonElement player : jsonPlayers) {
                     players.add(player.getAsString());
                 }
-                String token = event.get("token").getAsString();
-                eventVisitable = new SelectPlayers(players, token);
+                eventVisitable = new SelectPlayers(players);
                 break;
             }
             case "SelectWeapon": {
@@ -46,8 +45,7 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
                 for (JsonElement tileCoord : jsonCoords) {
                     coords.add(gson.fromJson(tileCoord,ViewTileCoords.class));
                 }
-                String token = event.get("token").getAsString();
-                eventVisitable = new SelectTiles(coords, token);
+                eventVisitable = new SelectTiles(coords);
                 break;
             }
             default:

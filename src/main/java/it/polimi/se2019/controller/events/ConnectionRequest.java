@@ -13,11 +13,11 @@ public class ConnectionRequest implements EventVisitable {
     String mode;
     View vv;
 
-    public ConnectionRequest(String username, String salt, String password, boolean existingGame, String mode) {
+    public ConnectionRequest(String username, String salt, String password, boolean signingUp, String mode) {
         this.username = username;
         this.salt = salt;
         this.password = password;
-        this.existingGame = existingGame;
+        this.existingGame = signingUp;
         this.mode = mode;
     }
 
@@ -47,5 +47,13 @@ public class ConnectionRequest implements EventVisitable {
             return username + "$" + salt + "$" + (password+salt).hashCode();
         else
             throw new IllegalArgumentException();
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
