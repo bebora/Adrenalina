@@ -7,10 +7,8 @@ import java.util.*;
 
 public class SelectPlayers implements EventVisitable {
     List<String> playersIds;
-    String token;
-    public SelectPlayers(List<String> playerIds, String token){
+    public SelectPlayers(List<String> playerIds){
         this.playersIds = playerIds;
-        this.token = token;
     }
     public void accept(EventVisitor visitor){
         visitor.visit(this);

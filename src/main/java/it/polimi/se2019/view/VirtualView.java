@@ -2,6 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
+import it.polimi.se2019.controller.RequestHandler;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.network.ServerInterface;
 
@@ -13,6 +14,9 @@ public class VirtualView extends View  {
     private View debugView = null;
     private LobbyController lobbyController;
     private EventVisitor eventVisitor;
+
+    private RequestHandler requestHandler;
+
 
     public VirtualView (ServerInterface virtualClient, LobbyController lobbyController) {
         this.virtualClient = virtualClient;

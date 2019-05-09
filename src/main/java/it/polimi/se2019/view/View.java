@@ -5,6 +5,7 @@ import java.util.*;
 
 public abstract class View {
 	private String username;
+
 	private ViewBoard board;
 
 	private List<ViewPlayer> players;
