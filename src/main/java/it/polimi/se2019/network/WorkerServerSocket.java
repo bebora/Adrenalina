@@ -2,18 +2,20 @@ package it.polimi.se2019.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
+import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
-import it.polimi.se2019.controller.events.IncorrectEvent;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -22,16 +24,21 @@ public class WorkerServerSocket extends Thread {
     private Socket socket;
     private View virtualView;
     private GsonBuilder gsonBuilder;
+    private BufferedReader jsonReader;
+    private OutputStreamWriter jsonSender;
+    private Gson gson;
     BlockingQueue queue = new LinkedBlockingDeque();
+    private EventVisitor eventVisitor;
 
     public WorkerServerSocket(Socket socket, LobbyController lobbyController) {
         this.socket = socket;
         this.gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventDeserializer());
-        Gson gson = gsonBuilder.create();
+        gson = gsonBuilder.create();
         String json;
         try {
-            BufferedReader jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            jsonSender = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
+            jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             json = jsonReader.readLine();
         }
         catch (IOException e) {
@@ -42,7 +49,7 @@ public class WorkerServerSocket extends Thread {
         try {
             ConnectionRequest connection = (ConnectionRequest) event;
             virtualView = new VirtualView(lobbyController);
-            //TODO SET INTERFACE TO SEND UPDATES
+            ViewUpdater viewUpdater = new ViewUpdaterSocket(this);
             String username = connection.getUsername();
             String password = connection.getPassword();
             String mode = connection.getMode();
@@ -50,10 +57,9 @@ public class WorkerServerSocket extends Thread {
             if (signingUp)
                 lobbyController.connectPlayer(username,password,mode, virtualView);
             else
-                ;
-                //TODO RECONNECT;
+                lobbyController.reconnectPlayer(username,password,virtualView);
         }
-        catch (IncorrectEvent e){
+        catch (ClassCastException e){
             event = null;
             //TODO LOG INCORRECT EVENT
         }
@@ -75,31 +81,52 @@ public class WorkerServerSocket extends Thread {
         //TODO run listener and sender
     }
 
-    public void update(UpdateVisitable update) {
-        //TODO serialize update
-
-        /*try {
-            //queue.put(serializedUpdate);
+    public void update(String json) {
+        try {
+            queue.put(json);
         }
         catch (InterruptedException e) {
             //TODO insert logger class to log exceptions
         }
-    }*/
     }
 
     private class Updater extends Thread {
             @Override
             public void run() {
-                //TODO take message from queue and send them using oos
+                try {
+                    String json;
+                    do {
+                        json = (String) queue.take();
+                        jsonSender.write(json, 0, json.length());
+                        jsonSender.flush();
+
+                    }
+                    //TODO edit conditions to run
+                    while (!socket.isClosed());
+                }
+                catch (InterruptedException | IOException e) {
+                    Logger.log(Priority.ERROR, e.toString());
+                }
             }
     }
 
     private class Listener extends Thread {
         @Override
         public void run() {
-            //TODO Get messages, parse them and use messageHandler relative visitor
+           //TODO edit conditions to run
+            while(!socket.isClosed()) {
+                String json;
+                try {
+                    json = jsonReader.readLine();
+                }
+                catch (IOException e) {
+                    //TODO LOGGER
+                    throw new UnsupportedOperationException();
+                }
+                EventVisitable event = gson.fromJson(json, EventVisitable.class);
+                event.accept(eventVisitor);
+
+            }
         }
     }
-
-
 }

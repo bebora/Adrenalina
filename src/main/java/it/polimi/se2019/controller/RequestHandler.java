@@ -11,6 +11,12 @@ import java.util.List;
 public class RequestHandler {
     Observer observer;
     LobbyController lobbyController;
+
+    public RequestHandler(Observer observer, LobbyController lobbyController) {
+        this.observer = observer;
+        this.lobbyController = lobbyController;
+    }
+
     void receiveRoom(String room) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
@@ -34,5 +40,13 @@ public class RequestHandler {
     }
     void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    public void setObserver(Observer observer) {
+        this.observer = observer;
+    }
+
+    public void setLobbyController(LobbyController lobbyController) {
+        this.lobbyController = lobbyController;
     }
 }

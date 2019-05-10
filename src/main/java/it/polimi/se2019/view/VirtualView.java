@@ -3,6 +3,7 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestHandler;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
+import it.polimi.se2019.network.ViewUpdater;
 
 
 public class VirtualView extends View  {
@@ -11,7 +12,7 @@ public class VirtualView extends View  {
      */
     private View debugView = null;
     private LobbyController lobbyController;
-    //TODO INSERT SENDER INTERFACE
+    private ViewUpdater viewUpdater;
     private RequestHandler requestHandler;
 
 

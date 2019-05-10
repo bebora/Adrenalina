@@ -11,6 +11,12 @@ import java.util.List;
 public class EventVisitor {
     RequestHandler requestHandler;
     LobbyController lobbyController;
+
+    public EventVisitor(RequestHandler requestHandler, LobbyController lobbyController) {
+        this.requestHandler = requestHandler;
+        this.lobbyController = lobbyController;
+    }
+
     public void visit(SelectPlayers event) {
         List<String> playerIds = event.getPlayerIds();
         try {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * Manage new Players connection and reconnections.
  * Handles the creation and the linking to the VirtualViews, checking if the username is already used in an active game.
  */
-public class LobbyController extends EventVisitor {
+public class LobbyController{
     private List<GameController> games;
     private Map<Mode, List<Player>> waitingPlayers;
 
@@ -29,10 +29,9 @@ public class LobbyController extends EventVisitor {
      * Reconnect a player to a game already started
      * @param username
      * @param password
-     * @param mode
      * @param view
      */
-    public void reconnectPlayer(String username, String password, String mode, View view) {
+    public void reconnectPlayer(String username, String password, View view) {
         Player player = null;
         String token = String.format("%s$%s", username, password.hashCode());
         for (GameController game : games) {
