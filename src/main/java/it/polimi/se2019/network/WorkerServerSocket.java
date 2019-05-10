@@ -9,7 +9,6 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
-import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
 import java.io.BufferedReader;
@@ -22,7 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class WorkerServerSocket extends Thread {
     private Socket socket;
-    private View virtualView;
+    private VirtualView virtualView;
     private GsonBuilder gsonBuilder;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
@@ -58,6 +57,7 @@ public class WorkerServerSocket extends Thread {
                 lobbyController.connectPlayer(username,password,mode, virtualView);
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
+            eventVisitor = new EventVisitor(virtualView.getRequestHandler(), lobbyController);
         }
         catch (ClassCastException e){
             event = null;
@@ -81,7 +81,8 @@ public class WorkerServerSocket extends Thread {
         //TODO run listener and sender
     }
 
-    public void update(String json) {
+    public void update(EventVisitable event) {
+        String json = gson.toJson(event, EventVisitable.class);
         try {
             queue.put(json);
         }
@@ -96,15 +97,19 @@ public class WorkerServerSocket extends Thread {
                 try {
                     String json;
                     do {
-                        json = (String) queue.take();
-                        jsonSender.write(json, 0, json.length());
-                        jsonSender.flush();
-
+                        try {
+                            json = (String) queue.take();
+                            jsonSender.write(json, 0, json.length());
+                            jsonSender.flush();
+                        }
+                        catch (InterruptedException e) {
+                            Logger.log(Priority.ERROR, e.toString());
+                        }
                     }
                     //TODO edit conditions to run
                     while (!socket.isClosed());
                 }
-                catch (InterruptedException | IOException e) {
+                catch (IOException e) {
                     Logger.log(Priority.ERROR, e.toString());
                 }
             }
@@ -125,7 +130,6 @@ public class WorkerServerSocket extends Thread {
                 }
                 EventVisitable event = gson.fromJson(json, EventVisitable.class);
                 event.accept(eventVisitor);
-
             }
         }
     }

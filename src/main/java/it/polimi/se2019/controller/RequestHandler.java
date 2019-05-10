@@ -12,8 +12,8 @@ public class RequestHandler {
     Observer observer;
     LobbyController lobbyController;
 
-    public RequestHandler(Observer observer, LobbyController lobbyController) {
-        this.observer = observer;
+    public RequestHandler(LobbyController lobbyController) {
+        observer = null;
         this.lobbyController = lobbyController;
     }
 

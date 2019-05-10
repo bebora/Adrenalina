@@ -2,7 +2,6 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestHandler;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.network.ViewUpdater;
 
 
@@ -18,6 +17,7 @@ public class VirtualView extends View  {
 
     public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
+        requestHandler = new RequestHandler(lobbyController);
     }
 
 
@@ -29,16 +29,12 @@ public class VirtualView extends View  {
         this.debugView = debugView;
     }
 
-    //TODO Observer class, the controller update the model, the model update the VirtualView passing a message with info on update needed, and the virtualview using the server interface updates the corresponding views
 
-    /**
-     * //TODO used by model to update, passing updates to do to the virtualview
-     * @param u
-     */
-    public void update(UpdateVisitable u) {
-        if (debugView != null) {
-            debugView.update(u);
-        }
+    public RequestHandler getRequestHandler() {
+        return requestHandler;
     }
 
+    public void setRequestHandler(RequestHandler requestHandler) {
+        this.requestHandler = requestHandler;
+    }
 }
