@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Observer;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
@@ -8,6 +9,8 @@ import java.util.List;
 
 
 public class RequestHandler {
+    Observer observer;
+    LobbyController lobbyController;
     void receiveRoom(String room) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }

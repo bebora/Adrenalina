@@ -3,16 +3,17 @@ package it.polimi.se2019.network;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.se2019.controller.EventVisitable;
-import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
+import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
-import it.polimi.se2019.controller.events.VisitorVirtualViewSetter;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -39,10 +40,18 @@ public class WorkerServerSocket extends Thread {
         }
         EventVisitable event = gson.fromJson(json, EventVisitable.class);
         try {
+            ConnectionRequest connection = (ConnectionRequest) event;
             virtualView = new VirtualView(lobbyController);
-            EventVisitor virtualViewSetter = new VisitorVirtualViewSetter(virtualView);
-            event.accept(virtualViewSetter);
-            event.accept(lobbyController);
+            //TODO SET INTERFACE TO SEND UPDATES
+            String username = connection.getUsername();
+            String password = connection.getPassword();
+            String mode = connection.getMode();
+            boolean signingUp = connection.getExistingGame();
+            if (signingUp)
+                lobbyController.connectPlayer(username,password,mode, virtualView);
+            else
+                ;
+                //TODO RECONNECT;
         }
         catch (IncorrectEvent e){
             event = null;

@@ -1,10 +1,8 @@
 package it.polimi.se2019.controller.events;
 
-import it.polimi.se2019.controller.EventVisitable;
-import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.view.View;
 
-public class ConnectionRequest implements EventVisitable {
+public class ConnectionRequest {
 
     String username;
     String salt;
@@ -20,11 +18,6 @@ public class ConnectionRequest implements EventVisitable {
         this.existingGame = signingUp;
         this.mode = mode;
     }
-
-    public void accept(EventVisitor visitor) {
-        visitor.visit(this);
-    }
-
 
     public String getMode() {
         return mode;

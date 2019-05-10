@@ -1,6 +1,5 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestHandler;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
@@ -12,8 +11,7 @@ public class VirtualView extends View  {
      */
     private View debugView = null;
     private LobbyController lobbyController;
-    private EventVisitor eventVisitor;
-
+    //TODO INSERT SENDER INTERFACE
     private RequestHandler requestHandler;
 
 

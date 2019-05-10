@@ -10,6 +10,7 @@ import java.util.List;
 
 public class EventVisitor {
     RequestHandler requestHandler;
+    LobbyController lobbyController;
     public void visit(SelectPlayers event) {
         List<String> playerIds = event.getPlayerIds();
         try {
@@ -45,21 +46,6 @@ public class EventVisitor {
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
-        }
-    }
-
-
-    public void visit(ConnectionRequest event) {
-        String username = event.getUsername();
-        String password = event.getPassword();
-        boolean signingUp = event.getExistingGame();
-        String mode = event.getMode();
-        try {
-            requestHandler.receiveConnection(username, password, signingUp, mode);
-        }
-        catch (RemoteException e) {
-            Logger.log(
-                    Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
 
