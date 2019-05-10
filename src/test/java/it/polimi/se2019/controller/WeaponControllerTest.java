@@ -24,7 +24,7 @@ class WeaponControllerTest {
     @Test
     void assignWeapon(){
         currentPlayer.addWeapon(testWeapon);
-        WeaponController weaponControllerTest = new WeaponController(testMatch,null);
+        WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers());
         weaponControllerTest.update(testWeapon);
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);
         testMatch.getPlayers().get(testMatch.getCurrentPlayer()).getWeapons().remove(testWeapon);
@@ -36,7 +36,7 @@ class WeaponControllerTest {
     void getUsableEffects(){
         //test with cannoneVortex(absolutePriority, missing Ammos)
          currentPlayer.addWeapon(testWeapon);
-         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon);
+         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers());
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
          for(int i = 0; i<3; i++)
              currentPlayer.getAmmos().remove(Ammo.RED);

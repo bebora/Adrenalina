@@ -38,6 +38,7 @@ public class Player {
 		damagesAllocable = 0;
 	}
 	public Player(Player originalPlayer){
+		this.id = originalPlayer.getId();
 		this.firstPlayer = originalPlayer.getFirstPlayer();
 		this.alive = originalPlayer.getAlive();
 		this.dominationSpawn = getDominationSpawn();
@@ -48,6 +49,15 @@ public class Player {
 		this.weapons = new ArrayList<>();
 		this.weapons.addAll(originalPlayer.getWeapons());
 		this.setMaxActions(originalPlayer.getMaxActions());
+		this.ammos = new ArrayList<>();
+		this.ammos.addAll(originalPlayer.getAmmos());
+		this.actions = new ArrayList<>();
+		this.actions.addAll(originalPlayer.actions);
+		this.rewardPoints = originalPlayer.rewardPoints;
+		this.powerUps = new ArrayList<>();
+		this.powerUps.addAll(originalPlayer.powerUps);
+		this.firstShotReward = originalPlayer.firstShotReward;
+		this.damagesAllocable = originalPlayer.damagesAllocable;
 	}
 
 
@@ -66,6 +76,7 @@ public class Player {
 			oldPlayer.getDamages().add(i,this.getDamages().get(i));
 		oldPlayer.weapons = this.weapons;
 		oldPlayer.setMaxActions(this.maxActions);
+		oldPlayer.ammos = this.ammos;
 	}
 
 	/**

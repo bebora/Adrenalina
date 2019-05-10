@@ -6,6 +6,7 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -19,24 +20,35 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class EffectControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
     private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
+    private Match sandboxMatch = new NormalMatch(testMatch);
     private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
-    private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
-    private WeaponController wp = new WeaponController(testMatch,testWeapon);
+    private Player currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
+    private WeaponController wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers());
 
+    @BeforeEach
+    void prepareWeapon(){
+        currentPlayer.addWeapon(testWeapon);
+        testWeapon.setLoaded(true);
+        wp.update(testWeapon);
+    }
     @Test
     void testCorrectTarget(){
         wp.update(testWeapon.getEffects().get(0));
         EffectController ec = wp.getEffectController();
-        List<Player> notCurrentPlayer = testMatch.getPlayers().stream()
-                .filter(p -> p != testMatch.getPlayers().get(testMatch.getCurrentPlayer()))
+        List<Player> notCurrentPlayer = sandboxMatch.getPlayers().stream()
+                .filter(p -> p != sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer()))
                 .collect(Collectors.toList());
+        Player originalNotCurrentPlayer = testMatch.getPlayers().stream()
+                .filter(p -> p.getId().equals(notCurrentPlayer.get(0).getId()))
+                .findAny().orElse(null);
         //player satisfy the target condition
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         notCurrentPlayer.remove(1);
         notCurrentPlayer.get(0).setTile(testMatch.getBoard().getTile(0,0));
         ec.updateOnPlayers(notCurrentPlayer);
+        sandboxMatch.restoreMatch(testMatch);
         assertEquals(2,notCurrentPlayer.get(0).getDamagesCount());
-        assertEquals(currentPlayer,notCurrentPlayer.get(0).getDamages().get(0));
+        assertEquals(testMatch.getPlayers().get(testMatch.getCurrentPlayer()),originalNotCurrentPlayer.getDamages().get(0));
     }
 
     @Test
@@ -69,6 +81,7 @@ public class EffectControllerTest {
     @Test
     void testMove(){
         //move self
+        wp.update(testWeapon);
         wp.update(testWeapon.getEffects().get(1));
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
