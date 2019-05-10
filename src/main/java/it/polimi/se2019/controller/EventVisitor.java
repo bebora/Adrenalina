@@ -2,7 +2,6 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.Side;
 import it.polimi.se2019.controller.events.*;
 import it.polimi.se2019.view.ViewTileCoords;
 
@@ -17,7 +16,7 @@ public class EventVisitor {
             requestHandler.receivePlayers(playerIds);
         }
         catch (RemoteException e) {
-            Logger.log(Side.SERVER, Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
     public void visit(SelectAction event) {
@@ -26,7 +25,7 @@ public class EventVisitor {
             requestHandler.receiveAction(selectedAction);
         }
         catch (RemoteException e) {
-            Logger.log(Side.SERVER, Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
     public void visit(SelectWeapon event){
@@ -36,7 +35,7 @@ public class EventVisitor {
             requestHandler.receiveWeapon(weapon);
         }
         catch (RemoteException e) {
-            Logger.log(Side.SERVER, Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
     public void visit(SelectTiles event){
@@ -45,7 +44,7 @@ public class EventVisitor {
             requestHandler.receiveTiles(viewTiles);
         }
         catch (RemoteException e) {
-            Logger.log(Side.SERVER, Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
 
@@ -59,7 +58,8 @@ public class EventVisitor {
             requestHandler.receiveConnection(username, password, signingUp, mode);
         }
         catch (RemoteException e) {
-            Logger.log(Side.SERVER, Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(
+                    Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
 

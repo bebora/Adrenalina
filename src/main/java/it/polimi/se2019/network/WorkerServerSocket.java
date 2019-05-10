@@ -17,7 +17,7 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
-public class WorkerServerSocket extends Thread implements ServerInterface {
+public class WorkerServerSocket extends Thread {
     private Socket socket;
     private View virtualView;
     private GsonBuilder gsonBuilder;
@@ -39,7 +39,7 @@ public class WorkerServerSocket extends Thread implements ServerInterface {
         }
         EventVisitable event = gson.fromJson(json, EventVisitable.class);
         try {
-            virtualView = new VirtualView(this, lobbyController);
+            virtualView = new VirtualView(lobbyController);
             EventVisitor virtualViewSetter = new VisitorVirtualViewSetter(virtualView);
             event.accept(virtualViewSetter);
             event.accept(lobbyController);

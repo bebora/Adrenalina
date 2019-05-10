@@ -8,30 +8,22 @@ public final class Logger {
     }
 
     private static final String HOME = System.getProperty("user.home");
-    private static final String CLIENT = "/adrenalina_client.log";
-    private static final String SERVER = "/adrenalina_server.log";
+    private static final String LOG = String.format("%s/adrenalina.log", HOME);
 
-    private static Side side;
     private static boolean debugMode;
 
-    public static void setSide(Side side) {
-        Logger.side = side;
-    }
-
-    public static void log(Side side, Priority priority, String toLog) {
-        if (Logger.side == side) {
-            switch (priority) {
-                case DEBUG:
-                    toLog = "[*] DEBUG: " + toLog;
-                    break;
-                case ERROR:
-                    toLog = "[*] ERROR: " + toLog;
-                    break;
-                case WARNING:
-                    toLog = "[*] WARNING: " + toLog;
-                    break;
-            }
-            //TODO LOG TO RELATIVE FILE
+    public static void log(Priority priority, String toLog) {
+        switch (priority) {
+            case DEBUG:
+                toLog = "[*] DEBUG: " + toLog;
+                break;
+            case ERROR:
+                toLog = "[*] ERROR: " + toLog;
+                break;
+            case WARNING:
+                toLog = "[*] WARNING: " + toLog;
+                break;
         }
+        //TODO LOG TO RELATIVE FILE
     }
 }

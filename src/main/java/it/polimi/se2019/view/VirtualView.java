@@ -4,10 +4,9 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestHandler;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
-import it.polimi.se2019.network.ServerInterface;
+
 
 public class VirtualView extends View  {
-    private transient ServerInterface virtualClient;
     /**
      * Debug view used to test events without the server
      */
@@ -18,8 +17,7 @@ public class VirtualView extends View  {
     private RequestHandler requestHandler;
 
 
-    public VirtualView (ServerInterface virtualClient, LobbyController lobbyController) {
-        this.virtualClient = virtualClient;
+    public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
     }
 
@@ -39,10 +37,7 @@ public class VirtualView extends View  {
      * @param u
      */
     public void update(UpdateVisitable u) {
-        if (virtualClient != null) {
-            virtualClient.update(u);
-        }
-        else if (debugView != null) {
+        if (debugView != null) {
             debugView.update(u);
         }
     }

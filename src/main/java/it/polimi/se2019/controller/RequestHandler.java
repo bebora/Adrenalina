@@ -6,12 +6,30 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface RequestHandler {
-    void receiveRoom(String room) throws RemoteException;
-    void receivePlayers(List<String> players) throws RemoteException;
-    void receiveAction(String subAction) throws RemoteException;
-    void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException;
-    void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException;
-    void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException;
-    void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException;
+
+public class RequestHandler {
+    void receiveRoom(String room) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    void receivePlayers(List<String> players) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    void receiveAction(String subAction) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+    void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+    void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+    void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
 }
