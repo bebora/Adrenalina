@@ -11,6 +11,7 @@ import it.polimi.se2019.model.cards.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.polimi.se2019.model.ThreeState.TRUE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
@@ -322,7 +323,8 @@ public class EffectController implements Observer {
         }
     }
 
-    private void updateMoveOnPlayers(List<Player> players){
+    private void updateMoveOnPlayers(List<Player> originalTargetPlayers){
+        List<Player> players = getSandboxPlayers(originalTargetPlayers);
         if(checkPlayerTargets(curMove.getTargetSource(),players)) {
             if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
                 pointOfView = players.get(0).getTile();
@@ -335,7 +337,8 @@ public class EffectController implements Observer {
         }
     }
 
-    private void updateDealDamageOnPlayers(List<Player> players){
+    private void updateDealDamageOnPlayers(List<Player> originalTargetPlayers){
+        List<Player> players = getSandboxPlayers(originalTargetPlayers);
         if(curDealDamage.getTarget().getMaxTargets() == 0){
             if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
                 curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
@@ -360,8 +363,20 @@ public class EffectController implements Observer {
                 .filter(p -> p.getId().equals(sandboxPlayer.getId()))
                 .findAny().orElse(null);
     }
+    private Player getSandboxPlayer(Player originalTargetPlayer){
+        return curMatch.getPlayers().stream()
+                .filter(p -> p.getId().equals(originalTargetPlayer.getId()))
+                .findAny().orElse(null);
+    }
+    private List<Player> getSandboxPlayers(List<Player> originalTargetPlayers){
+        return originalTargetPlayers.stream()
+                .map(this::getSandboxPlayer)
+                .collect(Collectors.toList());
+    }
 
     void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}
     void setCurEffect(Effect effect){this.curEffect = effect;}
+    void setCurMatch(Match match){this.curMatch = match;}
+    void setOriginalPlayers(List<Player> originalPlayers){this.originalPlayers = originalPlayers;}
     public void setPlayer(Player player){this.player = player;}
 }

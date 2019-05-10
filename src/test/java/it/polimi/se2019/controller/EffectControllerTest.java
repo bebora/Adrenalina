@@ -23,6 +23,7 @@ public class EffectControllerTest {
     private Match sandboxMatch = new NormalMatch(testMatch);
     private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
     private Player currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
+    private Player originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
     private WeaponController wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers());
 
     @BeforeEach
@@ -45,15 +46,19 @@ public class EffectControllerTest {
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         notCurrentPlayer.remove(1);
         notCurrentPlayer.get(0).setTile(testMatch.getBoard().getTile(0,0));
-        ec.updateOnPlayers(notCurrentPlayer);
+        ec.updateOnPlayers(Arrays.asList(originalNotCurrentPlayer));
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(2,notCurrentPlayer.get(0).getDamagesCount());
         assertEquals(testMatch.getPlayers().get(testMatch.getCurrentPlayer()),originalNotCurrentPlayer.getDamages().get(0));
+        assertEquals(2,notCurrentPlayer.get(0).getDamagesCount());
     }
 
     @Test
     void testWrongTarget(){
         Player enemy = new Player("nemico");
+        testMatch.addPlayer(enemy);
+        sandboxMatch = new NormalMatch(testMatch);
+        wp.setMatch(sandboxMatch);
         testWeapon.getEffects().get(0).setActivated(false);
         enemy.setTile(testMatch.getBoard().getTile(1,0));
         wp.update(testWeapon.getEffects().get(0));
@@ -65,37 +70,48 @@ public class EffectControllerTest {
     void testMultipleEffects(){
         Player firstEnemy = new Player("nemico");
         Player secondEnemy = new Player("nemicoCattivo");
+        testMatch.addPlayer(firstEnemy);
+        testMatch.addPlayer(secondEnemy);
+        testMatch.getPlayers().get(testMatch.getCurrentPlayer()).addAmmo(Ammo.YELLOW);
+        sandboxMatch = new NormalMatch(testMatch);
+        wp.setMatch(sandboxMatch);
+        wp.setOriginalPlayers(testMatch.getPlayers());
         testWeapon.getEffects().get(0).setActivated(false);
         secondEnemy.setTile(testMatch.getBoard().getTile(1,0));
         currentPlayer.setTile(testMatch.getBoard().getTile(1,0));
         firstEnemy.setTile(testMatch.getBoard().getTile(1,0));
         wp.update(testWeapon.getEffects().get(0));
         wp.getEffectController().updateOnPlayers(Arrays.asList(firstEnemy));
-        assertEquals(2,firstEnemy.getDamagesCount());
-        currentPlayer.addAmmo(Ammo.YELLOW);
         wp.update(testWeapon.getEffects().get(2));
         wp.getEffectController().updateOnPlayers(Arrays.asList(secondEnemy));
+        sandboxMatch.restoreMatch(testMatch);
+        assertEquals(2,firstEnemy.getDamagesCount());
         assertEquals(2,secondEnemy.getDamagesCount());
     }
 
     @Test
     void testMove(){
         //move self
+        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         wp.update(testWeapon);
         wp.update(testWeapon.getEffects().get(1));
-        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
-        assertEquals(testMatch.getBoard().getTile(0,1),currentPlayer.getTile());
+        sandboxMatch.restoreMatch(testMatch);
+        assertEquals(testMatch.getBoard().getTile(0,1),originalCurrentPlayer.getTile());
         //move opponent
         testWeapon = CardCreator.parseWeapon("fucileAPompa.btl");
         Player enemy = new Player("nemico");
+        testMatch.addPlayer(enemy);
         enemy.setTile(testMatch.getBoard().getTile(0,0));
-        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
-        currentPlayer.addWeapon(testWeapon);
+        originalCurrentPlayer.setTile(testMatch.getBoard().getTile(0,0));
+        originalCurrentPlayer.addWeapon(testWeapon);
+        sandboxMatch = new NormalMatch(testMatch);
+        wp.setMatch(sandboxMatch);
         wp.update(testWeapon);
         wp.update(testWeapon.getEffects().get(0));
         wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
+        sandboxMatch.restoreMatch(testMatch);
         assertEquals(3,enemy.getDamagesCount());
         assertEquals(testMatch.getBoard().getTile(0,1),enemy.getTile());
     }

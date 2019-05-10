@@ -86,6 +86,8 @@ public class WeaponController {
                 effectController.setCurEffect(effect);
                 effectController.setCurWeapon(weapon);
                 effectController.setPlayer(curPlayer);
+                effectController.setCurMatch(match);
+                effectController.setOriginalPlayers(originalPlayers);
                 effectController.nextStep();
             }
         }
@@ -93,6 +95,9 @@ public class WeaponController {
 
     public void setMatch(Match match) {
         this.match = match;
+    }
+    public void setOriginalPlayers(List<Player> originalPlayers){
+        this.originalPlayers = originalPlayers;
     }
 
     public Weapon getWeapon(){return weapon; }

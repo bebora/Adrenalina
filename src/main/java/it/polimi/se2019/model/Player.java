@@ -39,6 +39,7 @@ public class Player {
 	}
 	public Player(Player originalPlayer){
 		this.id = originalPlayer.getId();
+		this.tile = originalPlayer.getTile();
 		this.firstPlayer = originalPlayer.getFirstPlayer();
 		this.alive = originalPlayer.getAlive();
 		this.dominationSpawn = getDominationSpawn();
@@ -58,6 +59,7 @@ public class Player {
 		this.powerUps.addAll(originalPlayer.powerUps);
 		this.firstShotReward = originalPlayer.firstShotReward;
 		this.damagesAllocable = originalPlayer.damagesAllocable;
+		this.perspective = originalPlayer.getPerspective();
 	}
 
 
