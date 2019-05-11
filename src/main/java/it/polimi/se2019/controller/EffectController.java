@@ -48,6 +48,8 @@ public class EffectController implements Observer {
 
     private int orderIndex;
 
+    private int enemyWithPowerUps;
+
     private boolean askingForSource;
 
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers){
@@ -342,6 +344,7 @@ public class EffectController implements Observer {
 
     private boolean checkPowerUps(List<Player> players){
         boolean handlePowerup = false;
+        enemyWithPowerUps = 0;
         if(curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)){
             curWeapon.setTargetPlayers(players);
             handlePowerup = true;
@@ -349,6 +352,7 @@ public class EffectController implements Observer {
         for(Player p: players){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 handlePowerup = true;
+                enemyWithPowerUps++;
                 //TODO: tells the enemy player he can use the powerup
             }
         }
@@ -397,12 +401,17 @@ public class EffectController implements Observer {
     public void updateOnPowerUps(List<PowerUp> powerUps) {
         if(powerUps.get(0).getApplicability() == Moment.DAMAGING)
             curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
-        else if(powerUps.get(0).getApplicability() == Moment.DAMAGED) {
-            curWeapon.setTargetPlayers(Arrays.asList(player.getDamages().get(player.getDamages().size() - 1)));
-            curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
-            curActionType = DEALDAMAGE;
-        }
+    }
 
+    public void updateOnPowerUps(List<PowerUp> powerUps,Player enemy){
+        int damagesAmount;
+        for(PowerUp p: powerUps){
+            damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
+            player.receiveShot(enemy,damagesAmount,0);
+        }
+        enemyWithPowerUps--;
+        if(enemyWithPowerUps == 0)
+            nextStep();
     }
 
     private Player getOriginalPlayer(Player sandboxPlayer){
