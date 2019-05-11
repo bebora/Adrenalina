@@ -2,7 +2,6 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
-import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class LobbyController{
      * @param password
      * @param mode
      */
-    public void connectPlayer(String username, String password, String mode, View view) {
+    public void connectPlayer(String username, String password, String mode, VirtualView view) {
         for (GameController game : games) {
             List<String> allUsername = game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
@@ -73,14 +72,18 @@ public class LobbyController{
             }
             String token = String.format("%s$%s", username, password.hashCode());
             Player player = new Player(token);
+            player.setVirtualView(view);
             List<Player> modeWaiting = waitingPlayers.get(mode);
             if (modeWaiting == null) {
                 //TODO Send UPDATE to view saying mode is wrong :O
                 //TODO throw exception to close the connection
-            } else
+            } else {
                 modeWaiting.add(player);
-            //TODO start timer when players are 3
-            //TODO send popup update success
+
+
+                //TODO start timer when players are 3
+                //TODO send popup update success
+            }
         }
     }
 }

@@ -25,10 +25,10 @@ class WeaponControllerTest {
     void assignWeapon(){
         currentPlayer.addWeapon(testWeapon);
         WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers());
-        weaponControllerTest.update(testWeapon);
+        weaponControllerTest.updateOnWeapon(testWeapon);
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);
         testMatch.getPlayers().get(testMatch.getCurrentPlayer()).getWeapons().remove(testWeapon);
-        weaponControllerTest.update(testWeapon);
+        weaponControllerTest.updateOnWeapon(testWeapon);
         assertNull(weaponControllerTest.getWeapon());
     }
 
@@ -53,16 +53,16 @@ class WeaponControllerTest {
          //test with fucileLaser(equal absolutePriority)
          testWeapon = CardCreator.parseWeapon("fucileLaser.btl");
          currentPlayer.addWeapon(testWeapon);
-         weaponControllerTest.update(testWeapon);
+         weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(weaponControllerTest.getUsableEffects().size(), 2);
 
          //test with spadaFotonica(relativePriority)
          testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
          currentPlayer.addWeapon(testWeapon);
-         weaponControllerTest.update(testWeapon);
+         weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(3,weaponControllerTest.getUsableEffects().size());
          assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(1));
-         weaponControllerTest.update(testWeapon.getEffects().get(0));
+         weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0));
          assertEquals(2,weaponControllerTest.getUsableEffects().size());
          assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(0));
          assertEquals("modalità sminuzzare",weaponControllerTest.getUsableEffects().get(1));

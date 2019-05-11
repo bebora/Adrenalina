@@ -1,10 +1,15 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
+import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.board.Color;
+import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.Effect;
+import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
@@ -13,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WeaponController {
+public class WeaponController implements Observer {
     private int curEffect;
     private int lastUsedIndex;
     private Weapon weapon;
@@ -27,7 +32,7 @@ public class WeaponController {
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers){
         this.match = sandboxMatch;
         this.originalPlayers = originalPlayers;
-        update(weapon);
+        updateOnWeapon(weapon);
     }
     public List<String> getUsableEffects(){
         List<Effect> allEffects = weapon.getEffects();
@@ -63,7 +68,7 @@ public class WeaponController {
     }
 
 
-    void update(Weapon newWeapon) {
+    public void updateOnWeapon(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
             curEffect = 1;
@@ -96,7 +101,7 @@ public class WeaponController {
         }
     }
 
-    synchronized void update(Effect effect){
+    public synchronized void updateOnEffect(Effect effect){
         countdownTimer.stop();
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(getUsableEffects().contains(effect.getName())) {
@@ -128,4 +133,29 @@ public class WeaponController {
 
     public Weapon getWeapon(){return weapon; }
     public EffectController getEffectController(){return effectController;}
+
+    @Override
+    public void updateOnTiles(List<Tile> tiles) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnPlayers(List<Player> players) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnDirection(Direction direction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnRoom(Color room) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
+        throw new UnsupportedOperationException();
+    }
 }

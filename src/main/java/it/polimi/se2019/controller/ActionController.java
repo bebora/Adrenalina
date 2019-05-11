@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Observer;
 import it.polimi.se2019.model.DominationMatch;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
@@ -8,7 +9,10 @@ import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
+import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO: substitute comments with actual methods to communicate with the view
-public class ActionController {
+public class ActionController implements Observer {
     private Match originalMatch;
     private Match sandboxMatch;
     private WeaponController weaponController;
@@ -52,7 +56,7 @@ public class ActionController {
                 weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers());
             else {
                 weaponController.setMatch(sandboxMatch);
-                weaponController.update(weapon);
+                weaponController.updateOnWeapon(weapon);
             }
         }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
             weaponToReload = weapon;
@@ -74,8 +78,9 @@ public class ActionController {
         }
     }
 
-    public void updateOnTile(Tile tile){
-        if(curSubAction == SubAction.MOVE){
+    public void updateOnTiles(List<Tile> tiles){
+        if(curSubAction == SubAction.MOVE && tiles.size() >= 1){
+            Tile tile = tiles.get(0);
             if(originalMatch.getBoard().reachable(curPlayer.getTile(),0,curAction.getMovements(),false).contains(tile)) {
                 curPlayer.setTile(tile);
                 nextStep();
@@ -125,7 +130,7 @@ public class ActionController {
         }
     }
 
-    private void updateOnPowerUps(List<PowerUp> powerUps){
+    public void updateOnPowerUps(List<PowerUp> powerUps){
         powerUps.forEach(p -> curPlayer.discardPowerUp(p));
         for(Ammo a: curPlayer.getAmmos()){
             if(stillToPay.remove(a))
@@ -137,5 +142,25 @@ public class ActionController {
         }else{
             //ask for missing ammos
         }
+    }
+
+    @Override
+    public void updateOnPlayers(List<Player> players) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnDirection(Direction direction) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnRoom(Color room) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnEffect(Effect effect) {
+        throw new UnsupportedOperationException();
     }
 }

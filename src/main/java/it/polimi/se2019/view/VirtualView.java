@@ -37,4 +37,8 @@ public class VirtualView extends View  {
     public void setRequestHandler(RequestHandler requestHandler) {
         this.requestHandler = requestHandler;
     }
+
+    public void setViewUpdater(ViewUpdater viewUpdater) {
+        this.viewUpdater = viewUpdater;
+    }
 }

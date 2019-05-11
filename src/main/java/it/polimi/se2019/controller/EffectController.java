@@ -379,4 +379,19 @@ public class EffectController implements Observer {
     void setCurMatch(Match match){this.curMatch = match;}
     void setOriginalPlayers(List<Player> originalPlayers){this.originalPlayers = originalPlayers;}
     public void setPlayer(Player player){this.player = player;}
+
+    @Override
+    public void updateOnEffect(Effect effect) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnWeapon(Weapon weapon) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
+        throw new UnsupportedOperationException();
+    }
 }

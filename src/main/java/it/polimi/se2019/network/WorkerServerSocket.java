@@ -22,7 +22,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 public class WorkerServerSocket extends Thread {
     private Socket socket;
     private VirtualView virtualView;
-    private GsonBuilder gsonBuilder;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
     private Gson gson;
@@ -30,8 +29,9 @@ public class WorkerServerSocket extends Thread {
     private EventVisitor eventVisitor;
 
     public WorkerServerSocket(Socket socket, LobbyController lobbyController) {
+        GsonBuilder gsonBuilder;
         this.socket = socket;
-        this.gsonBuilder = new GsonBuilder();
+        gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventDeserializer());
         gson = gsonBuilder.create();
         String json;
@@ -49,6 +49,7 @@ public class WorkerServerSocket extends Thread {
             ConnectionRequest connection = (ConnectionRequest) event;
             virtualView = new VirtualView(lobbyController);
             ViewUpdater viewUpdater = new ViewUpdaterSocket(this);
+            virtualView.setViewUpdater(viewUpdater);
             String username = connection.getUsername();
             String password = connection.getPassword();
             String mode = connection.getMode();
