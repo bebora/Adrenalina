@@ -5,6 +5,7 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.ViewTile;
+import it.polimi.se2019.view.ViewTileCoords;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,8 +13,7 @@ import java.util.stream.Collectors;
 public class TileUpdate implements UpdateVisitable{
     private List<String> ammos;
     private List<String> weapons;
-    private int posx;
-    private int posy;
+    private ViewTileCoords coords;
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
     }
@@ -26,19 +26,15 @@ public class TileUpdate implements UpdateVisitable{
         return weapons;
     }
 
-    public int getPosx() {
-        return posx;
+    public ViewTileCoords getCoords() {
+        return coords;
     }
 
-    public int getPosy() {
-        return posy;
-    }
     //TODO one of the constructor may never be used depending on further implementaion
     public TileUpdate(ViewTile tile) {
         this.ammos = tile.getAmmos();
         this.weapons = tile.getWeapons();
-        this.posx = tile.getCoords().getPosx();
-        this.posy = tile.getCoords().getPosy();
+        this.coords = tile.getCoords();
     }
 
     /**
@@ -50,7 +46,6 @@ public class TileUpdate implements UpdateVisitable{
                 map(Ammo::name).collect(Collectors.toList());
         this.weapons = tile.getWeapons().stream().
                 map(Weapon::getName).collect(Collectors.toList());
-        this.posx = tile.getPosx();
-        this.posy = tile.getPosy();
+        this.coords = new ViewTileCoords(tile.getPosy(), tile.getPosx());
     }
 }

@@ -3,12 +3,12 @@ package it.polimi.se2019.view;
 import java.util.List;
 
 /**
- * Helper functions class to prevent code duplication in ConcreteUpdateVisitor
+ * Helper functions class to prevent code duplication in ConcreteViewReceiver
  */
-public class ConcreteUpdateVisitorHelper {
-    private ClientView view;
+public class ConcreteViewReceiverHelper {
+    private View view;
 
-    public ConcreteUpdateVisitorHelper(ClientView linkedView) {
+    public ConcreteViewReceiverHelper(View linkedView) {
         this.view = linkedView;
     }
 
@@ -24,15 +24,15 @@ public class ConcreteUpdateVisitorHelper {
             orElseThrow(()-> new InvalidUpdateException("Player with given id does not exist"));
     }
 
+
     /**
-     * Find and return ViewTile in view by its coordinates
-     * @param posx
-     * @param posy
+     * Find and return ViewTile given a ViewTileCoords object
+     * @param coords
      * @return
      */
-    public ViewTile getTileFromCoords(int posy, int posx) {
+    public ViewTile getTileFromCoords(ViewTileCoords coords) {
         try {
-            return view.getBoard().getTiles().get(posy).get(posx);
+            return view.getBoard().getTiles().get(coords.getPosy()).get(coords.getPosx());
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidUpdateException("Tile with given coords does not exist");
         }

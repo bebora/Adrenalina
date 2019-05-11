@@ -1,5 +1,6 @@
 package it.polimi.se2019.view;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
+import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.util.*;
 
@@ -20,14 +21,9 @@ public abstract class View {
 
 	private ViewTile perspective;
 
-	protected UpdateVisitor visitor;
+	protected ViewReceiverInterface receiver;
 
 	String token;
-
-	public void update(UpdateVisitable u) {
-		//TODO implements the update parsing (visitor pattern)
-		u.accept(visitor);
-	}
 
 	public List<ViewPlayer> getPlayers() {
 		return players;
