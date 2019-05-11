@@ -33,6 +33,8 @@ public class ViewTile {
         this.ammos = ammos;
     }
 
+    public String getRoom(){return room;}
+
     public ViewTile(Tile tile) {
         this.room = tile.getRoom().name();
         this.coords = new ViewTileCoords(tile.getPosy(), tile.getPosx());
