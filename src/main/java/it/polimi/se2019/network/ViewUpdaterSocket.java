@@ -13,7 +13,7 @@ public class ViewUpdaterSocket implements ViewUpdater{
     public ViewUpdaterSocket(WorkerServerSocket workerServerSocket) {
         this.workerServerSocket = workerServerSocket;
     }
-
+    //TODO implement all ViewUpdater methods
     public void sendTiles(List<Tile> tiles) {
         //TODO CONVERT IN JSON AND SEND TO WORKERSERVERSOCKET
     }

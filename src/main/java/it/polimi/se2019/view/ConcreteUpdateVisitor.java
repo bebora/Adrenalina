@@ -99,8 +99,8 @@ public class ConcreteUpdateVisitor implements UpdateVisitor {
         List<ViewTile> tiles = update.getCoords().stream().
                 map(m->helper.getTileFromCoords(m.getPosx(), m.getPosy())).
                 collect(Collectors.toList());
-        int minPlayers = update.getMinPlayers();
-        int maxPlayers = update.getMaxPlayers();
+        int minPlayers = update.getMinTiles();
+        int maxPlayers = update.getMaxTiles();
     }
 
     @Override

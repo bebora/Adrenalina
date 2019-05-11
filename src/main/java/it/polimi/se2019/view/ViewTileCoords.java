@@ -1,5 +1,7 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.model.board.Tile;
+
 /**
  * Position of a viewTile on the map
  * This class allows tiles to be sent without their unnecessary weapons and ammos
@@ -19,5 +21,10 @@ public class ViewTileCoords {
     public ViewTileCoords(int posy, int posx) {
         this.posx = posx;
         this.posy = posy;
+    }
+
+    public ViewTileCoords(Tile tile) {
+        this.posx = tile.getPosx();
+        this.posy = tile.getPosy();
     }
 }
