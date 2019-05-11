@@ -6,9 +6,15 @@ import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+
+import java.util.ArrayList;
+import java.util.List;
+
 //TODO: substitute comments with actual methods to communicate with the view
 public class ActionController {
     private Match originalMatch;
@@ -18,6 +24,8 @@ public class ActionController {
     private Action curAction;
     private int subActionIndex = 0;
     private Player curPlayer;
+    private Weapon weaponToReload;
+    private List<Ammo> stillToPay = new ArrayList<>();
 
     public ActionController(Match match){
         originalMatch = match;
@@ -46,16 +54,10 @@ public class ActionController {
                 weaponController.setMatch(sandboxMatch);
                 weaponController.update(weapon);
             }
-        }else if(curSubAction == SubAction.RELOAD){
-            if(curPlayer.getWeapons().contains(weapon)){
-                if(curPlayer.checkForAmmos(weapon.getCost())) {
-                    curPlayer.reload(weapon);
-                    nextStep();
-                }
-                else{
-                    //signals not enough ammo
-                }
-            }
+        }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
+            weaponToReload = weapon;
+            stillToPay.addAll(weapon.getCost());
+            startPayingProcess();
         }
     }
 
@@ -69,8 +71,6 @@ public class ActionController {
             else{
                 //illegal target
             }
-        }else{
-            //not waiting for this
         }
     }
 
@@ -83,8 +83,6 @@ public class ActionController {
             else{
                 //tell the player that he can't reach that tile
             }
-        }else{
-            //not waiting for this
         }
     }
 
@@ -104,5 +102,40 @@ public class ActionController {
             //TODO: ask for the proper target
         }
         subActionIndex++;
+    }
+
+    private void startPayingProcess(){
+        if(curPlayer.checkForAmmos(stillToPay,curPlayer.totalAmmoPool())){
+            if(curPlayer.canDiscardPowerUp(stillToPay)){
+                //ask the player if he want to discard powerups, giving a list of the discardable powerups
+            }
+            else if (!curPlayer.checkForAmmos(stillToPay,curPlayer.getAmmos())) {
+                for(Ammo a: curPlayer.getAmmos()){
+                    if(stillToPay.remove(a))
+                        curPlayer.getAmmos().remove(a);
+                }
+                //ask for the remaining ammos
+            }
+            else {
+                curPlayer.getAmmos().removeAll(stillToPay);
+                weaponToReload.setLoaded(true);
+            }
+        }else{
+            //tells the player not enough ammos
+        }
+    }
+
+    private void updateOnPowerUps(List<PowerUp> powerUps){
+        powerUps.forEach(p -> curPlayer.discardPowerUp(p));
+        for(Ammo a: curPlayer.getAmmos()){
+            if(stillToPay.remove(a))
+                curPlayer.getAmmos().remove(a);
+        }
+        if(stillToPay.isEmpty()){
+            weaponToReload.setLoaded(true);
+            nextStep();
+        }else{
+            //ask for missing ammos
+        }
     }
 }

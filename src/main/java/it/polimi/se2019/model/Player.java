@@ -69,7 +69,7 @@ public class Player {
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 	}
 
-	public void restorePlayer(Player oldPlayer){
+	void restorePlayer(Player oldPlayer){
 		oldPlayer.alive = this.getAlive();
 		oldPlayer.setTile(this.getTile());
 		for(int i = oldPlayer.getMarks().size(); i < this.getMarks().size(); i++)
@@ -78,7 +78,9 @@ public class Player {
 			oldPlayer.getDamages().add(i,this.getDamages().get(i));
 		oldPlayer.weapons = this.weapons;
 		oldPlayer.setMaxActions(this.maxActions);
+		oldPlayer.actions = this.actions;
 		oldPlayer.ammos = this.ammos;
+		oldPlayer.powerUps = this.powerUps;
 	}
 
 	/**
@@ -301,7 +303,7 @@ public class Player {
 	 * @return <code>true</code> if the player has enough ammo
 	 * 		   <cose>false</cose> otherwise
 	 */
-	public Boolean checkForAmmos(List<Ammo> cost){
+	public Boolean checkForAmmos(List<Ammo> cost,List<Ammo> ammoPool){
 		for (Ammo c : cost)
 			if (Collections.frequency(cost,c) > Collections.frequency(ammos,c))
 				return false;
@@ -351,6 +353,10 @@ public class Player {
 
 	public List<Ammo> getAmmos() {
 		return ammos;
+	}
+
+	public List<PowerUp> getPowerUps(){
+		return powerUps;
 	}
 
 	public Tile getPerspective() { return perspective; }
@@ -439,6 +445,29 @@ public class Player {
 	public void discardPowerUp(PowerUp powerUp) {
 		powerUps.remove(powerUp);
 		addAmmo(powerUp.getDiscardAward());
+	}
+
+	/**
+	 * Returns true if the player has at least one powerup that can be discarded
+	 * to pay for the cost
+	 * @param cost the ammos the player has to pay
+	 * @return <code>true</code> if the player can pay at least one ammo with a powerup
+	 * 		   <code>false</code> otherwise
+	 */
+	public boolean canDiscardPowerUp(List<Ammo> cost){
+		for(PowerUp p: powerUps){
+			if(cost.contains(p.getDiscardAward()))
+				return true;
+		}
+		return false;
+	}
+
+	public List<Ammo> totalAmmoPool(){
+		List<Ammo> totalPool = powerUps.stream()
+				.map(PowerUp::getDiscardAward)
+				.collect(Collectors.toList());
+		totalPool.addAll(ammos);
+		return totalPool;
 	}
 
 	public View getVirtualView() {

@@ -28,7 +28,7 @@ public class WeaponController {
 
         List<Effect> possiblyUsableEffects = allEffects.stream()
                 .filter(effect -> !effect.getActivated())
-                .filter(effect -> curPlayer.checkForAmmos(effect.getCost()))
+                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(),curPlayer.getAmmos()))
                 .collect(Collectors.toList());
 
         List<Integer> notUsedIndexes = possiblyUsableEffects.stream()

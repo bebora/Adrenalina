@@ -51,11 +51,11 @@ class PlayerTest {
             testPlayer.addAmmo(Ammo.RED);
 
         testPlayer.addWeapon(testWeapon);
-        if (testPlayer.checkForAmmos(testWeapon.getCost()))
+        if (testPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()))
             testPlayer.reload(testWeapon);
 
         assertTrue(testPlayer.getWeapons().get(0).getLoaded());
-        assertFalse(testPlayer.checkForAmmos(testPlayer.getWeapons().get(0).getCost()));
+        assertFalse(testPlayer.checkForAmmos(testPlayer.getWeapons().get(0).getCost(),testPlayer.getAmmos()));
     }
 
     @Test
@@ -64,10 +64,10 @@ class PlayerTest {
         for (int i = 0; i < 2; i++)
             testPlayer.addAmmo(Ammo.RED);
         testPlayer.addAmmo(Ammo.YELLOW);
-        assertTrue(testPlayer.checkForAmmos(testWeapon.getCost()));
+        assertTrue(testPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
 
         enemyPlayer.addAmmo(Ammo.RED);
-        assertFalse(enemyPlayer.checkForAmmos(testWeapon.getCost()));
+        assertFalse(enemyPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
 
     }
 
