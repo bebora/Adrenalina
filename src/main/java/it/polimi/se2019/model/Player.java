@@ -7,6 +7,7 @@ import it.polimi.se2019.model.actions.Move;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.VirtualView;
@@ -246,16 +247,18 @@ public class Player {
 	 * @param marks number of marks to add after converting the existing marks
 	 */
 	public void receiveShot(Player shooter, int damage, int marks) {
-		while(damage > 0 && damages.size() < 13){
-			damages.add(shooter);
-			damage--;
+		if(shooter != this) {
+			while (damage > 0 && damages.size() < 13) {
+				damages.add(shooter);
+				damage--;
+			}
+			convertMarks(shooter);
+			while (marks > 0) {
+				receiveMark(shooter);
+				marks--;
+			}
+			notifyHealthChange();
 		}
-		convertMarks(shooter);
-		while(marks > 0){
-			receiveMark(shooter);
-			marks--;
-		}
-		notifyHealthChange();
 	}
 
 	public void setActions(List<Action> actions) {
@@ -445,6 +448,19 @@ public class Player {
 	public void discardPowerUp(PowerUp powerUp) {
 		powerUps.remove(powerUp);
 		addAmmo(powerUp.getDiscardAward());
+	}
+
+	/**
+	 * Returns true if the player has a powerUp which can be used at the given moment
+	 * @param applicability the moment in which the player can use the powerup
+	 * @return <code>true</code> if the player has the corresponding powerup
+	 * 		   <code>false</code> otherwise
+	 */
+	public boolean hasPowerUp(Moment applicability){
+		for(PowerUp p: powerUps)
+			if(p.getApplicability() == applicability)
+				return true;
+		return false;
 	}
 
 	/**

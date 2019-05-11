@@ -10,10 +10,13 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.polimi.se2019.model.ThreeState.FALSE;
 import static it.polimi.se2019.model.ThreeState.TRUE;
+import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
 /**
@@ -168,9 +171,14 @@ public class EffectController implements Observer {
         }
         else{
             if(checkTileTargets(curDealDamage.getTarget(),tiles)){
-                tiles.forEach(t -> curMatch.getPlayersInTile(t)
-                        .forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount())));
-                nextStep();
+                List<Player> temp = tiles.stream()
+                        .map(t -> curMatch.getPlayersInTile(t))
+                        .flatMap(List::stream)
+                        .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()))
+                        .collect(Collectors.toList());
+                handleTargeting(curDealDamage.getTargeting(),temp);
+                if(!checkPowerUps(temp))
+                    nextStep();
             }
         }
     }
@@ -188,7 +196,9 @@ public class EffectController implements Observer {
                 .map(Player::getTile)
                 .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
             possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
-        nextStep();
+            handleTargeting(curDealDamage.getTargeting(),possibleTargets);
+            if(!checkPowerUps(possibleTargets))
+                nextStep();
         }
         else{
             //tells the player that the target is wrong
@@ -301,6 +311,13 @@ public class EffectController implements Observer {
                 .allMatch(target.getFilterTiles(board,pointOfView));
     }
 
+    private void handleTargeting(ThreeState targeting, List<Player> players){
+        if(targeting == TRUE){
+            curWeapon.setTargetPlayers(players);
+        }else if(targeting == FALSE)
+            curWeapon.setBlackListPlayers(players);
+    }
+
     /**
      * Check the pointOfView required by the target for the
      * current sub effect and set it accordingly.
@@ -321,6 +338,21 @@ public class EffectController implements Observer {
             default:
                 break;
         }
+    }
+
+    private boolean checkPowerUps(List<Player> players){
+        boolean handlePowerup = false;
+        if(curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)){
+            curWeapon.setTargetPlayers(players);
+            handlePowerup = true;
+        }
+        for(Player p: players){
+            if(p.hasPowerUp(Moment.DAMAGED)){
+                handlePowerup = true;
+                //TODO: tells the enemy player he can use the powerup
+            }
+        }
+        return handlePowerup;
     }
 
     private void updateMoveOnPlayers(List<Player> originalTargetPlayers){
@@ -347,15 +379,30 @@ public class EffectController implements Observer {
         }
         else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
             players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
-            if(curDealDamage.getTargeting() == TRUE)
-                curWeapon.setTargetPlayers(players);
-            else if(curDealDamage.getTargeting() == ThreeState.FALSE)
-                curWeapon.setBlackListPlayers(players);
-            nextStep();
+            handleTargeting(curDealDamage.getTargeting(),players);
+            if(!checkPowerUps(players))
+                nextStep();
         }
         else{
             //communicate the error to the player
         }
+    }
+
+    /**
+     * Receive a powerUp that can be used after a inflicting damage
+     * and prepare the controller for executing its effect
+     * @param powerUps a single powerUp to be used
+     */
+    @Override
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
+        if(powerUps.get(0).getApplicability() == Moment.DAMAGING)
+            curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
+        else if(powerUps.get(0).getApplicability() == Moment.DAMAGED) {
+            curWeapon.setTargetPlayers(Arrays.asList(player.getDamages().get(player.getDamages().size() - 1)));
+            curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
+            curActionType = DEALDAMAGE;
+        }
+
     }
 
     private Player getOriginalPlayer(Player sandboxPlayer){
@@ -390,8 +437,4 @@ public class EffectController implements Observer {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps) {
-        throw new UnsupportedOperationException();
-    }
 }
