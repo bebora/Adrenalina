@@ -15,11 +15,10 @@ public class EventSerializer implements JsonSerializer<EventVisitable> {
         String event = "event";
         switch (objectType) {
             default:
-                String weapon = gson.toJson(eventVisitable);
-                wrapper.add(event, new JsonPrimitive(weapon));
+                String json = gson.toJson(eventVisitable);
+                wrapper.add(event, new JsonPrimitive(json));
                 break;
         }
-        JsonElement jsonElement =  gson.fromJson(wrapper.toString(), JsonElement.class);
-        return jsonElement;
+        return gson.fromJson(wrapper.toString(), JsonElement.class);
     }
 }
