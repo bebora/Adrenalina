@@ -3,6 +3,7 @@ package it.polimi.se2019.controller.events;
 import com.google.gson.*;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.view.ViewTileCoords;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -12,13 +13,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class EventSerializerTest {
+    Gson gson;
 
-    @Test
-    void serialize() {
+    @BeforeEach
+    void initizialize() {
         GsonBuilder gsonBuilder;
         gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventSerializer());
-        Gson gson = gsonBuilder.create();
+        gson = gsonBuilder.create();
+    }
+    @Test
+    void serialize() {
         //Serializing array list of custom type
         ViewTileCoords tileCoord1 = new ViewTileCoords(0, 0);
         ViewTileCoords tileCoord2 = new ViewTileCoords(0, 1);

@@ -2,11 +2,8 @@ package it.polimi.se2019.controller.events;
 
 import com.google.gson.*;
 import it.polimi.se2019.controller.EventVisitable;
-import it.polimi.se2019.view.ViewTileCoords;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EventDeserializer implements JsonDeserializer<EventVisitable> {
     @Override
@@ -15,39 +12,30 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
         EventVisitable eventVisitable;
         JsonObject wrapper = jsonElement.getAsJsonObject();
         String objectType = wrapper.get("type").getAsString();
-        JsonObject event = wrapper.get("event").getAsJsonObject();
+        JsonObject event = new JsonParser().parse(wrapper.get("event").getAsString()).getAsJsonObject();
         switch (objectType) {
             case "ConnectionRequest":
-                eventVisitable = gson.fromJson(jsonElement,SelectAction.class);
+                eventVisitable = gson.fromJson(jsonElement,ConnectionRequest.class);
                 break;
             case "SelectAction":
-            {
+
                 eventVisitable = gson.fromJson(jsonElement,SelectAction.class);
                 break;
-            }
+
             case "SelectPlayers":
-            {
-                List<String> players= new ArrayList<>();
-                JsonArray jsonPlayers = event.get("players").getAsJsonArray();
-                for (JsonElement player : jsonPlayers) {
-                    players.add(player.getAsString());
-                }
-                eventVisitable = new SelectPlayers(players);
+
+                eventVisitable = gson.fromJson(event, SelectPlayers.class);
                 break;
-            }
-            case "SelectWeapon": {
-                eventVisitable = gson.fromJson(jsonElement, SelectWeapon.class);
+
+            case "SelectWeapon":
+                eventVisitable = gson.fromJson(event, SelectWeapon.class);
                 break;
-            }
-            case "SelectTiles": {
-                List<ViewTileCoords> coords = new ArrayList<>();
-                JsonArray jsonCoords = event.get("tiles").getAsJsonArray();
-                for (JsonElement tileCoord : jsonCoords) {
-                    coords.add(gson.fromJson(tileCoord,ViewTileCoords.class));
-                }
-                eventVisitable = new SelectTiles(coords);
+
+            case "SelectTiles":
+                eventVisitable = gson.fromJson(event, SelectTiles.class);
+
                 break;
-            }
+
             default:
                 throw new JsonParseException("WRONG FORMAT");
         }

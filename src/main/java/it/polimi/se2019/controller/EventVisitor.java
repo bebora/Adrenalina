@@ -58,4 +58,8 @@ public class EventVisitor {
         }
     }
 
+    public void visit(ConnectionRequest event) {
+        throw new UnsupportedOperationException();
+    }
+
 }
