@@ -1,15 +1,13 @@
 package it.polimi.se2019.model.updatemessage;
 
 import it.polimi.se2019.model.Player;
-import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;
-import it.polimi.se2019.view.ViewTile;
 
 /**
  * Represent Weapon Card taken from a spawn tile but not already replaced
  */
-public class WeaponTakenUpdate {
+public class WeaponTakenUpdate implements UpdateVisitable {
     private String takenWeapon;
 
     /**
@@ -51,13 +49,10 @@ public class WeaponTakenUpdate {
 
     /**
      * Default constructor without any discarded weapon
-     * @param tile
      * @param weapon
      * @param player
      */
-    public WeaponTakenUpdate(Tile tile, Weapon weapon, Player player) {
-        this.posx = tile.getPosx();
-        this.posy = tile.getPosy();
+    public WeaponTakenUpdate(Weapon weapon, Player player) {
         this.takenWeapon = weapon.getName();
         this.playerId = player.getId();
         this.discardedWeapon = null;
@@ -65,13 +60,12 @@ public class WeaponTakenUpdate {
 
     /**
      * Constructor for when a weapon has been discarded
-     * @param tile
      * @param weapon
      * @param player
      * @param discardedWeapon
      */
-    public WeaponTakenUpdate(Tile tile, Weapon weapon, Player player, Weapon discardedWeapon) {
-        this(tile, weapon, player);
+    public WeaponTakenUpdate(Weapon weapon, Weapon discardedWeapon, Player player) {
+        this(weapon, player);
         this.discardedWeapon = discardedWeapon.getName();
     }
 }

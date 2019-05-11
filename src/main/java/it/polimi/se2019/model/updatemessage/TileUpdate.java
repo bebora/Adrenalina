@@ -9,7 +9,7 @@ import it.polimi.se2019.view.ViewTile;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TileUpdate {
+public class TileUpdate implements UpdateVisitable{
     private List<String> ammos;
     private List<String> weapons;
     private int posx;

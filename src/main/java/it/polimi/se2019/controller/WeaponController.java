@@ -95,7 +95,6 @@ public class WeaponController implements Observer {
                     Logger.log(Priority.ERROR, "TIMER STOPPED WORKING" + e.toString());
                     Thread.currentThread().interrupt();
                 }
-
             }
 
 

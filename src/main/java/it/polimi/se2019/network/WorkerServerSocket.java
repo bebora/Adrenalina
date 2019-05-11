@@ -9,6 +9,7 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.VirtualView;
 
 import java.io.BufferedReader;
@@ -82,8 +83,8 @@ public class WorkerServerSocket extends Thread {
         //TODO run listener and sender
     }
 
-    public void update(EventVisitable event) {
-        String json = gson.toJson(event, EventVisitable.class);
+    public void update(UpdateVisitable update) {
+        String json = gson.toJson(update, UpdateVisitable.class);
         try {
             queue.put(json);
         }
