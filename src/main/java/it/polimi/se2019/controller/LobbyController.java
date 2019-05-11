@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.View;
@@ -75,7 +74,8 @@ public class LobbyController{
             Player player = new Player(token);
             List<Player> modeWaiting = waitingPlayers.get(mode);
             if (modeWaiting == null) {
-                throw new IncorrectEvent();
+                //TODO Send UPDATE to view saying mode is wrong :O
+                //TODO throw exception to close the connection
             } else
                 modeWaiting.add(player);
             //TODO start timer when players are 3

@@ -6,6 +6,7 @@ import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -17,6 +18,8 @@ public class WeaponController {
     private Player curPlayer;
     private List<Player> originalPlayers;
     private EffectController effectController;
+    private CountdownTimer countdownTimer;
+    AtomicBoolean inputReceived;
 
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers){
         this.match = sandboxMatch;
@@ -63,7 +66,19 @@ public class WeaponController {
             curEffect = 1;
             lastUsedIndex = -1;
             weapon = newWeapon;
-            //tell the player to select the effect
+            //TODO send update to player to ask for effect
+            countdownTimer = new CountdownTimer(System.currentTimeMillis(), 60);
+            while (countdownTimer.getActive().get()) {
+                synchronized (this) {
+                    if (countdownTimer.isFinished() || countdownTimer.getActive().get()) {
+                        //TODO next turn
+                        //TODO set requesthandler of player to waiting for nothing
+                    }
+                }
+
+            }
+
+
         }
         else {
             weapon = null;
@@ -71,7 +86,8 @@ public class WeaponController {
         }
     }
 
-    void update(Effect effect){
+    synchronized void update(Effect effect){
+        countdownTimer.stop();
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(getUsableEffects().contains(effect.getName())) {
             effect.getCost().forEach(ammo -> curPlayer.getAmmos().remove(ammo));
