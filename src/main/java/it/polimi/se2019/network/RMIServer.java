@@ -1,5 +1,6 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.controller.ConnectHandler;
 import it.polimi.se2019.controller.LobbyController;
 
 import java.net.MalformedURLException;
@@ -32,9 +33,8 @@ public class RMIServer extends Thread{
             //TODO log remote exception
         }
         try {
-            WorkerServerRMI serverWorker = new WorkerServerRMI(lobbyController);
-
-            Naming.rebind("//localhost/AdrenalineServer", serverWorker);
+            ConnectHandler connectHandler = new ConnectHandler(lobbyController);
+            Naming.rebind("//localhost/AdrenalineServer", connectHandler);
         }
         catch (RemoteException e) {
             //TODO log remote exception

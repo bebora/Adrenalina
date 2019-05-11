@@ -17,11 +17,5 @@ public class WorkerServerRMI extends UnicastRemoteObject{
         super();
         this.lobbyController = lobbyController;
     }
-
-    public boolean connectPlayer(ViewReceiverInterface viewReceiver){
-        //TODO check if player can connect, otherwise return false
-        //TODO save receiver in list of receivers
-        this.viewReceiver = viewReceiver;
-        return true;
-    }
+    //TODO save receiver in list of receivers
 }
