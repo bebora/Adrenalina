@@ -3,6 +3,7 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.VirtualView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class LobbyController{
      * @param password
      * @param view
      */
-    public void reconnectPlayer(String username, String password, View view) {
+    public void reconnectPlayer(String username, String password, VirtualView view) {
         Player player = null;
         String token = String.format("%s$%s", username, password.hashCode());
         for (GameController game : games) {

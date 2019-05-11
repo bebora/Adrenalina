@@ -9,7 +9,7 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -102,7 +102,7 @@ public class Player {
 	/**
 	 * Virtual View of the player
 	 */
-	private View virtualView;
+	private VirtualView virtualView;
 
 	private Boolean online;
 
@@ -470,18 +470,16 @@ public class Player {
 		return totalPool;
 	}
 
-	public View getVirtualView() {
+	public VirtualView getVirtualView() {
 		return virtualView;
 	}
 
-	public Player setOnline(Boolean online) {
+	public void setOnline(Boolean online) {
 		this.online = online;
-		return this;
 	}
 
-	public Player setVirtualView(View virtualView) {
+	public void setVirtualView(VirtualView virtualView) {
 		this.virtualView = virtualView;
-		return this;
 	}
 
 	public void addDamagesAllocable() {

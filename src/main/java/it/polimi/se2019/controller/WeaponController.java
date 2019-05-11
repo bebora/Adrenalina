@@ -1,11 +1,14 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -68,12 +71,19 @@ public class WeaponController {
             weapon = newWeapon;
             //TODO send update to player to ask for effect
             countdownTimer = new CountdownTimer(System.currentTimeMillis(), 60);
-            while (countdownTimer.getActive().get()) {
+            while (countdownTimer.getActive().get() && countdownTimer.isFinished())
+            {
                 synchronized (this) {
                     if (countdownTimer.isFinished() || countdownTimer.getActive().get()) {
                         //TODO next turn
-                        //TODO set requesthandler of player to waiting for nothing
                     }
+                }
+                try {
+                    TimeUnit.MINUTES.sleep(1);
+                }
+                catch (InterruptedException e) {
+                    Logger.log(Priority.ERROR, "TIMER STOPPED WORKING" + e.toString());
+                    Thread.currentThread().interrupt();
                 }
 
             }
