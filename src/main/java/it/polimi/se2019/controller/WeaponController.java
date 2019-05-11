@@ -5,6 +5,7 @@ import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Direction;
@@ -12,6 +13,7 @@ import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,11 +29,14 @@ public class WeaponController implements Observer {
     private List<Player> originalPlayers;
     private EffectController effectController;
     private CountdownTimer countdownTimer;
+    private Effect selectedEffect;
+    List<Ammo> stillToPay;
     AtomicBoolean inputReceived;
 
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers){
         this.match = sandboxMatch;
         this.originalPlayers = originalPlayers;
+        this.stillToPay = new ArrayList<>();
         updateOnWeapon(weapon);
     }
     public List<String> getUsableEffects(){
@@ -39,7 +44,7 @@ public class WeaponController implements Observer {
 
         List<Effect> possiblyUsableEffects = allEffects.stream()
                 .filter(effect -> !effect.getActivated())
-                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(),curPlayer.getAmmos()))
+                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(),curPlayer.totalAmmoPool()))
                 .collect(Collectors.toList());
 
         List<Integer> notUsedIndexes = possiblyUsableEffects.stream()
@@ -105,24 +110,64 @@ public class WeaponController implements Observer {
         countdownTimer.stop();
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if(getUsableEffects().contains(effect.getName())) {
-            effect.getCost().forEach(ammo -> curPlayer.getAmmos().remove(ammo));
-            curEffect ++;
-            effect.setActivated(true);
-            lastUsedIndex = weapon.getEffects().indexOf(effect) + 1;
-            if(effectController == null) {
-                effectController = new EffectController(effect, weapon, match, curPlayer,originalPlayers);
-                effectController.nextStep();
+            selectedEffect = effect;
+            stillToPay = new ArrayList<>();
+            stillToPay.addAll(effect.getCost());
+            if(effect.getCost().isEmpty()) {
+                startEffect();
+            }
+            else if (curPlayer.canDiscardPowerUp(stillToPay)) {
+                //ask to discard powerup if wanted
+            }
+            else if(!curPlayer.checkForAmmos(stillToPay,curPlayer.getAmmos())) {
+                for (Ammo a : curPlayer.getAmmos()) {
+                    if (stillToPay.remove(a))
+                        curPlayer.getAmmos().remove(a);
+                }
+                //ask to discard for missing ammos
             }
             else{
-                effectController.setCurEffect(effect);
-                effectController.setCurWeapon(weapon);
-                effectController.setPlayer(curPlayer);
-                effectController.setCurMatch(match);
-                effectController.setOriginalPlayers(originalPlayers);
-                effectController.nextStep();
+                curPlayer.getAmmos().removeAll(stillToPay);
+                startEffect();
             }
         }
     }
+
+    @Override
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
+        powerUps.forEach(p -> curPlayer.discardPowerUp(p));
+        for(Ammo a: curPlayer.getAmmos()){
+            if(stillToPay.remove(a))
+                curPlayer.getAmmos().remove(a);
+        }
+        if(stillToPay.isEmpty()){
+            startEffect();
+        }else{
+            //ask for missing ammos
+        }
+    }
+
+    public void startEffect(){
+        curEffect ++;
+        selectedEffect.setActivated(true);
+        lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
+        if(effectController == null) {
+            effectController = new EffectController(selectedEffect, weapon, match, curPlayer,originalPlayers);
+            effectController.nextStep();
+        }
+        else{
+            effectController.setCurEffect(selectedEffect);
+            effectController.setCurWeapon(weapon);
+            effectController.setPlayer(curPlayer);
+            effectController.setCurMatch(match);
+            effectController.setOriginalPlayers(originalPlayers);
+            effectController.nextStep();
+        }
+    }
+
+
+
+
 
     public void setMatch(Match match) {
         this.match = match;
@@ -154,8 +199,4 @@ public class WeaponController implements Observer {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps) {
-        throw new UnsupportedOperationException();
-    }
 }
