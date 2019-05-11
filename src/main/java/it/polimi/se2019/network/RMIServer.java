@@ -10,11 +10,21 @@ import java.rmi.registry.LocateRegistry;
 /**
  * Create WorkerServerRMI and export it on the RMI registry
  */
-public class RMIServer {
+public class RMIServer extends Thread{
     private static int defaultPort = 1099;
     private LobbyController lobbyController;
+    private int port;
 
     public RMIServer(LobbyController lobbyController, int port) {
+        this.lobbyController = lobbyController;
+        this.port = port;
+    }
+    public RMIServer(LobbyController lobbyController) {
+        this(lobbyController, defaultPort);
+    }
+
+    @Override
+    public void run() {
         try {
             LocateRegistry.createRegistry(port);
         }
@@ -23,6 +33,7 @@ public class RMIServer {
         }
         try {
             WorkerServerRMI serverWorker = new WorkerServerRMI(lobbyController);
+
             Naming.rebind("//localhost/AdrenalineServer", serverWorker);
         }
         catch (RemoteException e) {
@@ -31,9 +42,6 @@ public class RMIServer {
         catch (MalformedURLException e) {
             //TODO log malformed url
         }
-    }
-    public RMIServer(LobbyController lobbyController) {
-        this(lobbyController, defaultPort);
     }
 
 }

@@ -8,6 +8,9 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Visitor used by socket server implementation that apply events received on a RequestHandler
+ */
 public class EventVisitor {
     RequestHandler requestHandler;
     LobbyController lobbyController;
