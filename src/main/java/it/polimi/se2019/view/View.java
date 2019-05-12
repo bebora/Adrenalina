@@ -1,5 +1,4 @@
 package it.polimi.se2019.view;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.util.*;
@@ -55,6 +54,10 @@ public abstract class View {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public ViewReceiverInterface getReceiver() {
+		return receiver;
 	}
 
 	public void setUsername(String username) {

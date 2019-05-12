@@ -7,7 +7,7 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
-
+//TODO create RequestHandlerInterface so that remote RMI client does not have access to lobbyController and observer
 public class RequestHandler {
     Observer observer;
     LobbyController lobbyController;

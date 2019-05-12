@@ -7,6 +7,8 @@ import java.util.List;
 
 /**
  * Sender interface used by the view to send chosen events to controller.
+ * View does not know what methods really do, only the network implementation
+ * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
     //TODO will use for messages from the View to the Controller
@@ -20,8 +22,6 @@ public interface EventUpdater {
     void sendWeapon(String weapon);
     void sendPowerUp(String powerUp);
     void login(View view,
-               String serverIP,
-               int port,
                String nickname,
                String password,
                boolean existingGame,
