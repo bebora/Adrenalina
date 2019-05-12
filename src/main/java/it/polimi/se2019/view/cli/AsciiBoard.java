@@ -4,7 +4,7 @@ import it.polimi.se2019.view.ViewBoard;
 import it.polimi.se2019.view.ViewTile;
 
 public class AsciiBoard {
-    private static ViewBoard board;
+    static ViewBoard board;
     private static int offsetX = 1;
     private static int offsetY = 1;
 
@@ -55,7 +55,8 @@ public class AsciiBoard {
 
     static void drawLinks() {
         //check top row
-        ViewTile tile1, tile2;
+        ViewTile tile1;
+        ViewTile tile2;
         for (int i = 0; i < board.getTiles().size() - 1; i++) {
             tile1 = board.getTiles().get(i).get(0);
             tile2 = board.getTiles().get(i + 1).get(0);
@@ -84,5 +85,6 @@ public class AsciiBoard {
                 }
             }
         }
+        CLI.moveCursor(0, AsciiTile.Y_SIZE * board.getTiles().size() + 1);
     }
 }

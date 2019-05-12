@@ -10,11 +10,10 @@ import java.util.stream.Collectors;
 public class ViewPlayer {
 
 	public ViewPlayer(Player player) {
-		this.tile = new ViewTile(player.getTile());
 		this.color = player.getColor().name();
 		this.id = player.getId();
-		this.damages = player.getDamages().stream().map(Player::getId).collect(Collectors.toList());
-		this.marks = player.getMarks().stream().map(Player::getId).collect(Collectors.toList());
+		this.damages = player.getDamages().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
+		this.marks = player.getMarks().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
 		this.ammos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
 		this.firstPlayer = player.getFirstPlayer();
 		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
@@ -66,6 +65,8 @@ public class ViewPlayer {
 	public void setAmmos(List<String> ammos) {
 		this.ammos = ammos;
 	}
+
+	public List<String> getAmmos(){return ammos;}
 
 	public ViewTile getTile() {
 		return tile;
