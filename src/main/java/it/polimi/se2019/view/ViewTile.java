@@ -59,4 +59,16 @@ public class ViewTile {
     }
 
 
+    /**
+     * Constructor used in visitor, missing color because it won't be used: will get the correspondent tile using helper, from coords.
+     * @param ammos
+     * @param weapons
+     * @param coords
+     */
+    public ViewTile(List<String> ammos, List<String> weapons, ViewTileCoords coords) {
+        this.coords = coords;
+        this.weapons = weapons;
+        this.ammos = ammos;
+    }
+
 }

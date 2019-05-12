@@ -1,8 +1,5 @@
 package it.polimi.se2019.model;
-import java.util.*;
-import java.util.stream.Collectors;
-import it.polimi.se2019.model.ammos.*;
-
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.board.Tile;
@@ -10,6 +7,12 @@ import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +37,7 @@ class BoardTest {
 
         // Test same rooms and close tiles
         assertEquals(test.isLinked(test.getTile(1,1), test.getTile(1,2), false), true);
-        assertEquals(test.isLinked(test.getTile(2,2), test.getTile(2,3), false), false);
+        assertEquals(true, test.isLinked(test.getTile(2,2), test.getTile(2,3), false));
         assertEquals(test.isLinked(test.getTile(2,2), test.getTile(2,3), true), true);
     }
 

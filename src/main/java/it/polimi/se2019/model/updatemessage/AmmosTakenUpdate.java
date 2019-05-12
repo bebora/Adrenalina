@@ -39,4 +39,6 @@ public class AmmosTakenUpdate implements UpdateVisitable{
         this.playerId = player.getId();
         this.playerAmmos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
     }
+
+
 }

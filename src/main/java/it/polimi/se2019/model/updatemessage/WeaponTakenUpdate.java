@@ -15,10 +15,6 @@ public class WeaponTakenUpdate implements UpdateVisitable {
      */
     private String discardedWeapon;
 
-    private int posx;
-
-    private int posy;
-
     /**
      * Player who takes the weapon
      */
@@ -30,14 +26,6 @@ public class WeaponTakenUpdate implements UpdateVisitable {
 
     public String getDiscardedWeapon() {
         return discardedWeapon;
-    }
-
-    public int getPosx() {
-        return posx;
-    }
-
-    public int getPosy() {
-        return posy;
     }
 
     public String getPlayerId() {

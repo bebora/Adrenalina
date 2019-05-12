@@ -7,7 +7,6 @@ import it.polimi.se2019.view.View;
 public class ConnectionRequest implements EventVisitable {
 
     String username;
-    String salt;
     String password;
     boolean existingGame;
     String mode;
@@ -17,7 +16,6 @@ public class ConnectionRequest implements EventVisitable {
 
     {
         this.username = username;
-        this.salt = salt;
         this.password = password;
         this.existingGame = signingUp;
         this.mode = mode;
@@ -41,7 +39,7 @@ public class ConnectionRequest implements EventVisitable {
 
     public String getToken() {
         if (!(username.contains("$") || password.contains("$")))
-            return username + "$" + salt + "$" + (password+salt).hashCode();
+            return username + "$" + (password).hashCode();
         else
             throw new IllegalArgumentException();
     }

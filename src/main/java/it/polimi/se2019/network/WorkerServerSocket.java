@@ -9,6 +9,7 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
+import it.polimi.se2019.model.updatemessage.UpdateSerializer;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.VirtualView;
 
@@ -20,6 +21,8 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+
+//TODO implement heartbeat for disconnection
 public class WorkerServerSocket extends Thread {
     private Socket socket;
     private VirtualView virtualView;
@@ -34,6 +37,7 @@ public class WorkerServerSocket extends Thread {
         this.socket = socket;
         gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventDeserializer());
+        gsonBuilder.registerTypeAdapter(UpdateVisitable.class, new UpdateSerializer());
         gson = gsonBuilder.create();
         String json;
         try {
@@ -125,13 +129,13 @@ public class WorkerServerSocket extends Thread {
                 String json;
                 try {
                     json = jsonReader.readLine();
+                    EventVisitable event = gson.fromJson(json, EventVisitable.class);
+                    event.accept(eventVisitor);
                 }
                 catch (IOException e) {
                     //TODO LOGGER
                     throw new UnsupportedOperationException();
                 }
-                EventVisitable event = gson.fromJson(json, EventVisitable.class);
-                event.accept(eventVisitor);
             }
         }
     }
