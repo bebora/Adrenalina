@@ -16,9 +16,13 @@ import java.util.stream.Collectors;
 /**
  * A class with useful methods to parse the content of event messages.
  */
-public class EventVisitorHelper {
+public class EventHelper {
     private Match match;
 
+
+    public EventHelper(Match match) {
+        this.match = match;
+    }
     /**
      * Return a Player with the given id.
      * If there is no corresponding player in the current match return null.

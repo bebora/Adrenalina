@@ -12,11 +12,6 @@ public class RequestHandler {
     Observer observer;
     LobbyController lobbyController;
 
-    public RequestHandler(LobbyController lobbyController) {
-        observer = null;
-        this.lobbyController = lobbyController;
-    }
-
     void receiveRoom(String room) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
@@ -39,6 +34,14 @@ public class RequestHandler {
         throw new IllegalArgumentException("WRONG METHOD");
     }
     void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    void receiveEffect(String effect) throws RemoteException {
+        throw new IllegalArgumentException("WRONG METHOD");
+    }
+
+    void receiveChoice(String choice) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
 
