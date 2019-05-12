@@ -44,5 +44,19 @@ public class ViewTile {
         this.ammos = tile.isSpawn() ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
                 map(Ammo::name).collect(Collectors.toList());
     }
+    public static int cabDistance(ViewTile tile1, ViewTile tile2) {
+        return Math.abs(tile1.getCoords().getPosx() - tile2.getCoords().getPosx()) + Math.abs(tile1.getCoords().getPosy() - tile2.getCoords().getPosy());
+    }
+
+    @Override
+    public boolean equals(Object p) {
+        boolean returnValue = false;
+        if (p instanceof ViewTile) {
+            ViewTile tile = (ViewTile) p;
+            returnValue = (tile.getCoords().getPosx() == this.getCoords().getPosx() && tile.getCoords().getPosy() == this.getCoords().getPosy());
+        }
+        return returnValue;
+    }
+
 
 }
