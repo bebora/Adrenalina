@@ -2,13 +2,17 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.view.ViewBoard;
 import it.polimi.se2019.view.ViewTile;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 
 public class AsciiBoard {
     static ViewBoard board;
-    private static int offsetX = 1;
-    private static int offsetY = 1;
+    static int offsetX = 1;
+    static int offsetY = 1;
+    static int boardRightBorder;
+    static int boardBottomBorder;
+    static int infoBoxHeight = 8;
 
     static void drawBoard() {
         System.out.print(CLI.escCode + "[J");
@@ -20,6 +24,8 @@ public class AsciiBoard {
             }
         }
         drawLinks();
+        boardBottomBorder = AsciiTile.Y_SIZE * AsciiBoard.board.getTiles().size() + 1;
+        boardRightBorder = AsciiBoard.board.getTiles().get(0).size()*AsciiTile.X_SIZE + offsetX + 10;
     }
 
     static ViewTile findTile(int posX, int posY) {
@@ -122,4 +128,6 @@ public class AsciiBoard {
             CLI.cleanRow();
         }
     }
+
+
 }

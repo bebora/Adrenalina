@@ -21,9 +21,9 @@ public class AsciiPlayer {
     }
 
     static void printAmmos(){
-        CLI.moveCursor(12*2, AsciiTile.Y_SIZE * AsciiBoard.board.getTiles().size() + 1);
+        CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder);
         CLI.printInColor("w","Munizioni:");
-        CLI.moveCursor(12*2, AsciiTile.Y_SIZE * AsciiBoard.board.getTiles().size() + 2);
+        CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 1);
         CLI.saveCursorPosition();
         for(String a: player.getAmmos())
             CLI.printInColor(a,	"\u2610 ");

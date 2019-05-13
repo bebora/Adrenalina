@@ -16,11 +16,32 @@ public class CLI extends View {
     static void moveCursor(int posX,int posY){
         System.out.print(String.format("%c[%d;%df",escCode,posY,posX));
     }
+
     static void shiftCursorDown(int rows){System.out.print(String.format("%c[%dB",escCode,rows));}
+
     static void shiftCursorRight(int columns){System.out.print(String.format("%c[%dC",escCode,columns));}
+
     static void saveCursorPosition(){System.out.print(escCode + "[s");}
+
     static void restoreCursorPosition(){System.out.print(escCode + "[u");}
+
     static void cleanRow(){System.out.print(escCode + "[2K");}
+
+    static void fixedWidthPrint(int width, String text){
+        int relativePos = 0;
+        saveCursorPosition();
+        for(String w: text.split("\\s")){
+            System.out.print(w + " ");
+            relativePos += w.length();
+            if(relativePos > width){
+                relativePos = 0;
+                restoreCursorPosition();
+                shiftCursorDown(1);
+                saveCursorPosition();
+            }
+        }
+    }
+
     static void clearUntilEndOfLine(int rowBegin, int rowEnd, int column){
         for(int i = rowBegin; i < rowEnd; i++){
             moveCursor(column,i);

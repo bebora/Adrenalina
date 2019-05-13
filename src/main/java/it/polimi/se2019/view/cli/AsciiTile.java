@@ -8,6 +8,8 @@ class AsciiTile {
     private static final String LOW = "\u2514\u2500\u2500\u2500\u2518";
     static final int X_SIZE = 5;
     static final int Y_SIZE = 5;
+    static final String unicodeAmmo = "☐";
+    static final String unicodePowerUp = "\uD83C\uDCA0";
 
     static void drawTile(ViewTile tile, int offsetX, int offsetY){
         int x = tile.getCoords().getPosx()*X_SIZE + offsetX;
@@ -26,7 +28,7 @@ class AsciiTile {
     }
 
     static void drawTileInfo(ViewTile tile, int offsetX, int offsetY){
-        int x = AsciiBoard.board.getTiles().get(0).size()*X_SIZE + offsetX + 10;
+        int x = AsciiBoard.boardRightBorder;
         int y = offsetY;
         int i = 1;
         CLI.moveCursor(x,y);
@@ -45,7 +47,7 @@ class AsciiTile {
         CLI.moveCursor(x,y);
         for(String p: tile.getAmmos()){
             if(p.equals("POWERUP")){
-                CLI.printInColor("w", "\uD83C\uDCA0 ");
+                CLI.printInColor("w", unicodePowerUp + " ");
             }else{
                 CLI.printInColor(p,"☐ ");
             }
