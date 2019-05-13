@@ -20,5 +20,13 @@ public class CLI extends View {
     static void shiftCursorRight(int columns){System.out.print(String.format("%c[%dC",escCode,columns));}
     static void saveCursorPosition(){System.out.print(escCode + "[s");}
     static void restoreCursorPosition(){System.out.print(escCode + "[u");}
+    static void cleanRow(){System.out.print(escCode + "[2K");}
+    static void clearUntilEndOfLine(int rowBegin, int rowEnd, int column){
+        for(int i = rowBegin; i < rowEnd; i++){
+            moveCursor(column,i);
+            System.out.print(CLI.escCode + "[K");
+            moveCursor(column,rowBegin);
+        }
+    }
 
 }

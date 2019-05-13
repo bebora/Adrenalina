@@ -24,4 +24,31 @@ class AsciiTile {
         }
         CLI.printInColor(color, LOW);
     }
+
+    static void drawTileInfo(ViewTile tile, int offsetX, int offsetY){
+        int x = AsciiBoard.board.getTiles().get(0).size()*X_SIZE + offsetX + 10;
+        int y = offsetY;
+        int i = 1;
+        CLI.moveCursor(x,y);
+        CLI.clearUntilEndOfLine(y,y+8,x);
+        CLI.printInColor("w","Armi:");
+        y++;
+        CLI.moveCursor(x,y);
+        for(String w: tile.getWeapons()){
+            CLI.printInColor("w",i + ")" + w);
+            y++;
+            i++;
+            CLI.moveCursor(x,y);
+        }
+        CLI.printInColor("w","Munizioni:");
+        y++;
+        CLI.moveCursor(x,y);
+        for(String p: tile.getAmmos()){
+            if(p.equals("POWERUP")){
+                CLI.printInColor("w", "\uD83C\uDCA0 ");
+            }else{
+                CLI.printInColor(p,"☐ ");
+            }
+        }
+    }
 }

@@ -2,6 +2,8 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.view.ViewBoard;
 import it.polimi.se2019.view.ViewTile;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 public class AsciiBoard {
     static ViewBoard board;
@@ -86,5 +88,36 @@ public class AsciiBoard {
             }
         }
         CLI.moveCursor(0, AsciiTile.Y_SIZE * board.getTiles().size() + 1);
+    }
+
+    public static void tileInfoMode(BufferedReader input) throws IOException {
+        String in;
+        String[] inSplit;
+        int cursorX = 0;
+        int cursorY = 0;
+        int requestedX = 0;
+        int requestedY = 0;
+        CLI.moveCursor(1,20);
+        while((in = input.readLine()) != null && !in.equals("q")){
+            CLI.clearUntilEndOfLine(20,22,1);
+            if(!in.isEmpty() && in.contains(";")) {
+                inSplit = in.split(",");
+                CLI.moveCursor(1, 20);
+                CLI.cleanRow();
+                requestedX = Math.abs(Integer.parseInt(inSplit[0]));
+                if (in.contains(",") && !inSplit[1].isEmpty()) {
+                    requestedY = Math.abs(Integer.parseInt(inSplit[1]));
+                }
+                if (requestedX < AsciiBoard.board.getTiles().get(0).size() && requestedY < AsciiBoard.board.getTiles().size() && requestedX > 0 && requestedY > 0) {
+                    AsciiTile.drawTileInfo(AsciiBoard.board.getTiles().get(requestedY - 1).get(requestedX - 1), 1, 1);
+                }
+                else {
+                    CLI.shiftCursorDown(1);
+                    CLI.printInColor("r", "La casella selezionata non esiste!");
+                }
+            }
+            CLI.moveCursor(1, 20);
+            CLI.cleanRow();
+        }
     }
 }
