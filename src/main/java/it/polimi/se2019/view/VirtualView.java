@@ -17,7 +17,7 @@ public class VirtualView extends View  {
 
     public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
-        requestHandler = new RequestHandler(lobbyController);
+        requestHandler = new RequestHandler();
     }
 
 

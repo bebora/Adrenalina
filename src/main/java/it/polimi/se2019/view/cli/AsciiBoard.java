@@ -97,21 +97,23 @@ public class AsciiBoard {
         int cursorY = 0;
         int requestedX = 0;
         int requestedY = 0;
+        ViewTile requestedTile = null;
         CLI.moveCursor(1,20);
         while((in = input.readLine()) != null && !in.equals("q")){
             CLI.clearUntilEndOfLine(20,22,1);
-            if(!in.isEmpty() && in.contains(";")) {
+            if(in.matches("^\\d+(\\,\\d+)")){
                 inSplit = in.split(",");
+                requestedTile = null;
                 CLI.moveCursor(1, 20);
                 CLI.cleanRow();
                 requestedX = Math.abs(Integer.parseInt(inSplit[0]));
-                if (in.contains(",") && !inSplit[1].isEmpty()) {
-                    requestedY = Math.abs(Integer.parseInt(inSplit[1]));
+                requestedY = Math.abs(Integer.parseInt(inSplit[1]));
+                if (requestedY <= AsciiBoard.board.getTiles().size() && requestedY > 0 && requestedX <= AsciiBoard.board.getTiles().get(requestedY-1).size() && requestedX > 0) {
+                    requestedTile = AsciiBoard.board.getTiles().get(requestedY - 1).get(requestedX - 1);
+                    if(requestedTile != null )
+                        AsciiTile.drawTileInfo(requestedTile, 1, 1);
                 }
-                if (requestedX < AsciiBoard.board.getTiles().get(0).size() && requestedY < AsciiBoard.board.getTiles().size() && requestedX > 0 && requestedY > 0) {
-                    AsciiTile.drawTileInfo(AsciiBoard.board.getTiles().get(requestedY - 1).get(requestedX - 1), 1, 1);
-                }
-                else {
+                if(requestedTile == null){
                     CLI.shiftCursorDown(1);
                     CLI.printInColor("r", "La casella selezionata non esiste!");
                 }
