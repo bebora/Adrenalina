@@ -1,16 +1,19 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Board;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.model.updatemessage.PopupMessageUpdate;
-import it.polimi.se2019.view.ViewTile;
+import it.polimi.se2019.view.ViewTileCoords;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -48,16 +51,15 @@ public class EventHelper {
         List<Player> temp = new ArrayList<>();
         id.forEach(i -> temp.add(getSinglePlayerFromId(i)));
         temp.removeAll(Collections.singleton(null));
-        if(temp.isEmpty()){
-            //TODO:tell the player that he didn't send valid targets
-            PopupMessageUpdate message = new PopupMessageUpdate("The targets sent are not valid");
-        }
+        if(temp.isEmpty())
+            throw new IncorrectEvent("Player ID not correct");
         return temp;
     }
 
-    public List<Tile> getTilesFromViewTiles(List<ViewTile> viewTiles, Board board){
+    public List<Tile> getTilesFromViewTiles(List<ViewTileCoords> viewTiles){
+        Board board = match.getBoard();
         return viewTiles.stream()
-                .map(v -> board.getTile(v.getCoords().getPosy(),v.getCoords().getPosx()))
+                .map(v -> board.getTile(v.getPosy(),v.getPosx()))
                 .collect(Collectors.toList());
     }
 
@@ -77,11 +79,28 @@ public class EventHelper {
                         .filter(w -> w.getName().equals(weapon))
                         .findAny().orElse(null));
         if(realWeapon == null){
-            //mandare effettivamente il messaggio alla view
-            PopupMessageUpdate error = new PopupMessageUpdate("The player should not have access to this weapon");
+            throw new IncorrectEvent("Arma non presente");
         }
         return realWeapon;
     }
 
+    public Color getRoomFromString(String room) {
+        Set<Color> colors = match.getBoard().getTiles().stream().flatMap(List::stream).map(t -> t.getRoom()).collect(Collectors.toSet());
+        try {
+            Color relatedColor = Color.valueOf(room);
+            if (colors.contains(relatedColor))
+                return relatedColor;
+            else throw new IncorrectEvent("Il colore non è presente nella mappa!");
+        }
+        catch (IllegalArgumentException e) {
+            throw new IncorrectEvent("Il colore è sbagliato!");
+        }
+    }
+
+    public Action getActionFromString(String action) {
+        List<Action> actions = match.getPlayers().get(match.getCurrentPlayer()).getActions();
+        return  actions.stream().
+                filter(a -> a.toString() == action).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
+    }
 
 }

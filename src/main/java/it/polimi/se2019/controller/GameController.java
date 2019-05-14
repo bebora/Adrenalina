@@ -56,7 +56,7 @@ public class GameController {
         playTurn();
     }
 
-    public void  updateOnStopSelection(SelectStop selectStop){
+    public void updateOnStopSelection(SelectStop selectStop){
         actionController = null;
         playTurn();
     }

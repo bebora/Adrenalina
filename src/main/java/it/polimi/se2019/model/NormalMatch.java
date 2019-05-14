@@ -1,6 +1,5 @@
 package it.polimi.se2019.model;
 import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.board.BoardCreator;
 
 import java.util.*;
 import java.util.function.Function;
@@ -15,10 +14,6 @@ public class NormalMatch extends Match {
 		super(originalMatch);
 	}
 
-	/**
-	 * True if player turn has ended
-	 */
-	private Boolean turnEnd;
 
 	/**
 	 * Board used for the Match

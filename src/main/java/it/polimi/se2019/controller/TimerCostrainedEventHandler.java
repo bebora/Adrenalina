@@ -76,7 +76,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     @Override
     public synchronized void receiveAction(Action action) {
         if (active) {
-            //TODO ADD UPDATE ON ACTION!!!!!!!
+            //TODO ADD action update in observer!
             endHandler();
         }
     }
