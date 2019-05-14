@@ -19,8 +19,6 @@ public interface RequestDispatcherInterface {
 
     void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException;
 
-    void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException;
-
     void receiveEffect(String effect) throws RemoteException;
 
     void receiveChoice(String choice) throws RemoteException;

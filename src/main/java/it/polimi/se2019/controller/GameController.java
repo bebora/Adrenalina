@@ -12,6 +12,12 @@ public class GameController {
     }
 
     public void playTurn() {
+
+
+    }
+
+    public void nextTurn() {
+
     }
 
     public Match getMatch() {

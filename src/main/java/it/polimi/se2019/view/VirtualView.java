@@ -12,12 +12,11 @@ public class VirtualView extends View  {
     private View debugView = null;
     private LobbyController lobbyController;
     private ViewUpdater viewUpdater;
-    private RequestDispatcher requestHandler;
+    private RequestDispatcher requestDispatcher;
 
 
     public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
-        requestHandler = new RequestDispatcher();
     }
 
 
@@ -31,14 +30,13 @@ public class VirtualView extends View  {
 
 
     public RequestDispatcher getRequestHandler() {
-        return requestHandler;
-    }
-
-    public void setRequestHandler(RequestDispatcher requestHandler) {
-        this.requestHandler = requestHandler;
+        return requestDispatcher;
     }
 
     public void setViewUpdater(ViewUpdater viewUpdater) {
         this.viewUpdater = viewUpdater;
+        requestDispatcher = new RequestDispatcher(viewUpdater);
     }
+
+
 }

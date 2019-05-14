@@ -1,8 +1,6 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -14,8 +12,8 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -28,8 +26,8 @@ public class WeaponController implements Observer {
     private Player curPlayer;
     private List<Player> originalPlayers;
     private EffectController effectController;
-    private CountdownTimer countdownTimer;
     private Effect selectedEffect;
+    TimerCostrainedEventHandler timerCostrainedEventHandler;
     List<Ammo> stillToPay;
     AtomicBoolean inputReceived;
 
@@ -80,27 +78,12 @@ public class WeaponController implements Observer {
             lastUsedIndex = -1;
             weapon = newWeapon;
             //TODO send update to player to ask for effect
-
-            countdownTimer = new CountdownTimer(System.currentTimeMillis(), 60, this);
-
-            while (countdownTimer.getActive().get() && countdownTimer.isFinished())
-            {
-                synchronized (this) {
-                    if (countdownTimer.isFinished() || countdownTimer.getActive().get()) {
-                        curPlayer.getVirtualView().setRequestHandler(new RequestDispatcher());
-                        //TODO next turn
-                    }
-                }
-                try {
-                    TimeUnit.MINUTES.sleep(1);
-                }
-                catch (InterruptedException e) {
-                    Logger.log(Priority.ERROR, "TIMER STOPPED WORKING" + e.toString());
-                    Thread.currentThread().interrupt();
-                }
-            }
-
-
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(60,
+                    this,
+                    curPlayer.getVirtualView().getRequestHandler(),
+                    receivingTypes);
+            timerCostrainedEventHandler.start();
         }
         else {
             weapon = null;
@@ -109,29 +92,25 @@ public class WeaponController implements Observer {
     }
 
     public synchronized void updateOnEffect(Effect effect){
-        if (countdownTimer.isFinished())
-            throw new UnsupportedOperationException();
-            //TODO throw better exception, tell view time already ended!!
-        else {
-            curPlayer = match.getPlayers().get(match.getCurrentPlayer());
-            if (getUsableEffects().contains(effect.getName())) {
-                selectedEffect = effect;
-                stillToPay = new ArrayList<>();
-                stillToPay.addAll(effect.getCost());
-                if (effect.getCost().isEmpty()) {
-                    startEffect();
-                } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
-                    //ask to discard powerup if wanted
-                } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {
-                    for (Ammo a : curPlayer.getAmmos()) {
-                        if (stillToPay.remove(a))
-                            curPlayer.getAmmos().remove(a);
-                    }
-                    //ask to discard for missing ammos
-                } else {
-                    curPlayer.getAmmos().removeAll(stillToPay);
-                    startEffect();
+        curPlayer = match.getPlayers().get(match.getCurrentPlayer());
+        if (getUsableEffects().contains(effect.getName())) {
+            curPlayer.getVirtualView().getRequestHandler().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
+            selectedEffect = effect;
+            stillToPay = new ArrayList<>();
+            stillToPay.addAll(effect.getCost());
+            if (effect.getCost().isEmpty()) {
+                startEffect();
+            } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
+                //ask to discard powerup if wanted
+            } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {
+                for (Ammo a : curPlayer.getAmmos()) {
+                    if (stillToPay.remove(a))
+                        curPlayer.getAmmos().remove(a);
                 }
+                //ask to discard for missing ammos
+            } else {
+                curPlayer.getAmmos().removeAll(stillToPay);
+                startEffect();
             }
         }
     }
