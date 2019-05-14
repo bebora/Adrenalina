@@ -8,12 +8,14 @@ import java.util.stream.Collectors;
 
 public class ViewWeapon {
     private String name;
+    private boolean loaded;
     private List<String> cost;
     private List<ViewEffect> effects;
 
 
     public ViewWeapon(Weapon weapon){
         this.name = weapon.getName();
+        this.loaded = weapon.getLoaded();
         this.effects = weapon.getEffects().stream()
                 .map(ViewEffect::new)
                 .collect(Collectors.toList());
@@ -30,5 +32,9 @@ public class ViewWeapon {
 
     public List<String> getCost() {
         return cost;
+    }
+
+    public boolean getLoaded(){
+        return loaded;
     }
 }

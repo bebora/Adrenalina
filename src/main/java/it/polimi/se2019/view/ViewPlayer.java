@@ -11,6 +11,7 @@ public class ViewPlayer {
 
 	public ViewPlayer(Player player) {
 		this.color = player.getColor().name();
+		this.username = player.getToken().split("@")[0];
 		this.id = player.getId();
 		this.damages = player.getDamages().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
 		this.marks = player.getMarks().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
@@ -27,6 +28,8 @@ public class ViewPlayer {
 	}
 
 	private ViewTile tile;
+
+	private String username;
 
 	private String color;
 
@@ -57,6 +60,8 @@ public class ViewPlayer {
 	public String getId() {
 		return id;
 	}
+
+	public String getUsername(){ return username;}
 
 	public String getColor() {
 		return color;

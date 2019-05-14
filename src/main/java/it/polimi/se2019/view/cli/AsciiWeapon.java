@@ -36,6 +36,7 @@ public class AsciiWeapon {
             CLI.fixedWidthPrint(20, effect.getDesc());
             x += 40;
         }
-        CLI.moveCursor(0, AsciiBoard.boardBottomBorder + 5);
+        CLI.moveCursor(0, AsciiBoard.boardBottomBorder + 6);
+        CLI.cleanRow();
     }
 }
