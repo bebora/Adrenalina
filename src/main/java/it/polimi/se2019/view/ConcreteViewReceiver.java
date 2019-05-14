@@ -61,6 +61,11 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
         player.setActions(actions);
     }
 
+    @Override
+    public void receiveCurrentOptions(List<String> options) {
+        //TODO show options to player
+    }
+
     /**
      * Move player by changing its tile
      * @param playerId

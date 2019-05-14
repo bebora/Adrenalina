@@ -41,6 +41,12 @@ public class ViewUpdaterSocket implements ViewUpdater{
     }
 
     @Override
+    public void sendCurrentOptions(List<String> options) {
+        UpdateVisitable currentOptionsUpdate = new CurrentOptionsUpdate(options);
+        workerServerSocket.update(currentOptionsUpdate);
+    }
+
+    @Override
     public void sendMovePlayer(Player player) {
         UpdateVisitable sendMovePlayer = new MovePlayerUpdate(player);
         workerServerSocket.update(sendMovePlayer);

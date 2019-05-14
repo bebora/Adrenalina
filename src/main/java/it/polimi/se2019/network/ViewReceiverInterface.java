@@ -13,6 +13,7 @@ public interface ViewReceiverInterface {
     void receiveAmmosTaken(String playerId, List<String> playerAmmos);
     void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount);
     void receiveAvailableActions(String playerId, List<ViewAction> actions);
+    void receiveCurrentOptions(List<String> options);
     void receiveMovePlayer(String playerId, ViewTileCoords coords);
     void receivePopupMessage(String message);
     void receiveSelectFromPlayers(List<String> players, int minPlayers, int maxPlayers);

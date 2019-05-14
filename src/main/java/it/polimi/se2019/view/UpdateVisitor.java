@@ -24,6 +24,9 @@ public class UpdateVisitor {
         String playerId = update.getPlayerId();
         concreteViewReceiver.receiveAvailableActions(playerId, actions);
     }
+    public void visit(CurrentOptionsUpdate update) {
+        concreteViewReceiver.receiveCurrentOptions(update.getOptions());
+    }
     public void visit(MovePlayerUpdate update) {
         String playerId = update.getPlayerId();
         int posx = update.getPosx();

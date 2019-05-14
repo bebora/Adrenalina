@@ -43,6 +43,11 @@ public class ViewUpdaterRMI implements ViewUpdater {
     }
 
     @Override
+    public void sendCurrentOptions(List<String> options) {
+        remoteReceiver.receiveCurrentOptions(options);
+    }
+
+    @Override
     public void sendMovePlayer(Player player) {
         remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
     }

@@ -64,5 +64,8 @@ class UpdateVisitorTest {
         assertEquals(weapon.getName(), firstView.getLoadedWeapons().get(0));
     }*/
     //TODO add other tests
+    @Test
+    void visitTileUpdate() {
 
+    }
 }
