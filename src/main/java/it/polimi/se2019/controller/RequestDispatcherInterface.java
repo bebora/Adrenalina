@@ -15,7 +15,7 @@ public interface RequestDispatcherInterface {
 
     void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException;
 
-    void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException;
+    void receiveWeapon(String weapon) throws RemoteException;
 
     void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException;
 

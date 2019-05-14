@@ -15,7 +15,7 @@ public interface EventUpdater {
     //TODO used for handshaking
 
     void sendTiles(List<ViewTileCoords> tiles);
-    void sendRoom(String string);
+    void sendRoom(String room);
     void sendPlayers(List<String> players);
     void sendAction(String action);
     void sendChoice(String choice);

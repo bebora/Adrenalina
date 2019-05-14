@@ -1,7 +1,6 @@
 package it.polimi.se2019.network;
 
 import it.polimi.se2019.model.Player;
-import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
@@ -10,7 +9,6 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

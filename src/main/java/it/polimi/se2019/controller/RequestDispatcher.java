@@ -27,7 +27,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         throw new IllegalArgumentException("WRONG METHOD");
     }
     @Override
-    public void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException {
+    public void receiveWeapon(String weapon) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
     @Override

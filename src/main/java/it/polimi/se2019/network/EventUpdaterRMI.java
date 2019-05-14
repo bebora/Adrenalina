@@ -1,5 +1,7 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ConnectInterface;
 import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.view.View;
@@ -48,36 +50,67 @@ public class EventUpdaterRMI implements EventUpdater{
 
     @Override
     public void sendAction(String action) {
-        //TODO implement
+        try {
+            remoteHandler.receiveAction(action);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.ERROR, "Failed to send action");
+        }
+
     }
 
     @Override
     public void sendChoice(String choice) {
-        //TODO implement
+        try {
+            remoteHandler.receiveChoice(choice);
+        }
+        catch (RemoteException e){
+            Logger.log(Priority.ERROR, "Failed to send choice");
+        }
     }
 
     @Override
     public void sendPlayers(List<String> players) {
-        //TODO implement
+        try {
+            remoteHandler.receivePlayers(players);
+        }
+        catch (RemoteException e){
+            Logger.log(Priority.ERROR, "Failed to send player");
+        }
     }
 
     @Override
     public void sendPowerUp(String powerUp) {
-        //TODO implement
+        //TODO RequestDispatcher does not have any receivePowerup method at the moment
     }
 
     @Override
-    public void sendRoom(String string) {
-        //TODO implement
+    public void sendRoom(String room) {
+        try {
+            remoteHandler.receiveRoom(room);
+        }
+        catch (RemoteException e){
+            Logger.log(Priority.ERROR, "Failed to send room");
+        }
     }
 
     @Override
     public void sendTiles(List<ViewTileCoords> tiles) {
-        //TODO implement
+        try {
+            remoteHandler.receiveTiles(tiles);
+        }
+        catch (RemoteException e){
+            Logger.log(Priority.ERROR, "Failed to send tiles");
+        }
     }
 
     @Override
     public void sendWeapon(String weapon) {
-        //TODO implement
+        try {
+            remoteHandler.receiveWeapon(weapon);
+        }
+        catch (RemoteException e){
+            Logger.log(Priority.ERROR, "Failed to send weapon");
+        }
     }
 }
