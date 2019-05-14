@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -10,7 +11,6 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +28,7 @@ public class EffectController implements Observer {
     private Player player;
     private Weapon curWeapon;
     private Match curMatch;
+    private WeaponController weaponController;
     private List<Player> originalPlayers;
 
     private Effect curEffect;
@@ -52,7 +53,7 @@ public class EffectController implements Observer {
 
     private boolean askingForSource;
 
-    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers){
+    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
@@ -63,6 +64,7 @@ public class EffectController implements Observer {
         this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
         this.originalPlayers = originalPlayers;
+        this.weaponController = weaponController;
     }
 
     /**
@@ -90,15 +92,7 @@ public class EffectController implements Observer {
             }
         }
         else{
-            curEffect = null;
-            curWeapon = null;
-            player = null;
-            curMove = null;
-            curDealDamage = null;
-            curActionType = null;
-            dealDamageIndex = -1;
-            moveIndex = -1;
-            orderIndex = -1;
+            weaponController.updateOnConclusion();
         }
     }
 
@@ -205,6 +199,11 @@ public class EffectController implements Observer {
         else{
             //tells the player that the target is wrong
         }
+    }
+
+    public void updateOnStopSelection(SelectStop selectStop){
+        if(selectStop.isRevertAction())
+            weaponController.updateOnStopSelection(selectStop);
     }
 
     /**

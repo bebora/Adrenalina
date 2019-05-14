@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.DominationMatch;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
@@ -21,6 +22,7 @@ import java.util.List;
 
 //TODO: substitute comments with actual methods to communicate with the view
 public class ActionController implements Observer {
+    private GameController gameController;
     private Match originalMatch;
     private Match sandboxMatch;
     private WeaponController weaponController;
@@ -31,9 +33,10 @@ public class ActionController implements Observer {
     private Weapon weaponToReload;
     private List<Ammo> stillToPay = new ArrayList<>();
 
-    public ActionController(Match match){
+    public ActionController(Match match,GameController gameController){
         originalMatch = match;
         curPlayer = originalMatch.getPlayers().get(originalMatch.getCurrentPlayer());
+        this.gameController = gameController;
     }
 
     public void update(Action action){
@@ -52,12 +55,7 @@ public class ActionController implements Observer {
                 //signals impossible weapon selection
             }
         }else if(curSubAction == SubAction.SHOOT){
-            if(weaponController == null)
-                weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers());
-            else {
-                weaponController.setMatch(sandboxMatch);
-                weaponController.updateOnWeapon(weapon);
-            }
+            weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers(),this);
         }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
             weaponToReload = weapon;
             stillToPay.addAll(weapon.getCost());
@@ -79,7 +77,7 @@ public class ActionController implements Observer {
     }
 
     public void updateOnTiles(List<Tile> tiles){
-        if(curSubAction == SubAction.MOVE && tiles.size() >= 1){
+        if(curSubAction == SubAction.MOVE && !tiles.isEmpty()){
             Tile tile = tiles.get(0);
             if(originalMatch.getBoard().reachable(curPlayer.getTile(),0,curAction.getMovements(),false).contains(tile)) {
                 curPlayer.setTile(tile);
@@ -102,6 +100,7 @@ public class ActionController implements Observer {
     private void nextStep(){
         if(subActionIndex == curAction.getSubActions().size()){
             sandboxMatch.restoreMatch(originalMatch);
+            gameController.updateOnConclusion();
         }else{
             curSubAction = curAction.getSubActions().get(subActionIndex);
             //TODO: ask for the proper target
@@ -141,6 +140,17 @@ public class ActionController implements Observer {
             nextStep();
         }else{
             //ask for missing ammos
+        }
+    }
+
+    public void updateOnConclusion(){
+        weaponController = null;
+        nextStep();
+    }
+
+    public void updateOnStopSelection(SelectStop selectStop){
+        if(selectStop.isRevertAction()){
+            gameController.updateOnStopSelection(selectStop);
         }
     }
 

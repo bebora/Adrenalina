@@ -1,6 +1,8 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -27,14 +29,16 @@ public class WeaponController implements Observer {
     private List<Player> originalPlayers;
     private EffectController effectController;
     private Effect selectedEffect;
+    private ActionController actionController;
     TimerCostrainedEventHandler timerCostrainedEventHandler;
     List<Ammo> stillToPay;
     AtomicBoolean inputReceived;
 
-    public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers){
+    public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers,ActionController actionController){
         this.match = sandboxMatch;
         this.originalPlayers = originalPlayers;
         this.stillToPay = new ArrayList<>();
+        this.actionController = actionController;
         updateOnWeapon(weapon);
     }
     public List<String> getUsableEffects(){
@@ -134,19 +138,30 @@ public class WeaponController implements Observer {
         selectedEffect.setActivated(true);
         lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
         if(effectController == null) {
-            effectController = new EffectController(selectedEffect, weapon, match, curPlayer,originalPlayers);
-            effectController.nextStep();
-        }
-        else{
-            effectController.setCurEffect(selectedEffect);
-            effectController.setCurWeapon(weapon);
-            effectController.setPlayer(curPlayer);
-            effectController.setCurMatch(match);
-            effectController.setOriginalPlayers(originalPlayers);
+            effectController = new EffectController(selectedEffect, weapon, match, curPlayer,originalPlayers,this);
             effectController.nextStep();
         }
     }
 
+    public void updateOnConclusion(){
+        effectController = null;
+        if(getUsableEffects().isEmpty() && weapon.getEffects().get(0).getActivated()){
+            actionController.updateOnConclusion();
+        }
+    }
+
+    public void updateOnStopSelection(SelectStop selectStop){
+        if(selectStop.isRevertAction()){
+            actionController.updateOnStopSelection(selectStop);
+        }
+        else {
+            if (weapon.getEffects().get(0).getActivated()) {
+                actionController.updateOnConclusion();
+            } else {
+                //tell the player he must use the main effect or takeback the action
+            }
+        }
+    }
 
 
 
