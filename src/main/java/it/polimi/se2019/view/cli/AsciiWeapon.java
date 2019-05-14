@@ -1,6 +1,5 @@
 package it.polimi.se2019.view.cli;
 
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.view.ViewEffect;
 import it.polimi.se2019.view.ViewWeapon;
 

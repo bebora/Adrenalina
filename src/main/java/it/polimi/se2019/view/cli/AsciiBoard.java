@@ -103,13 +103,13 @@ public class AsciiBoard {
         int requestedX = 0;
         int requestedY = 0;
         ViewTile requestedTile = null;
-        CLI.moveCursor(1,boardBottomBorder+5);
+        CLI.moveCursor(1,boardBottomBorder+6);
         while((in = input.readLine()) != null && !in.equals("q")){
-            CLI.clearUntilEndOfLine(boardBottomBorder+5,boardBottomBorder+7,1);
+            CLI.clearUntilEndOfLine(boardBottomBorder+6,boardBottomBorder+8,1);
             if(in.matches("^\\d+(\\,\\d+)")){
                 inSplit = in.split(",");
                 requestedTile = null;
-                CLI.moveCursor(1, boardBottomBorder+5);
+                CLI.moveCursor(1, boardBottomBorder+6);
                 CLI.cleanRow();
                 requestedX = Math.abs(Integer.parseInt(inSplit[0]));
                 requestedY = Math.abs(Integer.parseInt(inSplit[1]));
@@ -123,7 +123,7 @@ public class AsciiBoard {
                     CLI.printInColor("r", "La casella selezionata non esiste!");
                 }
             }
-            CLI.moveCursor(1, boardBottomBorder + 5);
+            CLI.moveCursor(1, boardBottomBorder + 6);
             CLI.cleanRow();
         }
     }

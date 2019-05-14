@@ -19,7 +19,7 @@ public class ViewPlayer {
 		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
 		this.rewardPoints = player.getRewardPoints();
 		this.unloadedWeapons = player.getWeapons().stream().
-				filter(Weapon::getLoaded).map(ViewWeapon::new).collect(Collectors.toList());
+				filter(w -> !w.getLoaded()).map(ViewWeapon::new).collect(Collectors.toList());
 		this.actionCount = player.getActionCount();
 		this.alive = player.getAlive();
 		this.dominationSpawn = player.getDominationSpawn();

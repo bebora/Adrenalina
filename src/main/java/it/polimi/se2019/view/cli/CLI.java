@@ -1,10 +1,8 @@
 package it.polimi.se2019.view.cli;
-
-
 import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.ClientView;
 
-public class CLI extends View {
+public class CLI extends ClientView {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
 
