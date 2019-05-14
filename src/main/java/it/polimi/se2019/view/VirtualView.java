@@ -1,7 +1,7 @@
 package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.LobbyController;
-import it.polimi.se2019.controller.RequestHandler;
+import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.network.ViewUpdater;
 
 
@@ -12,12 +12,12 @@ public class VirtualView extends View  {
     private View debugView = null;
     private LobbyController lobbyController;
     private ViewUpdater viewUpdater;
-    private RequestHandler requestHandler;
+    private RequestDispatcher requestHandler;
 
 
     public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
-        requestHandler = new RequestHandler();
+        requestHandler = new RequestDispatcher();
     }
 
 
@@ -30,11 +30,11 @@ public class VirtualView extends View  {
     }
 
 
-    public RequestHandler getRequestHandler() {
+    public RequestDispatcher getRequestHandler() {
         return requestHandler;
     }
 
-    public void setRequestHandler(RequestHandler requestHandler) {
+    public void setRequestHandler(RequestDispatcher requestHandler) {
         this.requestHandler = requestHandler;
     }
 

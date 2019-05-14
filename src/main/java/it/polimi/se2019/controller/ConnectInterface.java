@@ -7,5 +7,5 @@ import it.polimi.se2019.network.ViewReceiverInterface;
  */
 public interface ConnectInterface {
     void connect(String username, String hashedPassword, boolean existingGame, String mode, ViewReceiverInterface receiver);
-    RequestHandler getRequestHandler();
+    RequestDispatcher getRequestHandler();
 }

@@ -87,7 +87,7 @@ public class WeaponController implements Observer {
             {
                 synchronized (this) {
                     if (countdownTimer.isFinished() || countdownTimer.getActive().get()) {
-                        curPlayer.getVirtualView().setRequestHandler(new RequestHandler());
+                        curPlayer.getVirtualView().setRequestHandler(new RequestDispatcher());
                         //TODO next turn
                     }
                 }

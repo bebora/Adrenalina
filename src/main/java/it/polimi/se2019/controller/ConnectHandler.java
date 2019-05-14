@@ -26,7 +26,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     }
 
     @Override
-    public RequestHandler getRequestHandler() {
+    public RequestDispatcher getRequestHandler() {
         //TODO get and return requestHandler from lobbycontroller
         return null;
     }

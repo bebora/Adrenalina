@@ -1,7 +1,7 @@
 package it.polimi.se2019.network;
 
 import it.polimi.se2019.controller.ConnectInterface;
-import it.polimi.se2019.controller.RequestHandler;
+import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewTileCoords;
 
@@ -20,9 +20,9 @@ public class EventUpdaterRMI implements EventUpdater{
      */
     private ConnectInterface connectInterface;
     /**
-     * remote RequestHandler on which methods will be called
+     * remote RequestDispatcher on which methods will be called
      */
-    private RequestHandler remoteHandler;
+    private RequestDispatcher remoteHandler;
 
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {

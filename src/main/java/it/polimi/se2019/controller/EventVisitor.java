@@ -9,13 +9,13 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- * Visitor used by socket server implementation that apply events received on a RequestHandler
+ * Visitor used by socket server implementation that apply events received on a RequestDispatcher
  */
 public class EventVisitor {
-    RequestHandler requestHandler;
+    RequestDispatcher requestHandler;
     LobbyController lobbyController;
 
-    public EventVisitor(RequestHandler requestHandler, LobbyController lobbyController) {
+    public EventVisitor(RequestDispatcher requestHandler, LobbyController lobbyController) {
         this.requestHandler = requestHandler;
         this.lobbyController = lobbyController;
     }
