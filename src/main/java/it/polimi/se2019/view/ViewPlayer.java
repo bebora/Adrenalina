@@ -19,7 +19,7 @@ public class ViewPlayer {
 		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
 		this.rewardPoints = player.getRewardPoints();
 		this.unloadedWeapons = player.getWeapons().stream().
-				filter(Weapon::getLoaded).map(Weapon::getName).collect(Collectors.toList());
+				filter(Weapon::getLoaded).map(ViewWeapon::new).collect(Collectors.toList());
 		this.actionCount = player.getActionCount();
 		this.alive = player.getAlive();
 		this.dominationSpawn = player.getDominationSpawn();
@@ -44,7 +44,7 @@ public class ViewPlayer {
 
 	private List<Integer> rewardPoints;
 
-	private List<String> unloadedWeapons;
+	private List<ViewWeapon> unloadedWeapons;
 
 	private int actionCount;
 
@@ -88,7 +88,7 @@ public class ViewPlayer {
 		this.actions = actions;
 	}
 
-	public List<String> getUnloadedWeapons() {
+	public List<ViewWeapon> getUnloadedWeapons() {
 		return unloadedWeapons;
 	}
 

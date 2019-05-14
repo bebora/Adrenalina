@@ -16,6 +16,9 @@ public class AsciiBoard {
 
     static void drawBoard() {
         System.out.print(CLI.escCode + "[J");
+        boardBottomBorder = AsciiTile.Y_SIZE * AsciiBoard.board.getTiles().size() + 1;
+        boardRightBorder = AsciiBoard.board.getTiles().get(0).size()*AsciiTile.X_SIZE + offsetX + 10;
+        CLI.clearUntilEndOfLine(offsetY,offsetY + boardBottomBorder,offsetX);
         for (int i = 0; i < board.getTiles().size(); i++) {
             for (ViewTile tile : board.getTiles().get(i)) {
                 if (tile != null) {
@@ -24,8 +27,6 @@ public class AsciiBoard {
             }
         }
         drawLinks();
-        boardBottomBorder = AsciiTile.Y_SIZE * AsciiBoard.board.getTiles().size() + 1;
-        boardRightBorder = AsciiBoard.board.getTiles().get(0).size()*AsciiTile.X_SIZE + offsetX + 10;
     }
 
     static ViewTile findTile(int posX, int posY) {
@@ -93,24 +94,22 @@ public class AsciiBoard {
                 }
             }
         }
-        CLI.moveCursor(0, AsciiTile.Y_SIZE * board.getTiles().size() + 1);
+        CLI.moveCursor(0, boardBottomBorder + 1);
     }
 
     public static void tileInfoMode(BufferedReader input) throws IOException {
         String in;
         String[] inSplit;
-        int cursorX = 0;
-        int cursorY = 0;
         int requestedX = 0;
         int requestedY = 0;
         ViewTile requestedTile = null;
-        CLI.moveCursor(1,20);
+        CLI.moveCursor(1,boardBottomBorder+5);
         while((in = input.readLine()) != null && !in.equals("q")){
-            CLI.clearUntilEndOfLine(20,22,1);
+            CLI.clearUntilEndOfLine(boardBottomBorder+5,boardBottomBorder+7,1);
             if(in.matches("^\\d+(\\,\\d+)")){
                 inSplit = in.split(",");
                 requestedTile = null;
-                CLI.moveCursor(1, 20);
+                CLI.moveCursor(1, boardBottomBorder+5);
                 CLI.cleanRow();
                 requestedX = Math.abs(Integer.parseInt(inSplit[0]));
                 requestedY = Math.abs(Integer.parseInt(inSplit[1]));
@@ -124,7 +123,7 @@ public class AsciiBoard {
                     CLI.printInColor("r", "La casella selezionata non esiste!");
                 }
             }
-            CLI.moveCursor(1, 20);
+            CLI.moveCursor(1, boardBottomBorder + 5);
             CLI.cleanRow();
         }
     }

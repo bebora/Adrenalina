@@ -1,12 +1,13 @@
 package it.polimi.se2019.view.cli;
 
+import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.view.ViewEffect;
 import it.polimi.se2019.view.ViewWeapon;
 
 public class AsciiWeapon {
     public static void drawWeaponInfo(ViewWeapon weapon){
-        CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.infoBoxHeight,AsciiBoard.boardRightBorder);
-        int x = AsciiBoard.boardRightBorder;
+        CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.boardBottomBorder,AsciiBoard.offsetX);
+        int x = AsciiBoard.offsetX;
         int y = AsciiBoard.offsetY;
         CLI.printInColor("w","Nome: ");
         CLI.printInColor(weapon.getColor(),weapon.getName());
@@ -23,13 +24,19 @@ public class AsciiWeapon {
                 CLI.printInColor(a,AsciiTile.unicodeAmmo + " ");
             CLI.moveCursor(x,++y);
         }
+        drawEffectsDesc(weapon);
     }
 
-    public static void drawEffectDesc(ViewEffect effect){
-        CLI.moveCursor(AsciiBoard.boardRightBorder,AsciiBoard.offsetY);
-        CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY + AsciiBoard.infoBoxHeight, AsciiBoard.boardRightBorder);
-        CLI.printInColor("w", effect.getName() + ":");
-        CLI.moveCursor(AsciiBoard.boardRightBorder,AsciiBoard.offsetY + 1);
-        CLI.fixedWidthPrint(20,effect.getDesc());
+    public static void drawEffectsDesc(ViewWeapon weapon){
+        int x = AsciiBoard.boardRightBorder;
+        int y = AsciiBoard.offsetY;
+        for(ViewEffect effect : weapon.getEffects()) {
+            CLI.moveCursor(x,y);
+            CLI.printInColor("w", effect.getName() + ":");
+            CLI.moveCursor(x, y +1);
+            CLI.fixedWidthPrint(20, effect.getDesc());
+            x += 40;
+        }
+        CLI.moveCursor(0, AsciiBoard.boardBottomBorder + 5);
     }
 }

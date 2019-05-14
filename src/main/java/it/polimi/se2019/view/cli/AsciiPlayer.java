@@ -1,11 +1,13 @@
 package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.view.ViewPlayer;
+import it.polimi.se2019.view.ViewWeapon;
 
 public class AsciiPlayer {
     static ViewPlayer player;
 
     static void printMarks(){
+        CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         CLI.printInColor("w","Marchi:\n");
         for(String m: player.getMarks()){
             CLI.printInColor(m,"\uD83E\uDE78 ");
@@ -21,9 +23,9 @@ public class AsciiPlayer {
     }
 
     static void printAmmos(){
-        CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder);
-        CLI.printInColor("w","Munizioni:");
         CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 1);
+        CLI.printInColor("w","Munizioni:");
+        CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 2);
         CLI.saveCursorPosition();
         for(String a: player.getAmmos())
             CLI.printInColor(a,	"\u2610 ");
@@ -36,8 +38,9 @@ public class AsciiPlayer {
         CLI.printInColor("w","Armi:");
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(2);
-        for(String w: player.getUnloadedWeapons()){
-            CLI.printInColor("w",i +")"+ w + " ");
+        for(ViewWeapon w: player.getUnloadedWeapons()){
+            CLI.printInColor("w",i +")"+ w.getName() + " ");
+            i++;
         }
     }
 
