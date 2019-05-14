@@ -11,8 +11,6 @@ import java.util.List;
  * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
-    //TODO will use for messages from the View to the Controller
-    //TODO used for handshaking
 
     void sendTiles(List<ViewTileCoords> tiles);
     void sendRoom(String room);
@@ -21,6 +19,16 @@ public interface EventUpdater {
     void sendChoice(String choice);
     void sendWeapon(String weapon);
     void sendPowerUp(String powerUp);
+
+    /**
+     * Login to controller
+     * Calling other methods before login may throw an exception
+     * @param view
+     * @param nickname
+     * @param password
+     * @param existingGame
+     * @param mode
+     */
     void login(View view,
                String nickname,
                String password,

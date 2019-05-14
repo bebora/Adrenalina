@@ -1,5 +1,7 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ConnectHandler;
 import it.polimi.se2019.controller.LobbyController;
 
@@ -30,17 +32,17 @@ public class RMIServer extends Thread{
             LocateRegistry.createRegistry(port);
         }
         catch (RemoteException e) {
-            //TODO log remote exception
+            Logger.log(Priority.ERROR, "Could not create create RMI registry due to RemoteException");
         }
         try {
             ConnectHandler connectHandler = new ConnectHandler(lobbyController);
             Naming.rebind("//localhost/AdrenalineServer", connectHandler);
         }
         catch (RemoteException e) {
-            //TODO log remote exception
+            Logger.log(Priority.ERROR, "Could not bind connectHandler to RMI registry due to RemoteException");
         }
         catch (MalformedURLException e) {
-            //TODO log malformed url
+            Logger.log(Priority.ERROR, "Could not bind connectHandler to RMI registry due to MalformedURLException");
         }
     }
 

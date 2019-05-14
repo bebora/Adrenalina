@@ -8,7 +8,6 @@ import java.util.List;
  * Interface that will receive updates from remote controller/model and
  * apply them to the linkedView
  */
-//TODO move update docs here and remove updates
 public interface ViewReceiverInterface {
     void receiveAmmosTaken(String playerId, List<String> playerAmmos);
     void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount);

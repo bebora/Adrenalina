@@ -25,7 +25,7 @@ public class EventUpdaterRMI implements EventUpdater{
      * remote RequestDispatcher on which methods will be called
      */
     private RequestDispatcher remoteHandler;
-
+    //TODO force login first
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
         //TODO export receiver as remote object
@@ -38,13 +38,13 @@ public class EventUpdaterRMI implements EventUpdater{
             connectInterface = (ConnectInterface) Naming.lookup("//" + url + "/AdrenalineServer");
         }
         catch (RemoteException e) {
-            //TODO log remote exception
+            Logger.log(Priority.ERROR, "Adrenaline server not found due to RemoteException");
         }
         catch (NotBoundException e) {
-            //TODO log not bound exception
+            Logger.log(Priority.ERROR, "Adrenaline server not found due to NotBoundException");
         }
         catch (MalformedURLException e) {
-            //TODO log malformed url exception
+            Logger.log(Priority.ERROR, "Adrenaline server URL is not valid");
         }
     }
 
