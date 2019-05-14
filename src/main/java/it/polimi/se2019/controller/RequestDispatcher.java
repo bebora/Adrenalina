@@ -6,41 +6,44 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
-//TODO create RequestHandlerInterface so that remote RMI client does not have access to lobbyController and observer
-public class RequestDispatcher {
+public class RequestDispatcher implements RequestDispatcherInterface{
     EventHelper eventHelper;
     LobbyController lobbyController;
 
-    void receiveRoom(String room) throws RemoteException {
+    @Override
+    public void receiveRoom(String room) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-
-    void receivePlayers(List<String> players) throws RemoteException {
+    @Override
+    public void receivePlayers(List<String> players) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-
-    void receiveAction(String subAction) throws RemoteException {
+    @Override
+    public void receiveAction(String subAction) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-
-    void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
+    @Override
+    public void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-    void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException {
+    @Override
+    public void receiveWeapon(String weapon, ViewPowerUp... powerUps) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-    void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException {
+    @Override
+    public void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-    void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException {
+    @Override
+    public void receiveConnection(String username, String password, Boolean signingUp, String mode) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-
-    void receiveEffect(String effect) throws RemoteException {
+    @Override
+    public void receiveEffect(String effect) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
-
-    void receiveChoice(String choice) throws RemoteException {
+    @Override
+    public void receiveChoice(String choice) throws RemoteException {
         throw new IllegalArgumentException("WRONG METHOD");
     }
 
