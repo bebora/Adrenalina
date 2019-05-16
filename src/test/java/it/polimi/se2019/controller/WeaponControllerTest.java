@@ -62,7 +62,7 @@ class WeaponControllerTest {
          weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(3,weaponControllerTest.getUsableEffects().size());
          assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(1));
-         weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0));
+         weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0).getName());
          assertEquals(2,weaponControllerTest.getUsableEffects().size());
          assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(0));
          assertEquals("modalità sminuzzare",weaponControllerTest.getUsableEffects().get(1));

@@ -5,6 +5,7 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.VirtualView;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ public class LobbyController{
     private Map<Mode, List<Player>> waitingPlayers;
 
     public LobbyController(List<Mode> modes) {
+        waitingPlayers = new EnumMap<>(Mode.class);
         for (Mode mode : modes) {
             waitingPlayers.put(mode, new ArrayList<>());
         }
@@ -71,10 +73,11 @@ public class LobbyController{
                 //TODO Send UPDATE to view saying username already used
                 //TODO throw exception to close the connection
             }
+        }
             String token = String.format("%s$%s", username, password.hashCode());
             Player player = new Player(token);
             player.setVirtualView(view);
-            List<Player> modeWaiting = waitingPlayers.get(mode);
+            List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
             if (modeWaiting == null) {
                 //TODO Send UPDATE to view saying mode is wrong :O
                 //TODO throw exception to close the connection
@@ -84,7 +87,6 @@ public class LobbyController{
                 //TODO send popup update success
             }
         }
-    }
 
     public RequestDispatcher getRequestHandler(String token) {
         for (GameController game :games) {
@@ -99,6 +101,10 @@ public class LobbyController{
             }
         }
         return null;
+    }
+
+    public Map<Mode, List<Player>> getWaitingPlayers() {
+        return waitingPlayers;
     }
 }
 

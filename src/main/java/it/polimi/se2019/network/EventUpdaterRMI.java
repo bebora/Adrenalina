@@ -36,8 +36,9 @@ public class EventUpdaterRMI implements EventUpdater{
         //TODO export receiver as remote object
         connectInterface.connect(nickname, password, existingGame, mode, view.getReceiver());
         remoteHandler = connectInterface.getRequestHandler(nickname, password);
+        //TODO Manage when login doesn't go as expected!
     }
-    EventUpdaterRMI(String url, int port) {
+    public EventUpdaterRMI(String url, int port) {
         //TODO use port
         try {
             connectInterface = (ConnectInterface) Naming.lookup("//" + url + "/AdrenalineServer");
@@ -56,7 +57,7 @@ public class EventUpdaterRMI implements EventUpdater{
     /**
      * Constructor used for debug purposes, view is local
      */
-    EventUpdaterRMI(LobbyController lobbyController) {
+    public EventUpdaterRMI(LobbyController lobbyController) {
         try {
             connectInterface = new ConnectHandler(lobbyController);
         }
