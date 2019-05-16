@@ -41,6 +41,7 @@ public class LobbyController{
             if (allTokens.contains(token)) {
                 player = game.getMatch().getPlayers().
                         stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
+                break;
             }
         }
         if (player != null) {
@@ -79,12 +80,25 @@ public class LobbyController{
                 //TODO throw exception to close the connection
             } else {
                 modeWaiting.add(player);
-
-
                 //TODO start timer when players are 3
                 //TODO send popup update success
             }
         }
+    }
+
+    public RequestDispatcher getRequestHandler(String token) {
+        for (GameController game :games) {
+            List<String> allTokens = game.getMatch().getPlayers().stream().
+                    filter(p -> !p.getOnline()).
+                    map(Player::getToken).
+                    collect(Collectors.toList());
+            if (allTokens.contains(token)) {
+                Player player = game.getMatch().getPlayers().
+                        stream().filter(p -> p.getVirtualView().getRequestHandler().equals(token)).findFirst().orElse(null);
+                return player.getVirtualView().getRequestHandler();
+            }
+        }
+        return null;
     }
 }
 

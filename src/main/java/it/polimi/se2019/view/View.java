@@ -6,7 +6,7 @@ import it.polimi.se2019.network.ViewUpdater;
 
 import java.util.List;
 
-public abstract class View {
+public class View {
 
 	private EventUpdater eventUpdater;
 
@@ -27,16 +27,24 @@ public abstract class View {
 	private ViewTile perspective;
 
 	protected ViewReceiverInterface receiver;
-	RequestDispatcher requestDispatcher;
+
+	private RequestDispatcher requestDispatcher;
+
+	private ViewUpdater viewUpdater;
 
 	String token;
 
-	public View(ViewReceiverInterface receiver, ViewUpdater viewUpdater) {
+	public View(ViewReceiverInterface receiver) {
 		this.receiver = receiver;
 	}
 
 	public View() {
 		this.receiver = new ConcreteViewReceiver(this);
+	}
+
+	public void setViewUpdater(ViewUpdater viewUpdater) {
+		this.viewUpdater = viewUpdater;
+		requestDispatcher = new RequestDispatcher(viewUpdater);
 	}
 
 	public List<ViewPlayer> getPlayers() {
@@ -121,5 +129,17 @@ public abstract class View {
 
 	public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
 		this.requestDispatcher = requestDispatcher;
+	}
+
+	public EventUpdater getEventUpdater() {
+		return eventUpdater;
+	}
+
+	public RequestDispatcher getRequestDispatcher() {
+		return requestDispatcher;
+	}
+
+	public ViewUpdater getViewUpdater() {
+		return viewUpdater;
 	}
 }

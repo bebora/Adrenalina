@@ -26,9 +26,9 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     }
 
     @Override
-    public RequestDispatcher getRequestHandler() {
-        //TODO get and return requestHandler from lobbycontroller
-        return null;
+    public RequestDispatcher getRequestHandler(String username, String password) {
+        String token = String.format("%s$%s", username, password.hashCode());
+        return lobbyController.getRequestHandler(token);
     }
 
     public ConnectHandler(LobbyController lobbyController) throws RemoteException {

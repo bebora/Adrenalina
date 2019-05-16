@@ -2,7 +2,9 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.ConnectHandler;
 import it.polimi.se2019.controller.ConnectInterface;
+import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewTileCoords;
@@ -32,7 +34,7 @@ public class EventUpdaterRMI implements EventUpdater{
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
         //TODO export receiver as remote object
         connectInterface.connect(nickname, password, existingGame, mode, view.getReceiver());
-        remoteHandler = connectInterface.getRequestHandler();
+        remoteHandler = connectInterface.getRequestHandler(nickname, password);
     }
     EventUpdaterRMI(String url, int port) {
         //TODO use port
@@ -47,6 +49,18 @@ public class EventUpdaterRMI implements EventUpdater{
         }
         catch (MalformedURLException e) {
             Logger.log(Priority.ERROR, "Adrenaline server URL is not valid");
+        }
+    }
+
+    /**
+     * Constructor used for debug purposes, view is local
+     */
+    EventUpdaterRMI(LobbyController lobbyController) {
+        try {
+            connectInterface = new ConnectHandler(lobbyController);
+        }
+        catch (RemoteException e) {
+            assert false;
         }
     }
 

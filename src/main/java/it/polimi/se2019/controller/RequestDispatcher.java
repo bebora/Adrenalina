@@ -16,11 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 public class RequestDispatcher implements RequestDispatcherInterface{
-    EventHelper eventHelper;
-    LobbyController lobbyController;
-    ViewUpdater viewUpdater;
-    Map<ReceivingType, EventHandler> observerTypes;
-    Object lock = new Object();
+    private EventHelper eventHelper;
+    private ViewUpdater viewUpdater;
+    private Map<ReceivingType, EventHandler> observerTypes;
+    final Object lock = new Object();
 
     public RequestDispatcher(ViewUpdater viewUpdater) {
         observerTypes = new EnumMap<>(ReceivingType.class);
@@ -124,9 +123,6 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         //TODO popup to view saying it's wrong!!
     }
 
-    public void setLobbyController(LobbyController lobbyController) {
-        this.lobbyController = lobbyController;
-    }
 
     public void setEventHelper(EventHelper eventHelper) {
         this.eventHelper = eventHelper;
