@@ -7,6 +7,7 @@ import it.polimi.se2019.controller.ConnectInterface;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.net.MalformedURLException;
@@ -75,15 +76,7 @@ public class EventUpdaterRMI implements EventUpdater{
 
     }
 
-    @Override
-    public void sendChoice(String choice) {
-        try {
-            remoteHandler.receiveChoice(choice);
-        }
-        catch (RemoteException e){
-            Logger.log(Priority.ERROR, "Failed to send choice");
-        }
-    }
+
 
     @Override
     public void sendPlayers(List<String> players) {
@@ -95,8 +88,8 @@ public class EventUpdaterRMI implements EventUpdater{
         }
     }
 
-    @Override
-    public void sendPowerUp(String powerUp) {
+    //TODO CAN'T SEND POWERUP BUT VIEWPOWERUP, AND NEED TO SEE IF NEEDS TO BE ALWAYS A LIST OR SINGLE
+    public void sendPowerUp(List<ViewPowerUp> viewPowerUps) {
         //TODO RequestDispatcher does not have any receivePowerup method at the moment
     }
 

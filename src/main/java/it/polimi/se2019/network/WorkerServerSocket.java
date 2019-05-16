@@ -63,7 +63,7 @@ public class WorkerServerSocket extends Thread {
                 lobbyController.connectPlayer(username,password,mode, virtualView);
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
-            eventVisitor = new EventVisitor(virtualView.getRequestHandler(), lobbyController);
+            eventVisitor = new EventVisitor(virtualView.getRequestDispatcher(), lobbyController);
         }
         catch (ClassCastException e){
             event = null;

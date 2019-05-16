@@ -94,8 +94,8 @@ public class LobbyController{
                     collect(Collectors.toList());
             if (allTokens.contains(token)) {
                 Player player = game.getMatch().getPlayers().
-                        stream().filter(p -> p.getVirtualView().getRequestHandler().equals(token)).findFirst().orElse(null);
-                return player.getVirtualView().getRequestHandler();
+                        stream().filter(p -> p.getVirtualView().getRequestDispatcher().equals(token)).findFirst().orElse(null);
+                return player.getVirtualView().getRequestDispatcher();
             }
         }
         return null;

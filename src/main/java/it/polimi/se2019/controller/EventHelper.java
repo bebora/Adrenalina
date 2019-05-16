@@ -7,7 +7,10 @@ import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Effect;
+import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.util.ArrayList;
@@ -103,4 +106,24 @@ public class EventHelper {
                 filter(a -> a.toString() == action).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
     }
 
+    /**
+     * Get related powerup from the current Player
+     * @param powerup
+     * @return
+     */
+    public PowerUp getPowerUpFromViewPowerUp(ViewPowerUp powerup) {
+       return match.getPlayers().
+               get(match.getCurrentPlayer()).
+               getPowerUps().
+               stream().
+                filter(p -> p.getName() == powerup.getName() && p.getDiscardAward().toString() == powerup.getDiscardAward()).
+               findAny().orElse(null);
+    }
+
+    public Effect getEffectFromString(String effect) {
+        //TODO add a way to find the current weapon used by the player
+        //return match.getPlayers().
+                //get(match.getCurrentPlayer()).
+        return null;
+    }
 }

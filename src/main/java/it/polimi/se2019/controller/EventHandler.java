@@ -25,5 +25,4 @@ public interface EventHandler {
         
     void receiveEffect(Effect effect);
     
-    void receiveChoice(Choice choice);
 }

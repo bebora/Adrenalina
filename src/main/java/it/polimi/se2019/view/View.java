@@ -1,11 +1,15 @@
 package it.polimi.se2019.view;
-import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewReceiverInterface;
-import it.polimi.se2019.network.ViewUpdater;
 
 import java.util.List;
 
+/**
+ * View used by the clients for:
+ * <li>Access info for visualizing the state of the game</li>
+ * <li>Receive updates from the {@link #View#receiver}</li>
+ * <li>Sending events from the {@link #View#eventUpdater}</li>
+ */
 public class View {
 
 	private EventUpdater eventUpdater;
@@ -28,23 +32,8 @@ public class View {
 
 	protected ViewReceiverInterface receiver;
 
-	private RequestDispatcher requestDispatcher;
-
-	private ViewUpdater viewUpdater;
-
-	String token;
-
-	public View(ViewReceiverInterface receiver) {
-		this.receiver = receiver;
-	}
-
 	public View() {
 		this.receiver = new ConcreteViewReceiver(this);
-	}
-
-	public void setViewUpdater(ViewUpdater viewUpdater) {
-		this.viewUpdater = viewUpdater;
-		requestDispatcher = new RequestDispatcher(viewUpdater);
 	}
 
 	public List<ViewPlayer> getPlayers() {
@@ -115,10 +104,6 @@ public class View {
 		this.perspective = perspective;
 	}
 
-	public void setToken(String token) {
-		this.token = token;
-	}
-
 	public void setEventUpdater(EventUpdater eventUpdater) {
 		this.eventUpdater = eventUpdater;
 	}
@@ -127,19 +112,7 @@ public class View {
 		this.receiver = receiver;
 	}
 
-	public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
-		this.requestDispatcher = requestDispatcher;
-	}
-
 	public EventUpdater getEventUpdater() {
 		return eventUpdater;
-	}
-
-	public RequestDispatcher getRequestDispatcher() {
-		return requestDispatcher;
-	}
-
-	public ViewUpdater getViewUpdater() {
-		return viewUpdater;
 	}
 }

@@ -1,6 +1,7 @@
 package it.polimi.se2019.network;
 
 import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.util.List;
@@ -16,9 +17,8 @@ public interface EventUpdater {
     void sendRoom(String room);
     void sendPlayers(List<String> players);
     void sendAction(String action);
-    void sendChoice(String choice);
     void sendWeapon(String weapon);
-    void sendPowerUp(String powerUp);
+    void sendPowerUp(List<ViewPowerUp> powerUp);
 
     /**
      * Login to controller

@@ -114,14 +114,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         }
     }
 
-    @Override
-    public synchronized void receiveChoice(Choice choice) {
-        if (active) {
-            //TODO ADD CHOICE
-            endHandler();
-        }
-    }
-
     public synchronized List<ReceivingType> getReceivingTypes () {
         return receivingTypes;
     }

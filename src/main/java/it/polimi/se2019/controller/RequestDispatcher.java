@@ -5,6 +5,8 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Effect;
+import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.view.ViewPowerUp;
@@ -14,6 +16,7 @@ import java.rmi.RemoteException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RequestDispatcher implements RequestDispatcherInterface{
     private EventHelper eventHelper;
@@ -111,18 +114,38 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     }
     @Override
     public void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException {
-        //TODO popup to view saying it's wrong!!
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
+                    List<PowerUp> relatedPowerUps = powerUps.
+                            stream().
+                            map(p -> eventHelper.getPowerUpFromViewPowerUp(p)).filter(p -> p != null).collect(Collectors.toList());
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
+                    eventHandler.receiveDiscardPowerUps(relatedPowerUps);
+                } else
+                    throw new IncorrectEvent("Non posso accettare powerUp!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG :P
+            }
+        }
     }
 
     @Override
     public void receiveEffect(String effect) throws RemoteException {
-        //TODO popup to view saying it's wrong!!
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.EFFECT)) {
+                    //TODO ADD CURRENT WEAPON PARSING!!
+                    Effect relatedEffect = eventHelper.getEffectFromString(effect);
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
+                    eventHandler.receiveEffect(relatedEffect);
+                } else
+                    throw new IncorrectEvent("Non posso accettare powerUp!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG :P
+            }
+        }
     }
-    @Override
-    public void receiveChoice(String choice) throws RemoteException {
-        //TODO popup to view saying it's wrong!!
-    }
-
 
     public void setEventHelper(EventHelper eventHelper) {
         this.eventHelper = eventHelper;

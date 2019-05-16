@@ -30,8 +30,12 @@ public class GameController {
     public void playTurn() {
         if(actionCounter < currentPlayer.getMaxActions()){
             //tells the player to choose an action
-        }else{
-            //tells the player to choose a power up
+        if (currentPlayer.getPowerUps().stream().
+                filter(p -> p.getApplicability() == Moment.OWNROUND).
+                count() >= 1) {
+            //tells the player to choose a powerup too
+        }
+
         }
     }
 

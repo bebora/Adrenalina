@@ -1,7 +1,6 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
@@ -85,7 +84,7 @@ public class WeaponController implements Observer {
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(60,
                     this,
-                    curPlayer.getVirtualView().getRequestHandler(),
+                    curPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);
             timerCostrainedEventHandler.start();
         }
@@ -98,7 +97,7 @@ public class WeaponController implements Observer {
     public synchronized void updateOnEffect(Effect effect){
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if (getUsableEffects().contains(effect.getName())) {
-            curPlayer.getVirtualView().getRequestHandler().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
+            curPlayer.getVirtualView().getRequestDispatcher().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
             selectedEffect = effect;
             stillToPay = new ArrayList<>();
             stillToPay.addAll(effect.getCost());

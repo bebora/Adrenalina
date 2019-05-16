@@ -6,7 +6,8 @@ public enum ReceivingType {
     ACTION,
     TILES,
     WEAPON,
-    DISCARDPOWERUP,
+    POWERUP,
     EFFECT,
-    CHOICE
+    CHOICE,
+    RESET
 }
