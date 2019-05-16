@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.model.ThreeState.FALSE;
 import static it.polimi.se2019.model.ThreeState.TRUE;
-import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
 /**

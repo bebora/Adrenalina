@@ -1,9 +1,15 @@
 package it.polimi.se2019.view;
+import it.polimi.se2019.controller.RequestDispatcher;
+import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewReceiverInterface;
+import it.polimi.se2019.network.ViewUpdater;
 
-import java.util.*;
+import java.util.List;
 
 public abstract class View {
+
+	private EventUpdater eventUpdater;
+
 	private String username;
 
 	private ViewBoard board;
@@ -21,8 +27,17 @@ public abstract class View {
 	private ViewTile perspective;
 
 	protected ViewReceiverInterface receiver;
+	RequestDispatcher requestDispatcher;
 
 	String token;
+
+	public View(ViewReceiverInterface receiver, ViewUpdater viewUpdater) {
+		this.receiver = receiver;
+	}
+
+	public View() {
+		this.receiver = new ConcreteViewReceiver(this);
+	}
 
 	public List<ViewPlayer> getPlayers() {
 		return players;
@@ -94,5 +109,17 @@ public abstract class View {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public void setEventUpdater(EventUpdater eventUpdater) {
+		this.eventUpdater = eventUpdater;
+	}
+
+	public void setReceiver(ViewReceiverInterface receiver) {
+		this.receiver = receiver;
+	}
+
+	public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
+		this.requestDispatcher = requestDispatcher;
 	}
 }

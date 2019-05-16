@@ -6,10 +6,6 @@ import it.polimi.se2019.network.ViewUpdater;
 
 
 public class VirtualView extends View  {
-    /**
-     * Debug view used to test events without the server
-     */
-    private View debugView = null;
     private LobbyController lobbyController;
     private ViewUpdater viewUpdater;
     private RequestDispatcher requestDispatcher;
@@ -17,15 +13,6 @@ public class VirtualView extends View  {
 
     public VirtualView (LobbyController lobbyController) {
         this.lobbyController = lobbyController;
-    }
-
-
-    /**
-     * View used to debug without server
-     * @param debugView client view
-     */
-    public VirtualView (View debugView) {
-        this.debugView = debugView;
     }
 
 
@@ -37,6 +24,4 @@ public class VirtualView extends View  {
         this.viewUpdater = viewUpdater;
         requestDispatcher = new RequestDispatcher(viewUpdater);
     }
-
-
 }

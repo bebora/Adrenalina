@@ -5,8 +5,7 @@ import it.polimi.se2019.view.*;
 import java.util.List;
 
 /**
- * Interface that will receive updates from remote controller/model and
- * apply them to the linkedView
+ * Interface for the view that will receive updates from controller/model
  */
 public interface ViewReceiverInterface {
     void receiveAmmosTaken(String playerId, List<String> playerAmmos);

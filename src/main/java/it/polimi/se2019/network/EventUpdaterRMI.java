@@ -25,6 +25,8 @@ public class EventUpdaterRMI implements EventUpdater{
      * remote RequestDispatcher on which methods will be called
      */
     private RequestDispatcher remoteHandler;
+
+
     //TODO force login first
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
