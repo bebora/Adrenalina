@@ -1,5 +1,8 @@
 package it.polimi.se2019.controller;
 
+/**
+ * Types that define what the RequestDispatcher can accept.
+ */
 public enum ReceivingType {
     ROOM,
     PLAYERS,
@@ -8,6 +11,5 @@ public enum ReceivingType {
     WEAPON,
     POWERUP,
     EFFECT,
-    CHOICE,
     RESET
 }

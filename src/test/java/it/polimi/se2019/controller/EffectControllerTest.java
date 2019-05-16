@@ -19,7 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class EffectControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
-    private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
+    private Match testMatch = new NormalMatch(testPlayers,"board1" +
+            "btlb",5);
     private Match sandboxMatch = new NormalMatch(testMatch);
     private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
     private Player currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());

@@ -5,6 +5,11 @@ import it.polimi.se2019.controller.EventVisitable;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserializer class used to deserialize EventVisitable
+ * Need a new case in the switch for every new EventVisitable added to the logic
+ * For nested custom Objects, it may be necessary to implement custom parsing
+ */
 public class EventDeserializer implements JsonDeserializer<EventVisitable> {
     @Override
     public EventVisitable deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {

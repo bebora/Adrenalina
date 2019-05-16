@@ -21,9 +21,9 @@ public interface EventHandler {
     void receiveWeapon(Weapon weapon);
 
     void receiveDiscardPowerUps(List<PowerUp> powerUps);
-        
+
     void receiveEffect(String effect);
 
     void receiveStop(boolean reverse);
-    
+
 }

@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * A class with useful methods to parse the content of event messages.
+ * Helper class with useful methods to parse the content of event messages.
  */
 public class EventHelper {
     private Match match;

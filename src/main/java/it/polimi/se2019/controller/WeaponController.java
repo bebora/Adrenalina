@@ -80,13 +80,14 @@ public class WeaponController extends Observer {
             curEffect = 1;
             lastUsedIndex = -1;
             weapon = newWeapon;
-            //TODO send update to player to ask for effect
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(60,
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);
             timerCostrainedEventHandler.start();
+            //TODO send update to player to ask for effect
+
         }
         else {
             weapon = null;
@@ -99,6 +100,7 @@ public class WeaponController extends Observer {
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
         if (selectedEffect != null) {
             curPlayer.getVirtualView().getRequestDispatcher().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
+            //TODO UPDATE VIEW!!!
             stillToPay = new ArrayList<>();
             stillToPay.addAll(selectedEffect.getCost());
             if (selectedEffect.getCost().isEmpty()) {

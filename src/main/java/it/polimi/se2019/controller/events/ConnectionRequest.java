@@ -2,15 +2,16 @@ package it.polimi.se2019.controller.events;
 
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.EventVisitor;
-import it.polimi.se2019.view.View;
 
+/**
+ * Socket message used for communicating a request of login
+ */
 public class ConnectionRequest implements EventVisitable {
 
-    String username;
-    String password;
-    boolean existingGame;
-    String mode;
-    View vv;
+    private String username;
+    private String password;
+    private boolean existingGame;
+    private String mode;
 
     public ConnectionRequest(String username, String salt, String password, boolean signingUp, String mode)
 
@@ -25,13 +26,6 @@ public class ConnectionRequest implements EventVisitable {
         return mode;
     }
 
-    public void setVv(View vv) {
-        this.vv = vv;
-    }
-
-    public View getVv() {
-        return vv;
-    }
 
     public boolean getExistingGame() {
         return existingGame;

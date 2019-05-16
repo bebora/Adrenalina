@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * ServerSocket for creating related WorkerServerSocket for each client connecting
+ */
 public class SocketServer extends Thread{
     private ServerSocket serverSocket;
     private int serverPort;

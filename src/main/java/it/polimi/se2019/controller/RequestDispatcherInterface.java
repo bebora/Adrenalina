@@ -6,6 +6,9 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Interface used by RMI
+ */
 public interface RequestDispatcherInterface {
     void receiveRoom(String room) throws RemoteException ;
 

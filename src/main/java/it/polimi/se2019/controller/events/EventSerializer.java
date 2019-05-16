@@ -5,6 +5,10 @@ import it.polimi.se2019.controller.EventVisitable;
 
 import java.lang.reflect.Type;
 
+/**
+ * Serialize EventVisitable in a json having as the type, the name of the class serialized.
+ * Add particular objectType to switch-case if needed custom parsing
+ */
 public class EventSerializer implements JsonSerializer<EventVisitable> {
     Gson gson = new Gson();
     @Override

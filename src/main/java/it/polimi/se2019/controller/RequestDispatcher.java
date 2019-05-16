@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Dispatcher class used by the VirtualView to allow the use of a EventHandler for each Receiving type; if null, the type can't be accepted.
+ * Locking on an object for fixing lack of RMI documentation on synchronization.
+ */
 public class RequestDispatcher implements RequestDispatcherInterface{
     private EventHelper eventHelper;
     private ViewUpdater viewUpdater;
