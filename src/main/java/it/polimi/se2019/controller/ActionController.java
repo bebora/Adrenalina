@@ -1,7 +1,6 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.DominationMatch;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
@@ -10,10 +9,7 @@ import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Direction;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
@@ -21,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //TODO: substitute comments with actual methods to communicate with the view
-public class ActionController implements Observer {
+public class ActionController extends Observer {
     private GameController gameController;
     private Match originalMatch;
     private Match sandboxMatch;
@@ -39,13 +35,14 @@ public class ActionController implements Observer {
         this.gameController = gameController;
     }
 
-    public void update(Action action){
+    public void updateOnAction(Action action){
         cloneMatch();
         if(curPlayer.getActions().contains(action))
             curAction = action;
         nextStep();
     }
 
+    @Override
     public void updateOnWeapon(Weapon weapon){
         if(curSubAction == SubAction.GRAB){
             if(curPlayer.getTile().getWeapons().contains(weapon)){
@@ -148,29 +145,9 @@ public class ActionController implements Observer {
         nextStep();
     }
 
-    public void updateOnStopSelection(SelectStop selectStop){
-        if(selectStop.isRevertAction()){
-            gameController.updateOnStopSelection(selectStop);
+    public void updateOnStopSelection(boolean reverse){
+        if (reverse) {
+            gameController.updateOnStopSelection(reverse);
         }
-    }
-
-    @Override
-    public void updateOnPlayers(List<Player> players) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void updateOnDirection(Direction direction) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void updateOnRoom(Color room) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void updateOnEffect(Effect effect) {
-        throw new UnsupportedOperationException();
     }
 }

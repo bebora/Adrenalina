@@ -18,6 +18,12 @@ public interface EventUpdater {
     void sendPlayers(List<String> players);
     void sendAction(String action);
     void sendWeapon(String weapon);
+
+    /**
+     * Send effect to activate related to the current weapon
+     * @param effect name of the effect of the current weapon
+     */
+    void sendEffect(String effect);
     void sendPowerUp(List<ViewPowerUp> powerUp);
 
     /**

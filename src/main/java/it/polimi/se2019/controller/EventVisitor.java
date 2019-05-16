@@ -62,4 +62,13 @@ public class EventVisitor {
         throw new UnsupportedOperationException();
     }
 
+    public void visit(SelectStop selectStop) {
+        try {
+            requestHandler.receiveStopAction(selectStop.isRevertAction());
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
+
 }

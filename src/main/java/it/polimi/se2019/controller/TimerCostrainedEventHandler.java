@@ -7,7 +7,6 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
@@ -107,11 +106,16 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public synchronized void receiveEffect(Effect effect) {
+    public synchronized void receiveEffect(String effect) {
         if (active) {
             observer.updateOnEffect(effect);
             endHandler();
         }
+    }
+
+    public synchronized  void receiveStop(boolean reverse) {
+        observer.updateOnStopSelection(reverse);
+        endHandler();
     }
 
     public synchronized List<ReceivingType> getReceivingTypes () {

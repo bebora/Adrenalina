@@ -5,7 +5,6 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
@@ -136,9 +135,22 @@ public class RequestDispatcher implements RequestDispatcherInterface{
             try {
                 if (observerTypes.keySet().contains(ReceivingType.EFFECT)) {
                     //TODO ADD CURRENT WEAPON PARSING!!
-                    Effect relatedEffect = eventHelper.getEffectFromString(effect);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
-                    eventHandler.receiveEffect(relatedEffect);
+                    eventHandler.receiveEffect(effect);
+                } else
+                    throw new IncorrectEvent("Non posso accettare powerUp!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG :P
+            }
+        }
+    }
+
+    public void receiveStopAction(boolean reverse) throws RemoteException {
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.RESET)) {
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.RESET);
+                    eventHandler.receiveStop(reverse);
                 } else
                     throw new IncorrectEvent("Non posso accettare powerUp!");
             } catch (IncorrectEvent e) {

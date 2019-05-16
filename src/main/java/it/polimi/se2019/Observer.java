@@ -1,28 +1,56 @@
 package it.polimi.se2019;
 
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Direction;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
-public interface Observer {
+public class  Observer {
 
-    void updateOnTiles(List<Tile> tiles);
+    public void updateOnTiles(List<Tile> tiles) {
+        throw new IncorrectEvent("Non accetto tiles");
+    }
 
-    void updateOnPlayers(List<Player> players);
+    public void updateOnPlayers(List<Player> players) {
+        throw new IncorrectEvent("Non accetto tiles");
+    }
 
-    void updateOnDirection(Direction direction);
+    public void updateOnDirection(Direction direction) {
+        throw new IncorrectEvent("Non accetto direzioni");
+    }
 
-    void updateOnRoom(Color room);
+    public void updateOnRoom(Color room) {
+        throw new IncorrectEvent("Non accetto stanze");
+    }
 
-    void updateOnEffect(Effect effect);
+    public void updateOnEffect(String effect) {
+        throw new IncorrectEvent("Non accetto effetti");
+    }
 
-    void updateOnWeapon(Weapon weapon);
+    public void updateOnWeapon(Weapon weapon) {
+        throw new IncorrectEvent("Non accetto armi");
+    }
 
-    void updateOnPowerUps(List<PowerUp> powerUps);
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
+        throw new IncorrectEvent("Non accetto potenziamenti");
+    }
+
+    public void updateOnAction(Action action) {
+        throw new IncorrectEvent("Non accetto azioni");
+    }
+
+    public void updateOnAmmoCard(AmmoCard ammoCard){
+        throw new IncorrectEvent("Non accetto carte munizioni");
+    }
+
+    public void updateOnStopSelection(boolean reverse) {
+        throw new IncorrectEvent("Non accetto reset!");
+    }
 }

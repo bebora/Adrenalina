@@ -1,7 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.SelectStop;
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WeaponController implements Observer {
+public class WeaponController extends Observer {
     private int curEffect;
     private int lastUsedIndex;
     private Weapon weapon;
@@ -94,14 +94,14 @@ public class WeaponController implements Observer {
         }
     }
 
-    public synchronized void updateOnEffect(Effect effect){
+    public synchronized void updateOnEffect(String effect){
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        if (getUsableEffects().contains(effect.getName())) {
+        selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
+        if (selectedEffect != null) {
             curPlayer.getVirtualView().getRequestDispatcher().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
-            selectedEffect = effect;
             stillToPay = new ArrayList<>();
-            stillToPay.addAll(effect.getCost());
-            if (effect.getCost().isEmpty()) {
+            stillToPay.addAll(selectedEffect.getCost());
+            if (selectedEffect.getCost().isEmpty()) {
                 startEffect();
             } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
                 //ask to discard powerup if wanted
@@ -115,6 +115,9 @@ public class WeaponController implements Observer {
                 curPlayer.getAmmos().removeAll(stillToPay);
                 startEffect();
             }
+        }
+        else {
+            throw new IncorrectEvent("Effetto non presente!");
         }
     }
 
@@ -149,9 +152,9 @@ public class WeaponController implements Observer {
         }
     }
 
-    public void updateOnStopSelection(SelectStop selectStop){
-        if(selectStop.isRevertAction()){
-            actionController.updateOnStopSelection(selectStop);
+    public void updateOnStopSelection(boolean reverse){
+        if(reverse){
+            actionController.updateOnStopSelection(reverse);
         }
         else {
             if (weapon.getEffects().get(0).getActivated()) {

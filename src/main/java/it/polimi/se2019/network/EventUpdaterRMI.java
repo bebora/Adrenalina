@@ -76,7 +76,16 @@ public class EventUpdaterRMI implements EventUpdater{
 
     }
 
+    @Override
+    public void sendEffect(String effect) {
+        try {
+            remoteHandler.receiveEffect(effect);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.ERROR, "Failed to send effect");
+        }
 
+    }
 
     @Override
     public void sendPlayers(List<String> players) {

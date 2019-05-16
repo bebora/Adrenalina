@@ -1,7 +1,6 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -22,7 +21,7 @@ import static it.polimi.se2019.model.cards.ActionType.MOVE;
  * This class contains all the logic related to the execution
  * of an effect after the player has chosen it.
  */
-public class EffectController implements Observer {
+public class EffectController extends Observer {
     private Board board;
     private Player player;
     private Weapon curWeapon;
@@ -31,6 +30,7 @@ public class EffectController implements Observer {
     private List<Player> originalPlayers;
 
     private Effect curEffect;
+
 
     private Move curMove;
 
@@ -200,9 +200,9 @@ public class EffectController implements Observer {
         }
     }
 
-    public void updateOnStopSelection(SelectStop selectStop){
-        if(selectStop.isRevertAction())
-            weaponController.updateOnStopSelection(selectStop);
+    public void updateOnStopSelection(boolean reverse){
+        if (reverse)
+            weaponController.updateOnStopSelection(reverse);
     }
 
     /**
@@ -433,15 +433,5 @@ public class EffectController implements Observer {
     void setCurMatch(Match match){this.curMatch = match;}
     void setOriginalPlayers(List<Player> originalPlayers){this.originalPlayers = originalPlayers;}
     public void setPlayer(Player player){this.player = player;}
-
-    @Override
-    public void updateOnEffect(Effect effect) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void updateOnWeapon(Weapon weapon) {
-        throw new UnsupportedOperationException();
-    }
 
 }

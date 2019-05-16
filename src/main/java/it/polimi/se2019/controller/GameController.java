@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.SelectStop;
 import it.polimi.se2019.model.DominationMatch;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
@@ -60,9 +59,11 @@ public class GameController {
         playTurn();
     }
 
-    public void updateOnStopSelection(SelectStop selectStop){
-        actionController = null;
-        playTurn();
+    public void updateOnStopSelection(boolean reverse){
+        if (reverse) {
+            actionController = null;
+            playTurn();
+        }
     }
 
 }
