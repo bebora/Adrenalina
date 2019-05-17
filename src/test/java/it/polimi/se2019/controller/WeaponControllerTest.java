@@ -1,11 +1,14 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Match;
-import it.polimi.se2019.model.NormalMatch;
+import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.ViewUpdaterRMI;
+import it.polimi.se2019.view.ConcreteViewReceiver;
+import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,14 +20,17 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class WeaponControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono"),new Player("cattivo")));
-    private Match testMatch = new NormalMatch(testPlayers,"board1.btlb",5);
     private Weapon testWeapon = CardCreator.parseWeapon("cannoneVortex.btl");
+    private GameController gameController = new GameController(testPlayers,"board1.btlb",5,false);
+    Match testMatch = gameController.getMatch();
     private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
+    private ActionController actionController = new ActionController(testMatch,gameController);
 
     @Test
     void assignWeapon(){
         currentPlayer.addWeapon(testWeapon);
-        WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers());
+        currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
+        WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers(),actionController);
         weaponControllerTest.updateOnWeapon(testWeapon);
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);
         testMatch.getPlayers().get(testMatch.getCurrentPlayer()).getWeapons().remove(testWeapon);
@@ -36,7 +42,9 @@ class WeaponControllerTest {
     void getUsableEffects(){
         //test with cannoneVortex(absolutePriority, missing Ammos)
          currentPlayer.addWeapon(testWeapon);
-         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers());
+         currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
+         currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
+         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers(),actionController);
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
          for(int i = 0; i<3; i++)
              currentPlayer.getAmmos().remove(Ammo.RED);

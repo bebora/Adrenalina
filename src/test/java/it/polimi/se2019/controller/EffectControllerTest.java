@@ -1,11 +1,16 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Match;
+import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.actions.Attack;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.ViewUpdaterRMI;
+import it.polimi.se2019.view.ConcreteViewReceiver;
+import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,17 +24,24 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class EffectControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
-    private Match testMatch = new NormalMatch(testPlayers,"board1" +
-            "btlb",5);
+    private GameController gameController = new GameController(testPlayers,"board1" +
+            ".btlb",5,false);
+    private Match testMatch = gameController.getMatch();
     private Match sandboxMatch = new NormalMatch(testMatch);
     private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
     private Player currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
     private Player originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
-    private WeaponController wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers());
+    private ActionController actionController = new ActionController(testMatch,gameController);
+    private WeaponController wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),actionController);
+
 
     @BeforeEach
     void prepareWeapon(){
         currentPlayer.addWeapon(testWeapon);
+        currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
+        currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
+        originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
+        originalCurrentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
         testWeapon.setLoaded(true);
         wp.updateOnWeapon(testWeapon);
     }
@@ -111,6 +123,7 @@ public class EffectControllerTest {
         wp.updateOnWeapon(testWeapon);
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
         wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
+        actionController.updateOnAction(originalCurrentPlayer.getActions().get(0));
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(3,enemy.getDamagesCount());
