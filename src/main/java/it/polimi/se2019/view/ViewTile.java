@@ -13,6 +13,7 @@ public class ViewTile {
     private ViewTileCoords coords;
     private List<String> weapons;
     private List<String> ammos;
+    private boolean spawn;
     public ViewTileCoords getCoords() {
         return coords;
     }
@@ -35,11 +36,14 @@ public class ViewTile {
 
     public String getRoom(){return room;}
 
+    public boolean isSpawn(){return spawn;}
+
     public ViewTile(Tile tile) {
         this.room = tile.getRoom().name();
         this.coords = new ViewTileCoords(tile.getPosy(), tile.getPosx());
         this.weapons = tile.getWeapons().stream().
                 map(Weapon::getName).collect(Collectors.toList());
+        this.spawn = tile.isSpawn();
         //Spawn tiles have a null ammoCard, so getting their ammoCard name would throw a NullPointerException
         this.ammos = tile.isSpawn() ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
                 map(Ammo::name).collect(Collectors.toList());

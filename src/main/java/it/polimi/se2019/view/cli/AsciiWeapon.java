@@ -27,7 +27,7 @@ public class AsciiWeapon {
     }
 
     public static void drawEffectsDesc(ViewWeapon weapon){
-        int x = AsciiBoard.boardRightBorder;
+        int x = 40;
         int y = AsciiBoard.offsetY;
         for(ViewEffect effect : weapon.getEffects()) {
             CLI.moveCursor(x,y);

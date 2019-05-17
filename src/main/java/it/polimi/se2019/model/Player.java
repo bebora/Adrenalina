@@ -42,6 +42,7 @@ public class Player {
 		this.id = originalPlayer.getId();
 		this.tile = originalPlayer.getTile();
 		this.firstPlayer = originalPlayer.getFirstPlayer();
+		this.virtualView = originalPlayer.getVirtualView();
 		this.alive = originalPlayer.getAlive();
 		this.dominationSpawn = getDominationSpawn();
 		this.marks = new ArrayList<>();
