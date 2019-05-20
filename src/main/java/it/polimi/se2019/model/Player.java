@@ -351,6 +351,8 @@ public class Player {
 		return alive;
 	}
 
+	public void setAlive(ThreeState alive){ this.alive = alive; }
+
 	public int getPoints() {
 		return points;
 	}

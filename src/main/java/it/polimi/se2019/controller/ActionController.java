@@ -35,6 +35,7 @@ public class ActionController extends Observer {
         this.gameController = gameController;
     }
 
+    @Override
     public void updateOnAction(Action action){
         cloneMatch();
         if(curPlayer.getActions().contains(action)) {
@@ -63,6 +64,7 @@ public class ActionController extends Observer {
         }
     }
 
+    @Override
     public void updateOnAmmoCard(AmmoCard ammoCard){
         if(curSubAction == SubAction.GRAB){
             if(curPlayer.getTile().getAmmoCard() == ammoCard){
@@ -76,6 +78,7 @@ public class ActionController extends Observer {
         }
     }
 
+    @Override
     public void updateOnTiles(List<Tile> tiles){
         if(curSubAction == SubAction.MOVE && !tiles.isEmpty()){
             Tile tile = tiles.get(0);
@@ -140,6 +143,7 @@ public class ActionController extends Observer {
         }
     }
 
+    @Override
     public void updateOnPowerUps(List<PowerUp> powerUps){
         powerUps.forEach(p -> curPlayer.discardPowerUp(p));
         for(Ammo a: curPlayer.getAmmos()){
@@ -158,9 +162,14 @@ public class ActionController extends Observer {
         nextStep();
     }
 
+    @Override
     public void updateOnStopSelection(boolean reverse){
         if (reverse) {
             gameController.updateOnStopSelection(reverse);
         }
+    }
+
+    public WeaponController getWeaponController(){
+        return weaponController;
     }
 }
