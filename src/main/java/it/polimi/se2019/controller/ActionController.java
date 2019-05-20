@@ -26,7 +26,7 @@ public class ActionController extends Observer {
     private Action curAction;
     private int subActionIndex = 0;
     private Player curPlayer;
-    private Weapon weaponToReload;
+    private Weapon selectedWeapon;
     private List<Ammo> stillToPay = new ArrayList<>();
 
     public ActionController(Match match,GameController gameController){
@@ -37,24 +37,27 @@ public class ActionController extends Observer {
 
     public void updateOnAction(Action action){
         cloneMatch();
-        if(curPlayer.getActions().contains(action))
+        if(curPlayer.getActions().contains(action)) {
+            curPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
             curAction = action;
-        nextStep();
+            nextStep();
+        }
     }
 
     @Override
     public void updateOnWeapon(Weapon weapon){
         if(curSubAction == SubAction.GRAB){
             if(curPlayer.getTile().getWeapons().contains(weapon)){
-                curPlayer.addWeapon(curPlayer.getTile().grabWeapon(weapon));
-                nextStep();
+                selectedWeapon = weapon;
+                stillToPay.add(weapon.getCost().get(0));
+                startPayingProcess();
             }else{
                 //signals impossible weapon selection
             }
         }else if(curSubAction == SubAction.SHOOT){
             weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers(),this);
         }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
-            weaponToReload = weapon;
+            selectedWeapon = weapon;
             stillToPay.addAll(weapon.getCost());
             startPayingProcess();
         }
@@ -119,10 +122,21 @@ public class ActionController extends Observer {
             }
             else {
                 curPlayer.getAmmos().removeAll(stillToPay);
-                weaponToReload.setLoaded(true);
+                concludePayment();
             }
         }else{
             //tells the player not enough ammos
+        }
+    }
+
+    public void concludePayment(){
+        if(curSubAction == SubAction.GRAB){
+            curPlayer.addWeapon(curPlayer.getTile().grabWeapon(selectedWeapon));
+            nextStep();
+        }
+        else if(curSubAction == SubAction.SHOOT){
+            selectedWeapon.setLoaded(true);
+            nextStep();
         }
     }
 
@@ -133,8 +147,7 @@ public class ActionController extends Observer {
                 curPlayer.getAmmos().remove(a);
         }
         if(stillToPay.isEmpty()){
-            weaponToReload.setLoaded(true);
-            nextStep();
+            concludePayment();
         }else{
             //ask for missing ammos
         }

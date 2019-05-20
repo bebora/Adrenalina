@@ -29,7 +29,7 @@ public class Player {
 		dominationSpawn = false;
 		marks = new ArrayList<>();
 		damages = new ArrayList<>();
-		ammos = new ArrayList<>();
+		ammos = new ArrayList<>(Arrays.asList(Ammo.RED,Ammo.YELLOW,Ammo.BLUE));
 		rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
