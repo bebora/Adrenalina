@@ -4,6 +4,7 @@ import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -39,5 +40,5 @@ public interface EventUpdater {
                String nickname,
                String password,
                boolean existingGame,
-               String mode);
+               String mode) throws RemoteException;
 }

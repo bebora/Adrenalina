@@ -32,7 +32,7 @@ public class EventUpdaterRMI implements EventUpdater{
 
     //TODO force login first
     @Override
-    public void login(View view, String nickname, String password, boolean existingGame, String mode) {
+    public void login(View view, String nickname, String password, boolean existingGame, String mode)  throws RemoteException{
         //TODO export receiver as remote object
         connectInterface.connect(nickname, password, existingGame, mode, view.getReceiver());
         remoteHandler = connectInterface.getRequestHandler(nickname, password);

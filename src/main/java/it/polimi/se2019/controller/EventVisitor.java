@@ -62,6 +62,16 @@ public class EventVisitor {
         throw new UnsupportedOperationException();
     }
 
+    public void visit(SelectRoom selectRoom) {
+        String room = selectRoom.getRoom();
+        try {
+            requestHandler.receiveRoom(room);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
+
     public void visit(SelectStop selectStop) {
         try {
             requestHandler.receiveStopAction(selectStop.isRevertAction());
