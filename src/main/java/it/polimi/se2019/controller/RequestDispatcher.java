@@ -143,7 +143,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
                     eventHandler.receiveEffect(effect);
                 } else
-                    throw new IncorrectEvent("Non posso accettare powerUp!");
+                    throw new IncorrectEvent("Non posso accettare un effetto!");
             } catch (IncorrectEvent e) {
                 //TODO SEND UPDATE WRONG :P
             }
@@ -157,7 +157,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     EventHandler eventHandler = observerTypes.get(ReceivingType.RESET);
                     eventHandler.receiveStop(reverse);
                 } else
-                    throw new IncorrectEvent("Non posso accettare powerUp!");
+                    throw new IncorrectEvent("Non posso accettare uno stop!");
             } catch (IncorrectEvent e) {
                 //TODO SEND UPDATE WRONG :P
             }
