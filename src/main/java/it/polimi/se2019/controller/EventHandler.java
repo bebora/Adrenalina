@@ -20,7 +20,7 @@ public interface EventHandler {
 
     void receiveWeapon(Weapon weapon);
 
-    void receiveDiscardPowerUps(List<PowerUp> powerUps);
+    void receivePowerUps(List<PowerUp> powerUps, boolean discard);
 
     void receiveEffect(String effect);
 

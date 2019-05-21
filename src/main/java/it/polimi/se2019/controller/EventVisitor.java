@@ -3,6 +3,7 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.*;
+import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.rmi.RemoteException;
@@ -62,6 +63,16 @@ public class EventVisitor {
         throw new UnsupportedOperationException();
     }
 
+    public void visit(SelectPowerUps selectPowerUps) {
+        List<ViewPowerUp> powerups = selectPowerUps.getPowerUps();
+        boolean discard = selectPowerUps.isDiscarded();
+        try {
+            requestHandler.receivePowerUps(powerups, discard);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
     public void visit(SelectRoom selectRoom) {
         String room = selectRoom.getRoom();
         try {

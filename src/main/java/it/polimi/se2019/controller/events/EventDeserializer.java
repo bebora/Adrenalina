@@ -32,6 +32,10 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
                 eventVisitable = gson.fromJson(event, SelectPlayers.class);
                 break;
 
+            case "SelectPowerUps":
+                eventVisitable = gson.fromJson(event, SelectPowerUps.class);
+                break;
+
             case "SelectWeapon":
                 eventVisitable = gson.fromJson(event, SelectWeapon.class);
                 break;

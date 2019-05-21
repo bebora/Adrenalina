@@ -20,7 +20,7 @@ public interface RequestDispatcherInterface {
 
     void receiveWeapon(String weapon) throws RemoteException;
 
-    void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException;
+    void receivePowerUps(List<ViewPowerUp> powerUps, boolean discarded) throws RemoteException;
 
     void receiveEffect(String effect) throws RemoteException;
 

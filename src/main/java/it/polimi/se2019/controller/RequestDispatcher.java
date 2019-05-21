@@ -116,15 +116,16 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         }
     }
     @Override
-    public void receiveDiscardPowerUps(List<ViewPowerUp> powerUps) throws RemoteException {
+    public void receivePowerUps(List<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
                     List<PowerUp> relatedPowerUps = powerUps.
                             stream().
-                            map(p -> eventHelper.getPowerUpFromViewPowerUp(p)).filter(p -> p != null).collect(Collectors.toList());
+                            map(eventHelper::getPowerUpFromViewPowerUp).
+                            filter(p -> p != null).collect(Collectors.toList());
                     EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
-                    eventHandler.receiveDiscardPowerUps(relatedPowerUps);
+                    eventHandler.receivePowerUps(relatedPowerUps, discard);
                 } else
                     throw new IncorrectEvent("Non posso accettare powerUp!");
             } catch (IncorrectEvent e) {

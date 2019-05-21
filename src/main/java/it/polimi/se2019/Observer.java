@@ -38,7 +38,7 @@ public class  Observer {
         throw new IncorrectEvent("Non accetto armi");
     }
 
-    public void updateOnPowerUps(List<PowerUp> powerUps) {
+    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         throw new IncorrectEvent("Non accetto potenziamenti");
     }
 

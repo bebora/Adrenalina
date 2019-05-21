@@ -396,7 +396,7 @@ public class EffectController extends Observer {
      * @param powerUps a single powerUp to be used
      */
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps) {
+    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         if(powerUps.get(0).getApplicability() == Moment.DAMAGING)
             curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
     }

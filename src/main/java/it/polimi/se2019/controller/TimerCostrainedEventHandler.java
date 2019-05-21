@@ -98,9 +98,9 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public synchronized void receiveDiscardPowerUps(List<PowerUp> powerUps) {
+    public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
         if (active) {
-            observer.updateOnPowerUps(powerUps);
+            observer.updateOnPowerUps(powerUps, discard);
             endHandler();
         }
     }
