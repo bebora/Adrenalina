@@ -19,4 +19,8 @@ public class ViewAction {
         this.shoot = subActions.contains(SubAction.SHOOT);
         this.type = a.toString();
     }
+
+    public String getType(){
+        return this.type;
+    }
 }

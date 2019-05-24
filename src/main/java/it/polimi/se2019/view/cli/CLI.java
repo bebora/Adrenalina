@@ -48,4 +48,9 @@ public class CLI extends ClientView {
         }
     }
 
+    static void printMessage(String message,String color){
+        moveCursor(1, AsciiBoard.boardBottomBorder + 7);
+        printInColor(color, message);
+    }
+
 }

@@ -93,6 +93,8 @@ public class ViewPlayer {
 		this.actions = actions;
 	}
 
+	public List<ViewAction> getActions(){ return this.actions;}
+
 	public List<ViewWeapon> getUnloadedWeapons() {
 		return unloadedWeapons;
 	}

@@ -80,9 +80,7 @@ public class View {
 		this.board = board;
 	}
 
-	public void setPlayers(List<ViewPlayer> players) {
-		this.players = players;
-	}
+	public void setPlayers(List<ViewPlayer> players) { this.players = players; }
 
 	public void setIdView(String idView) {
 		this.idView = idView;
@@ -110,6 +108,12 @@ public class View {
 
 	public void setReceiver(ViewReceiverInterface receiver) {
 		this.receiver = receiver;
+	}
+
+	public ViewPlayer getSelf(){
+		return players.stream()
+				.filter(p -> p.getUsername().equals(username))
+				.findAny().orElse(null);
 	}
 
 	public EventUpdater getEventUpdater() {
