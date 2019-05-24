@@ -7,6 +7,7 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
@@ -57,9 +58,25 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public synchronized void receiveRoom(Color color) {
+    public synchronized void receiveAction(Action action) {
         if (active) {
-            observer.updateOnRoom(color);
+            observer.updateOnAction(action);
+            endHandler();
+        }
+    }
+
+    @Override
+    public void receiveDirection(Direction direction) {
+        if (active) {
+            observer.updateOnDirection(direction);
+            endHandler();
+        }
+    }
+
+    @Override
+    public synchronized void receiveEffect(String effect) {
+        if (active) {
+            observer.updateOnEffect(effect);
             endHandler();
         }
     }
@@ -73,11 +90,24 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public synchronized void receiveAction(Action action) {
+    public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
         if (active) {
-            //TODO ADD action update in observer!
+            observer.updateOnPowerUps(powerUps, discard);
             endHandler();
         }
+    }
+
+    @Override
+    public synchronized void receiveRoom(Color color) {
+        if (active) {
+            observer.updateOnRoom(color);
+            endHandler();
+        }
+    }
+
+    public synchronized  void receiveStop(boolean reverse) {
+        observer.updateOnStopSelection(reverse);
+        endHandler();
     }
 
     @Override
@@ -95,27 +125,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             endHandler();
         }
 
-    }
-
-    @Override
-    public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (active) {
-            observer.updateOnPowerUps(powerUps, discard);
-            endHandler();
-        }
-    }
-
-    @Override
-    public synchronized void receiveEffect(String effect) {
-        if (active) {
-            observer.updateOnEffect(effect);
-            endHandler();
-        }
-    }
-
-    public synchronized  void receiveStop(boolean reverse) {
-        observer.updateOnStopSelection(reverse);
-        endHandler();
     }
 
     public synchronized List<ReceivingType> getReceivingTypes () {

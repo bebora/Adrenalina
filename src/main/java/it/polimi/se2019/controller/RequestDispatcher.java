@@ -37,39 +37,6 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     }
 
     @Override
-    public void receiveRoom(String room) throws RemoteException {
-        synchronized (lock) {
-            Color relatedRoom;
-            try {
-                if (observerTypes.keySet().contains(ReceivingType.ROOM)) {
-                    relatedRoom = eventHelper.getRoomFromString(room);
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.ROOM);
-                    eventHandler.receiveRoom(relatedRoom);
-                } else {
-                    throw new IncorrectEvent("Non posso accettare ROOM!");
-                }
-            } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE USING VIEWUPDATER
-            }
-        }
-    }
-    @Override
-    public void receivePlayers(List<String> players) throws RemoteException {
-        synchronized (lock) {
-            try {
-                if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
-                    List<Player> relatedPlayers = eventHelper.getPlayersFromId(players);
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.PLAYERS);
-                    eventHandler.receivePlayer(relatedPlayers);
-                } else {
-                    throw new IncorrectEvent("Non posso accettare ROOM!");
-                }
-            } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE
-            }
-        }
-    }
-    @Override
     public void receiveAction(String subAction) throws RemoteException {
         synchronized (lock) {
             try {
@@ -85,51 +52,18 @@ public class RequestDispatcher implements RequestDispatcherInterface{
             }
         }
     }
+
     @Override
-    public void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
+    public void receiveDirection(String direction) throws RemoteException {
         synchronized (lock) {
             try {
-                if (observerTypes.keySet().contains(ReceivingType.TILES)) {
-                    List<Tile> tiles = eventHelper.getTilesFromViewTiles(viewTiles);
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.TILES);
-                    eventHandler.receiveTiles(tiles);
+                if (observerTypes.keySet().contains(ReceivingType.DIRECTION)) {
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.DIRECTION);
+                    eventHandler.receiveDirection(eventHelper.getDirectionFromString(direction));
                 } else
-                    throw new IncorrectEvent("Non posso accettare TILES!");
+                    throw new IncorrectEvent("Non posso accettare una direzione!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE!
-            }
-        }
-    }
-    @Override
-    public void receiveWeapon(String weapon) throws RemoteException {
-        synchronized (lock) {
-            try {
-                if (observerTypes.keySet().contains(ReceivingType.WEAPON)) {
-                    Weapon relatedWeapon = eventHelper.getWeaponFromString(weapon);
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.WEAPON);
-                    eventHandler.receiveWeapon(relatedWeapon);
-                } else
-                    throw new IncorrectEvent("Non posso accettare armi!");
-            } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
-            }
-        }
-    }
-    @Override
-    public void receivePowerUps(List<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
-        synchronized (lock) {
-            try {
-                if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
-                    List<PowerUp> relatedPowerUps = powerUps.
-                            stream().
-                            map(eventHelper::getPowerUpFromViewPowerUp).
-                            filter(p -> p != null).collect(Collectors.toList());
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
-                    eventHandler.receivePowerUps(relatedPowerUps, discard);
-                } else
-                    throw new IncorrectEvent("Non posso accettare powerUp!");
-            } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
+                //TODO send update wrong
             }
         }
     }
@@ -150,6 +84,61 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         }
     }
 
+    @Override
+    public void receivePlayers(List<String> players) throws RemoteException {
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
+                    List<Player> relatedPlayers = eventHelper.getPlayersFromId(players);
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.PLAYERS);
+                    eventHandler.receivePlayer(relatedPlayers);
+                } else {
+                    throw new IncorrectEvent("Non posso accettare ROOM!");
+                }
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG MESSAGE
+            }
+        }
+    }
+
+    @Override
+    public void receivePowerUps(List<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
+                    List<PowerUp> relatedPowerUps = powerUps.
+                            stream().
+                            map(eventHelper::getPowerUpFromViewPowerUp).
+                            filter(p -> p != null).collect(Collectors.toList());
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
+                    eventHandler.receivePowerUps(relatedPowerUps, discard);
+                } else
+                    throw new IncorrectEvent("Non posso accettare powerUp!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG :P
+            }
+        }
+    }
+
+    @Override
+    public void receiveRoom(String room) throws RemoteException {
+        synchronized (lock) {
+            Color relatedRoom;
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.ROOM)) {
+                    relatedRoom = eventHelper.getRoomFromString(room);
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.ROOM);
+                    eventHandler.receiveRoom(relatedRoom);
+                } else {
+                    throw new IncorrectEvent("Non posso accettare ROOM!");
+                }
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG MESSAGE USING VIEWUPDATER
+            }
+        }
+    }
+
+    @Override
     public void receiveStopAction(boolean reverse) throws RemoteException {
         synchronized (lock) {
             try {
@@ -158,6 +147,38 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     eventHandler.receiveStop(reverse);
                 } else
                     throw new IncorrectEvent("Non posso accettare uno stop!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG :P
+            }
+        }
+    }
+
+    @Override
+    public void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.TILES)) {
+                    List<Tile> tiles = eventHelper.getTilesFromViewTiles(viewTiles);
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.TILES);
+                    eventHandler.receiveTiles(tiles);
+                } else
+                    throw new IncorrectEvent("Non posso accettare TILES!");
+            } catch (IncorrectEvent e) {
+                //TODO SEND UPDATE WRONG MESSAGE!
+            }
+        }
+    }
+
+    @Override
+    public void receiveWeapon(String weapon) throws RemoteException {
+        synchronized (lock) {
+            try {
+                if (observerTypes.keySet().contains(ReceivingType.WEAPON)) {
+                    Weapon relatedWeapon = eventHelper.getWeaponFromString(weapon);
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.WEAPON);
+                    eventHandler.receiveWeapon(relatedWeapon);
+                } else
+                    throw new IncorrectEvent("Non posso accettare armi!");
             } catch (IncorrectEvent e) {
                 //TODO SEND UPDATE WRONG :P
             }

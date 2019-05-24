@@ -4,12 +4,13 @@ package it.polimi.se2019.controller;
  * Types that define what the RequestDispatcher can accept.
  */
 public enum ReceivingType {
-    ROOM,
-    PLAYERS,
     ACTION,
+    DIRECTION,
+    EFFECT,
+    PLAYERS,
+    POWERUP,
+    RESET, //reset=stop in other parts of the code
+    ROOM,
     TILES,
     WEAPON,
-    POWERUP,
-    EFFECT,
-    RESET
 }

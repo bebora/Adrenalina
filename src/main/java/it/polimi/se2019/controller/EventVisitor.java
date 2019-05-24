@@ -21,15 +21,10 @@ public class EventVisitor {
         this.lobbyController = lobbyController;
     }
 
-    public void visit(SelectPlayers event) {
-        List<String> playerIds = event.getPlayerIds();
-        try {
-            requestHandler.receivePlayers(playerIds);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
-        }
+    public void visit(ConnectionRequest event) {
+        throw new UnsupportedOperationException();
     }
+
     public void visit(SelectAction event) {
         String selectedAction = event.getSelectedAction();
         try {
@@ -39,28 +34,25 @@ public class EventVisitor {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
-    public void visit(SelectWeapon event){
-        String weapon = event.getWeapon();
+
+    public void visit(SelectDirection event) {
+        String direction = event.getDirection();
         try {
-            //ADD powerups discarding option
-            requestHandler.receiveWeapon(weapon);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
-        }
-    }
-    public void visit(SelectTiles event){
-        List<ViewTileCoords> viewTiles = event.getSelectedTiles();
-        try {
-            requestHandler.receiveTiles(viewTiles);
+            requestHandler.receiveDirection(direction);
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
         }
     }
 
-    public void visit(ConnectionRequest event) {
-        throw new UnsupportedOperationException();
+    public void visit(SelectPlayers event) {
+        List<String> playerIds = event.getPlayerIds();
+        try {
+            requestHandler.receivePlayers(playerIds);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
     }
 
     public void visit(SelectPowerUps selectPowerUps) {
@@ -92,4 +84,24 @@ public class EventVisitor {
         }
     }
 
+    public void visit(SelectTiles event){
+        List<ViewTileCoords> viewTiles = event.getSelectedTiles();
+        try {
+            requestHandler.receiveTiles(viewTiles);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
+
+    public void visit(SelectWeapon event){
+        String weapon = event.getWeapon();
+        try {
+            //ADD powerups discarding option
+            requestHandler.receiveWeapon(weapon);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
 }

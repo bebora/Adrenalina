@@ -4,26 +4,30 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
 public interface EventHandler {
-    void receiveRoom(Color color);
+
+    void receiveAction(Action action);
+
+    void receiveDirection(Direction direction);
+
+    void receiveEffect(String effect);
 
     void receivePlayer(List<Player> players);
 
-    void receiveAction(Action action);
+    void receivePowerUps(List<PowerUp> powerUps, boolean discard);
+
+    void receiveRoom(Color color);
+
+    void receiveStop(boolean reverse);
 
     void receiveTiles(List<Tile> tiles);
 
     void receiveWeapon(Weapon weapon);
-
-    void receivePowerUps(List<PowerUp> powerUps, boolean discard);
-
-    void receiveEffect(String effect);
-
-    void receiveStop(boolean reverse);
 
 }

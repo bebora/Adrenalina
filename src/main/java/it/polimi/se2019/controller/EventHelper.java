@@ -7,6 +7,7 @@ import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -104,6 +105,16 @@ public class EventHelper {
         List<Action> actions = match.getPlayers().get(match.getCurrentPlayer()).getActions();
         return  actions.stream().
                 filter(a -> a.toString() == action).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
+    }
+
+    public Direction getDirectionFromString(String direction) {
+        try {
+            Direction ret = Direction.valueOf(direction.toUpperCase());
+            return ret;
+        }
+        catch (IllegalArgumentException e) {
+            throw new IncorrectEvent("La direzione non esiste!");
+        }
     }
 
     /**
