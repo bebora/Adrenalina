@@ -21,7 +21,7 @@ public interface EventUpdater {
      */
     void sendEffect(String effect);
     void sendPlayers(List<String> players);
-    void sendPowerUp(List<ViewPowerUp> powerUp);
+    void sendPowerUp(List<ViewPowerUp> powerUp, boolean discard);
     void sendRoom(String room);
     void sendTiles(List<ViewTileCoords> tiles);
     void sendWeapon(String weapon);

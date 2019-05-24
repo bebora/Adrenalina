@@ -68,68 +68,92 @@ public class EventUpdaterRMI implements EventUpdater{
 
     @Override
     public void sendAction(String action) {
-        try {
-            remoteHandler.receiveAction(action);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Failed to send action");
-        }
-
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveAction(action);
+            } catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send action");
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendEffect(String effect) {
-        try {
-            remoteHandler.receiveEffect(effect);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Failed to send effect");
-        }
-
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveEffect(effect);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send effect");
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendPlayers(List<String> players) {
-        try {
-            remoteHandler.receivePlayers(players);
-        }
-        catch (RemoteException e){
-            Logger.log(Priority.ERROR, "Failed to send player");
-        }
+        Runnable task = () -> {
+            try {
+                remoteHandler.receivePlayers(players);
+            }
+            catch (RemoteException e){
+                Logger.log(Priority.ERROR, "Failed to send player");
+            }
+        };
+        new Thread(task).start();
     }
 
-    //TODO CAN'T SEND POWERUP BUT VIEWPOWERUP, AND NEED TO SEE IF NEEDS TO BE ALWAYS A LIST OR SINGLE
-    public void sendPowerUp(List<ViewPowerUp> viewPowerUps) {
-        //TODO RequestDispatcher does not have any receivePowerup method at the moment
+    //TODO NEED TO SEE IF NEEDS TO BE ALWAYS A LIST OR SINGLE
+    @Override
+    public void sendPowerUp(List<ViewPowerUp> viewPowerUps, boolean discard) {
+        Runnable task = () -> {
+            try {
+                remoteHandler.receivePowerUps(viewPowerUps, discard);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send powerup");
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendRoom(String room) {
-        try {
-            remoteHandler.receiveRoom(room);
-        }
-        catch (RemoteException e){
-            Logger.log(Priority.ERROR, "Failed to send room");
-        }
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveRoom(room);
+            }
+            catch (RemoteException e){
+                Logger.log(Priority.ERROR, "Failed to send room");
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendTiles(List<ViewTileCoords> tiles) {
-        try {
-            remoteHandler.receiveTiles(tiles);
-        }
-        catch (RemoteException e){
-            Logger.log(Priority.ERROR, "Failed to send tiles");
-        }
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveTiles(tiles);
+            }
+            catch (RemoteException e){
+                Logger.log(Priority.ERROR, "Failed to send tiles");
+            }
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendWeapon(String weapon) {
-        try {
-            remoteHandler.receiveWeapon(weapon);
-        }
-        catch (RemoteException e){
-            Logger.log(Priority.ERROR, "Failed to send weapon");
-        }
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveWeapon(weapon);
+            }
+            catch (RemoteException e){
+                Logger.log(Priority.ERROR, "Failed to send weapon");
+            }
+        };
+        new Thread(task).start();
     }
 }
