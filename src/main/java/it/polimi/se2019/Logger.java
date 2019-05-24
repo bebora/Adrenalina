@@ -11,7 +11,7 @@ public final class Logger {
     private static final String LOG = String.format("%s/adrenalina.log", HOME);
 
     private static boolean debugMode;
-
+    //TODO log somewhere (cli/file)
     public static void log(Priority priority, String toLog) {
         switch (priority) {
             case DEBUG:

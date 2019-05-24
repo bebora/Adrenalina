@@ -15,6 +15,12 @@ import java.util.List;
 public interface EventUpdater {
     //TODO add sendDirection
     void sendAction(String action);
+
+    /**
+     * Send direction the player wants to target
+     * @param direction
+     */
+    void sendDirection(String direction);
     /**
      * Send effect to activate related to the current weapon
      * @param effect name of the effect of the current weapon

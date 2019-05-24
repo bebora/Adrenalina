@@ -79,6 +79,19 @@ public class EventUpdaterRMI implements EventUpdater{
     }
 
     @Override
+    public void sendDirection(String direction) {
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveDirection(direction);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send effect");
+            }
+        };
+        new Thread(task).start();
+    }
+
+    @Override
     public void sendEffect(String effect) {
         Runnable task = () -> {
             try {
