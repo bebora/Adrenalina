@@ -191,16 +191,10 @@ public class Board {
 		    reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance-1));
 		return reachableTiles.get(maxDistance);
 	}
-    @Override
-    public String toString() {
-	    //TODO print string with format 3x3 each, 9 spaces means to have space for 5 players, 1 color, 3 ammos
-		return "";
-    }
 
     public PowerUp drawPowerUp() {
 		return powerUps.draw();
 	}
-
 
     public Weapon drawWeapon(){
         return weaponsDeck.draw();
