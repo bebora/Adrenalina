@@ -1,5 +1,7 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.LobbyController;
 
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class SocketServer extends Thread{
                 workerServerSocket = new WorkerServerSocket(clientSocket, lobbyController);
                 workerServerSocket.start();
             } catch (AuthenticationErrorException e) {
-                //TODO Logger
+                Logger.log(Priority.ERROR, "Unable to authenticate");
             }
         }
     }

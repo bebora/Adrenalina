@@ -37,7 +37,6 @@ public class ViewUpdaterSocket implements ViewUpdater{
     public void sendAvailableActions(Player player) {
         UpdateVisitable availableActionsUpdate = new AvailableActionsUpdate(player);
         workerServerSocket.update(availableActionsUpdate);
-
     }
 
     @Override
@@ -86,7 +85,6 @@ public class ViewUpdaterSocket implements ViewUpdater{
     public void sendTile(Tile tile) {
         UpdateVisitable tileUpdate = new TileUpdate(tile);
         workerServerSocket.update(tileUpdate);
-
     }
 
     @Override

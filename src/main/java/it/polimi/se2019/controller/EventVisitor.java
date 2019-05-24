@@ -45,6 +45,16 @@ public class EventVisitor {
         }
     }
 
+    public void visit(SelectEffect event) {
+        String effect = event.getEffect();
+        try {
+            requestHandler.receiveEffect(effect);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+        }
+    }
+
     public void visit(SelectPlayers event) {
         List<String> playerIds = event.getPlayerIds();
         try {
