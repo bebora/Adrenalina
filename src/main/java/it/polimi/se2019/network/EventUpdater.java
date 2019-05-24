@@ -13,19 +13,18 @@ import java.util.List;
  * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
-
-    void sendTiles(List<ViewTileCoords> tiles);
-    void sendRoom(String room);
-    void sendPlayers(List<String> players);
+    //TODO add sendDirection
     void sendAction(String action);
-    void sendWeapon(String weapon);
-
     /**
      * Send effect to activate related to the current weapon
      * @param effect name of the effect of the current weapon
      */
     void sendEffect(String effect);
+    void sendPlayers(List<String> players);
     void sendPowerUp(List<ViewPowerUp> powerUp);
+    void sendRoom(String room);
+    void sendTiles(List<ViewTileCoords> tiles);
+    void sendWeapon(String weapon);
 
     /**
      * Login to controller

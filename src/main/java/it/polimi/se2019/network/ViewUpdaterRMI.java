@@ -21,97 +21,130 @@ public class ViewUpdaterRMI implements ViewUpdater {
 
     @Override
     public void sendAmmosTaken(Player player) {
-        List<String> playerAmmos = player.getAmmos().stream().
-                map(Ammo::name).
-                collect(Collectors.toList());
-        remoteReceiver.receiveAmmosTaken(player.getId(), playerAmmos);
+        Runnable task = () -> {
+            List<String> playerAmmos = player.getAmmos().stream().
+                    map(Ammo::name).
+                    collect(Collectors.toList());
+            remoteReceiver.receiveAmmosTaken(player.getId(), playerAmmos);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendAttackPlayer(Player attacker, Player receiver, int damageAmount, int marksAmount) {
-        remoteReceiver.receiveAttackPlayer(attacker.getId(), receiver.getId(), damageAmount, marksAmount);
+        Runnable task = () ->
+            remoteReceiver.receiveAttackPlayer(attacker.getId(), receiver.getId(), damageAmount, marksAmount);
+        new Thread(task).start();
     }
 
     @Override
     public void sendAvailableActions(Player player) {
-        List<ViewAction> actions = player.getActions().stream().
-                map(ViewAction::new).
-                collect(Collectors.toList());
-        remoteReceiver.receiveAvailableActions(player.getId(), actions);
+        Runnable task = () -> {
+            List<ViewAction> actions = player.getActions().stream().
+                    map(ViewAction::new).
+                    collect(Collectors.toList());
+            remoteReceiver.receiveAvailableActions(player.getId(), actions);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendCurrentOptions(List<String> options) {
-        remoteReceiver.receiveCurrentOptions(options);
+        Runnable task = () ->
+                remoteReceiver.receiveCurrentOptions(options);
+        new Thread(task).start();
     }
 
     @Override
     public void sendMovePlayer(Player player) {
-        remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
+        Runnable task = () ->
+                remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
+        new Thread(task).start();
     }
 
     @Override
     public void sendPopupMessage(String message) {
-        remoteReceiver.receivePopupMessage(message);
+        Runnable task = () ->
+                remoteReceiver.receivePopupMessage(message);
+        new Thread(task).start();
     }
 
     @Override
     public void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers) {
-        List<String> viewPlayers = players.stream().
-                map(Player::getId).
-                collect(Collectors.toList());
-        remoteReceiver.receiveSelectFromPlayers(viewPlayers, minPlayers, maxPlayers);
+        Runnable task = () -> {
+            List<String> viewPlayers = players.stream().
+                    map(Player::getId).
+                    collect(Collectors.toList());
+            remoteReceiver.receiveSelectFromPlayers(viewPlayers, minPlayers, maxPlayers);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendSelectFromRooms(List<Color> rooms) {
-        List<String> viewRooms = rooms.stream().
-                map(Color::name).
-                collect(Collectors.toList());
-        remoteReceiver.receiveSelectFromRooms(viewRooms);
+        Runnable task = () -> {
+            List<String> viewRooms = rooms.stream().
+                    map(Color::name).
+                    collect(Collectors.toList());
+            remoteReceiver.receiveSelectFromRooms(viewRooms);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles) {
-        List<ViewTileCoords> coords = tiles.stream().
-                map(ViewTileCoords::new).
-                collect(Collectors.toList());
-        remoteReceiver.receiveSelectFromTiles(coords, minTiles, maxTiles);
+        Runnable task = () -> {
+            List<ViewTileCoords> coords = tiles.stream().
+                    map(ViewTileCoords::new).
+                    collect(Collectors.toList());
+            remoteReceiver.receiveSelectFromTiles(coords, minTiles, maxTiles);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendSuccessConnection(String token) {
-        remoteReceiver.receiveSuccessConnection(token);
+        Runnable task = () ->
+                remoteReceiver.receiveSuccessConnection(token);
+        new Thread(task).start();
     }
 
     @Override
     public void sendTile(Tile tile) {
-        remoteReceiver.receiveTile(new ViewTile(tile));
+        Runnable task = () ->
+                remoteReceiver.receiveTile(new ViewTile(tile));
+        new Thread(task).start();
     }
 
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons) {
-        ViewBoard viewBoard = new ViewBoard(board);
-        Player receivingPlayer = players.stream().
-                filter(p-> p.getToken().equals(username)).
-                findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
-        ViewTileCoords perspective = new ViewTileCoords(receivingPlayer.getTile());
-        List<ViewPlayer> viewPlayers = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
-        List<ViewPowerUp> viewPowerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
-        List<String> viewLoadedWeapons = loadedWeapons.stream().map(Weapon::getName).collect(Collectors.toList());
-        remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
-                                            viewPlayers, idView, points,
-                                            viewPowerUps, viewLoadedWeapons);
+        Runnable task = () -> {
+            ViewBoard viewBoard = new ViewBoard(board);
+            Player receivingPlayer = players.stream().
+                    filter(p-> p.getToken().equals(username)).
+                    findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
+            ViewTileCoords perspective = new ViewTileCoords(receivingPlayer.getTile());
+            List<ViewPlayer> viewPlayers = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
+            List<ViewPowerUp> viewPowerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
+            List<String> viewLoadedWeapons = loadedWeapons.stream().map(Weapon::getName).collect(Collectors.toList());
+            remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
+                    viewPlayers, idView, points,
+                    viewPowerUps, viewLoadedWeapons);
+        };
+        new Thread(task).start();
     }
 
     @Override
     public void sendWeaponTaken(Weapon takenWeapon, Weapon discardedWeapon, Player player) {
-        if (discardedWeapon == null)
-            remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), null, player.getId());
-        else
-            remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), discardedWeapon.getName(), player.getId());
+        Runnable task = () -> {
+            if (discardedWeapon == null)
+                remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), null, player.getId());
+            else
+                remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), discardedWeapon.getName(), player.getId());
+        };
+        new Thread(task).start();
     }
 
     /**
