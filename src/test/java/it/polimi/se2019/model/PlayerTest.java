@@ -66,7 +66,7 @@ class PlayerTest {
         testPlayer.addAmmo(Ammo.YELLOW);
         assertTrue(testPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
 
-        assertFalse(enemyPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
+        assertFalse(enemyPlayer.checkForAmmos(testWeapon.getCost(),enemyPlayer.getAmmos()));
 
     }
 

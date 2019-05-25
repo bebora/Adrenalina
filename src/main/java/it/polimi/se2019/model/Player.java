@@ -151,12 +151,12 @@ public class Player {
 	/**
 	 * Ordered list of reward points given to other players if player dies
 	 */
-	private ArrayList<Integer> rewardPoints;
+	private List<Integer> rewardPoints;
 
 	/**
 	 * Loaded and unloaded weapons owned by the Player
 	 */
-	private ArrayList<Weapon> weapons;
+	private List<Weapon> weapons;
 
 	/**
 	 * How many kills the player did in the current turn
@@ -177,7 +177,7 @@ public class Player {
 	/**
 	 * PowerUps cards owned by the Player
 	 */
-	private ArrayList<PowerUp> powerUps;
+	private List<PowerUp> powerUps;
 
 
 	/**
@@ -287,7 +287,7 @@ public class Player {
 		return online;
 	}
 
-	public ArrayList<Integer> getRewardPoints() {
+	public List<Integer> getRewardPoints() {
 		return rewardPoints;
 	}
 
@@ -307,9 +307,9 @@ public class Player {
 	 * @return <code>true</code> if the player has enough ammo
 	 * 		   <cose>false</cose> otherwise
 	 */
-	public Boolean checkForAmmos(List<Ammo> cost,List<Ammo> ammoPool){
+	public Boolean checkForAmmos(List<Ammo> cost, List<Ammo> ammoPool){
 		for (Ammo c : cost)
-			if (Collections.frequency(cost,c) > Collections.frequency(ammos,c))
+			if (Collections.frequency(cost, c) > Collections.frequency(ammoPool, c))
 				return false;
 		return true;
 	}
