@@ -15,38 +15,43 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class CliInputHandler implements Runnable{
-    BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-    String in;
-    CLI view;
-    EventUpdater eventUpdater;
+    private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    private String in;
+    private CLI view;
+    private EventUpdater eventUpdater;
+    private static final String wrongInputMessage = "Wrong input!";
 
-    public static void tileInfoMode(BufferedReader input) throws IOException {
-        String in;
+    private void tileInfoMode(BufferedReader input){
+        String in = "InitialValue";
         String[] inSplit;
-        int requestedX = 0;
-        int requestedY = 0;
-        ViewTile requestedTile = null;
+        int requestedX;
+        int requestedY;
         CLI.moveCursor(1,AsciiBoard.boardBottomBorder+6);
-        while((in = input.readLine()) != null && !in.equals("q")){
+        while(!in.equals("q")){
+            try{
+                in = input.readLine();
+            }catch (IOException e){
+                Logger.log(Priority.ERROR,"Failed to read stdin");
+            }
             CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder+6,AsciiBoard.boardBottomBorder+8,1);
             if(in.matches("^\\d+(,\\d+)")){
                 inSplit = in.split(",");
-                requestedTile = null;
                 CLI.moveCursor(1, AsciiBoard.boardBottomBorder+6);
                 CLI.cleanRow();
                 requestedX = Math.abs(Integer.parseInt(inSplit[0]));
                 requestedY = Math.abs(Integer.parseInt(inSplit[1]));
-                if (requestedY <= AsciiBoard.board.getTiles().size() && requestedY > 0 && requestedX <= AsciiBoard.board.getTiles().get(requestedY-1).size() && requestedX > 0) {
-                    requestedTile = AsciiBoard.board.getTiles().get(requestedY - 1).get(requestedX - 1);
-                    if(requestedTile != null )
-                        AsciiTile.drawTileInfo(requestedTile, 1, 1);
-                }
-                if(requestedTile == null){
-                    CLI.printMessage("The selected tile does not exist", " R");
-                }
+                AsciiBoard.requestTileInfo(requestedX,requestedY);
             }
             CLI.moveCursor(1, AsciiBoard.boardBottomBorder + 6);
             CLI.cleanRow();
+        }
+    }
+
+    private void infoWeapon(int i){
+        if(i < AsciiWeapon.displayedWeapons.size()){
+            AsciiWeapon.drawWeaponInfo(i);
+        }else{
+            CLI.printMessage("The selected weapon does not exist!","R");
         }
     }
 
@@ -91,7 +96,7 @@ public class CliInputHandler implements Runnable{
             if(viewP != null){
                 selectedViewPlayers.add(viewP.getId());
             }else {
-                CLI.printMessage("Wrong input", "R");
+                CLI.printMessage(wrongInputMessage, "R");
                 error=true;
                 break;
             }
@@ -113,7 +118,7 @@ public class CliInputHandler implements Runnable{
                 selectedCoords.add(new ViewTileCoords(x,y));
             }else
             {
-                CLI.printMessage("Wrong input","R");
+                CLI.printMessage(wrongInputMessage,"R");
                 error = true;
                 break;
             }
@@ -134,7 +139,7 @@ public class CliInputHandler implements Runnable{
         if(possibleDirections.contains(direction))
             eventUpdater.sendDirection(direction);
         else
-            CLI.printMessage("Wrong input","R");
+            CLI.printMessage(wrongInputMessage,"R");
     }
 
     private void parseAction(String action){
@@ -144,7 +149,7 @@ public class CliInputHandler implements Runnable{
         if(actions.contains(action))
             eventUpdater.sendAction(action);
         else
-            CLI.printMessage("Wrong input", "R");
+            CLI.printMessage(wrongInputMessage, "R");
     }
 
     private void parsePowerUps(String[] selection){
@@ -160,7 +165,7 @@ public class CliInputHandler implements Runnable{
             if(singlePowerUp != null){
                 selectedPowerUps.add(singlePowerUp);
             }else{
-                CLI.printMessage("Wrong input!", "R");
+                CLI.printMessage(wrongInputMessage, "R");
                 error = true;
                 break;
             }
@@ -170,6 +175,9 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    private void lobbyInput(BufferedReader input){
+
+    }
     public void run(){
         while(!in.equals("quit")){
             try{
@@ -182,7 +190,20 @@ public class CliInputHandler implements Runnable{
                 String[] inSplit = in.split("\\s");
                 switch (inSplit[0]){
                     case "SELECT":
-
+                        parseSelection(inSplit);
+                        break;
+                    case "TILE":
+                        tileInfoMode(input);
+                        break;
+                    case "WEAPON":
+                        if(inSplit.length > 2 && inSplit[2].matches("\\d"))
+                            infoWeapon(Integer.parseInt(inSplit[2]));
+                        else
+                            CLI.printMessage("Wrong format", "R");
+                        break;
+                    default:
+                        AsciiBoard.drawBoard(view.getPlayers());
+                        break;
                 }
             }
         }

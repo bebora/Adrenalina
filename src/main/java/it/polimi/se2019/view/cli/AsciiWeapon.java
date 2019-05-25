@@ -3,8 +3,12 @@ package it.polimi.se2019.view.cli;
 import it.polimi.se2019.view.ViewEffect;
 import it.polimi.se2019.view.ViewWeapon;
 
+import java.util.List;
+
 public class AsciiWeapon {
-    public static void drawWeaponInfo(ViewWeapon weapon){
+    static List<ViewWeapon> displayedWeapons;
+    public static void drawWeaponInfo(int weaponIndex){
+        ViewWeapon weapon = displayedWeapons.get(weaponIndex);
         CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.boardBottomBorder,AsciiBoard.offsetX);
         int x = AsciiBoard.offsetX;
         int y = AsciiBoard.offsetY;
@@ -39,4 +43,5 @@ public class AsciiWeapon {
         CLI.moveCursor(0, AsciiBoard.boardBottomBorder + 6);
         CLI.cleanRow();
     }
+
 }
