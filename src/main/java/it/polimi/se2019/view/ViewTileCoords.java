@@ -2,11 +2,13 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.model.board.Tile;
 
+import java.io.Serializable;
+
 /**
  * Position of a viewTile on the map
  * This class allows tiles to be sent without their unnecessary weapons and ammos
  */
-public class ViewTileCoords {
+public class ViewTileCoords implements Serializable {
     private int posx;
     private int posy;
 

@@ -2,42 +2,47 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ViewBoard {
+public class ViewBoard implements Serializable {
 
-	public ViewBoard(List<List<ViewTile>> tiles, List<String> killShotTrack,
+	public ViewBoard(List<ArrayList<ViewTile>> tiles, List<String> killShotTrack,
 					 List<ViewDoor> doors, int skulls) {
-		this.tiles = tiles;
-		this.killShotTrack = killShotTrack;
-		this.doors = doors;
+		this.tiles = new ArrayList<>(tiles);
+		this.killShotTrack = new ArrayList<>(killShotTrack);
+		this.doors = new ArrayList<>(doors);
 		this.skulls = skulls;
 	}
 
-	private List<List<ViewTile>> tiles;
+	private ArrayList<ArrayList<ViewTile>> tiles;
 
-	private List<String> killShotTrack;
+	private ArrayList<String> killShotTrack;
 
-	private List<ViewDoor> doors;
+	private ArrayList<ViewDoor> doors;
 
 	private int skulls;
 
-	public List<List<ViewTile>> getTiles() {
+	public ArrayList<ArrayList<ViewTile>> getTiles() {
 		return tiles;
 	}
 	public ViewBoard (Board board){
 		this.tiles = board.getTiles().stream().
 				map(line -> line.stream().
-						map(t -> t == null ? null : new ViewTile(t)).collect(Collectors.toList())).
-				collect(Collectors.toList());
-		this.killShotTrack = board.getKillShotTrack().stream().map(Player::getId).collect(Collectors.toList());
+						map(t -> t == null ? null : new ViewTile(t)).
+						collect(Collectors.toCollection(ArrayList::new))).
+				collect(Collectors.toCollection(ArrayList::new));
+		this.killShotTrack = board.getKillShotTrack().stream().
+				map(Player::getId).
+				collect(Collectors.toCollection(ArrayList::new));
 		this.doors = board.getDoors().stream().
-				map(ViewDoor::new).collect(Collectors.toList());
+				map(ViewDoor::new).
+				collect(Collectors.toCollection(ArrayList::new));
 		this.skulls = board.getSkulls();
 	}
 
-	public boolean isLinked(ViewTile tile1,ViewTile tile2, boolean throughWalls) {
+	public boolean isLinked(ViewTile tile1, ViewTile tile2, boolean throughWalls) {
 		if (!throughWalls)
 			return doors.contains(new ViewDoor(tile1,tile2)) || (tile1.getRoom().equals(tile2.getRoom()) && ViewTile.cabDistance(tile1,tile2) == 1);
 		else return ViewTile.cabDistance(tile1,tile2) == 1;

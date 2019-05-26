@@ -3,14 +3,16 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.Weapon;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ViewWeapon {
+public class ViewWeapon implements Serializable {
     private String name;
     private boolean loaded;
-    private List<String> cost;
-    private List<ViewEffect> effects;
+    private ArrayList<String> cost;
+    private ArrayList<ViewEffect> effects;
 
 
     public ViewWeapon(Weapon weapon){
@@ -18,10 +20,10 @@ public class ViewWeapon {
         this.loaded = weapon.getLoaded();
         this.effects = weapon.getEffects().stream()
                 .map(ViewEffect::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
         this.cost = weapon.getCost().stream()
                 .map(Ammo::name)
-                .collect(Collectors.toList());
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String getName() { return name; }

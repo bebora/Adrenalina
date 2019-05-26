@@ -4,10 +4,10 @@ import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.ArrayList;
 
 /**
- * Interface used by RMI
+ * Interface used by RMI server to receive updates
  */
 public interface RequestDispatcherInterface {
 
@@ -17,15 +17,15 @@ public interface RequestDispatcherInterface {
 
     void receiveEffect(String effect) throws RemoteException;
 
-    void receivePlayers(List<String> players) throws RemoteException;
+    void receivePlayers(ArrayList<String> players) throws RemoteException;
 
-    void receivePowerUps(List<ViewPowerUp> powerUps, boolean discarded) throws RemoteException;
+    void receivePowerUps(ArrayList<ViewPowerUp> powerUps, boolean discarded) throws RemoteException;
 
     void receiveRoom(String room) throws RemoteException ;
 
     void receiveStopAction(boolean reverse) throws RemoteException;
 
-    void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException;
+    void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException;
 
     void receiveWeapon(String weapon) throws RemoteException;
 

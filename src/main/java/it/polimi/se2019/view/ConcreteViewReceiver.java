@@ -3,6 +3,7 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param playerAmmos
      */
     @Override
-    public void receiveAmmosTaken(String playerId, List<String> playerAmmos) {
+    public void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos) {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setAmmos(playerAmmos);
     }
@@ -56,13 +57,13 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param actions
      */
     @Override
-    public void receiveAvailableActions(String playerId, List<ViewAction> actions) {
+    public void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setActions(actions);
     }
 
     @Override
-    public void receiveCurrentOptions(List<String> options) {
+    public void receiveCurrentOptions(ArrayList<String> options) {
         //TODO show options to player
     }
 
@@ -93,7 +94,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param maxPlayers
      */
     @Override
-    public void receiveSelectFromPlayers(List<String> players, int minPlayers, int maxPlayers) {
+    public void receiveSelectFromPlayers(ArrayList<String> players, int minPlayers, int maxPlayers) {
         //TODO show possible players to the receiver player
         List<ViewPlayer> viewPlayers = players.stream().
                 map(p->helper.getPlayerFromId(p)).
@@ -105,7 +106,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param rooms
      */
     @Override
-    public void receiveSelectFromRooms(List<String> rooms) {
+    public void receiveSelectFromRooms(ArrayList<String> rooms) {
         //TODO show possible rooms to the player
         List<Color> viewRooms = rooms.stream().
                 map(Color::valueOf).
@@ -119,7 +120,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param maxTiles
      */
     @Override
-    public void receiveSelectFromTiles(List<ViewTileCoords> coords, int minTiles, int maxTiles) {
+    public void receiveSelectFromTiles(ArrayList<ViewTileCoords> coords, int minTiles, int maxTiles) {
         //TODO show possible tiles to the player
         List<ViewTile> tiles = coords.stream().
                 map(helper::getTileFromCoords).
@@ -162,8 +163,8 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      */
     @Override
     public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
-                                   List<ViewPlayer> players, String idView, int points,
-                                   List<ViewPowerUp> powerUps, List<String> loadedWeapons) {
+                                   ArrayList<ViewPlayer> players, String idView, int points,
+                                   ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons) {
         linkedView.setUsername(username);
         linkedView.setBoard(board);
         linkedView.setPerspective(helper.getTileFromCoords(perspective));

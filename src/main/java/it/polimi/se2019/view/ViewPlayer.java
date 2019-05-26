@@ -2,25 +2,35 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.cards.Weapon;
 
+
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class ViewPlayer {
+public class ViewPlayer implements Serializable {
 
 	public ViewPlayer(Player player) {
 		this.color = player.getColor().name();
 		this.username = player.getToken().split("@")[0];
 		this.id = player.getId();
-		this.damages = player.getDamages().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
-		this.marks = player.getMarks().stream().map(p -> p.getColor().name()).collect(Collectors.toList());
-		this.ammos = player.getAmmos().stream().map(Ammo::name).collect(Collectors.toList());
+		this.damages = player.getDamages().stream().
+				map(p -> p.getColor().name()).
+				collect(Collectors.toCollection(ArrayList::new));
+		this.marks = player.getMarks().stream().
+				map(p -> p.getColor().name()).
+				collect(Collectors.toCollection(ArrayList::new));
+		this.ammos = player.getAmmos().stream().
+				map(Ammo::name).
+				collect(Collectors.toCollection(ArrayList::new));
 		this.firstPlayer = player.getFirstPlayer();
-		this.actions = player.getActions().stream().map(ViewAction::new).collect(Collectors.toList());
-		this.rewardPoints = player.getRewardPoints();
+		this.actions = player.getActions().stream().
+				map(ViewAction::new).
+				collect(Collectors.toCollection(ArrayList::new));
+		this.rewardPoints = new ArrayList<>(player.getRewardPoints());
 		this.unloadedWeapons = player.getWeapons().stream().
-				filter(w -> !w.getLoaded()).map(ViewWeapon::new).collect(Collectors.toList());
+				filter(w -> !w.getLoaded()).map(ViewWeapon::new).
+				collect(Collectors.toCollection(ArrayList::new));
 		this.actionCount = player.getActionCount();
 		this.alive = player.getAlive();
 		this.dominationSpawn = player.getDominationSpawn();
@@ -35,19 +45,19 @@ public class ViewPlayer {
 
 	private String id;
 
-	private List<String> damages;
+	private ArrayList<String> damages;
 
-	private List<String> marks;
+	private ArrayList<String> marks;
 
-	private List<String> ammos;
+	private ArrayList<String> ammos;
 
 	private Boolean firstPlayer;
 
-	private List<ViewAction> actions;
+	private ArrayList<ViewAction> actions;
 
-	private List<Integer> rewardPoints;
+	private ArrayList<Integer> rewardPoints;
 
-	private List<ViewWeapon> unloadedWeapons;
+	private ArrayList<ViewWeapon> unloadedWeapons;
 
 	private int actionCount;
 
@@ -68,7 +78,7 @@ public class ViewPlayer {
 	}
 
 	public void setAmmos(List<String> ammos) {
-		this.ammos = ammos;
+		this.ammos = new ArrayList<>(ammos);
 	}
 
 	public List<String> getAmmos(){return ammos;}
@@ -90,7 +100,7 @@ public class ViewPlayer {
 	}
 
 	public void setActions(List<ViewAction> actions) {
-		this.actions = actions;
+		this.actions = new ArrayList<>(actions);
 	}
 
 	public List<ViewAction> getActions(){ return this.actions;}
@@ -100,10 +110,10 @@ public class ViewPlayer {
 	}
 
 	public void setDamages(List<String> damages) {
-		this.damages = damages;
+		this.damages = new ArrayList<>(damages);
 	}
 
 	public void setMarks(List<String> marks) {
-		this.marks = marks;
+		this.marks = new ArrayList<>(marks);
 	}
 }

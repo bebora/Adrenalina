@@ -2,25 +2,27 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.view.*;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Interface for the view that will receive updates from controller/model
  */
-public interface ViewReceiverInterface {
-    void receiveAmmosTaken(String playerId, List<String> playerAmmos);
+public interface ViewReceiverInterface extends Serializable {
+    void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos);
     void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount);
-    void receiveAvailableActions(String playerId, List<ViewAction> actions);
-    void receiveCurrentOptions(List<String> options);
+    void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions);
+    void receiveCurrentOptions(ArrayList<String> options);
     void receiveMovePlayer(String playerId, ViewTileCoords coords);
     void receivePopupMessage(String message);
-    void receiveSelectFromPlayers(List<String> players, int minPlayers, int maxPlayers);
-    void receiveSelectFromRooms(List<String> rooms);
-    void receiveSelectFromTiles(List<ViewTileCoords> coords, int minPlayers, int maxPlayers);
+    void receiveSelectFromPlayers(ArrayList<String> players, int minPlayers, int maxPlayers);
+    void receiveSelectFromRooms(ArrayList<String> rooms);
+    void receiveSelectFromTiles(ArrayList<ViewTileCoords> coords, int minPlayers, int maxPlayers);
     void receiveSuccessConnection(String token);
     void receiveTile(ViewTile tile);
     void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
-                             List<ViewPlayer> players, String idView, int points,
-                             List<ViewPowerUp> powerUps, List<String> loadedWeapons);
+                             ArrayList<ViewPlayer> players, String idView, int points,
+                             ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons);
     void receiveWeaponTaken(String takenWeapon, String discardedWeapon, String playerId);
 }

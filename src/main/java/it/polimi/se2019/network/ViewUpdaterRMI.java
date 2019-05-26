@@ -9,6 +9,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,9 +23,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendAmmosTaken(Player player) {
         Runnable task = () -> {
-            List<String> playerAmmos = player.getAmmos().stream().
+            ArrayList<String> playerAmmos = player.getAmmos().stream().
                     map(Ammo::name).
-                    collect(Collectors.toList());
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveAmmosTaken(player.getId(), playerAmmos);
         };
         new Thread(task).start();
@@ -40,9 +41,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendAvailableActions(Player player) {
         Runnable task = () -> {
-            List<ViewAction> actions = player.getActions().stream().
+            ArrayList<ViewAction> actions = player.getActions().stream().
                     map(ViewAction::new).
-                    collect(Collectors.toList());
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveAvailableActions(player.getId(), actions);
         };
         new Thread(task).start();
@@ -51,7 +52,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendCurrentOptions(List<String> options) {
         Runnable task = () ->
-                remoteReceiver.receiveCurrentOptions(options);
+                remoteReceiver.receiveCurrentOptions(new ArrayList<>(options));
         new Thread(task).start();
     }
 
@@ -72,9 +73,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers) {
         Runnable task = () -> {
-            List<String> viewPlayers = players.stream().
+            ArrayList<String> viewPlayers = players.stream().
                     map(Player::getId).
-                    collect(Collectors.toList());
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveSelectFromPlayers(viewPlayers, minPlayers, maxPlayers);
         };
         new Thread(task).start();
@@ -83,9 +84,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendSelectFromRooms(List<Color> rooms) {
         Runnable task = () -> {
-            List<String> viewRooms = rooms.stream().
+            ArrayList<String> viewRooms = rooms.stream().
                     map(Color::name).
-                    collect(Collectors.toList());
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveSelectFromRooms(viewRooms);
         };
         new Thread(task).start();
@@ -94,9 +95,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles) {
         Runnable task = () -> {
-            List<ViewTileCoords> coords = tiles.stream().
+            ArrayList<ViewTileCoords> coords = tiles.stream().
                     map(ViewTileCoords::new).
-                    collect(Collectors.toList());
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveSelectFromTiles(coords, minTiles, maxTiles);
         };
         new Thread(task).start();
@@ -126,9 +127,15 @@ public class ViewUpdaterRMI implements ViewUpdater {
                     filter(p-> p.getToken().equals(username)).
                     findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
             ViewTileCoords perspective = new ViewTileCoords(receivingPlayer.getTile());
-            List<ViewPlayer> viewPlayers = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
-            List<ViewPowerUp> viewPowerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
-            List<String> viewLoadedWeapons = loadedWeapons.stream().map(Weapon::getName).collect(Collectors.toList());
+            ArrayList<ViewPlayer> viewPlayers = players.stream().
+                    map(ViewPlayer::new).
+                    collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<ViewPowerUp> viewPowerUps = powerUps.stream().
+                    map(ViewPowerUp::new).
+                    collect(Collectors.toCollection(ArrayList::new));
+            ArrayList<String> viewLoadedWeapons = loadedWeapons.stream().
+                    map(Weapon::getName).
+                    collect(Collectors.toCollection(ArrayList::new));
             remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
                     viewPlayers, idView, points,
                     viewPowerUps, viewLoadedWeapons);

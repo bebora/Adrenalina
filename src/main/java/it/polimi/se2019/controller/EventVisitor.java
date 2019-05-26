@@ -7,6 +7,7 @@ import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,7 +59,7 @@ public class EventVisitor {
     public void visit(SelectPlayers event) {
         List<String> playerIds = event.getPlayerIds();
         try {
-            requestHandler.receivePlayers(playerIds);
+            requestHandler.receivePlayers(new ArrayList<>(playerIds));
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
@@ -69,7 +70,7 @@ public class EventVisitor {
         List<ViewPowerUp> powerups = selectPowerUps.getPowerUps();
         boolean discard = selectPowerUps.isDiscarded();
         try {
-            requestHandler.receivePowerUps(powerups, discard);
+            requestHandler.receivePowerUps(new ArrayList<>(powerups), discard);
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
@@ -97,7 +98,7 @@ public class EventVisitor {
     public void visit(SelectTiles event){
         List<ViewTileCoords> viewTiles = event.getSelectedTiles();
         try {
-            requestHandler.receiveTiles(viewTiles);
+            requestHandler.receiveTiles(new ArrayList<>(viewTiles));
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());

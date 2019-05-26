@@ -2,7 +2,9 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.model.cards.PowerUp;
 
-public class ViewPowerUp {
+import java.io.Serializable;
+
+public class ViewPowerUp implements Serializable {
     private String discardAward;
     private String name;
 

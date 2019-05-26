@@ -12,6 +12,7 @@ import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     }
 
     @Override
-    public void receivePlayers(List<String> players) throws RemoteException {
+    public void receivePlayers(ArrayList<String> players) throws RemoteException {
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
@@ -102,7 +103,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     }
 
     @Override
-    public void receivePowerUps(List<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
+    public void receivePowerUps(ArrayList<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
@@ -154,7 +155,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     }
 
     @Override
-    public void receiveTiles(List<ViewTileCoords> viewTiles) throws RemoteException {
+    public void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException {
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.TILES)) {

@@ -2,6 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.model.updatemessage.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateVisitor {
@@ -10,7 +11,7 @@ public class UpdateVisitor {
     public void visit(AmmosTakenUpdate update) {
         List<String> ammos= update.getPlayerAmmos();
         String playerId = update.getPlayerId();
-        concreteViewReceiver.receiveAmmosTaken(playerId,ammos);
+        concreteViewReceiver.receiveAmmosTaken(playerId, new ArrayList<>(ammos));
     }
     public void visit(AttackPlayerUpdate update) {
         String attackerId = update.getAttackerId();
@@ -22,10 +23,10 @@ public class UpdateVisitor {
     public void visit(AvailableActionsUpdate update) {
         List<ViewAction> actions = update.getActions();
         String playerId = update.getPlayerId();
-        concreteViewReceiver.receiveAvailableActions(playerId, actions);
+        concreteViewReceiver.receiveAvailableActions(playerId, new ArrayList<>(actions));
     }
     public void visit(CurrentOptionsUpdate update) {
-        concreteViewReceiver.receiveCurrentOptions(update.getOptions());
+        concreteViewReceiver.receiveCurrentOptions(new ArrayList<>(update.getOptions()));
     }
     public void visit(MovePlayerUpdate update) {
         String playerId = update.getPlayerId();
@@ -41,17 +42,17 @@ public class UpdateVisitor {
         List<String> players = update.getPlayers();
         int minPlayers = update.getMinPlayers();
         int maxPlayers = update.getMaxPlayers();
-        concreteViewReceiver.receiveSelectFromPlayers(players,minPlayers,maxPlayers);
+        concreteViewReceiver.receiveSelectFromPlayers(new ArrayList<>(players), minPlayers, maxPlayers);
     }
     public void visit(SelectFromRoomsUpdate update) {
         List<String> rooms = update.getRooms();
-        concreteViewReceiver.receiveSelectFromRooms(rooms);
+        concreteViewReceiver.receiveSelectFromRooms(new ArrayList<>(rooms));
     }
     public void visit(SelectFromTilesUpdate update) {
         List<ViewTileCoords> tiles = update.getCoords();
         int minPlayers = update.getMinTiles();
         int maxPlayers = update.getMaxTiles();
-        concreteViewReceiver.receiveSelectFromTiles(tiles, minPlayers, maxPlayers);
+        concreteViewReceiver.receiveSelectFromTiles(new ArrayList<>(tiles), minPlayers, maxPlayers);
     }
     public void visit(SuccessConnectionUpdate update) {
         String token = update.getToken();
@@ -76,11 +77,11 @@ public class UpdateVisitor {
         concreteViewReceiver.receiveTotalUpdate(username,
                 board,
                 perspective,
-                players,
+                new ArrayList<>(players),
                 idView,
                 points,
-                powerUps,
-                loadedWeapons);
+                new ArrayList<>(powerUps),
+                new ArrayList<>(loadedWeapons));
     }
     public void visit(WeaponTakenUpdate update) {
         String takenWeapon = update.getTakenWeapon();

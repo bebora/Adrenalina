@@ -14,6 +14,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,7 +109,7 @@ public class EventUpdaterRMI implements EventUpdater{
     public void sendPlayers(List<String> players) {
         Runnable task = () -> {
             try {
-                remoteHandler.receivePlayers(players);
+                remoteHandler.receivePlayers(new ArrayList<>(players));
             }
             catch (RemoteException e){
                 Logger.log(Priority.ERROR, "Failed to send player");
@@ -122,7 +123,7 @@ public class EventUpdaterRMI implements EventUpdater{
     public void sendPowerUp(List<ViewPowerUp> viewPowerUps, boolean discard) {
         Runnable task = () -> {
             try {
-                remoteHandler.receivePowerUps(viewPowerUps, discard);
+                remoteHandler.receivePowerUps(new ArrayList<>(viewPowerUps), discard);
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Failed to send powerup");
@@ -148,7 +149,7 @@ public class EventUpdaterRMI implements EventUpdater{
     public void sendTiles(List<ViewTileCoords> tiles) {
         Runnable task = () -> {
             try {
-                remoteHandler.receiveTiles(tiles);
+                remoteHandler.receiveTiles(new ArrayList<>(tiles));
             }
             catch (RemoteException e){
                 Logger.log(Priority.ERROR, "Failed to send tiles");

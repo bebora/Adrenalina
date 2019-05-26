@@ -13,7 +13,6 @@ import java.util.List;
  * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
-    //TODO add sendDirection
     void sendAction(String action);
 
     /**

@@ -6,7 +6,6 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.view.*;
 
 import java.util.List;
 
