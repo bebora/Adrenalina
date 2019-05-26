@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 class LobbyControllerTest {
     /**
      * Example test on using the fake virtualview for debugging, using it for adding a player to lobbyController
@@ -20,10 +22,24 @@ class LobbyControllerTest {
         EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
         try {
             eventUpdater.login(vv, "fabio", "rizzo", false, "NORMAL");
+            eventUpdater.login(vv, "simone", "rigoli", false, "NORMAL");
+            eventUpdater.login(vv, "simona", "rizzo", false, "NORMAL");
+            eventUpdater.login(vv, "simona1", "rizzo", false, "NORMAL");
+            assertEquals(4,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
+            eventUpdater.login(vv, "simona2", "rizzo", false, "NORMAL");
+
         }
         catch (RemoteException e) {
             System.out.println(e);
         }
-    }
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e){
+            assertEquals(false, true);
+        }
+        assertEquals(0,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
 
+    }
 }
+

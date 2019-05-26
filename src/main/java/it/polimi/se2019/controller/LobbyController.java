@@ -4,19 +4,17 @@ import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.VirtualView;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Manage new Players connection and reconnections.
  * Handles the creation and the linking to the VirtualViews, checking if the username is already used in an active game.
  */
-public class LobbyController{
+public class LobbyController extends Thread{
     private List<GameController> games;
     private Map<Mode, List<Player>> waitingPlayers;
+    private Map<Mode, Timer> waitingTimers;
 
     public LobbyController(List<Mode> modes) {
         waitingPlayers = new EnumMap<>(Mode.class);
@@ -24,6 +22,8 @@ public class LobbyController{
             waitingPlayers.put(mode, new ArrayList<>());
         }
         games = new ArrayList<>();
+        waitingTimers = new EnumMap<>(Mode.class);
+
     }
 
     /**
@@ -62,7 +62,7 @@ public class LobbyController{
      * @param password
      * @param mode
      */
-    public void connectPlayer(String username, String password, String mode, VirtualView view) {
+    public synchronized void connectPlayer(String username, String password, String mode, VirtualView view) {
         for (GameController game : games) {
             List<String> allUsername = game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
@@ -74,19 +74,28 @@ public class LobbyController{
                 //TODO throw exception to close the connection
             }
         }
-            String token = String.format("%s$%s", username, password.hashCode());
-            Player player = new Player(token);
-            player.setVirtualView(view);
-            List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
-            if (modeWaiting == null) {
-                //TODO Send UPDATE to view saying mode is wrong :O
-                //TODO throw exception to close the connection
-            } else {
-                modeWaiting.add(player);
-                //TODO start timer when players are 3
+        String token = String.format("%s$%s", username, password.hashCode());
+        Player player = new Player(token);
+        player.setVirtualView(view);
+        List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
+        if (modeWaiting == null) {
+            //TODO Send UPDATE to view saying mode is wrong :O
+            //TODO throw exception to close the connection
+        } else {
+            modeWaiting.add(player);
+            if (modeWaiting.size() == 3) {
+                Timer timer = new Timer();
+                waitingTimers.put(Mode.valueOf(mode), timer);
+                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 50000);
                 //TODO send popup update success
             }
+            else if (modeWaiting.size() == 5) {
+                waitingTimers.get(Mode.valueOf(mode)).cancel();
+                Timer timer = new Timer();
+                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 0);
+            }
         }
+    }
 
     public RequestDispatcher getRequestHandler(String token) {
         for (GameController game :games) {
@@ -106,5 +115,14 @@ public class LobbyController{
     public Map<Mode, List<Player>> getWaitingPlayers() {
         return waitingPlayers;
     }
-}
 
+    public synchronized void startGame(Mode mode) {
+        List<Player> playing = new ArrayList<>(waitingPlayers.get(mode));
+        if (playing.size() > 5) {
+            playing = playing.subList(0,5);
+        }
+        waitingPlayers.get(mode).removeAll(playing);
+        GameController gameController = new GameController(playing, "board1.btlb", 8, mode.equals(Mode.DOMINATION));
+        games.add(gameController);
+    }
+}

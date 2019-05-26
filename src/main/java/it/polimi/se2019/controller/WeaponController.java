@@ -81,7 +81,7 @@ public class WeaponController extends Observer {
             lastUsedIndex = -1;
             weapon = newWeapon;
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(60,
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);

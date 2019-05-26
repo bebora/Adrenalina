@@ -12,7 +12,6 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class TimerCostrainedEventHandler extends Thread implements EventHandler {
     private long start;
@@ -46,10 +45,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public void run() {
         requestDispatcher.addReceivingType(receivingTypes, this);
         this.start = System.currentTimeMillis();
-        while (!active) {
+        while (active) {
             checkFinished();
             try {
-                TimeUnit.MINUTES.sleep(1);
+                Thread.sleep(1000);
             }
             catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "COULDN'T SLEEP");
