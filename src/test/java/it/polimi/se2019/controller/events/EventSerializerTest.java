@@ -32,7 +32,7 @@ class EventSerializerTest {
         System.out.println(json);
         JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
         assertEquals("SelectTiles", jsonObject.get("type").getAsString());
-        JsonObject event = jsonObject = new JsonParser().parse(jsonObject.get("event").getAsString()).getAsJsonObject();
+        JsonObject event = new JsonParser().parse(jsonObject.get("event").getAsString()).getAsJsonObject();
         JsonArray array = event.getAsJsonArray("selectedTiles");
         assertEquals(1, array.get(1).getAsJsonObject().get("posx").getAsInt());
 

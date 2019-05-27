@@ -36,9 +36,9 @@ public class ActionControllerTest {
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
         Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().get(0);
         actionController.updateOnWeapon(grabbableWeapon);
-        assertEquals(grabbableWeapon,currentPlayer.getWeapons().get(0));
-        assertEquals(2,currentPlayer.getAmmos().size());
-        assertEquals(2,currentPlayer.getTile().getWeapons().size());
+        assertEquals(grabbableWeapon, currentPlayer.getWeapons().get(0));
+        assertEquals(2, currentPlayer.getAmmos().size());
+        assertEquals(2, currentPlayer.getTile().getWeapons().size());
     }
 
     @Test

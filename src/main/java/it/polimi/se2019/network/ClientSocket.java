@@ -27,7 +27,7 @@ import java.util.concurrent.SynchronousQueue;
 public class ClientSocket {
     private Socket socket;
     private boolean keepAlive;
-    private BlockingQueue queue = new SynchronousQueue();
+    private BlockingQueue<EventVisitable> queue = new SynchronousQueue<>();
     private UpdateVisitor updateVisitor;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
@@ -66,6 +66,10 @@ public class ClientSocket {
         }
     }
 
+    public void addEventToQueue(EventVisitable event) {
+        this.queue.add(event);
+    }
+
     private class Updater extends Thread {
         @Override
         public void run() {
@@ -73,7 +77,7 @@ public class ClientSocket {
                 String json;
                 do {
                     try {
-                        json = (String) queue.take();
+                        json = gson.toJson(queue.take(), EventVisitable.class);
                         jsonSender.write(json, 0 ,json.length());
                         jsonSender.flush();
                     }

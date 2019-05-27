@@ -13,12 +13,12 @@ public class ConnectionRequest implements EventVisitable {
     private boolean existingGame;
     private String mode;
 
-    public ConnectionRequest(String username, String salt, String password, boolean signingUp, String mode)
+    public ConnectionRequest(String username, String password, boolean existingGame, String mode)
 
     {
         this.username = username;
         this.password = password;
-        this.existingGame = signingUp;
+        this.existingGame = existingGame;
         this.mode = mode;
     }
 

@@ -9,58 +9,64 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.util.List;
 
 public class EventUpdaterSocket implements EventUpdater{
-    //TODO add some sort of WorkerClientSocket or anything that can send the events
+    private ClientSocket socket;
+
+    public EventUpdaterSocket(ClientSocket socket) {
+        this.socket = socket;
+    }
+
     @Override
     public void sendAction(String action) {
         EventVisitable actionEvent = new SelectAction(action);
-        //TODO send event to server
+        socket.addEventToQueue(actionEvent);
     }
 
     @Override
     public void sendDirection(String direction) {
         EventVisitable directionEvent = new SelectDirection(direction);
-        //TODO send event to server
+        socket.addEventToQueue(directionEvent);
     }
 
     @Override
     public void sendEffect(String effect) {
         EventVisitable effectEvent = new SelectEffect(effect);
-        //TODO send event to server
+        socket.addEventToQueue(effectEvent);
     }
 
     @Override
     public void sendPlayers(List<String> players) {
-        EventVisitable actionEvent = new SelectPlayers(players);
-        //TODO send event to server
+        EventVisitable playerEvent = new SelectPlayers(players);
+        socket.addEventToQueue(playerEvent);
     }
 
     @Override
     public void sendPowerUp(List<ViewPowerUp> powerUp, boolean discard) {
-        EventVisitable actionEvent = new SelectPowerUps(powerUp, discard);
-        //TODO send event to server
+        EventVisitable powerupEvent = new SelectPowerUps(powerUp, discard);
+        socket.addEventToQueue(powerupEvent);
     }
 
     @Override
     public void sendRoom(String room) {
-        EventVisitable actionEvent = new SelectRoom(room);
-        //TODO send event to server
+        EventVisitable roomEvent = new SelectRoom(room);
+        socket.addEventToQueue(roomEvent);
     }
 
     @Override
     public void sendTiles(List<ViewTileCoords> tiles) {
-        EventVisitable actionEvent = new SelectTiles(tiles);
-        //TODO send event to server
+        EventVisitable tileEvent = new SelectTiles(tiles);
+        socket.addEventToQueue(tileEvent);
     }
 
     @Override
     public void sendWeapon(String weapon) {
-        EventVisitable actionEvent = new SelectWeapon(weapon);
-        //TODO send event to server
+        EventVisitable weaponEvent = new SelectWeapon(weapon);
+        socket.addEventToQueue(weaponEvent);
     }
 
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
-        //TODO throw exception or integrate ClientSocket login based on ConnectionRequest?
-        throw new UnsupportedOperationException();
+        //TODO check salt
+        EventVisitable loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
+        socket.addEventToQueue(loginEvent);
     }
 }

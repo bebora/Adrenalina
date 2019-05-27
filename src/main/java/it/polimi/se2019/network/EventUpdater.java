@@ -37,7 +37,7 @@ public interface EventUpdater {
      * @param view
      * @param nickname
      * @param password
-     * @param existingGame
+     * @param existingGame true if the player is reconnecting, false if the player wants to join a new match
      * @param mode
      */
     void login(View view,
