@@ -1,8 +1,11 @@
 package it.polimi.se2019.view;
+
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.util.List;
+import java.util.Queue;
 
 /**
  * View used by the clients for:
@@ -11,6 +14,7 @@ import java.util.List;
  * <li>Sending events from the {@link #View#eventUpdater}</li>
  */
 public class View {
+	private Queue<String> messages;
 
 	private EventUpdater eventUpdater;
 
@@ -31,6 +35,8 @@ public class View {
 	private ViewTile perspective;
 
 	protected ViewReceiverInterface receiver;
+
+	private List<ReceivingType> types;
 
 	public View() {
 		this.receiver = new ConcreteViewReceiver(this);
@@ -119,4 +125,8 @@ public class View {
 	public EventUpdater getEventUpdater() {
 		return eventUpdater;
 	}
+
+	public synchronized void update() {
+
+    }
 }

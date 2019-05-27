@@ -86,7 +86,7 @@ public class LobbyController extends Thread{
             if (modeWaiting.size() == 3) {
                 Timer timer = new Timer();
                 waitingTimers.put(Mode.valueOf(mode), timer);
-                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 50000);
+                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
                 //TODO send popup update success
             }
             else if (modeWaiting.size() == 5) {

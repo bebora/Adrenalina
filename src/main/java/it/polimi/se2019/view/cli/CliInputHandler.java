@@ -179,6 +179,7 @@ public class CliInputHandler implements Runnable{
 
     }
     public void run(){
+        //TODO CHOICE SOCKET OR RMI
         while(!in.equals("quit")){
             try{
                 in = input.readLine();

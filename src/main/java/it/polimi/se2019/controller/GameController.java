@@ -32,12 +32,14 @@ public class GameController extends Observer {
             match = new DominationMatch(players,boardName,numSkulls);
         }
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
+        startTurn();
+        startTurn();
     }
 
     public void startTurn(){
         if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i<2; i++){
-                currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),true);
+                currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
             }
             //ask the player to discard one powerUp
         }
@@ -103,10 +105,10 @@ public class GameController extends Observer {
                     PowerUp discarded = p.getPowerUps().get(random.nextInt(p.getPowerUps().size()));
                     p.getPowerUps().remove(discarded);
                     p.setTile(match.getBoard().getTiles().stream()
-                    .flatMap(Collection::stream)
-                    .filter(Tile::isSpawn)
-                    .filter(t->t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
-                    .findFirst().orElse(null));
+                            .flatMap(Collection::stream)
+                            .filter(Tile::isSpawn)
+                            .filter(t->t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
+                            .findFirst().orElse(null));
                     p.setAlive(ThreeState.TRUE);
                 }
             }

@@ -10,11 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 //TODO refactor to new updating logic with receiver
 class UpdateVisitorTest {
-    static ClientView firstView;
+    static View firstView;
     static String username;
     static Board board;
     static List<Player> players;
@@ -26,7 +24,7 @@ class UpdateVisitorTest {
     static List<Weapon> loadedWeapons;
     @BeforeAll
     static void setup() {
-        firstView = new ClientView();
+        firstView = new View();
         username = "Noobmaster69";
         board = BoardCreator.parseBoard("board1.btlb",8);
         players = Arrays.asList(

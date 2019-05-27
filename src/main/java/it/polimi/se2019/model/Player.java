@@ -21,6 +21,7 @@ import static java.lang.Boolean.FALSE;
 public class Player {
 
 	public Player(String token) {
+		editing = new Object();
 		this.firstPlayer = false;
 		this.token = token;
 		this.color = Color.WHITE;
@@ -84,6 +85,8 @@ public class Player {
 		oldPlayer.ammos = this.ammos;
 		oldPlayer.powerUps = this.powerUps;
 	}
+
+	private Object editing;
 
 	/**
 	 * Tracks how many damages can be allocated in spawnpoints
@@ -391,10 +394,10 @@ public class Player {
 
 	/**
 	 * Reset Player when {@link #alive} is False
-	 * Clear the damages and draw a PowerUp, even if already three are present
+	 * Clear the damages
 	 */
 	public void resetPlayer() {
-		damages.clear();
+	    damages.clear();
 	}
 
 	/**

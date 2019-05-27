@@ -20,8 +20,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private Observer observer;
     private RequestDispatcher requestDispatcher;
     private List<ReceivingType> receivingTypes;
+    private GameController gameController;
 
     public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, List<ReceivingType> receivingTypes) {
+        //TODO put game controller
         this.time = time;
         active = true;
         this.observer = observer;
@@ -51,9 +53,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Thread.sleep(1000);
             }
             catch (InterruptedException e) {
-                Logger.log(Priority.WARNING, "COULDN'T SLEEP");
+                Logger.log(Priority.WARNING, "FINISHING SLEEP");
             }
         }
+        observer.updateOnStopSelection(false);
     }
 
     @Override
