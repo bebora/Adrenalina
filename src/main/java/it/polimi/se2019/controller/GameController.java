@@ -32,8 +32,6 @@ public class GameController extends Observer {
             match = new DominationMatch(players,boardName,numSkulls);
         }
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        startTurn();
-        startTurn();
     }
 
     public void startTurn(){

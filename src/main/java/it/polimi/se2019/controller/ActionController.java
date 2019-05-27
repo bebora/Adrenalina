@@ -124,7 +124,8 @@ public class ActionController extends Observer {
                 //ask for the remaining ammos
             }
             else {
-                curPlayer.getAmmos().removeAll(stillToPay);
+                for(Ammo a: stillToPay)
+                    curPlayer.getAmmos().remove(a);
                 concludePayment();
             }
         }else{

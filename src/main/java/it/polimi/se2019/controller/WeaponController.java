@@ -114,7 +114,8 @@ public class WeaponController extends Observer {
                 }
                 //ask to discard for missing ammos
             } else {
-                curPlayer.getAmmos().removeAll(stillToPay);
+                for(Ammo a: stillToPay)
+                    curPlayer.getAmmos().remove(a);
                 startEffect();
             }
         }
