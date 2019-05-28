@@ -200,9 +200,9 @@ public class EffectController extends Observer {
         }
     }
 
-    public void updateOnStopSelection(boolean reverse){
+    public void updateOnStopSelection(boolean reverse, boolean skip){
         if (reverse)
-            weaponController.updateOnStopSelection(reverse);
+            weaponController.updateOnStopSelection(true, skip);
     }
 
     /**

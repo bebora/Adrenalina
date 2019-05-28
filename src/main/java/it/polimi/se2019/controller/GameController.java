@@ -114,10 +114,15 @@ public class GameController extends Observer {
     }
 
     @Override
-    public void updateOnStopSelection(boolean reverse){
+    public void updateOnStopSelection(boolean reverse, boolean skip){
         if (reverse) {
             actionController = null;
-            playTurn();
+            if (skip) {
+                endTurn();
+            }
+            else {
+                playTurn();
+            }
         }
     }
 

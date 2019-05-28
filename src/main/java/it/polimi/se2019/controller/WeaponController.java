@@ -155,9 +155,9 @@ public class WeaponController extends Observer {
         }
     }
 
-    public void updateOnStopSelection(boolean reverse){
+    public void updateOnStopSelection(boolean reverse, boolean skip){
         if(reverse){
-            actionController.updateOnStopSelection(reverse);
+            actionController.updateOnStopSelection(true, skip);
         }
         else {
             if (weapon.getEffects().get(0).getActivated()) {

@@ -20,7 +20,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private Observer observer;
     private RequestDispatcher requestDispatcher;
     private List<ReceivingType> receivingTypes;
-    private GameController gameController;
 
     public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, List<ReceivingType> receivingTypes) {
         //TODO put game controller
@@ -56,7 +55,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Logger.log(Priority.WARNING, "FINISHING SLEEP");
             }
         }
-        observer.updateOnStopSelection(false);
+        observer.updateOnStopSelection(false, true);
     }
 
     @Override
@@ -108,7 +107,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     public synchronized  void receiveStop(boolean reverse) {
-        observer.updateOnStopSelection(reverse);
+        observer.updateOnStopSelection(reverse, false);
         endHandler();
     }
 

@@ -50,7 +50,7 @@ public class  Observer {
         throw new IncorrectEvent("Non accetto carte munizioni");
     }
 
-    public void updateOnStopSelection(boolean reverse) {
+    public void updateOnStopSelection(boolean reverse, boolean skip) {
         throw new IncorrectEvent("Non accetto reset!");
     }
 }
