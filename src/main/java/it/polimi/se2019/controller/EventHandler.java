@@ -30,4 +30,6 @@ public interface EventHandler {
 
     void receiveWeapon(Weapon weapon);
 
+    void setBlocked(boolean toblock);
+
 }

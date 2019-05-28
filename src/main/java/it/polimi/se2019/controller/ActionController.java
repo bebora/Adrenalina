@@ -129,6 +129,24 @@ public class ActionController extends Observer {
                 case MOVE:
                     receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
                     Set<Tile> selectableTiles = sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false);
+                    if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
+                        selectableTiles.removeAll(sandboxMatch.
+                                getBoard().
+                                getTiles().
+                                stream().
+                                flatMap(List::stream).
+                                filter(t -> t != null && (!t.isSpawn() && t.getAmmoCard() == null)).
+                                collect(Collectors.toList()));
+                        for (Tile t : sandboxMatch.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.isSpawn()).collect(Collectors.toList())) {
+                            boolean toRemove = true;
+                            for (Weapon weapon : t.getWeapons()) {
+                                if (curPlayer.checkForAmmos(weapon.getCost(), curPlayer.totalAmmoPool()))
+                                    toRemove = false;
+                            }
+                            if (toRemove)
+                                selectableTiles.remove(t);
+                        }
+                    }
                     timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                             this,
                             curPlayer.getVirtualView().getRequestDispatcher(),

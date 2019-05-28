@@ -106,24 +106,24 @@ public class EffectController extends Observer {
             processDealDamage();
     }
 
-    //TODO:complete the update method and add update for others input targets
-
     /**
-     * direction is the cardinal Direction in which the effect
-     * is applied. If the current value is null memorize the new value,
+     * If the current value is null memorize the new value,
      * otherwise tell the user to send another Direction
      * @param direction the Direction in which the effect is applied
      * @see Direction
      */
     public void updateOnDirection(Direction direction){
         if(curEffect.getDirection() == null){
+            player.getVirtualView().getRequestDispatcher().clear();
             curEffect.setDirection(direction);
             processStep();
         }
-        else if(curEffect.getDirection() == direction)
+        else if(curEffect.getDirection() == direction) {
+            player.getVirtualView().getRequestDispatcher().clear();
             processStep();
+        }
         else {
-            //signals that the direction is not the same as the previous step
+            //TODO ask user for same direction as curEffect.getDirection()!
         }
     }
 
@@ -360,6 +360,7 @@ public class EffectController extends Observer {
     private void updateMoveOnPlayers(List<Player> originalTargetPlayers){
         List<Player> players = getSandboxPlayers(originalTargetPlayers);
         if(checkPlayerTargets(curMove.getTargetSource(),players)) {
+            player.getVirtualView().getRequestDispatcher().clear();
             if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
                 pointOfView = players.get(0).getTile();
             askingForSource = false;
@@ -367,7 +368,7 @@ public class EffectController extends Observer {
             //ask for targetDestination
         }
         else{
-            //communicate the error to the player
+            //TODO send error to the player
         }
     }
 

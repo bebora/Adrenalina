@@ -17,6 +17,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private long start;
     private int time;
     private boolean active;
+    private boolean blocked;
     private Observer observer;
     private RequestDispatcher requestDispatcher;
     private List<ReceivingType> receivingTypes;
@@ -28,6 +29,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         this.observer = observer;
         this.requestDispatcher = requestDispatcher;
         this.receivingTypes = receivingTypes;
+        this.blocked = false;
     }
 
     public void endHandler() {
@@ -42,11 +44,15 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     }
 
+    public synchronized void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     @Override
     public void run() {
         requestDispatcher.addReceivingType(receivingTypes, this);
         this.start = System.currentTimeMillis();
-        while (active) {
+        while (active && !blocked) {
             checkFinished();
             try {
                 Thread.sleep(1000);
@@ -56,7 +62,9 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             }
             Logger.log(Priority.DEBUG, "Millis remaining: " + (System.currentTimeMillis() - this.start));
         }
-        observer.updateOnStopSelection(false, true);
+        if (!blocked) {
+            observer.updateOnStopSelection(false, true);
+        }
     }
 
     @Override

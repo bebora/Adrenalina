@@ -30,10 +30,12 @@ public class RequestDispatcher implements RequestDispatcherInterface{
 
     public void clear() {
         synchronized (lock) {
+            for (EventHandler eventHandler : observerTypes.values()) {
+                eventHandler.setBlocked(true);
+            }
             observerTypes.clear();
             //TODO SEND UPDATE STOP ASKING FOR THINGS
         }
-
     }
 
     public RequestDispatcher(ViewUpdater viewUpdater) {
