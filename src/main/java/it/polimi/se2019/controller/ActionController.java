@@ -16,6 +16,12 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static it.polimi.se2019.controller.ReceivingType.STOP;
+import static it.polimi.se2019.controller.ReceivingType.WEAPON;
+import static it.polimi.se2019.model.actions.SubAction.GRAB;
 
 //TODO: substitute comments with actual methods to communicate with the view
 public class ActionController extends Observer {
@@ -46,11 +52,14 @@ public class ActionController extends Observer {
             curAction = action;
             nextStep();
         }
+        else {
+            //TODO send update wrong action selected! try again!
+        }
     }
 
     @Override
     public void updateOnWeapon(Weapon weapon){
-        if(curSubAction == SubAction.GRAB){
+        if(curSubAction == GRAB){
             if(curPlayer.getTile().getWeapons().contains(weapon)){
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 selectedWeapon = weapon;
@@ -72,7 +81,7 @@ public class ActionController extends Observer {
 
     @Override
     public void updateOnAmmoCard(AmmoCard ammoCard){
-        if(curSubAction == SubAction.GRAB){
+        if(curSubAction == GRAB){
             if(curPlayer.getTile().getAmmoCard() == ammoCard){
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 ammoCard.getAmmos().forEach(a -> curPlayer.addAmmo(a));
@@ -114,19 +123,62 @@ public class ActionController extends Observer {
             gameController.updateOnConclusion();
         }else{
             curSubAction = curAction.getSubActions().get(subActionIndex);
-            //TODO: @luca i meant this
+            List<ReceivingType> receivingTypes;
             switch(curSubAction){
                 case MOVE:
-                    //ask for tile
+                    receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
+                    Set<Tile> selectableTiles = sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false);
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                            this,
+                            curPlayer.getVirtualView().getRequestDispatcher(),
+                            receivingTypes);
+                    timerCostrainedEventHandler.start();
+                    //TODO send update with selectable tiles
                     break;
                 case SHOOT:
-                    //ask for weapon
+                    receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                            this,
+                            curPlayer.getVirtualView().getRequestDispatcher(),
+                            receivingTypes);
+                    timerCostrainedEventHandler.start();
+                    List<Weapon> weaponsSelectable = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
+                    //TODO send update with selectable weapons!
                     break;
                 case GRAB:
-                    //ask for weapon or ammocard
+                    if (curPlayer.getTile().isSpawn()) {
+                        receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
+                        List<Weapon> weaponsGrabbable = curPlayer.
+                                getTile().
+                                getWeapons().
+                                stream().
+                                filter(p -> curPlayer.checkForAmmos(p.getCost(), curPlayer.totalAmmoPool())).
+                                collect(Collectors.toList());
+                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                                this,
+                                curPlayer.getVirtualView().getRequestDispatcher(),
+                                receivingTypes);
+                        timerCostrainedEventHandler.start();
+                        //TODO send update with weaponsgrabbable
+                    }
+                    else {
+                        curPlayer.getTile().getAmmoCard().getAmmos().stream().forEach(curPlayer::addAmmo);
+                        nextStep();
+                    }
                     break;
                 case RELOAD:
-                    //ask for weapon
+                    receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, STOP));
+                    List<Weapon> weaponsReloadable = curPlayer.
+                            getWeapons().
+                            stream().
+                            filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost(), curPlayer.totalAmmoPool())).
+                            collect(Collectors.toList());
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                            this,
+                            curPlayer.getVirtualView().getRequestDispatcher(),
+                            receivingTypes);
+                    timerCostrainedEventHandler.start();
+                    //TODO send update with weaponsreloadable
                     break;
                 default:
                     break;
@@ -138,8 +190,13 @@ public class ActionController extends Observer {
     private void startPayingProcess(){
         List<ReceivingType> receivingTypes;
         if(curPlayer.checkForAmmos(stillToPay,curPlayer.totalAmmoPool())){
+            // if player can use powerup to pay some ammos
             if(curPlayer.canDiscardPowerUp(stillToPay)){
                 receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+                List<PowerUp> discardablePowerups = curPlayer.
+                        getPowerUps().
+                        stream().
+                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
@@ -147,12 +204,23 @@ public class ActionController extends Observer {
                 timerCostrainedEventHandler.start();
                 //TODO SEND UPDATE ASKING FOR POWERUPS
             }
+            // if player HAVE to use powerup to pay for some ammos
             else if (!curPlayer.checkForAmmos(stillToPay,curPlayer.getAmmos())) {
                 for(Ammo a: curPlayer.getAmmos()){
                     if(stillToPay.remove(a))
                         curPlayer.getAmmos().remove(a);
                 }
-                //TODO ask for the remaining ammos @luca -> comunicare che deve pagare stillToPay e chiedere POWERUP
+                receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+                List<PowerUp> discardablePowerups = curPlayer.
+                        getPowerUps().
+                        stream().
+                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                        this,
+                        curPlayer.getVirtualView().getRequestDispatcher(),
+                        receivingTypes);
+                timerCostrainedEventHandler.start();
+                //TODO send update asking for remaining powerups, to be chosen between discadablepowerups
             }
             else {
                 for(Ammo a: stillToPay)
@@ -165,7 +233,7 @@ public class ActionController extends Observer {
     }
 
     public void concludePayment(){
-        if(curSubAction == SubAction.GRAB){
+        if(curSubAction == GRAB){
             curPlayer.addWeapon(curPlayer.getTile().grabWeapon(selectedWeapon));
             nextStep();
         }

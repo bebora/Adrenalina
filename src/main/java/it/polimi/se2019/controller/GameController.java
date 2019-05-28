@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.model.*;
+import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
@@ -44,7 +45,8 @@ public class GameController extends Observer {
                     currentPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);
             timerCostrainedEventHandler.start();
-            //TODO send update asking to discard one powerup
+            List<PowerUp> discardablePowerups = currentPlayer.getPowerUps();
+            //TODO send update asking to discard one between discardablePowerups
         }
         else{
             playTurn();
@@ -61,7 +63,8 @@ public class GameController extends Observer {
                     currentPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);
             timerCostrainedEventHandler.start();
-            //TODO send update asking for action to cur player
+            List<Action> actions = currentPlayer.getActions();
+            //TODO send update asking for action to cur player - remember, to have the action type you just need to do .toString()
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
@@ -71,7 +74,9 @@ public class GameController extends Observer {
                     currentPlayer.getVirtualView().getRequestDispatcher(),
                     receivingTypes);
             timerCostrainedEventHandler.start();
-            //TODO SEND update asking for powerup, stop to cur player
+            List<PowerUp> usablePowerups = currentPlayer.getPowerUps().stream().
+                    filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
+            //TODO SEND update asking for powerup (between usablePowerUps), or STOP
         }
 
         }
