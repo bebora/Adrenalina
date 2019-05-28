@@ -22,7 +22,7 @@ public class VirtualView extends View  {
 
     /**
      * Set the viewUpdater, and create the related RequestDispatcher that will use the {@link #viewUpdater} to answer
-     * //TODO is really necessary to propagate the IncorrectEvent in {@link #requestDispatcher} like it's currently being done or viewUpdates could be done at a lower level? think and fix
+     * //TODO @simone is really necessary to propagate the IncorrectEvent in {@link #requestDispatcher} like it's currently being done or viewUpdates could be done at a lower level? think and fix
      */
     public void setViewUpdater(ViewUpdater viewUpdater) {
         this.viewUpdater = viewUpdater;

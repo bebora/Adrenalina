@@ -7,9 +7,15 @@ import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.ViewUpdater;
+import it.polimi.se2019.network.ViewUpdaterRMI;
+import it.polimi.se2019.view.ConcreteViewReceiver;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -21,6 +27,13 @@ public class ActionControllerTest {
     Player currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
     Board board = gameController.getMatch().getBoard();
 
+    @BeforeEach
+    void beforeEach() {
+        currentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
+        View view = new View();
+        ViewUpdater viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
+    }
     @Test
     void testMove(){
         currentPlayer.setTile(board.getTile(0,0));
@@ -44,10 +57,9 @@ public class ActionControllerTest {
     @Test
     void testGrabPowerUp(){
         currentPlayer.setTile(board.getTile(0,0));
+        AmmoCard grabbableAmmocard = currentPlayer.getTile().getAmmoCard();
         actionController.updateOnAction(currentPlayer.getActions().get(1));
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
-        AmmoCard grabbableAmmocard = currentPlayer.getTile().getAmmoCard();
-        actionController.updateOnAmmoCard(grabbableAmmocard);
         currentPlayer.getAmmos().remove(Ammo.RED);
         currentPlayer.getAmmos().remove(Ammo.YELLOW);
         currentPlayer.getAmmos().remove(Ammo.BLUE);
@@ -58,7 +70,6 @@ public class ActionControllerTest {
     @Test
     void testAttack(){
         currentPlayer.addWeapon(CardCreator.parseWeapon("spadaFotonica.btl"));
-        currentPlayer.setVirtualView(new VirtualView(new LobbyController(Collections.singletonList(Mode.NORMAL))));
         actionController.updateOnAction(currentPlayer.getActions().get(2));
         actionController.updateOnWeapon(currentPlayer.getWeapons().get(0));
         assertNotNull(actionController.getWeaponController());

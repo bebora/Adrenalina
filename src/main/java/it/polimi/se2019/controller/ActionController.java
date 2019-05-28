@@ -124,6 +124,7 @@ public class ActionController extends Observer {
         }else{
             curSubAction = curAction.getSubActions().get(subActionIndex);
             List<ReceivingType> receivingTypes;
+            subActionIndex++;
             switch(curSubAction){
                 case MOVE:
                     receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
@@ -162,8 +163,9 @@ public class ActionController extends Observer {
                         //TODO send update with weaponsgrabbable
                     }
                     else {
-                        curPlayer.getTile().getAmmoCard().getAmmos().stream().forEach(curPlayer::addAmmo);
-                        nextStep();
+                        curPlayer.getTile().getAmmoCard().getAmmos().forEach(a -> curPlayer.addAmmo(a));
+                        curPlayer.getTile().grabAmmoCard();
+                        updateOnConclusion();
                     }
                     break;
                 case RELOAD:
@@ -184,7 +186,7 @@ public class ActionController extends Observer {
                     break;
             }
         }
-        subActionIndex++;
+
     }
 
     private void startPayingProcess(){
