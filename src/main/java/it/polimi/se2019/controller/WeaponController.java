@@ -87,11 +87,10 @@ public class WeaponController extends Observer {
                     receivingTypes);
             timerCostrainedEventHandler.start();
             //TODO send update to player to ask for effect
-
         }
         else {
             weapon = null;
-            //tell the player that the missing weapon is unloaded
+            //TODO tell the player that the missing weapon is unloaded
         }
     }
 
@@ -100,13 +99,19 @@ public class WeaponController extends Observer {
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
         if (selectedEffect != null) {
             curPlayer.getVirtualView().getRequestDispatcher().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
-            //TODO UPDATE VIEW!!!
+            //TODO UPDATE VIEW effect no more requested!!!
             stillToPay = new ArrayList<>();
             stillToPay.addAll(selectedEffect.getCost());
             if (selectedEffect.getCost().isEmpty()) {
                 startEffect();
             } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
-                //ask to discard powerup if wanted
+                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                        this,
+                        curPlayer.getVirtualView().getRequestDispatcher(),
+                        receivingTypes);
+                timerCostrainedEventHandler.start();
+                //TODO send update asking for powerup // STOP
             } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {
                 for (Ammo a : curPlayer.getAmmos()) {
                     if (stillToPay.remove(a))

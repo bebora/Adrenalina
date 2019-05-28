@@ -9,7 +9,7 @@ public enum ReceivingType {
     EFFECT,
     PLAYERS,
     POWERUP,
-    RESET, //reset=stop in other parts of the code
+    STOP,
     ROOM,
     TILES,
     WEAPON,

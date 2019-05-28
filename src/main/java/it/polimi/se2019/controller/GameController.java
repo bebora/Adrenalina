@@ -7,9 +7,7 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +22,7 @@ public class GameController extends Observer {
     private ActionController actionController;
     private List<Player> spawnablePlayers;
     private Random random = new Random();
+    private TimerCostrainedEventHandler timerCostrainedEventHandler;
 
     public GameController(List<Player> players,String boardName, int numSkulls, boolean domination) {
         if(!domination){
@@ -39,7 +38,13 @@ public class GameController extends Observer {
             for(int i = 0; i<2; i++){
                 currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
             }
-            //ask the player to discard one powerUp
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                    this,
+                    currentPlayer.getVirtualView().getRequestDispatcher(),
+                    receivingTypes);
+            timerCostrainedEventHandler.start();
+            //TODO send update asking to discard one powerup
         }
         else{
             playTurn();
@@ -48,12 +53,25 @@ public class GameController extends Observer {
 
     //TODO: substitute comments with actual communication with the player
     public void playTurn() {
+        List<ReceivingType> receivingTypes;
         if(actionCounter < currentPlayer.getMaxActions()){
-            //tells the player to choose an action
+            receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.ACTION));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                    this,
+                    currentPlayer.getVirtualView().getRequestDispatcher(),
+                    receivingTypes);
+            timerCostrainedEventHandler.start();
+            //TODO send update asking for action to cur player
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
-            //tells the player to choose a powerup too
+            receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                    this,
+                    currentPlayer.getVirtualView().getRequestDispatcher(),
+                    receivingTypes);
+            timerCostrainedEventHandler.start();
+            //TODO SEND update asking for powerup, stop to cur player
         }
 
         }
@@ -87,6 +105,7 @@ public class GameController extends Observer {
     }
 
     public void startSpawning(){
+        //TODO fix thread coherence @fabio!
         //TODO:ask every player in spawnablePlayers to discard a powerUp
         //if the timer is over randomly spawn them?
         ExecutorService spawnerManager = Executors.newCachedThreadPool();
@@ -117,7 +136,7 @@ public class GameController extends Observer {
     public void updateOnStopSelection(boolean reverse, boolean skip){
         if (reverse) {
             actionController = null;
-            if (skip) {
+            if (skip || actionCounter == currentPlayer.getMaxActions()) {
                 endTurn();
             }
             else {

@@ -28,6 +28,13 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     private Map<ReceivingType, EventHandler> observerTypes;
     final Object lock = new Object();
 
+    public void clear() {
+        synchronized (lock) {
+            observerTypes.clear();
+        }
+
+    }
+
     public RequestDispatcher(ViewUpdater viewUpdater) {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;
@@ -74,7 +81,6 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.EFFECT)) {
-                    //TODO ADD CURRENT WEAPON PARSING!!
                     EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
                     eventHandler.receiveEffect(effect);
                 } else
@@ -143,8 +149,8 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     public void receiveStopAction(boolean reverse) throws RemoteException {
         synchronized (lock) {
             try {
-                if (observerTypes.keySet().contains(ReceivingType.RESET)) {
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.RESET);
+                if (observerTypes.keySet().contains(ReceivingType.STOP)) {
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.STOP);
                     eventHandler.receiveStop(reverse);
                 } else
                     throw new IncorrectEvent("Non posso accettare uno stop!");
@@ -181,7 +187,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare armi!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
+                //TODO SEND UPDATE WRONG
             }
         }
     }
@@ -195,14 +201,12 @@ public class RequestDispatcher implements RequestDispatcherInterface{
             for (ReceivingType receivingType : receivingTypes) {
                 observerTypes.put(receivingType, eventHandler);
             }
-            //TODO UPDATE VIEW
         }
     }
 
     public void removeReceivingType(List<ReceivingType> receivingTypes) {
         synchronized (lock) {
             observerTypes.remove(receivingTypes);
-            //TODO UPDATE VIEW
         }
     }
 }
