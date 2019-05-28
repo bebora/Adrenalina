@@ -1,5 +1,6 @@
 package it.polimi.se2019.model;
 
+import it.polimi.se2019.controller.UpdateSender;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.board.Color;
@@ -23,7 +24,9 @@ public abstract class Match {
         firstPlayer = rand.nextInt(players.size());
         currentPlayer = firstPlayer;
         board = BoardCreator.parseBoard(boardFilename, numSkulls);
+        this.updateSender = new UpdateSender(this);
     }
+
     public Match(Match originalMatch){
     	this.currentPlayer = originalMatch.getCurrentPlayer();
     	this.finalFrenzy = originalMatch.getFinalFrenzy();
@@ -32,6 +35,7 @@ public abstract class Match {
     	this.board = originalMatch.getBoard();
     	this.players = originalMatch.getPlayers().stream()
 				.map(Player::new).collect(Collectors.toList());
+    	this.updateSender = originalMatch.getUpdateSender();
 	}
 
 	public void restoreMatch(Match oldMatch){
@@ -41,6 +45,10 @@ public abstract class Match {
 
 
     Random rand = new Random();
+	/**
+	 * Sender used to send updates to players in the match
+	 */
+    private UpdateSender updateSender;
 
 	/**
 	 * True if player turn has ended
@@ -241,4 +249,7 @@ public abstract class Match {
 
 	public List<Player> getSpawnPoints(){return null; }
 
+	public UpdateSender getUpdateSender() {
+		return updateSender;
+	}
 }

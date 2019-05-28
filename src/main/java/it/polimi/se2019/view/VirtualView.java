@@ -2,6 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestDispatcher;
+import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewUpdater;
 
 /**
@@ -29,7 +30,9 @@ public class VirtualView extends View  {
         this.requestDispatcher = new RequestDispatcher(viewUpdater);
     }
 
-
+    public ViewUpdater getViewUpdater() {
+        return viewUpdater;
+    }
 
     public RequestDispatcher getRequestDispatcher() {
         return requestDispatcher;
