@@ -20,15 +20,22 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
         JsonObject event = new JsonParser().parse(wrapper.get("event").getAsString()).getAsJsonObject();
         switch (objectType) {
             case "ConnectionRequest":
-                eventVisitable = gson.fromJson(jsonElement,ConnectionRequest.class);
+                eventVisitable = gson.fromJson(jsonElement, ConnectionRequest.class);
                 break;
-            case "SelectAction":
 
-                eventVisitable = gson.fromJson(jsonElement,SelectAction.class);
+            case "SelectAction":
+                eventVisitable = gson.fromJson(jsonElement, SelectAction.class);
+                break;
+
+            case "SelectDirection":
+                eventVisitable = gson.fromJson(jsonElement, SelectDirection.class);
+                break;
+
+            case "SelectEffect":
+                eventVisitable = gson.fromJson(jsonElement, SelectEffect.class);
                 break;
 
             case "SelectPlayers":
-
                 eventVisitable = gson.fromJson(event, SelectPlayers.class);
                 break;
 
@@ -36,13 +43,20 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
                 eventVisitable = gson.fromJson(event, SelectPowerUps.class);
                 break;
 
-            case "SelectWeapon":
-                eventVisitable = gson.fromJson(event, SelectWeapon.class);
+            case "SelectRoom":
+                eventVisitable = gson.fromJson(event, SelectRoom.class);
+                break;
+
+            case "SelectStop":
+                eventVisitable = gson.fromJson(event, SelectStop.class);
                 break;
 
             case "SelectTiles":
                 eventVisitable = gson.fromJson(event, SelectTiles.class);
+                break;
 
+            case "SelectWeapon":
+                eventVisitable = gson.fromJson(event, SelectWeapon.class);
                 break;
 
             default:
