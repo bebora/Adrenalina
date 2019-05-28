@@ -84,6 +84,7 @@ public class GameController extends Observer {
     public void updateOnConclusion(){
         actionCounter++;
         actionController = null;
+
         if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
             playTurn();
         }
@@ -134,7 +135,9 @@ public class GameController extends Observer {
 
     @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
+        currentPlayer.getVirtualView().getRequestDispatcher().clear();
         if (reverse) {
+            actionCounter ++;
             actionController = null;
             if (skip || actionCounter == currentPlayer.getMaxActions()) {
                 endTurn();

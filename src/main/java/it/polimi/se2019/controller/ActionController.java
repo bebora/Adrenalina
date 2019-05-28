@@ -14,6 +14,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //TODO: substitute comments with actual methods to communicate with the view
@@ -28,6 +29,7 @@ public class ActionController extends Observer {
     private Player curPlayer;
     private Weapon selectedWeapon;
     private List<Ammo> stillToPay = new ArrayList<>();
+    private TimerCostrainedEventHandler timerCostrainedEventHandler;
 
     public ActionController(Match match,GameController gameController){
         originalMatch = match;
@@ -39,6 +41,7 @@ public class ActionController extends Observer {
     public void updateOnAction(Action action){
         cloneMatch();
         if(curPlayer.getActions().contains(action)) {
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
             curPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
             curAction = action;
             nextStep();
@@ -49,15 +52,18 @@ public class ActionController extends Observer {
     public void updateOnWeapon(Weapon weapon){
         if(curSubAction == SubAction.GRAB){
             if(curPlayer.getTile().getWeapons().contains(weapon)){
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
                 selectedWeapon = weapon;
                 stillToPay.add(weapon.getCost().get(0));
                 startPayingProcess();
             }else{
-                //signals impossible weapon selection
+                //TODO send update impossible weapon selection
             }
         }else if(curSubAction == SubAction.SHOOT){
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
             weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers(),this);
         }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
             selectedWeapon = weapon;
             stillToPay.addAll(weapon.getCost());
             startPayingProcess();
@@ -68,12 +74,13 @@ public class ActionController extends Observer {
     public void updateOnAmmoCard(AmmoCard ammoCard){
         if(curSubAction == SubAction.GRAB){
             if(curPlayer.getTile().getAmmoCard() == ammoCard){
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
                 ammoCard.getAmmos().forEach(a -> curPlayer.addAmmo(a));
                 curPlayer.getTile().grabAmmoCard();
                 nextStep();
             }
             else{
-                //illegal target
+                //TODO SEND UPDATE illegal ammo
             }
         }
     }
@@ -83,11 +90,12 @@ public class ActionController extends Observer {
         if(curSubAction == SubAction.MOVE && !tiles.isEmpty()){
             Tile tile = tiles.get(0);
             if(originalMatch.getBoard().reachable(curPlayer.getTile(),0,curAction.getMovements(),false).contains(tile)) {
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
                 curPlayer.setTile(tile);
                 nextStep();
             }
             else{
-                //tell the player that he can't reach that tile
+                //TODO SEND UPDATE he can't reach that tile
             }
         }
     }
@@ -106,22 +114,29 @@ public class ActionController extends Observer {
             gameController.updateOnConclusion();
         }else{
             curSubAction = curAction.getSubActions().get(subActionIndex);
-            //TODO: ask for the proper target
+            //TODO: ask for the proper target ???? what does it mean @fabio what target
         }
         subActionIndex++;
     }
 
     private void startPayingProcess(){
+        List<ReceivingType> receivingTypes;
         if(curPlayer.checkForAmmos(stillToPay,curPlayer.totalAmmoPool())){
             if(curPlayer.canDiscardPowerUp(stillToPay)){
-                //ask the player if he want to discard powerups, giving a list of the discardable powerups
+                receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                        this,
+                        curPlayer.getVirtualView().getRequestDispatcher(),
+                        receivingTypes);
+                timerCostrainedEventHandler.start();
+                //TODO SEND UPDATE ASKING FOR POWERUPS
             }
             else if (!curPlayer.checkForAmmos(stillToPay,curPlayer.getAmmos())) {
                 for(Ammo a: curPlayer.getAmmos()){
                     if(stillToPay.remove(a))
                         curPlayer.getAmmos().remove(a);
                 }
-                //ask for the remaining ammos
+                //TODO ask for the remaining ammos @fabio ?? what does it mean che ammo deve cercare?
             }
             else {
                 for(Ammo a: stillToPay)
@@ -129,7 +144,7 @@ public class ActionController extends Observer {
                 concludePayment();
             }
         }else{
-            //tells the player not enough ammos
+            //TODO send update player not enough ammos
         }
     }
 
@@ -153,8 +168,9 @@ public class ActionController extends Observer {
         }
         if(stillToPay.isEmpty()){
             concludePayment();
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
         }else{
-            //ask for missing ammos
+            //TODO ask for missing ammos @fabio che ammo? con cosa?
         }
     }
 
@@ -165,6 +181,7 @@ public class ActionController extends Observer {
 
     @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
+        curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (reverse) {
             gameController.updateOnStopSelection(true, skip);
         }

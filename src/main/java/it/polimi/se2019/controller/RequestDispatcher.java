@@ -31,6 +31,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
     public void clear() {
         synchronized (lock) {
             observerTypes.clear();
+            //TODO SEND UPDATE STOP ASKING FOR THINGS
         }
 
     }
