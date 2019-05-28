@@ -114,7 +114,23 @@ public class ActionController extends Observer {
             gameController.updateOnConclusion();
         }else{
             curSubAction = curAction.getSubActions().get(subActionIndex);
-            //TODO: ask for the proper target ???? what does it mean @fabio what target
+            //TODO: @luca i meant this
+            switch(curSubAction){
+                case MOVE:
+                    //ask for tile
+                    break;
+                case SHOOT:
+                    //ask for weapon
+                    break;
+                case GRAB:
+                    //ask for weapon or ammocard
+                    break;
+                case RELOAD:
+                    //ask for weapon
+                    break;
+                default:
+                    break;
+            }
         }
         subActionIndex++;
     }
@@ -136,7 +152,7 @@ public class ActionController extends Observer {
                     if(stillToPay.remove(a))
                         curPlayer.getAmmos().remove(a);
                 }
-                //TODO ask for the remaining ammos @fabio ?? what does it mean che ammo deve cercare?
+                //TODO ask for the remaining ammos @luca -> comunicare che deve pagare stillToPay e chiedere POWERUP
             }
             else {
                 for(Ammo a: stillToPay)
@@ -169,8 +185,6 @@ public class ActionController extends Observer {
         if(stillToPay.isEmpty()){
             concludePayment();
             curPlayer.getVirtualView().getRequestDispatcher().clear();
-        }else{
-            //TODO ask for missing ammos @fabio che ammo? con cosa?
         }
     }
 
