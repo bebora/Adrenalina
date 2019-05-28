@@ -11,53 +11,60 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
         UpdateVisitable updateVisitable;
         JsonObject wrapper = jsonElement.getAsJsonObject();
         String objectType = wrapper.get("type").getAsString();
-        JsonObject event = new JsonParser().parse(wrapper.get("update").getAsString()).getAsJsonObject();
+        JsonObject update = new JsonParser().parse(wrapper.get("update").getAsString()).getAsJsonObject();
         switch (objectType) {
             case "AmmosTakenUpdate":
-                updateVisitable = gson.fromJson(jsonElement, AmmosTakenUpdate.class);
+                updateVisitable = gson.fromJson(update, AmmosTakenUpdate.class);
                 break;
-            case "AttackPlayerUpdate":
 
-                updateVisitable = gson.fromJson(jsonElement, AttackPlayerUpdate.class);
+            case "AttackPlayerUpdate":
+                updateVisitable = gson.fromJson(update, AttackPlayerUpdate.class);
                 break;
 
             case "AvailableActionsUpdate":
-                updateVisitable = gson.fromJson(event, AvailableActionsUpdate.class);
+                updateVisitable = gson.fromJson(update, AvailableActionsUpdate.class);
+                break;
+
+            case "CurrentOptionsUpdate":
+                updateVisitable = gson.fromJson(update, CurrentOptionsUpdate.class);
                 break;
 
             case "MovePlayerUpdate":
-                updateVisitable = gson.fromJson(event, MovePlayerUpdate.class);
+                updateVisitable = gson.fromJson(update, MovePlayerUpdate.class);
                 break;
 
             case "PopupMessageUpdate":
-                updateVisitable = gson.fromJson(event, PopupMessageUpdate.class);
+                updateVisitable = gson.fromJson(update, PopupMessageUpdate.class);
                 break;
+
             case "SelectFromPlayersUpdate":
-                updateVisitable = gson.fromJson(event, SelectFromPlayersUpdate.class);
+                updateVisitable = gson.fromJson(update, SelectFromPlayersUpdate.class);
                 break;
 
             case "SelectFromRoomsUpdate":
-                updateVisitable = gson.fromJson(event, SelectFromRoomsUpdate.class);
+                updateVisitable = gson.fromJson(update, SelectFromRoomsUpdate.class);
                 break;
 
             case "SelectFromTilesUpdate":
-                updateVisitable = gson.fromJson(event, SelectFromTilesUpdate.class);
+                updateVisitable = gson.fromJson(update, SelectFromTilesUpdate.class);
                 break;
 
             case "SuccessConnectionUpdate":
-                updateVisitable = gson.fromJson(event, SuccessConnectionUpdate.class);
+                updateVisitable = gson.fromJson(update, SuccessConnectionUpdate.class);
                 break;
+
             case "TileUpdate":
-                updateVisitable = gson.fromJson(event, TileUpdate.class);
+                updateVisitable = gson.fromJson(update, TileUpdate.class);
                 break;
 
             case "TotalUpdate":
-                updateVisitable = gson.fromJson(event, TotalUpdate.class);
+                updateVisitable = gson.fromJson(update, TotalUpdate.class);
                 break;
 
             case "WeaponTakenUpdate":
-                updateVisitable = gson.fromJson(event, WeaponTakenUpdate.class);
+                updateVisitable = gson.fromJson(update, WeaponTakenUpdate.class);
                 break;
+
             default:
                 throw new JsonParseException("WRONG FORMAT");
         }
