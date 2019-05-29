@@ -51,7 +51,7 @@ public class ActionController extends Observer {
             nextStep();
         }
         else {
-            //TODO send update wrong action selected! try again!
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't the selected action!");
         }
     }
 
@@ -65,7 +65,7 @@ public class ActionController extends Observer {
                     stillToPay.add(weapon.getCost().get(0));
                     startPayingProcess();
                 } else {
-                    //TODO send update impossible weapon selection
+                    curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You don't have the chosen weapon!");
                 }
             } else if (curSubAction == SubAction.SHOOT) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
@@ -89,7 +89,7 @@ public class ActionController extends Observer {
                     curPlayer.setTile(tile);
                     nextStep();
                 } else {
-                    //TODO SEND UPDATE he can't reach that tile
+                    curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't reach the selected tile!");
                 }
             }
         }
@@ -234,7 +234,7 @@ public class ActionController extends Observer {
                 concludePayment();
             }
         }else{
-            //TODO send update player not enough ammos
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Yoi don't have enough ammos!");
         }
     }
 
