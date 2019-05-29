@@ -52,9 +52,10 @@ public class EffectController extends Observer {
     private int enemyWithPowerUps;
 
     private boolean askingForSource;
-    private Player currentEnemy;
 
+    private Player currentEnemy;
     private List<TimerCostrainedEventHandler> handlersPowerUp;
+    private TimerCostrainedEventHandler timerCostrainedEventHandler;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -175,8 +176,8 @@ public class EffectController extends Observer {
                         .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()))
                         .collect(Collectors.toList());
                 handleTargeting(curDealDamage.getTargeting(),temp);
-                if(!checkPowerUps(temp))
-                    nextStep();
+                checkPowerUps(temp);
+                nextStep();
             }
         }
     }
@@ -195,8 +196,8 @@ public class EffectController extends Observer {
                 .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
             possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             handleTargeting(curDealDamage.getTargeting(),possibleTargets);
-            if(!checkPowerUps(possibleTargets))
-                nextStep();
+            checkPowerUps(possibleTargets);
+            nextStep();
         }
         else{
             //tells the player that the target is wrong
@@ -214,8 +215,11 @@ public class EffectController extends Observer {
      * @param target the target of the current subeffect
      */
     private void processDirection(Target target){
-        if(target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) {
-            //ask for direction
+        if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.DIRECTION));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), receivingTypes);
+            timerCostrainedEventHandler.start();
+            //TODO send update asking for direction
         }
         else
             processStep();
@@ -343,18 +347,27 @@ public class EffectController extends Observer {
         }
     }
 
-    private boolean checkPowerUps(List<Player> players){
-        boolean handlePowerup = false;
-        enemyWithPowerUps = 0;
-        if(curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)){
-            curWeapon.setTargetPlayers(players);
-            handlePowerup = true;
+    private void checkPowerUps(List<Player> players){
+        List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+        for (Player p : players) {
+            if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)) {
+                currentEnemy = p;
+                selectablePowerUps = player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), receivingTypes);
+                timerCostrainedEventHandler.start();
+                //TODO ASK FOR DAMAGING POWERUPS
+                try {
+                    timerCostrainedEventHandler.join();
+                }
+                catch (Exception e) {
+                    Logger.log(Priority.DEBUG, "Ended handler powerup damaging");
+                }
+                player.getVirtualView().getRequestDispatcher().clear();
+            }
         }
         handlersPowerUp = new ArrayList<>();
         for(Player p: players){
             if(p.hasPowerUp(Moment.DAMAGED)){
-                handlePowerup = true;
-                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
                 Observer damagedController = new DamagedController(p, player, applicable);
                 TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(5,damagedController,p.getVirtualView().getRequestDispatcher(), receivingTypes);
@@ -369,7 +382,6 @@ public class EffectController extends Observer {
                 Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
             }
         }
-        return handlePowerup;
     }
 
     private void updateMoveOnPlayers(List<Player> originalTargetPlayers){
@@ -398,8 +410,8 @@ public class EffectController extends Observer {
         else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
             players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             handleTargeting(curDealDamage.getTargeting(),players);
-            if(!checkPowerUps(players))
-                nextStep();
+            checkPowerUps(players);
+            nextStep();
         }
         else{
             //communicate the error to the player

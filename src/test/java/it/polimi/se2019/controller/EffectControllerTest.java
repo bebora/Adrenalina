@@ -4,12 +4,13 @@ import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
-import it.polimi.se2019.model.actions.Attack;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,26 +24,34 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class EffectControllerTest {
-    private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
-    private GameController gameController = new GameController(testPlayers,"board1" +
-            ".btlb",5,false);
-    private Match testMatch = gameController.getMatch();
-    private Match sandboxMatch = new NormalMatch(testMatch);
-    private Weapon testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
-    private Player currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
-    private Player originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
-    private ActionController actionController = new ActionController(testMatch,gameController);
-    private WeaponController wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),actionController);
+    private List<Player> testPlayers;
+    private GameController gameController;
+    private Match testMatch;
+    private Match sandboxMatch;
+    private Weapon testWeapon;
+    private Player currentPlayer;
+    private Player originalCurrentPlayer;
+    private ActionController actionController;
+    private WeaponController wp;
 
 
     @BeforeEach
     void prepareWeapon(){
+        testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
+        gameController = new GameController(testPlayers,"board1" +".btlb",5,false);
+        testMatch = gameController.getMatch();
+        testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
+        originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
+        originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
+        View view = new View();
+        ViewUpdater viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        originalCurrentPlayer.getVirtualView().setViewUpdater(viewUpdater);
+        actionController = new ActionController(testMatch,gameController);
+        sandboxMatch = new NormalMatch(testMatch);
+        currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
         currentPlayer.addWeapon(testWeapon);
-        currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
-        currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
-        originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
-        originalCurrentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
         testWeapon.setLoaded(true);
+        wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),actionController);
         wp.updateOnWeapon(testWeapon);
     }
     @Test
@@ -129,4 +138,6 @@ public class EffectControllerTest {
         assertEquals(3,enemy.getDamagesCount());
         assertEquals(testMatch.getBoard().getTile(0,1),enemy.getTile());
     }
+
+
 }
