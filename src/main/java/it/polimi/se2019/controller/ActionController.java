@@ -141,13 +141,13 @@ public class ActionController extends Observer {
                     //TODO send update with selectable tiles
                     break;
                 case SHOOT:
+                    selectableWeapon = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
                     timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                             this,
                             curPlayer.getVirtualView().getRequestDispatcher(),
                             receivingTypes);
                     timerCostrainedEventHandler.start();
-                    selectableWeapon = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
                     //TODO send update with selectable weapons!
                     break;
                 case GRAB:

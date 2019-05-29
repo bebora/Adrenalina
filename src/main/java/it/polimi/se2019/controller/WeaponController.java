@@ -5,9 +5,6 @@ import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -33,19 +30,20 @@ public class WeaponController extends Observer {
     List<Ammo> stillToPay;
     AtomicBoolean inputReceived;
 
-    public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers,ActionController actionController){
+    public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers, ActionController actionController) {
         this.match = sandboxMatch;
         this.originalPlayers = originalPlayers;
         this.stillToPay = new ArrayList<>();
         this.actionController = actionController;
         updateOnWeapon(weapon);
     }
-    public List<String> getUsableEffects(){
+
+    public List<String> getUsableEffects() {
         List<Effect> allEffects = weapon.getEffects();
 
         List<Effect> possiblyUsableEffects = allEffects.stream()
                 .filter(effect -> !effect.getActivated())
-                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(),curPlayer.totalAmmoPool()))
+                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(), curPlayer.totalAmmoPool()))
                 .collect(Collectors.toList());
 
         List<Integer> notUsedIndexes = possiblyUsableEffects.stream()
@@ -59,24 +57,24 @@ public class WeaponController extends Observer {
                 .map(Effect::getName);
 
         Stream<String> checkRelativeAfter = possiblyUsableEffects.stream()
-                .filter(effect-> effect.getAbsolutePriority() == 0)
-                .filter(effect-> effect.getRelativePriority().contains(lastUsedIndex))
+                .filter(effect -> effect.getAbsolutePriority() == 0)
+                .filter(effect -> effect.getRelativePriority().contains(lastUsedIndex))
                 .map(Effect::getName);
 
         Stream<String> checkRelativeBefore = possiblyUsableEffects.stream()
                 .filter(effect -> effect.getAbsolutePriority() == 0)
-                .filter(effect -> effect.getRelativePriority().stream().filter(i -> i<0).anyMatch(i->notUsedIndexes.contains(-i-1)))
+                .filter(effect -> effect.getRelativePriority().stream().filter(i -> i < 0).anyMatch(i -> notUsedIndexes.contains(-i - 1)))
                 .map(Effect::getName);
 
-        Stream<String> checkRelative = Stream.concat(checkRelativeAfter,checkRelativeBefore).distinct();
+        Stream<String> checkRelative = Stream.concat(checkRelativeAfter, checkRelativeBefore).distinct();
 
-        return Stream.concat(checkAbsolute,checkRelative).collect(Collectors.toList());
+        return Stream.concat(checkAbsolute, checkRelative).collect(Collectors.toList());
     }
 
 
     public void updateOnWeapon(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        if(curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
+        if (curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
             curEffect = 1;
             lastUsedIndex = -1;
             weapon = newWeapon;
@@ -87,14 +85,13 @@ public class WeaponController extends Observer {
                     receivingTypes);
             timerCostrainedEventHandler.start();
             //TODO send update to player to ask for effect
-        }
-        else {
+        } else {
             weapon = null;
             //TODO tell the player that the missing weapon is unloaded
         }
     }
 
-    public synchronized void updateOnEffect(String effect){
+    public synchronized void updateOnEffect(String effect) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
         if (selectedEffect != null) {
@@ -119,12 +116,11 @@ public class WeaponController extends Observer {
                 }
                 //ask to discard for missing ammos
             } else {
-                for(Ammo a: stillToPay)
+                for (Ammo a : stillToPay)
                     curPlayer.getAmmos().remove(a);
                 startEffect();
             }
-        }
-        else {
+        } else {
             throw new IncorrectEvent("Effetto non presente!");
         }
     }
@@ -132,39 +128,38 @@ public class WeaponController extends Observer {
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         powerUps.forEach(p -> curPlayer.discardPowerUp(p));
-        for(Ammo a: curPlayer.getAmmos()){
-            if(stillToPay.remove(a))
+        for (Ammo a : curPlayer.getAmmos()) {
+            if (stillToPay.remove(a))
                 curPlayer.getAmmos().remove(a);
         }
-        if(stillToPay.isEmpty()){
+        if (stillToPay.isEmpty()) {
             startEffect();
-        }else{
+        } else {
             //ask for missing ammos
         }
     }
 
-    public void startEffect(){
-        curEffect ++;
+    public void startEffect() {
+        curEffect++;
         selectedEffect.setActivated(true);
         lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
-        if(effectController == null) {
-            effectController = new EffectController(selectedEffect, weapon, match, curPlayer,originalPlayers,this);
+        if (effectController == null) {
+            effectController = new EffectController(selectedEffect, weapon, match, curPlayer, originalPlayers, this);
             effectController.nextStep();
         }
     }
 
-    public void updateOnConclusion(){
+    public void updateOnConclusion() {
         effectController = null;
-        if(getUsableEffects().isEmpty() && weapon.getEffects().get(0).getActivated()){
+        if (getUsableEffects().isEmpty() && weapon.getEffects().get(0).getActivated()) {
             actionController.updateOnConclusion();
         }
     }
 
-    public void updateOnStopSelection(boolean reverse, boolean skip){
-        if(reverse){
+    public void updateOnStopSelection(boolean reverse, boolean skip) {
+        if (reverse) {
             actionController.updateOnStopSelection(true, skip);
-        }
-        else {
+        } else {
             if (weapon.getEffects().get(0).getActivated()) {
                 actionController.updateOnConclusion();
             } else {
@@ -174,36 +169,19 @@ public class WeaponController extends Observer {
     }
 
 
-
-
     public void setMatch(Match match) {
         this.match = match;
     }
-    public void setOriginalPlayers(List<Player> originalPlayers){
+
+    public void setOriginalPlayers(List<Player> originalPlayers) {
         this.originalPlayers = originalPlayers;
     }
 
-    public Weapon getWeapon(){return weapon; }
-    public EffectController getEffectController(){return effectController;}
-
-    @Override
-    public void updateOnTiles(List<Tile> tiles) {
-        throw new UnsupportedOperationException();
+    public Weapon getWeapon() {
+        return weapon;
     }
 
-    @Override
-    public void updateOnPlayers(List<Player> players) {
-        throw new UnsupportedOperationException();
+    public EffectController getEffectController() {
+        return effectController;
     }
-
-    @Override
-    public void updateOnDirection(Direction direction) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void updateOnRoom(Color room) {
-        throw new UnsupportedOperationException();
-    }
-
 }
