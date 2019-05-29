@@ -1,6 +1,8 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -9,8 +11,7 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.model.ThreeState.FALSE;
@@ -52,6 +53,7 @@ public class EffectController extends Observer {
 
     private boolean askingForSource;
 
+    private List<TimerCostrainedEventHandler> handlersPowerUp;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -347,11 +349,23 @@ public class EffectController extends Observer {
             curWeapon.setTargetPlayers(players);
             handlePowerup = true;
         }
+        handlersPowerUp = new ArrayList<>();
         for(Player p: players){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 handlePowerup = true;
-                enemyWithPowerUps++;
-                //TODO: tells the enemy player he can use the powerup
+                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+                List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
+                Observer damagedController = new DamagedController(p, player, applicable);
+                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(5,damagedController,p.getVirtualView().getRequestDispatcher(), receivingTypes);
+                handlersPowerUp.add(temp);
+            }
+        }
+        for (TimerCostrainedEventHandler t : handlersPowerUp) {
+            try {
+                t.join();
+            }
+            catch (Exception e) {
+                Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
             }
         }
         return handlePowerup;
@@ -394,11 +408,14 @@ public class EffectController extends Observer {
     /**
      * Receive a powerUp that can be used after a inflicting damage
      * and prepare the controller for executing its effect
+     * Assumptions:
+     * <li>Moment.damaging powerup inflict damage</li>
+     * <li>Moment.damaged powerup inflict mark</li>
      * @param powerUps a single powerUp to be used
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        if(powerUps.get(0).getApplicability() == Moment.DAMAGING)
+        if (powerUps.get(0).getApplicability() == Moment.DAMAGING)
             curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
     }
 
