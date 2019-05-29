@@ -49,8 +49,8 @@ public class LobbyController extends Thread{
         if (player != null) {
             player.setVirtualView(view);
             player.setOnline(true);
+            view.getViewUpdater().sendPopupMessage("Reconnected succesfully!");
         }
-        //TODO send popup update success
         //TODO send update match
     }
 
@@ -70,7 +70,7 @@ public class LobbyController extends Thread{
                     map(s -> s = s.split("\\$")[0]).
                     collect(Collectors.toList());
             if (allUsername.contains(username)) {
-                //TODO Send UPDATE to view saying username already used
+                view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
                 //TODO throw exception to close the connection
             }
         }
@@ -79,7 +79,7 @@ public class LobbyController extends Thread{
         player.setVirtualView(view);
         List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
         if (modeWaiting == null) {
-            //TODO Send UPDATE to view saying mode is wrong :O
+            view.getViewUpdater().sendPopupMessage("Selected mode does not exist! Can't connect.");
             //TODO throw exception to close the connection
         } else {
             modeWaiting.add(player);
@@ -87,7 +87,7 @@ public class LobbyController extends Thread{
                 Timer timer = new Timer();
                 waitingTimers.put(Mode.valueOf(mode), timer);
                 timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
-                //TODO send popup update success
+                view.getViewUpdater().sendPopupMessage("Connected successfully!");
             }
             else if (modeWaiting.size() == 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();

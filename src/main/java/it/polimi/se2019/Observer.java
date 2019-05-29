@@ -12,7 +12,7 @@ import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
-public class  Observer {
+public class Observer {
     public List <Tile> selectableTiles;
     public List<Player> selectablePlayers;
     public List<Color> selectableRoom;
@@ -21,7 +21,7 @@ public class  Observer {
     public List<PowerUp> selectablePowerUps;
     public List<Action> selectableAction;
 
-        public void updateOnTiles(List<Tile> tiles) {
+    public void updateOnTiles(List<Tile> tiles) {
         throw new IncorrectEvent("Non accetto tiles");
     }
 
