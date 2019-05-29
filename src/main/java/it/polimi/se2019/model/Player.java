@@ -495,10 +495,6 @@ public class Player {
 		return virtualView;
 	}
 
-	public void removePowerUp(PowerUp powerUp) {
-		powerUps.remove(powerUp);
-	}
-
 	public void setOnline(Boolean online) {
 		this.online = online;
 	}

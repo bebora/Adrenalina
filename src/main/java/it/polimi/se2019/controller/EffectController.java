@@ -52,6 +52,7 @@ public class EffectController extends Observer {
     private int enemyWithPowerUps;
 
     private boolean askingForSource;
+    private Player currentEnemy;
 
     private List<TimerCostrainedEventHandler> handlersPowerUp;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
@@ -412,22 +413,19 @@ public class EffectController extends Observer {
      * <li>Moment.damaging powerup inflict damage</li>
      * <li>Moment.damaged powerup inflict mark</li>
      * @param powerUps a single powerUp to be used
+     * @param discard whether you are discarding the powerup (mostly deprecated)
      */
-    @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (powerUps.get(0).getApplicability() == Moment.DAMAGING)
-            curDealDamage = powerUps.get(0).getEffect().getDamages().get(0);
-    }
-
-    public void updateOnPowerUps(List<PowerUp> powerUps,Player enemy){
+    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
         int damagesAmount;
+        int marksAmount;
+        powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());
         for(PowerUp p: powerUps){
+            player.discardPowerUp(p);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
-            player.receiveShot(enemy,damagesAmount,0);
+            marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
+            player.receiveShot(currentEnemy,damagesAmount,marksAmount);
         }
-        enemyWithPowerUps--;
-        if(enemyWithPowerUps == 0)
-            nextStep();
+        nextStep();
     }
 
     private Player getOriginalPlayer(Player sandboxPlayer){

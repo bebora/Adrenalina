@@ -22,7 +22,7 @@ public class DamagedController extends Observer {
         damagedPlayer.getVirtualView().getRequestDispatcher().clear();
         for (PowerUp p : powerUps) {
             if (applicable.contains(p)) {
-                damagedPlayer.removePowerUp(p);
+                damagedPlayer.discardPowerUp(p);
                 damagingPlayer.receiveShot(damagedPlayer,p.getEffect().getDamages().get(0).getDamagesAmount(),p.getEffect().getDamages().get(0).getMarksAmount());
             }
         }
