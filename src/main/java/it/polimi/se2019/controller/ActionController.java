@@ -8,7 +8,6 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -16,7 +15,6 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.STOP;
@@ -59,52 +57,40 @@ public class ActionController extends Observer {
 
     @Override
     public void updateOnWeapon(Weapon weapon){
-        if(curSubAction == GRAB){
-            if(curPlayer.getTile().getWeapons().contains(weapon)){
+        if (selectableWeapon.contains(weapon)) {
+            if (curSubAction == GRAB) {
+                if (curPlayer.getTile().getWeapons().contains(weapon)) {
+                    curPlayer.getVirtualView().getRequestDispatcher().clear();
+                    selectedWeapon = weapon;
+                    stillToPay.add(weapon.getCost().get(0));
+                    startPayingProcess();
+                } else {
+                    //TODO send update impossible weapon selection
+                }
+            } else if (curSubAction == SubAction.SHOOT) {
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
+                weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
+            } else if (curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 selectedWeapon = weapon;
-                stillToPay.add(weapon.getCost().get(0));
+                stillToPay.addAll(weapon.getCost());
                 startPayingProcess();
-            }else{
-                //TODO send update impossible weapon selection
-            }
-        }else if(curSubAction == SubAction.SHOOT){
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
-            weaponController = new WeaponController(sandboxMatch,weapon,originalMatch.getPlayers(),this);
-        }else if(curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)){
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
-            selectedWeapon = weapon;
-            stillToPay.addAll(weapon.getCost());
-            startPayingProcess();
-        }
-    }
-
-    @Override
-    public void updateOnAmmoCard(AmmoCard ammoCard){
-        if(curSubAction == GRAB){
-            if(curPlayer.getTile().getAmmoCard() == ammoCard){
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
-                ammoCard.getAmmos().forEach(a -> curPlayer.addAmmo(a));
-                curPlayer.getTile().grabAmmoCard();
-                nextStep();
-            }
-            else{
-                //TODO SEND UPDATE illegal ammo
             }
         }
     }
 
     @Override
     public void updateOnTiles(List<Tile> tiles){
-        if(curSubAction == SubAction.MOVE && !tiles.isEmpty()){
-            Tile tile = tiles.get(0);
-            if(originalMatch.getBoard().reachable(curPlayer.getTile(),0,curAction.getMovements(),false).contains(tile)) {
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
-                curPlayer.setTile(tile);
-                nextStep();
-            }
-            else{
-                //TODO SEND UPDATE he can't reach that tile
+        if (selectableTiles.containsAll(tiles)) {
+            if (curSubAction == SubAction.MOVE && !tiles.isEmpty()) {
+                Tile tile = tiles.get(0);
+                if (originalMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false).contains(tile)) {
+                    curPlayer.getVirtualView().getRequestDispatcher().clear();
+                    curPlayer.setTile(tile);
+                    nextStep();
+                } else {
+                    //TODO SEND UPDATE he can't reach that tile
+                }
             }
         }
     }
@@ -128,7 +114,7 @@ public class ActionController extends Observer {
             switch(curSubAction){
                 case MOVE:
                     receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
-                    Set<Tile> selectableTiles = sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false);
+                    selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
                     if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
                         selectableTiles.removeAll(sandboxMatch.
                                 getBoard().
@@ -161,13 +147,13 @@ public class ActionController extends Observer {
                             curPlayer.getVirtualView().getRequestDispatcher(),
                             receivingTypes);
                     timerCostrainedEventHandler.start();
-                    List<Weapon> weaponsSelectable = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
+                    selectableWeapon = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
                     //TODO send update with selectable weapons!
                     break;
                 case GRAB:
                     if (curPlayer.getTile().isSpawn()) {
                         receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
-                        List<Weapon> weaponsGrabbable = curPlayer.
+                        selectableWeapon = curPlayer.
                                 getTile().
                                 getWeapons().
                                 stream().
@@ -188,7 +174,7 @@ public class ActionController extends Observer {
                     break;
                 case RELOAD:
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, STOP));
-                    List<Weapon> weaponsReloadable = curPlayer.
+                    selectableWeapon = curPlayer.
                             getWeapons().
                             stream().
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost(), curPlayer.totalAmmoPool())).
@@ -213,7 +199,7 @@ public class ActionController extends Observer {
             // if player can use powerup to pay some ammos
             if(curPlayer.canDiscardPowerUp(stillToPay)){
                 receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-                List<PowerUp> discardablePowerups = curPlayer.
+                selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
@@ -231,7 +217,7 @@ public class ActionController extends Observer {
                         curPlayer.getAmmos().remove(a);
                 }
                 receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-                List<PowerUp> discardablePowerups = curPlayer.
+                selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
@@ -265,14 +251,16 @@ public class ActionController extends Observer {
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
-        powerUps.forEach(p -> curPlayer.discardPowerUp(p));
-        for(Ammo a: curPlayer.getAmmos()){
-            if(stillToPay.remove(a))
-                curPlayer.getAmmos().remove(a);
-        }
-        if(stillToPay.isEmpty()){
-            concludePayment();
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
+        if (selectablePowerUps.containsAll(powerUps)) {
+            powerUps.forEach(p -> curPlayer.discardPowerUp(p));
+            for (Ammo a : curPlayer.getAmmos()) {
+                if (stillToPay.remove(a))
+                    curPlayer.getAmmos().remove(a);
+            }
+            if (stillToPay.isEmpty()) {
+                concludePayment();
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
+            }
         }
     }
 
