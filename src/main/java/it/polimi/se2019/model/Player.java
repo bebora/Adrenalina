@@ -246,11 +246,12 @@ public class Player {
 	 * Convert marks related to the shooting player in damages
 	 * Add given number of {@code marks} given by {@code shooter}
 	 * Change avaiable actions of the receiving player accordingly
+	 * Synchronized to avoid instant powerup with MOMENT.DAMAGED activation
 	 * @param shooter player who shoots
 	 * @param damage number of damages to add
 	 * @param marks number of marks to add after converting the existing marks
 	 */
-	public void receiveShot(Player shooter, int damage, int marks) {
+	public synchronized void receiveShot(Player shooter, int damage, int marks) {
 		if(shooter != this) {
 			while (damage > 0 && damages.size() < 13) {
 				damages.add(shooter);

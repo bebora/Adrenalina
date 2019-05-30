@@ -8,6 +8,10 @@ import java.util.List;
 public class UpdateVisitor {
     ConcreteViewReceiver concreteViewReceiver;
 
+    public void visit(SelectableOptionsUpdate selectableOptionsWrapper) {
+        //TODO
+    }
+
     public void visit(AmmosTakenUpdate update) {
         List<String> ammos= update.getPlayerAmmos();
         String playerId = update.getPlayerId();

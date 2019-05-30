@@ -355,7 +355,7 @@ public class EffectController extends Observer {
                 selectablePowerUps = player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), receivingTypes);
                 timerCostrainedEventHandler.start();
-                //TODO ASK FOR DAMAGING POWERUPS
+                //Todo ask for damaging powerup / refactoring asking things
                 try {
                     timerCostrainedEventHandler.join();
                 }

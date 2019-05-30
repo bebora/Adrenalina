@@ -59,4 +59,18 @@ public class SelectableOptions<T> {
         this.options = new ArrayList<>();
         this.prompt = null;
     }
+
+    public SelectableOptions(SelectableOptions selectableOptions) {
+        this.minSelectables = selectableOptions.getMinSelectables();
+        this.maxSelectables = selectableOptions.getMaxSelectables();
+        this.prompt = selectableOptions.getPrompt();
+    }
+
+    public boolean checkForCoherency(List<T> options) {
+        if (options.size() < minSelectables || options.size() > maxSelectables || !this.options.containsAll(options))
+            return false;
+        else return true;
+    }
+
 }
+

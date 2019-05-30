@@ -65,7 +65,6 @@ public class EventUpdaterSocket implements EventUpdater{
 
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
-        //TODO check salt
         EventVisitable loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
         socket.addEventToQueue(loginEvent);
     }
