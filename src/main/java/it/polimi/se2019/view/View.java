@@ -129,4 +129,8 @@ public class View {
 	public synchronized void update() {
 
     }
+
+    public void setupConnection(String connectionType){
+		//TODO:implement this method to setup RMI or socket connection
+	}
 }
