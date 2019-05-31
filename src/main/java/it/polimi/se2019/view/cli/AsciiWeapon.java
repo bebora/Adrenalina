@@ -6,8 +6,7 @@ import it.polimi.se2019.view.ViewWeapon;
 import java.util.List;
 
 public class AsciiWeapon {
-    static List<ViewWeapon> displayedWeapons;
-    public static void drawWeaponInfo(int weaponIndex){
+    public static void drawWeaponInfo(int weaponIndex, List<ViewWeapon> displayedWeapons){
         ViewWeapon weapon = displayedWeapons.get(weaponIndex);
         CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.boardBottomBorder,AsciiBoard.offsetX);
         int x = AsciiBoard.offsetX;

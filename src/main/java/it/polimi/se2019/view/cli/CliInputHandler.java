@@ -4,9 +4,8 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.network.EventUpdater;
-import it.polimi.se2019.network.EventUpdaterRMI;
-import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.view.*;
+import it.polimi.se2019.view.gui.LoginScreen;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,12 +17,17 @@ import java.util.stream.Collectors;
 
 public class CliInputHandler implements Runnable{
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-    private String in;
+    private String in = "notQuit";
     private CLI view;
     private EventUpdater eventUpdater;
     private static final String wrongInputMessage = "Wrong input!";
     private String URL;
     private int port;
+    private String[] args;
+
+    public CliInputHandler(String[] args){
+        this.args = args;
+    }
 
     private void tileInfoMode(BufferedReader input){
         String in = "InitialValue";
@@ -52,8 +56,8 @@ public class CliInputHandler implements Runnable{
     }
 
     private void infoWeapon(int i){
-        if(i < AsciiWeapon.displayedWeapons.size()){
-            AsciiWeapon.drawWeaponInfo(i);
+        if(i < view.getDisplayedWeapons().size()){
+            AsciiWeapon.drawWeaponInfo(i,view.getDisplayedWeapons());
         }else{
             CLI.printMessage("The selected weapon does not exist!","R");
         }
@@ -179,24 +183,41 @@ public class CliInputHandler implements Runnable{
         }
     }
 
-    private void lobbyInput(BufferedReader input){
-        CLI.printInColor("W","1)RMI\n2)Socket");
-        String answer = "1";
+    private void connectionChoice(BufferedReader input){
+        CLI.printInColor("W","RMI or Socket?\n");
+        String answer = "RMI";
         try{
             answer = input.readLine();
+            answer = answer.toUpperCase();
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
-        if(answer.matches("\\d")){
-            if(Integer.parseInt(answer) == 1)
-                view.setEventUpdater(new EventUpdaterRMI(URL,port));
-            //else
-                //view.setEventUpdater(new EventUpdaterSocket());
+        if(answer.equals("RMI") || answer.equals("SOCKET")) {
+            view = new CLI();
+            view.setupConnection(answer);
         }
     }
+
+    private boolean viewChoice(){
+        CLI.printInColor("W","GUI or CLI?\n");
+        String answer = "CLI";
+        try{
+            answer = input.readLine();
+            answer = answer.toUpperCase();
+        }catch (IOException e){
+            Logger.log(Priority.ERROR, "Can't read from stdin");
+        }
+        return answer.equals("CLI");
+    }
+
     public void run(){
-        //TODO CHOICE SOCKET OR RMI
-        while(!in.equals("quit")){
+        boolean cliSelected = viewChoice();
+        if(cliSelected)
+            connectionChoice(input);
+        else
+            LoginScreen.main(args);
+        //TODO: complete login process,complete view initialization
+        while(!in.equals("quit") && cliSelected){
             try{
                 in = input.readLine();
             }catch(IOException e){

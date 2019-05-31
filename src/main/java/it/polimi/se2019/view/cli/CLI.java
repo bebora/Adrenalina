@@ -2,10 +2,14 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
+import it.polimi.se2019.view.ViewWeapon;
+
+import java.util.List;
 
 public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
+    List<ViewWeapon> displayedWeapons;
 
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
@@ -54,4 +58,7 @@ public class CLI extends View {
         printInColor(color, message);
     }
 
+    public List<ViewWeapon> getDisplayedWeapons() {
+        return displayedWeapons;
+    }
 }
