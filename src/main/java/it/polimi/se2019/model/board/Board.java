@@ -14,6 +14,8 @@ public class Board {
 
     Random rand = new Random();
 
+    private String name;
+
     private List<Integer> killShotReward;
 	/**
 	 * List of tiles that make up the Board
@@ -62,6 +64,7 @@ public class Board {
 		private List<List<Tile>> tiles;
 		private List<Door> doors;
 		private int skulls;
+		private String name;
 		private List<Player> killShotTrack = new ArrayList<>();
 		private Deck<Weapon> weaponsDeck = new LimitedDeck<>();
 		private Deck<AmmoCard> ammoCards = new UnlimitedDeck<>();
@@ -100,6 +103,11 @@ public class Board {
 			return this;
 		}
 
+		public Builder setName(String name){
+			this.name = name;
+			return this;
+		}
+
 		public Board build() {
 			return new Board(this);
 		}
@@ -113,6 +121,7 @@ public class Board {
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
+		this.name = builder.name;
 		refreshWeapons();
 		refreshAmmos();
 	}
@@ -191,6 +200,8 @@ public class Board {
 		    reachableTiles.get(maxDistance).removeAll(reachableTiles.get(minDistance-1));
 		return reachableTiles.get(maxDistance);
 	}
+
+	public String getName(){ return name;}
 
     public PowerUp drawPowerUp() {
 		return powerUps.draw();

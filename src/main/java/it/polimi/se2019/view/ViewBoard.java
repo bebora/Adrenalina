@@ -24,6 +24,8 @@ public class ViewBoard implements Serializable {
 
 	private int skulls;
 
+	private String name;
+
 	public ArrayList<ArrayList<ViewTile>> getTiles() {
 		return tiles;
 	}
@@ -40,6 +42,7 @@ public class ViewBoard implements Serializable {
 				map(ViewDoor::new).
 				collect(Collectors.toCollection(ArrayList::new));
 		this.skulls = board.getSkulls();
+		this.name = board.getName();
 	}
 
 	public boolean isLinked(ViewTile tile1, ViewTile tile2, boolean throughWalls) {
@@ -48,4 +51,7 @@ public class ViewBoard implements Serializable {
 		else return ViewTile.cabDistance(tile1,tile2) == 1;
 	}
 
+	private String getName(){
+		return name;
+	}
 }

@@ -4,6 +4,8 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.network.EventUpdater;
+import it.polimi.se2019.network.EventUpdaterRMI;
+import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.view.*;
 
 import java.io.BufferedReader;
@@ -20,6 +22,8 @@ public class CliInputHandler implements Runnable{
     private CLI view;
     private EventUpdater eventUpdater;
     private static final String wrongInputMessage = "Wrong input!";
+    private String URL;
+    private int port;
 
     private void tileInfoMode(BufferedReader input){
         String in = "InitialValue";
@@ -176,7 +180,19 @@ public class CliInputHandler implements Runnable{
     }
 
     private void lobbyInput(BufferedReader input){
-
+        CLI.printInColor("W","1)RMI\n2)Socket");
+        String answer = "1";
+        try{
+            answer = input.readLine();
+        }catch (IOException e){
+            Logger.log(Priority.ERROR, "Can't read from stdin");
+        }
+        if(answer.matches("\\d")){
+            if(Integer.parseInt(answer) == 1)
+                view.setEventUpdater(new EventUpdaterRMI(URL,port));
+            //else
+                //view.setEventUpdater(new EventUpdaterSocket());
+        }
     }
     public void run(){
         //TODO CHOICE SOCKET OR RMI
