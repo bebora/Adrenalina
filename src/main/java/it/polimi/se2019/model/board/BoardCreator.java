@@ -20,6 +20,7 @@ public class BoardCreator {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
         List<Door> doors = new ArrayList<>();
+        String name = null;
         Deck<Weapon> weaponsDeck;
         Deck<PowerUp> powerUps;
         List<Tile> temp;
@@ -58,6 +59,9 @@ public class BoardCreator {
                             get(Character.getNumericValue(secondTile.charAt(2)))));
 
                 }
+                if(section == 2){
+                    name = curLine.split(":")[1];
+                }
             }
         } catch (IOException e) {
             return null;
@@ -75,6 +79,7 @@ public class BoardCreator {
                 setWeapon(weaponsDeck).
                 setPowerUps(powerUps).
                 setAmmoCards(ammoCards).
+                setName(name).
                 build();
     }
 
