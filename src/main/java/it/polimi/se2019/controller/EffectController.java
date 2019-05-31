@@ -10,6 +10,7 @@ import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.*;
+import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -56,6 +57,7 @@ public class EffectController extends Observer {
     private Player currentEnemy;
     private List<TimerCostrainedEventHandler> handlersPowerUp;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private AcceptableTypes acceptableTypes;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -217,9 +219,9 @@ public class EffectController extends Observer {
     private void processDirection(Target target){
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.DIRECTION));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), receivingTypes);
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
-            //TODO send update asking for direction
         }
         else
             processStep();
@@ -352,10 +354,11 @@ public class EffectController extends Observer {
         for (Player p : players) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)) {
                 currentEnemy = p;
-                selectablePowerUps = player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), receivingTypes);
+                List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
-                //Todo ask for damaging powerup / refactoring asking things
                 try {
                     timerCostrainedEventHandler.join();
                 }
@@ -369,8 +372,10 @@ public class EffectController extends Observer {
         for(Player p: players){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
                 Observer damagedController = new DamagedController(p, player, applicable);
-                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(5,damagedController,p.getVirtualView().getRequestDispatcher(), receivingTypes);
+                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(5,damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 handlersPowerUp.add(temp);
             }
         }

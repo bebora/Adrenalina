@@ -6,21 +6,12 @@ import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Direction;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
 public class Observer {
-    public List <Tile> selectableTiles;
-    public List<Player> selectablePlayers;
-    public List<Color> selectableRoom;
-    public List<Effect> selectableEffect;
-    public List<Weapon> selectableWeapon;
-    public List<PowerUp> selectablePowerUps;
-    public List<Action> selectableAction;
-
     public void updateOnTiles(List<Tile> tiles) {
         throw new IncorrectEvent("Non accetto tiles");
     }

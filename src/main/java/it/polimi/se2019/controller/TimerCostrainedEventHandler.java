@@ -20,15 +20,15 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private boolean blocked;
     private Observer observer;
     private RequestDispatcher requestDispatcher;
-    private List<ReceivingType> receivingTypes;
+    private AcceptableTypes acceptableTypes;
 
-    public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, List<ReceivingType> receivingTypes) {
+    public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
         //TODO put game controller
         this.time = time;
         active = true;
         this.observer = observer;
         this.requestDispatcher = requestDispatcher;
-        this.receivingTypes = receivingTypes;
+        this.acceptableTypes = acceptableTypes;
         this.blocked = false;
     }
 
@@ -50,7 +50,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public void run() {
-        requestDispatcher.addReceivingType(receivingTypes, this);
+        requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
         this.start = System.currentTimeMillis();
         while (active && !blocked) {
             checkFinished();
@@ -134,10 +134,5 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             observer.updateOnWeapon(weapon);
             endHandler();
         }
-
-    }
-
-    public synchronized List<ReceivingType> getReceivingTypes () {
-        return receivingTypes;
     }
 }

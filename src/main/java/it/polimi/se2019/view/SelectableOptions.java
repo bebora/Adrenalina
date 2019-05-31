@@ -60,6 +60,12 @@ public class SelectableOptions<T> {
         this.prompt = null;
     }
 
+    public SelectableOptions(List<T> options, int maxSelectables, int minSelectables, String prompt) {
+        this.options = options;
+        this.maxSelectables = maxSelectables;
+        this.minSelectables = minSelectables;
+        this.prompt = prompt;
+    }
     public SelectableOptions(SelectableOptions selectableOptions) {
         this.minSelectables = selectableOptions.getMinSelectables();
         this.maxSelectables = selectableOptions.getMaxSelectables();

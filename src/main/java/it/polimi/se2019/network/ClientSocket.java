@@ -2,14 +2,11 @@ package it.polimi.se2019.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventSerializer;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.model.updatemessage.UpdateDeserializer;
-
+import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.UpdateVisitor;
 
 import java.io.BufferedReader;
@@ -35,7 +32,8 @@ public class ClientSocket {
 
     public ClientSocket(String serverIP,
                         int port,
-                        ConnectionRequest connectionRequest) {
+                        ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) {
+        this.updateVisitor = updateVisitor;
         GsonBuilder gsonBuilder;
         gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(EventVisitable.class, new EventSerializer());
@@ -43,7 +41,6 @@ public class ClientSocket {
         gson = gsonBuilder.create();
         String json;
         try {
-            this.updateVisitor = updateVisitor;
             socket = new Socket(serverIP, port);
             jsonSender = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -51,13 +48,8 @@ public class ClientSocket {
             jsonSender.write(json, 0, json.length());
             jsonSender.flush();
             json = jsonReader.readLine();
-            JsonObject jsonObject = new JsonParser().parse(json).getAsJsonObject();
-            if (jsonObject.get("type").getAsString() == "SuccessConnectionUpdate") {
-                //TODO inizialize view correctly
-            }
-            else {
-                //TODO popup wrong message
-            }
+            UpdateVisitable update = gson.fromJson(json, UpdateVisitable.class);
+            update.accept(updateVisitor);
         }
         catch (IOException e) {
             //TODO change to remote exception
