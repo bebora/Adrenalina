@@ -35,6 +35,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
             }
             observerTypes.clear();
             AcceptableTypes acceptableTypes = new AcceptableTypes(new ArrayList<>());
+
             //TODO send update to client with cleared acceptabletypes
         }
     }

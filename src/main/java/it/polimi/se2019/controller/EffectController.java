@@ -139,14 +139,15 @@ public class EffectController extends Observer {
      * @param players a List of Player to which the current subeffect is applied
      * @see Player
      */
+    @Override
     public void updateOnPlayers(List<Player> players){
-        if(curActionType == MOVE && askingForSource){
-            updateMoveOnPlayers(players);
+        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
+            if (curActionType == MOVE && askingForSource) {
+                updateMoveOnPlayers(players);
+            } else {
+                updateDealDamageOnPlayers(players);
+            }
         }
-        else{
-            updateDealDamageOnPlayers(players);
-        }
-
     }
 
     /**
@@ -157,6 +158,7 @@ public class EffectController extends Observer {
      * @param tiles a target for Move(must contain a single tile) or DealDamage
      * @see Tile
      */
+    @Override
     public void updateOnTiles(List<Tile> tiles){
         if(curActionType == MOVE) {
             if (checkTileTargets(curMove.getTargetDestination(), tiles)){

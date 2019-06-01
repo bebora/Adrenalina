@@ -1,20 +1,16 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.*;
-import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-//TODO this class will be an observer for events
 public class GameController extends Observer {
     private Match match;
     private LobbyController lobbyController;
@@ -105,29 +101,20 @@ public class GameController extends Observer {
     }
 
     public void startSpawning(){
-        //TODO fix thread coherence @fabio!
-        //TODO:ask every player in spawnablePlayers to discard a powerUp
-        //if the timer is over randomly spawn them?
-        ExecutorService spawnerManager = Executors.newCachedThreadPool();
+        List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
         for(Player p: spawnablePlayers){
-            spawnerManager.execute(new Spawner(p,match.getBoard()));
+            List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
+            Observer spawner = new Spawner(p,match.getBoard());
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Seleziona il powerup da scartare!"));
+            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(5,spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
         }
-        spawnerManager.shutdown();
-        try{
-            spawnerManager.awaitTermination(1, TimeUnit.MINUTES);
-        }catch(InterruptedException e){
-            spawnerManager.shutdownNow();
-            for(Player p: spawnablePlayers){
-                if(p.getAlive() == ThreeState.FALSE){
-                    PowerUp discarded = p.getPowerUps().get(random.nextInt(p.getPowerUps().size()));
-                    p.getPowerUps().remove(discarded);
-                    p.setTile(match.getBoard().getTiles().stream()
-                            .flatMap(Collection::stream)
-                            .filter(Tile::isSpawn)
-                            .filter(t->t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
-                            .findFirst().orElse(null));
-                    p.setAlive(ThreeState.TRUE);
-                }
+        for (TimerCostrainedEventHandler t : timerCostrainedEventHandlers) {
+            try {
+                t.join();
+            }
+            catch (Exception e) {
+                Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
             }
         }
     }

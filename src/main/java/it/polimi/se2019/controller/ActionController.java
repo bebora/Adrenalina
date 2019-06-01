@@ -23,7 +23,6 @@ import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.controller.ReceivingType.WEAPON;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
 
-//TODO: substitute comments with actual methods to communicate with the view
 public class ActionController extends Observer {
     private GameController gameController;
     private Match originalMatch;

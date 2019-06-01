@@ -4,6 +4,7 @@ import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.VirtualView;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -122,7 +123,13 @@ public class LobbyController extends Thread{
             playing = playing.subList(0,5);
         }
         waitingPlayers.get(mode).removeAll(playing);
-        GameController gameController = new GameController(playing, "board1.btlb", 8, mode.equals(Mode.DOMINATION));
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        String nameDir = classloader.getResource("board").getPath();
+        File dir = new File(nameDir);
+        File[] directoryListing = dir.listFiles();
+        int rnd = new Random().nextInt(directoryListing.length);
+        String boardName = directoryListing[rnd].getName();
+        GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION));
         games.add(gameController);
     }
 }
