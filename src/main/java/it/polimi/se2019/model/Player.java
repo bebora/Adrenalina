@@ -515,4 +515,17 @@ public class Player {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+
+	@Override
+	public int hashCode() {
+		return id.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Player) {
+			return ((Player) obj).getId() == this.id;
+		}
+		return false;
+	}
 }

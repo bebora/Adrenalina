@@ -117,7 +117,6 @@ public class WeaponController extends Observer {
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);
                 timerCostrainedEventHandler.start();
-                //TODO send update asking for powerup // STOP
             } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {
                 for (Ammo a : curPlayer.getAmmos()) {
                     if (stillToPay.remove(a))
@@ -152,10 +151,8 @@ public class WeaponController extends Observer {
         curEffect++;
         selectedEffect.setActivated(true);
         lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
-        if (effectController == null) {
-            effectController = new EffectController(selectedEffect, weapon, match, curPlayer, originalPlayers, this);
-            effectController.nextStep();
-        }
+        effectController = new EffectController(selectedEffect, weapon, match, curPlayer, originalPlayers, this);
+        effectController.nextStep();
     }
 
     public void updateOnConclusion() {

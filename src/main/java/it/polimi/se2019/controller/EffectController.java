@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.model.ThreeState.FALSE;
 import static it.polimi.se2019.model.ThreeState.TRUE;
+import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
 /**
@@ -118,19 +119,11 @@ public class EffectController extends Observer {
      * @param direction the Direction in which the effect is applied
      * @see Direction
      */
+    @Override
     public void updateOnDirection(Direction direction){
-        if(curEffect.getDirection() == null){
-            player.getVirtualView().getRequestDispatcher().clear();
-            curEffect.setDirection(direction);
-            processStep();
-        }
-        else if(curEffect.getDirection() == direction) {
-            player.getVirtualView().getRequestDispatcher().clear();
-            processStep();
-        }
-        else {
-            //TODO ask user for same direction as curEffect.getDirection()!
-        }
+        player.getVirtualView().getRequestDispatcher().clear();
+        curEffect.setDirection(direction);
+        processStep();
     }
 
     /**
@@ -160,20 +153,15 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnTiles(List<Tile> tiles){
-        if(curActionType == MOVE) {
-            if (checkTileTargets(curMove.getTargetDestination(), tiles)){
+        if (acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
+            if(curActionType == MOVE) {
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
                     playersToMove.forEach(p -> p.setTile(tiles.get(0)));
                 else
                     player.setPerspective(tiles.get(0));
                 nextStep();
             }
-            else {
-                //communicate the error to the player
-            }
-        }
-        else{
-            if(checkTileTargets(curDealDamage.getTarget(),tiles)){
+            else if (curActionType == DEALDAMAGE) {
                 List<Player> temp = tiles.stream()
                         .map(t -> curMatch.getPlayersInTile(t))
                         .flatMap(List::stream)
@@ -184,6 +172,9 @@ public class EffectController extends Observer {
                 nextStep();
             }
         }
+        else {
+            //Todo error
+        }
     }
 
     /**
@@ -193,17 +184,16 @@ public class EffectController extends Observer {
      * Only check for using samePlayerRoom and Visibility filters.
      * @param room the color of the target room
      */
+    @Override
     public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
-        if(possibleTargets.stream()
-                .map(Player::getTile)
-                .allMatch(curDealDamage.getTarget().getFilterRoom(board,pointOfView))){
+        if(acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(room))){
             possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             handleTargeting(curDealDamage.getTargeting(),possibleTargets);
             checkPowerUps(possibleTargets);
             nextStep();
         }
-        else{
+        else {
             //tells the player that the target is wrong
         }
     }
@@ -220,39 +210,41 @@ public class EffectController extends Observer {
      */
     private void processDirection(Target target){
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
-            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.DIRECTION));
+            List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
-        else
-            processStep();
+        else processStep();
     }
 
     /**
      * Ask the player for the proper target after checking the current Move
      */
-    //TODO: complete processMove and processDealDamage with proper methods to communicate with view
     private void processMove(){
+        List<Tile> selectableTiles = tileTargets(curMove.getTargetDestination());
+        List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
         switch(curMove.getObjectToMove()){
+            case PERSPECTIVE:
+                askingForSource = false;
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per il tuo punto di vista!"));
+                break;
             case SELF:
                 askingForSource = false;
                 playersToMove.add(player);
-                //ask for tile destination
-                break;
-            case PERSPECTIVE:
-                askingForSource = false;
-                //ask for tile destination
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per te stesso!"));
                 break;
             case TARGETSOURCE:
                 askingForSource = true;
                 processTargetSource(curMove.getTargetSource());
-                //ask for tile destination
+                //todo ask for tile destination
                 break;
             default:
                 break;
         }
-
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+        timerCostrainedEventHandler.start();
     }
 
     /**
@@ -260,19 +252,39 @@ public class EffectController extends Observer {
      */
     private void processDealDamage(){
         Area targetType = curDealDamage.getTarget().getAreaDamage();
+        List<ReceivingType> receivingTypes;
+        int min = curDealDamage.getTarget().getMinDistance();
+        int max = curDealDamage.getTarget().getMaxTargets();
         switch(targetType){
             case TILE:
-                //ask for tiles
+                List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
+                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, max, min, "Seleziona la tile dove attaccare"));
                 break;
             case ROOM:
-                //ask for room
+                List<Color> selectableRoom = board.getTiles().
+                        stream().
+                        flatMap(List::stream).
+                        filter(curDealDamage.getTarget().getFilterRoom(board,pointOfView)).
+                        map(Tile::getRoom).
+                        distinct().
+                        collect(Collectors.toList());
+                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.ROOM));
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom,max,min,"Seleziona una room"));
                 break;
             case SINGLE:
-                //ask for players;
+                List<Player> players = playerTargets(curDealDamage.getTarget());
+                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Seleziona i players da attaccare"));
                 break;
             default:
                 break;
         }
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,this,player.getVirtualView().getRequestDispatcher(),acceptableTypes);
+        timerCostrainedEventHandler.start();
     }
 
     /**
@@ -281,12 +293,27 @@ public class EffectController extends Observer {
      */
     private void processTargetSource(Target target){
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
-                playersToMove = curWeapon.getTargetPlayers();
+            playersToMove = curWeapon.getTargetPlayers();
         }
         if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
             playersToMove = curWeapon.getBlackListPlayers();
         }
-        //set visitor to accept only tiles
+        //todo set visitor to accept only tiles
+    }
+
+    private List<Player> playerTargets(Target target) {
+        checkPointOfView(target);
+        List<Player> acceptablePlayer = curMatch.getPlayers().
+                stream().
+                filter(target.getPlayerListFilter(player,curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers())).
+                collect(Collectors.toList());
+        List<Tile> acceptableTiles = curMatch.getBoard().getTiles().
+                stream().flatMap(List::stream).
+                filter(target.getFilterTiles(board,pointOfView)).
+                collect(Collectors.toList());
+        return acceptablePlayer.stream().
+                filter(p -> acceptableTiles.contains(p.getTile())).
+                collect(Collectors.toList());
     }
 
     /**
@@ -308,6 +335,14 @@ public class EffectController extends Observer {
         return result;
     }
 
+    private List<Tile> tileTargets(Target target) {
+        checkPointOfView(target);
+        return board.getTiles().stream().
+                flatMap(List::stream).
+                filter(Objects::nonNull).
+                filter(target.getFilterTiles(board,pointOfView)).
+                collect(Collectors.toList());
+    }
     /**
      * Return true if the tiles respect the parameters specified
      * in Target
@@ -399,7 +434,7 @@ public class EffectController extends Observer {
                 pointOfView = players.get(0).getTile();
             askingForSource = false;
             playersToMove = players;
-            //ask for targetDestination
+            //todo ask for targetDestination
         }
         else{
             //TODO send error to the player
@@ -430,10 +465,10 @@ public class EffectController extends Observer {
      * and prepare the controller for executing its effect
      * Assumptions:
      * <li>Moment.damaging powerup inflict damage</li>
-     * <li>Moment.damaged powerup inflict mark</li>
      * @param powerUps a single powerUp to be used
      * @param discard whether you are discarding the powerup (mostly deprecated)
      */
+    @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
         int damagesAmount;
         int marksAmount;

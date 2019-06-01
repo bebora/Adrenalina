@@ -124,7 +124,7 @@ public class LobbyController extends Thread{
         }
         waitingPlayers.get(mode).removeAll(playing);
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        String nameDir = classloader.getResource("board").getPath();
+        String nameDir = classloader.getResource("boards").getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
         int rnd = new Random().nextInt(directoryListing.length);
