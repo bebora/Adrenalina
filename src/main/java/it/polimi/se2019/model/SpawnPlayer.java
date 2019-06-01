@@ -2,11 +2,9 @@ package it.polimi.se2019.model;
 import it.polimi.se2019.model.board.Color;
 
 public class SpawnPlayer extends Player{
-
     private Boolean damaged;
     public SpawnPlayer(Color color) {
         super(color.toString());
-        //TODO MUST !! INSERT COLOR
         damaged  = Boolean.FALSE;
 
     }

@@ -3,6 +3,7 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -173,7 +174,7 @@ public class EffectController extends Observer {
             }
         }
         else {
-            //Todo error
+            throw new IncorrectEvent("Tile sbagliate!");
         }
     }
 
@@ -437,7 +438,7 @@ public class EffectController extends Observer {
             //todo ask for targetDestination
         }
         else{
-            //TODO send error to the player
+            throw new IncorrectEvent("Bersagli sbagliati!");
         }
     }
 

@@ -4,7 +4,6 @@ import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;
-import it.polimi.se2019.view.ViewTile;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.util.List;
@@ -28,13 +27,6 @@ public class TileUpdate implements UpdateVisitable{
 
     public ViewTileCoords getCoords() {
         return coords;
-    }
-
-    //TODO one of the constructor may never be used depending on further implementaion
-    public TileUpdate(ViewTile tile) {
-        this.ammos = tile.getAmmos();
-        this.weapons = tile.getWeapons();
-        this.coords = tile.getCoords();
     }
 
     /**

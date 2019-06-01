@@ -63,13 +63,6 @@ public class ViewUpdaterSocket implements ViewUpdater{
         workerServerSocket.update(popupMessageUpdate);
     }
 
-
-    @Override
-    public void sendSuccessConnection(String token) {
-        UpdateVisitable successConnectionUpdate = new SuccessConnectionUpdate(token);
-        workerServerSocket.update(successConnectionUpdate);
-    }
-
     @Override
     public void sendTile(Tile tile) {
         UpdateVisitable tileUpdate = new TileUpdate(tile);

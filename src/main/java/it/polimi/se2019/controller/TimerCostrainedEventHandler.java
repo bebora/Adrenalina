@@ -23,7 +23,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private AcceptableTypes acceptableTypes;
 
     public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
-        //TODO put game controller
         this.time = time;
         active = true;
         this.observer = observer;
@@ -51,6 +50,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     @Override
     public void run() {
         requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
+        requestDispatcher.getViewUpdater().sendAcceptableType(acceptableTypes);
         this.start = System.currentTimeMillis();
         while (active && !blocked) {
             checkFinished();

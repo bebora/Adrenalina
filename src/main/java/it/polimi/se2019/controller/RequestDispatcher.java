@@ -35,8 +35,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
             }
             observerTypes.clear();
             AcceptableTypes acceptableTypes = new AcceptableTypes(new ArrayList<>());
-
-            //TODO send update to client with cleared acceptabletypes
+            viewUpdater.sendAcceptableType(acceptableTypes);
         }
     }
 
@@ -61,7 +60,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     throw new IncorrectEvent("Non posso accettare ROOM!");
                 }
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE!
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -76,7 +75,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare una direzione!");
             } catch (IncorrectEvent e) {
-                //TODO send update wrong
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -91,7 +90,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare un effetto!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -108,7 +107,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     throw new IncorrectEvent("Non posso accettare ROOM!");
                 }
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -127,7 +126,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare powerUp!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -145,7 +144,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     throw new IncorrectEvent("Non posso accettare ROOM!");
                 }
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE USING VIEWUPDATER
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -160,7 +159,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare uno stop!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG :P
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -176,7 +175,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare TILES!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG MESSAGE!
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
@@ -192,7 +191,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 } else
                     throw new IncorrectEvent("Non posso accettare armi!");
             } catch (IncorrectEvent e) {
-                //TODO SEND UPDATE WRONG
+                viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }

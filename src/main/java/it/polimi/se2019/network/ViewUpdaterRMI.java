@@ -77,12 +77,6 @@ public class ViewUpdaterRMI implements ViewUpdater {
         new Thread(task).start();
     }
 
-    @Override
-    public void sendSuccessConnection(String token) {
-        Runnable task = () ->
-                remoteReceiver.receiveSuccessConnection(token);
-        new Thread(task).start();
-    }
 
     @Override
     public void sendTile(Tile tile) {

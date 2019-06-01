@@ -24,7 +24,6 @@ public interface ViewUpdater {
     void sendMovePlayer(Player player);
     void sendPopupMessage(String message);
     void sendAcceptableType(AcceptableTypes acceptableTypes);
-    void sendSuccessConnection(String token);
     void sendTile(Tile tile);
     void sendTotalUpdate(String username, Board board, List<Player> players,
                          String idView, int points, List<PowerUp> powerUps,

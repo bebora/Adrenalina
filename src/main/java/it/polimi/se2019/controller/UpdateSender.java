@@ -96,17 +96,6 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendAcceptableType(acceptableTypes);
     }
 
-
-    @Override
-    public void sendSuccessConnection(String token) {
-        throw new UnsupportedOperationException();
-    }
-
-    public void sendSuccessConnection(Player receivingPlayer, String token) {
-        //TODO check if this method needs to be here or in a previous phase of the client-server connection
-        receivingPlayer.getVirtualView().getViewUpdater().sendSuccessConnection(token);
-    }
-
     @Override
     public void sendTile(Tile tile) {
         match.getPlayers().stream().

@@ -91,7 +91,7 @@ public class WeaponController extends Observer {
             timerCostrainedEventHandler.start();
         } else {
             weapon = null;
-            //TODO tell the player that the missing weapon is unloaded
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Arma scarica");
         }
     }
 

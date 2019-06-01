@@ -14,6 +14,8 @@ import java.util.Queue;
  * <li>Sending events from the {@link #View#eventUpdater}</li>
  */
 public class View {
+	private Status status;
+
 	private Queue<String> messages;
 
 	private EventUpdater eventUpdater;
@@ -132,5 +134,13 @@ public class View {
 
     public void setupConnection(String connectionType){
 		//TODO:implement this method to setup RMI or socket connection
+	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 }

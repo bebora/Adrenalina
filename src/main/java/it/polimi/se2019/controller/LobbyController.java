@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.VirtualView;
@@ -36,6 +37,7 @@ public class LobbyController extends Thread{
     public void reconnectPlayer(String username, String password, VirtualView view) {
         Player player = null;
         String token = String.format("%s$%s", username, password.hashCode());
+        Match ownGame;
         for (GameController game : games) {
             List<String> allTokens = game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
@@ -44,15 +46,18 @@ public class LobbyController extends Thread{
             if (allTokens.contains(token)) {
                 player = game.getMatch().getPlayers().
                         stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
+                ownGame = game.getMatch();
+                player.setVirtualView(view);
+                player.setOnline(true);
+                view.getViewUpdater().sendPopupMessage("Reconnected succesfully!");
+                player.getVirtualView().getViewUpdater().sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(), view.getIdView(), player.getPoints(), player.getPowerUps(), player.getWeapons());
                 break;
             }
         }
-        if (player != null) {
-            player.setVirtualView(view);
-            player.setOnline(true);
-            view.getViewUpdater().sendPopupMessage("Reconnected succesfully!");
+        if (player == null) {
+            view.getViewUpdater().sendPopupMessage("Errore nel login!");
         }
-        //TODO send update match
+
     }
 
     /**
@@ -84,11 +89,11 @@ public class LobbyController extends Thread{
             //TODO throw exception to close the connection
         } else {
             modeWaiting.add(player);
+            view.getViewUpdater().sendPopupMessage("SUCCESS");
             if (modeWaiting.size() == 3) {
                 Timer timer = new Timer();
                 waitingTimers.put(Mode.valueOf(mode), timer);
                 timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
-                view.getViewUpdater().sendPopupMessage("Connected successfully!");
             }
             else if (modeWaiting.size() == 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();

@@ -86,6 +86,9 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      */
     @Override
     public void receivePopupMessage(String message) {
+        if (linkedView.getStatus() == Status.LOGIN && message.equals("SUCCESS")){
+            linkedView.setStatus(Status.WAITING);
+        }
         //TODO show message to the client, e.g. view.showPopup(message)
     }
 
@@ -123,6 +126,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
     public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons) {
+        linkedView.setStatus(Status.PLAYING);
         linkedView.setUsername(username);
         linkedView.setBoard(board);
         linkedView.setPerspective(helper.getTileFromCoords(perspective));

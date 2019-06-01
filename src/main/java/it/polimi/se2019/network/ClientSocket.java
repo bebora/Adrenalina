@@ -20,8 +20,7 @@ import java.util.concurrent.SynchronousQueue;
 /**
  * ClientSocket, need to be inside EventUpdaterSocket and used to send events to connected server.
  */
-//TODO run both listener and runner in run() if extending thread or in constructor
-public class ClientSocket {
+public class ClientSocket extends Thread{
     private Socket socket;
     private boolean keepAlive;
     private BlockingQueue<EventVisitable> queue = new SynchronousQueue<>();
