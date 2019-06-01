@@ -8,6 +8,7 @@ import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class WeaponController extends Observer {
     TimerCostrainedEventHandler timerCostrainedEventHandler;
     List<Ammo> stillToPay;
     AtomicBoolean inputReceived;
+    AcceptableTypes acceptableTypes;
 
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers, ActionController actionController) {
         this.match = sandboxMatch;
@@ -79,12 +81,14 @@ public class WeaponController extends Observer {
             lastUsedIndex = -1;
             weapon = newWeapon;
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            List<Effect> selectableEffect = weapon.getEffects().stream().filter(e -> !e.getActivated() && curPlayer.checkForAmmos(e.getCost(), curPlayer.totalAmmoPool())).collect(Collectors.toList());
+            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, "Seleziona un effetto!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
-                    receivingTypes);
+                    acceptableTypes);
             timerCostrainedEventHandler.start();
-            //TODO send update to player to ask for effect
         } else {
             weapon = null;
             //TODO tell the player that the missing weapon is unloaded
@@ -95,18 +99,23 @@ public class WeaponController extends Observer {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
         if (selectedEffect != null) {
-            curPlayer.getVirtualView().getRequestDispatcher().removeReceivingType(timerCostrainedEventHandler.getReceivingTypes());
-            //TODO UPDATE VIEW effect no more requested!!!
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
             stillToPay = new ArrayList<>();
             stillToPay.addAll(selectedEffect.getCost());
             if (selectedEffect.getCost().isEmpty()) {
                 startEffect();
             } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
+                List<PowerUp> selectablePowerUps = curPlayer.
+                        getPowerUps().
+                        stream().
+                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, "Seleziona PowerUp per pagare!"));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
-                        receivingTypes);
+                        acceptableTypes);
                 timerCostrainedEventHandler.start();
                 //TODO send update asking for powerup // STOP
             } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {

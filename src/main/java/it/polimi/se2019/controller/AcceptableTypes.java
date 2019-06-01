@@ -21,6 +21,10 @@ public class AcceptableTypes {
     private SelectableOptions<Weapon> selectableWeapons;
     private List<ReceivingType> acceptedTypes;
 
+    public AcceptableTypes(List<ReceivingType> receivingTypes) {
+        this.acceptedTypes = receivingTypes;
+    }
+
     public SelectableOptions<Action> getSelectableActions() {
         return selectableActions;
     }

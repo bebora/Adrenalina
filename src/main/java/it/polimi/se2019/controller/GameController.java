@@ -2,11 +2,11 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.model.*;
-import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
+import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -24,6 +24,7 @@ public class GameController extends Observer {
     private List<Player> spawnablePlayers;
     private Random random = new Random();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private AcceptableTypes acceptableTypes;
 
     public GameController(List<Player> players,String boardName, int numSkulls, boolean domination) {
         if(!domination){
@@ -36,50 +37,43 @@ public class GameController extends Observer {
 
     public void startTurn(){
         if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
-            for(int i = 0; i<2; i++){
+            for(int i = 0; i < 2; i++){
                 currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
             }
-            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+            List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(currentPlayer.getPowerUps(), 1,1, "Seleziona un PowerUp!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
                     this,
                     currentPlayer.getVirtualView().getRequestDispatcher(),
-                    receivingTypes);
+                    acceptableTypes);
             timerCostrainedEventHandler.start();
-            List<PowerUp> discardablePowerups = currentPlayer.getPowerUps();
-            //TODO send update asking to discard one between discardablePowerups
         }
-        else{
+        else {
             playTurn();
         }
     }
 
-    //TODO: substitute comments with actual communication with the player
     public void playTurn() {
-        List<ReceivingType> receivingTypes;
-        if(actionCounter < currentPlayer.getMaxActions()){
-            receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.ACTION));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
-                    this,
-                    currentPlayer.getVirtualView().getRequestDispatcher(),
-                    receivingTypes);
-            timerCostrainedEventHandler.start();
-            List<Action> actions = currentPlayer.getActions();
-            //TODO send update asking for action to cur player - remember, to have the action type you just need to do .toString()
+        List<ReceivingType> receivingTypes = new ArrayList<>();
+        if(actionCounter < currentPlayer.getMaxActions()) {
+            receivingTypes.add(ReceivingType.ACTION);
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Seleziona un'azione"));
+        }
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
-            receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
-                    this,
-                    currentPlayer.getVirtualView().getRequestDispatcher(),
-                    receivingTypes);
-            timerCostrainedEventHandler.start();
+            receivingTypes.addAll(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
             List<PowerUp> usablePowerups = currentPlayer.getPowerUps().stream().
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
-            //TODO SEND update asking for powerup (between usablePowerUps), or STOP
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Seleziona un'azione o un powerup"));
         }
-
-        }
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                this,
+                currentPlayer.getVirtualView().getRequestDispatcher(),
+                acceptableTypes);
+        timerCostrainedEventHandler.start();
     }
 
     public Match getMatch() {

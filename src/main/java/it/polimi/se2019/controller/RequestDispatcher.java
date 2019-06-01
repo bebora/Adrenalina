@@ -34,7 +34,8 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                 eventHandler.setBlocked(true);
             }
             observerTypes.clear();
-            //TODO SEND UPDATE STOP ASKING FOR THINGS
+            AcceptableTypes acceptableTypes = new AcceptableTypes(new ArrayList<>());
+            //TODO send update to client with cleared acceptabletypes
         }
     }
 
@@ -211,6 +212,10 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         synchronized (lock) {
             observerTypes.remove(receivingTypes);
         }
+    }
+
+    public ViewUpdater getViewUpdater() {
+        return viewUpdater;
     }
 }
 
