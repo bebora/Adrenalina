@@ -1,13 +1,17 @@
 package it.polimi.se2019.view;
 
 import it.polimi.se2019.model.updatemessage.*;
+import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateVisitor {
-    ConcreteViewReceiver concreteViewReceiver;
+    ViewReceiverInterface concreteViewReceiver;
 
+    public UpdateVisitor(ViewReceiverInterface concreteViewReceiver) {
+        this.concreteViewReceiver = concreteViewReceiver;
+    }
     public void visit(SelectableOptionsUpdate selectableOptionsWrapper) {
         //TODO
     }

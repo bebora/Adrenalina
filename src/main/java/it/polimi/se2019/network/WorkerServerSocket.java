@@ -84,7 +84,10 @@ public class WorkerServerSocket extends Thread {
 
     @Override
     public void run() {
-        //TODO run listener and sender
+        Updater updater = new Updater();
+        updater.run();
+        Listener listener = new Listener();
+        listener.run();
     }
 
     public void update(UpdateVisitable update) {

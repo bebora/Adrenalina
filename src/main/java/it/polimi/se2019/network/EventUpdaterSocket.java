@@ -2,6 +2,7 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.events.*;
+import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
@@ -10,6 +11,7 @@ import java.util.List;
 
 public class EventUpdaterSocket implements EventUpdater{
     private ClientSocket socket;
+    private UpdateVisitor updateVisitor;
 
     public EventUpdaterSocket(ClientSocket socket) {
         this.socket = socket;
@@ -65,7 +67,8 @@ public class EventUpdaterSocket implements EventUpdater{
 
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
-        EventVisitable loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
-        socket.addEventToQueue(loginEvent);
+        ConnectionRequest loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
+        updateVisitor = new UpdateVisitor(view.getReceiver());
+        socket = new ClientSocket("192.168.0.1",80,loginEvent, updateVisitor);
     }
 }
