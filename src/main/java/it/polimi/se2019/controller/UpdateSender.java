@@ -3,7 +3,6 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -89,21 +88,14 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendPopupMessage(message);
     }
 
-    //TODO All the following SelectFromX should be one method
-    @Override
-    public void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers) {
-        throw new UnsupportedOperationException();
+    public void sendAcceptableType(AcceptableTypes acceptableTypes) {
+        throw new UnsupportedOperationException("Not supported");
     }
 
-    @Override
-    public void sendSelectFromRooms(List<Color> rooms) {
-        throw new UnsupportedOperationException();
+    public void sendAcceptableType(Player receivingPlayer, AcceptableTypes acceptableTypes) {
+        receivingPlayer.getVirtualView().getViewUpdater().sendAcceptableType(acceptableTypes);
     }
 
-    @Override
-    public void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles) {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     public void sendSuccessConnection(String token) {

@@ -1,8 +1,8 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -23,9 +23,7 @@ public interface ViewUpdater {
     void sendCurrentOptions(List<String> options);
     void sendMovePlayer(Player player);
     void sendPopupMessage(String message);
-    void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers);
-    void sendSelectFromRooms(List<Color> rooms);
-    void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles);
+    void sendAcceptableType(AcceptableTypes acceptableTypes);
     void sendSuccessConnection(String token);
     void sendTile(Tile tile);
     void sendTotalUpdate(String username, Board board, List<Player> players,

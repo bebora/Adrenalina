@@ -1,8 +1,8 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -20,6 +20,12 @@ public class ViewUpdaterSocket implements ViewUpdater{
         this.workerServerSocket = workerServerSocket;
     }
 
+
+    @Override
+    public void sendAcceptableType(AcceptableTypes acceptableTypes) {
+        UpdateVisitable selectableOptionsUpdate = new SelectableOptionsUpdate(acceptableTypes);
+        workerServerSocket.update(selectableOptionsUpdate);
+    }
 
     @Override
     public void sendAmmosTaken(Player player) {
@@ -57,23 +63,6 @@ public class ViewUpdaterSocket implements ViewUpdater{
         workerServerSocket.update(popupMessageUpdate);
     }
 
-    @Override
-    public void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers) {
-        UpdateVisitable selectFromPlayersUpdate = new SelectFromPlayersUpdate(players, minPlayers, maxPlayers);
-        workerServerSocket.update(selectFromPlayersUpdate);
-    }
-
-    @Override
-    public void sendSelectFromRooms(List<Color> rooms) {
-        UpdateVisitable selectFromRoomsUpdate = new SelectFromRoomsUpdate(rooms);
-        workerServerSocket.update(selectFromRoomsUpdate);
-    }
-
-    @Override
-    public void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles) {
-        UpdateVisitable selectFromTilesUpdate = new SelectFromTilesUpdate(tiles, minTiles, maxTiles);
-        workerServerSocket.update(selectFromTilesUpdate);
-    }
 
     @Override
     public void sendSuccessConnection(String token) {

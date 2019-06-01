@@ -1,9 +1,9 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -71,35 +71,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
     }
 
     @Override
-    public void sendSelectFromPlayers(List<Player> players, int minPlayers, int maxPlayers) {
-        Runnable task = () -> {
-            ArrayList<String> viewPlayers = players.stream().
-                    map(Player::getId).
-                    collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveSelectFromPlayers(viewPlayers, minPlayers, maxPlayers);
-        };
-        new Thread(task).start();
-    }
-
-    @Override
-    public void sendSelectFromRooms(List<Color> rooms) {
-        Runnable task = () -> {
-            ArrayList<String> viewRooms = rooms.stream().
-                    map(Color::name).
-                    collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveSelectFromRooms(viewRooms);
-        };
-        new Thread(task).start();
-    }
-
-    @Override
-    public void sendSelectFromTiles(List<Tile> tiles, int minTiles, int maxTiles) {
-        Runnable task = () -> {
-            ArrayList<ViewTileCoords> coords = tiles.stream().
-                    map(ViewTileCoords::new).
-                    collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveSelectFromTiles(coords, minTiles, maxTiles);
-        };
+    public void sendAcceptableType(AcceptableTypes acceptableTypes) {
+        Runnable task = () ->
+                remoteReceiver.receiveSelectablesWrapper(new SelectableOptionsWrapper(acceptableTypes));
         new Thread(task).start();
     }
 

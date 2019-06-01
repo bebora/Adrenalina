@@ -42,22 +42,7 @@ public class UpdateVisitor {
         String message = update.getMessage();
         concreteViewReceiver.receivePopupMessage(message);
     }
-    public void visit(SelectFromPlayersUpdate update) {
-        List<String> players = update.getPlayers();
-        int minPlayers = update.getMinPlayers();
-        int maxPlayers = update.getMaxPlayers();
-        concreteViewReceiver.receiveSelectFromPlayers(new ArrayList<>(players), minPlayers, maxPlayers);
-    }
-    public void visit(SelectFromRoomsUpdate update) {
-        List<String> rooms = update.getRooms();
-        concreteViewReceiver.receiveSelectFromRooms(new ArrayList<>(rooms));
-    }
-    public void visit(SelectFromTilesUpdate update) {
-        List<ViewTileCoords> tiles = update.getCoords();
-        int minPlayers = update.getMinTiles();
-        int maxPlayers = update.getMaxTiles();
-        concreteViewReceiver.receiveSelectFromTiles(new ArrayList<>(tiles), minPlayers, maxPlayers);
-    }
+
     public void visit(SuccessConnectionUpdate update) {
         String token = update.getToken();
         concreteViewReceiver.receiveSuccessConnection(token);

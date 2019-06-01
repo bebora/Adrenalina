@@ -1,12 +1,9 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ConcreteViewReceiver implements ViewReceiverInterface {
     private View linkedView;
@@ -16,7 +13,12 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
         this.linkedView = linkedView;
         this.helper = new ConcreteViewReceiverHelper(linkedView);
     }
-    
+
+    @Override
+    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+        //TODO
+    }
+
     /**
      * Set the player ammos to those received in playerAmmos
      * @param playerId
@@ -87,51 +89,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
         //TODO show message to the client, e.g. view.showPopup(message)
     }
 
-    /**
-     * Receive possible players from which the player can choose from
-     * @param players
-     * @param minPlayers
-     * @param maxPlayers
-     */
-    @Override
-    public void receiveSelectFromPlayers(ArrayList<String> players, int minPlayers, int maxPlayers) {
-        //TODO show possible players to the receiver player
-        List<ViewPlayer> viewPlayers = players.stream().
-                map(p->helper.getPlayerFromId(p)).
-                collect(Collectors.toList());
-    }
 
-    /**
-     * Receive possible rooms from which the player can choose from
-     * @param rooms
-     */
-    @Override
-    public void receiveSelectFromRooms(ArrayList<String> rooms) {
-        //TODO show possible rooms to the player
-        List<Color> viewRooms = rooms.stream().
-                map(Color::valueOf).
-                collect(Collectors.toList());
-    }
-
-    /**
-     * Receive possible tiles from which the player can choose from
-     * @param coords
-     * @param minTiles
-     * @param maxTiles
-     */
-    @Override
-    public void receiveSelectFromTiles(ArrayList<ViewTileCoords> coords, int minTiles, int maxTiles) {
-        //TODO show possible tiles to the player
-        List<ViewTile> tiles = coords.stream().
-                map(helper::getTileFromCoords).
-                collect(Collectors.toList());
-    }
-
-    /**
-     * Inform the view that the link with the game controller
-     * has been successfully established
-     * @param token
-     */
     @Override
     public void receiveSuccessConnection(String token) {
         //TODO do something with the token
