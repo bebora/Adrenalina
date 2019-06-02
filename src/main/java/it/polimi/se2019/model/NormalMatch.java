@@ -1,6 +1,4 @@
 package it.polimi.se2019.model;
-import it.polimi.se2019.model.board.Board;
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -13,33 +11,6 @@ public class NormalMatch extends Match {
 	public NormalMatch(Match originalMatch){
 		super(originalMatch);
 	}
-
-
-	/**
-	 * Board used for the Match
-	 */
-	private Board board;
-
-	/**
-	 * List of players playing the match
-	 */
-	private List<Player> players;
-
-	/**
-	 * Index of the player whose turn is the current
-	 */
-	private int currentPlayer;
-
-	/**
-	 * Index of the firstPlayer
-	 */
-	private int firstPlayer;
-
-	/**
-	 * If True, the activated mode is finalFrenzy
-	 */
-	private Boolean finalFrenzy;
-
 
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));

@@ -34,7 +34,7 @@ public class LobbyController extends Thread{
      * @param password
      * @param view
      */
-    public void reconnectPlayer(String username, String password, VirtualView view) {
+    public synchronized void reconnectPlayer(String username, String password, VirtualView view) {
         Player player = null;
         String token = String.format("%s$%s", username, password.hashCode());
         Match ownGame;
@@ -126,7 +126,10 @@ public class LobbyController extends Thread{
     public synchronized void startGame(Mode mode) {
         List<Player> playing = new ArrayList<>(waitingPlayers.get(mode));
         if (playing.size() > 5) {
-            playing = playing.subList(0,5);
+            playing = new ArrayList<>(playing.subList(0,5));
+        }
+        else {
+            playing = new ArrayList<>(playing);
         }
         waitingPlayers.get(mode).removeAll(playing);
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -137,5 +140,9 @@ public class LobbyController extends Thread{
         String boardName = directoryListing[rnd].getName();
         GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION));
         games.add(gameController);
+    }
+
+    public List<GameController> getGames() {
+        return games;
     }
 }

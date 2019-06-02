@@ -48,37 +48,37 @@ public abstract class Match {
 	/**
 	 * Sender used to send updates to players in the match
 	 */
-    private UpdateSender updateSender;
+    UpdateSender updateSender;
 
 	/**
 	 * True if player turn has ended
 	 */
-	private Boolean turnEnd;
+	boolean turnEnd;
 
 	/**
 	 * Board used for the Match
 	 */
-	private Board board;
+	Board board;
 
 	/**
 	 * List of players playing the match
 	 */
-	private List <Player> players;
+	List <Player> players;
 
 	/**
 	 * Index of the player whose turn is the current
 	 */
-	private int currentPlayer;
+	int currentPlayer;
 
 	/**
 	 * Index of the firstPlayer
 	 */
-	private int firstPlayer;
+	int firstPlayer;
 
 	/**
 	 * If True, the activated mode is finalFrenzy
 	 */
-	private Boolean finalFrenzy;
+	boolean finalFrenzy;
 
 	/**
 	 * Manage the change to frenzy mode

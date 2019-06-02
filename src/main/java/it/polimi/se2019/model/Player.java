@@ -21,6 +21,7 @@ import static java.lang.Boolean.FALSE;
 public class Player {
 
 	public Player(String token) {
+		online = true;
 		editing = new Object();
 		this.firstPlayer = false;
 		this.token = token;

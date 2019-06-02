@@ -227,6 +227,7 @@ public class EffectController extends Observer {
         switch(curMove.getObjectToMove()){
             case PERSPECTIVE:
                 askingForSource = false;
+                acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per il tuo punto di vista!"));
                 break;
             case SELF:

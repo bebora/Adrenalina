@@ -3,11 +3,15 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -16,7 +20,7 @@ class LobbyControllerTest {
      * Example test on using the fake virtualview for debugging, using it for adding a player to lobbyController
      */
     @Test
-    void addView() {
+    void checkWaitingPlayer() {
         LobbyController lobbyController = new LobbyController(Arrays.asList(Mode.NORMAL));
         VirtualView vv = new VirtualView(lobbyController);
         EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
@@ -29,17 +33,40 @@ class LobbyControllerTest {
             eventUpdater.login(vv, "simona2", "rizzo", false, "NORMAL");
 
         }
+
         catch (RemoteException e) {
             System.out.println(e);
         }
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
             assertEquals(false, true);
         }
         assertEquals(0,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
+    }
 
+    @Test
+    void checkStartedGames() {
+        LobbyController lobbyController = new LobbyController(new ArrayList<>(Collections.singleton(Mode.NORMAL)));
+        List<View> views = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
+            View view = new View();
+            views.add(view);
+            try {
+                eventUpdater.login(view, "ciao" + i, "ciao", false, "normal");
+            } catch (RemoteException e) {
+                System.out.println("Error!");
+            }
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e){
+                assertEquals(false, true);
+            }
+        }
+        assertEquals(20, lobbyController.getGames().size());
     }
 }
 

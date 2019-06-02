@@ -1,15 +1,11 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.Logger;
-import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Properties;
@@ -155,7 +151,7 @@ public class View {
 			return;
 		}
 		try {
-			eventUpdater.login(this, username, password, true, "NORMAL");
+			eventUpdater.login(this, username, password, false, "NORMAL");
 		}
 		catch (RemoteException e) {
 			receiver.receivePopupMessage(e.getMessage());
