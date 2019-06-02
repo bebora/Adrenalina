@@ -103,8 +103,6 @@ class BoardTest {
         for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList())) {
             assertEquals(t.getWeaponsNumber(),3);
         }
-
-        //TODO add test for checking if weapons are really limited
     }
 
     @Test
@@ -133,6 +131,5 @@ class BoardTest {
     void getSpawnPointFromAmmo() {
         Ammo ammo = Ammo.RED;
         assertEquals(test.getTile(1,0), test.getSpawningPoint(CardCreator.parsePowerUp("mirino.btl", Ammo.RED)));
-    //TODO insert assert for thrown exception
     }
 }

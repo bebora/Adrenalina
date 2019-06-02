@@ -2,8 +2,11 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
+import it.polimi.se2019.network.EventUpdaterRMI;
+import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.Queue;
 
@@ -133,7 +136,25 @@ public class View {
     }
 
     public void setupConnection(String connectionType){
-		//TODO:implement this method to setup RMI or socket connection
+		//TODO @fabio create config file to read for url and port
+		//TODO @fabio where to find the nickname, password etc here?? username in this.username? ho fatto così, cambia pure le cose nelle inizializzazioni se è sbagliato, e dove metti le impostazioni che prendi dal login tipo existing game o la modalità o la password???
+		if (connectionType.equalsIgnoreCase("socket")) {
+			eventUpdater = new EventUpdaterSocket("url", 80);
+		}
+		else if (connectionType.equalsIgnoreCase("rmi")) {
+			eventUpdater = new EventUpdaterRMI("url", 80);
+		}
+		else {
+			receiver.receivePopupMessage("Error!");
+			return;
+		}
+		try {
+			eventUpdater.login(this, username, "password", true, "NORMAL");
+		}
+		catch (RemoteException e) {
+			receiver.receivePopupMessage(e.getMessage());
+		}
+
 	}
 
 	public Status getStatus() {

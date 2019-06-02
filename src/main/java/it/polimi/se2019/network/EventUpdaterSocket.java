@@ -12,11 +12,13 @@ import java.util.List;
 public class EventUpdaterSocket implements EventUpdater{
     private ClientSocket socket;
     private UpdateVisitor updateVisitor;
+    private String url;
+    private int port;
 
-    public EventUpdaterSocket(ClientSocket socket) {
-        this.socket = socket;
+    public EventUpdaterSocket(String url, int port) {
+        this.url = url;
+        this.port = port;
     }
-
     @Override
     public void sendAction(String action) {
         EventVisitable actionEvent = new SelectAction(action);
@@ -69,6 +71,6 @@ public class EventUpdaterSocket implements EventUpdater{
     public void login(View view, String nickname, String password, boolean existingGame, String mode) {
         ConnectionRequest loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
         updateVisitor = new UpdateVisitor(view.getReceiver());
-        socket = new ClientSocket("192.168.0.1",80,loginEvent, updateVisitor);
+        socket = new ClientSocket(url,port,loginEvent, updateVisitor);
     }
 }

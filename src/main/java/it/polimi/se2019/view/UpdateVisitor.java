@@ -13,7 +13,8 @@ public class UpdateVisitor {
         this.concreteViewReceiver = concreteViewReceiver;
     }
     public void visit(SelectableOptionsUpdate selectableOptionsWrapper) {
-        //TODO
+        SelectableOptionsWrapper selectableOptions = selectableOptionsWrapper.getSelectableOptionsWrapper();
+        concreteViewReceiver.receiveSelectablesWrapper(selectableOptions);
     }
 
     public void visit(AmmosTakenUpdate update) {
