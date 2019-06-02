@@ -1,13 +1,18 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Queue;
 
 /**
@@ -135,21 +140,22 @@ public class View {
 
     }
 
-    public void setupConnection(String connectionType){
-		//TODO @fabio create config file to read for url and port
-		//TODO @fabio where to find the nickname, password etc here?? username in this.username? ho fatto così, cambia pure le cose nelle inizializzazioni se è sbagliato, e dove metti le impostazioni che prendi dal login tipo existing game o la modalità o la password???
+    public void setupConnection(String connectionType,String username,String password,Properties connectionProperties){
+		String url = connectionProperties.getProperty("url");
+		int rmiPort = Integer.parseInt(connectionProperties.getProperty("RMIPort"));
+		int socketPort = Integer.parseInt(connectionProperties.getProperty("SocketPort"));
 		if (connectionType.equalsIgnoreCase("socket")) {
-			eventUpdater = new EventUpdaterSocket("url", 80);
+			eventUpdater = new EventUpdaterSocket(url,socketPort);
 		}
 		else if (connectionType.equalsIgnoreCase("rmi")) {
-			eventUpdater = new EventUpdaterRMI("url", 80);
+			eventUpdater = new EventUpdaterRMI(url,rmiPort);
 		}
 		else {
 			receiver.receivePopupMessage("Error!");
 			return;
 		}
 		try {
-			eventUpdater.login(this, username, "password", true, "NORMAL");
+			eventUpdater.login(this, username, password, true, "NORMAL");
 		}
 		catch (RemoteException e) {
 			receiver.receivePopupMessage(e.getMessage());

@@ -8,11 +8,13 @@ import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class CliInputHandler implements Runnable{
@@ -65,7 +67,7 @@ public class CliInputHandler implements Runnable{
 
     private void parseSelection(String[] inSplit){
         String[] selectedElements = new String[inSplit.length];
-        System.arraycopy(inSplit,2,selectedElements,0,inSplit.length);
+        System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-3);
         switch(inSplit[1]){
             case "PLAYER":
                 parsePlayers(selectedElements);
@@ -186,15 +188,30 @@ public class CliInputHandler implements Runnable{
     private void connectionChoice(BufferedReader input){
         CLI.printInColor("W","RMI or Socket?\n");
         String answer = "RMI";
+        String username = "user";
+        String password = "password";
         try{
             answer = input.readLine();
             answer = answer.toUpperCase();
+            CLI.printInColor("W","\nUsername: ");
+            username = input.readLine();
+            CLI.printInColor("W","\nPassword: ");
+            password = input.readLine();
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
         if(answer.equals("RMI") || answer.equals("SOCKET")) {
             view = new CLI();
-            view.setupConnection(answer);
+            Properties connectionProperties = new Properties();
+            FileInputStream fin;
+            try{
+                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+                connectionProperties.load(fin);
+            }catch (Exception e){
+                Logger.log(Priority.ERROR,e.getMessage());
+            }
+            view.setupConnection(answer,username,password,connectionProperties);
+            eventUpdater = view.getEventUpdater();
         }
     }
 
@@ -216,7 +233,11 @@ public class CliInputHandler implements Runnable{
             connectionChoice(input);
         else
             LoginScreen.main(args);
-        //TODO: complete login process,complete view initialization
+        while(view.getStatus()==Status.WAITING);
+        if(view.getStatus()==Status.PLAYING){
+            System.out.println(view.getStatus().name());
+        }
+        AsciiBoard.setBoard(view.getBoard());
         while(!in.equals("quit") && cliSelected){
             try{
                 in = input.readLine();

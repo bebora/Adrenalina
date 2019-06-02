@@ -13,7 +13,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Properties;
 
 public class LoginScreen extends Application {
     @FXML ListView connectionType;
@@ -42,7 +44,15 @@ public class LoginScreen extends Application {
             Parent root = loader.load();
             Scene scene = new Scene(root, 1024, 576);
             BoardScreen boardScreen = loader.getController();
-            boardScreen.setupConnection(selectedConnection);
+            Properties connectionProperties = new Properties();
+            FileInputStream fin;
+            try{
+                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+                connectionProperties.load(fin);
+            }catch (Exception e){
+                Logger.log(Priority.ERROR,e.getMessage());
+            }
+            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties);
             stage.setScene(scene);
         }catch (IOException e){
             Logger.log(Priority.DEBUG,e.getMessage());
