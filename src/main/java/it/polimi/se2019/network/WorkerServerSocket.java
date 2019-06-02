@@ -59,8 +59,8 @@ public class WorkerServerSocket extends Thread {
             String username = connection.getUsername();
             String password = connection.getPassword();
             String mode = connection.getMode();
-            boolean signingUp = connection.getExistingGame();
-            if (signingUp)
+            boolean existingGame = connection.getExistingGame();
+            if (!existingGame)
                 lobbyController.connectPlayer(username,password,mode, virtualView);
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
