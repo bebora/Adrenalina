@@ -9,7 +9,6 @@ import it.polimi.se2019.model.updatemessage.UpdateDeserializer;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.UpdateVisitor;
 
-import javax.sound.midi.Receiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -44,7 +43,7 @@ public class ClientSocket extends Thread{
             socket = new Socket(serverIP, port);
             jsonSender = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
             jsonReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            json = gson.toJson(connectionRequest, ConnectionRequest.class);
+            json = gson.toJson(connectionRequest, EventVisitable.class) + "\n";
             jsonSender.write(json, 0, json.length());
             jsonSender.flush();
             json = jsonReader.readLine();

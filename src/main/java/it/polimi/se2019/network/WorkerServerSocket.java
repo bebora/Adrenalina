@@ -49,6 +49,7 @@ public class WorkerServerSocket extends Thread {
             //TODO LOGGER
             throw new UnsupportedOperationException();
         }
+        System.out.println(json);
         EventVisitable event = gson.fromJson(json, EventVisitable.class);
         try {
             ConnectionRequest connection = (ConnectionRequest) event;
@@ -85,9 +86,9 @@ public class WorkerServerSocket extends Thread {
     @Override
     public void run() {
         Updater updater = new Updater();
-        updater.run();
+        updater.start();
         Listener listener = new Listener();
-        listener.run();
+        listener.start();
     }
 
     public void update(UpdateVisitable update) {
@@ -107,7 +108,7 @@ public class WorkerServerSocket extends Thread {
                     String json;
                     do {
                         try {
-                            json = (String) queue.take();
+                            json = (String) queue.take() + "\n";
                             jsonSender.write(json, 0, json.length());
                             jsonSender.flush();
                         }

@@ -72,5 +72,6 @@ public class EventUpdaterSocket implements EventUpdater{
         ConnectionRequest loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
         updateVisitor = new UpdateVisitor(view.getReceiver());
         socket = new ClientSocket(url,port,loginEvent, updateVisitor);
+        socket.start();
     }
 }

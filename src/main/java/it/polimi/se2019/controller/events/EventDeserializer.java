@@ -20,19 +20,19 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
         JsonObject event = new JsonParser().parse(wrapper.get("event").getAsString()).getAsJsonObject();
         switch (objectType) {
             case "ConnectionRequest":
-                eventVisitable = gson.fromJson(jsonElement, ConnectionRequest.class);
+                eventVisitable = gson.fromJson(event, ConnectionRequest.class);
                 break;
 
             case "SelectAction":
-                eventVisitable = gson.fromJson(jsonElement, SelectAction.class);
+                eventVisitable = gson.fromJson(event, SelectAction.class);
                 break;
 
             case "SelectDirection":
-                eventVisitable = gson.fromJson(jsonElement, SelectDirection.class);
+                eventVisitable = gson.fromJson(event, SelectDirection.class);
                 break;
 
             case "SelectEffect":
-                eventVisitable = gson.fromJson(jsonElement, SelectEffect.class);
+                eventVisitable = gson.fromJson(event, SelectEffect.class);
                 break;
 
             case "SelectPlayers":

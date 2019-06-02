@@ -69,6 +69,7 @@ public class LobbyController extends Thread{
      * @param mode
      */
     public synchronized void connectPlayer(String username, String password, String mode, VirtualView view) {
+        mode = mode.toUpperCase();
         for (GameController game : games) {
             List<String> allUsername = game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).

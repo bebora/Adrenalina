@@ -131,6 +131,7 @@ public class EffectControllerTest {
         wp.setMatch(sandboxMatch);
         wp.updateOnWeapon(testWeapon);
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
+
         wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
         actionController.updateOnAction(originalCurrentPlayer.getActions().get(0));
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));

@@ -13,6 +13,9 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
         String objectType = wrapper.get("type").getAsString();
         JsonObject update = new JsonParser().parse(wrapper.get("update").getAsString()).getAsJsonObject();
         switch (objectType) {
+            case "SelectableOptionsUpdate":
+                updateVisitable = gson.fromJson(update, SelectableOptionsUpdate.class);
+                break;
             case "AmmosTakenUpdate":
                 updateVisitable = gson.fromJson(update, AmmosTakenUpdate.class);
                 break;
