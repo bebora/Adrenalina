@@ -12,7 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
  * Handler exposed by the RMI server to the client so that it can request to connect
  */
 public class ConnectHandler extends UnicastRemoteObject implements ConnectInterface{
-    private LobbyController lobbyController;
+    private transient LobbyController lobbyController;
 
     @Override
     public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) {

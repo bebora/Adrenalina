@@ -2,7 +2,6 @@ package it.polimi.se2019.model.updatemessage;
 
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
-import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.ViewAction;
 

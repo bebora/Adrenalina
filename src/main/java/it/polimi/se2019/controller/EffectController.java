@@ -57,7 +57,6 @@ public class EffectController extends Observer {
     private boolean askingForSource;
 
     private Player currentEnemy;
-    private List<TimerCostrainedEventHandler> handlersPowerUp;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
@@ -198,7 +197,7 @@ public class EffectController extends Observer {
             //tells the player that the target is wrong
         }
     }
-
+    @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
         if (reverse)
             weaponController.updateOnStopSelection(true, skip);
@@ -406,7 +405,7 @@ public class EffectController extends Observer {
                 player.getVirtualView().getRequestDispatcher().clear();
             }
         }
-        handlersPowerUp = new ArrayList<>();
+        List<TimerCostrainedEventHandler> handlersPowerUp = new ArrayList<>();
         for(Player p: players){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());

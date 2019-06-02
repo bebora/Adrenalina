@@ -105,6 +105,36 @@ public class ActionController extends Observer {
         }
     }
 
+    private void nextMove() {
+        List <ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
+        List<Tile> selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
+        if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
+            selectableTiles.removeAll(sandboxMatch.
+                    getBoard().
+                    getTiles().
+                    stream().
+                    flatMap(List::stream).
+                    filter(t -> t != null && (!t.isSpawn() && t.getAmmoCard() == null)).
+                    collect(Collectors.toList()));
+            for (Tile t : sandboxMatch.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.isSpawn()).collect(Collectors.toList())) {
+                boolean toRemove = true;
+                for (Weapon weapon : t.getWeapons()) {
+                    if (curPlayer.checkForAmmos(weapon.getCost(), curPlayer.totalAmmoPool()))
+                        toRemove = false;
+                }
+                if (toRemove)
+                    selectableTiles.remove(t);
+            }
+        }
+        acceptableTypes = new AcceptableTypes(receivingTypes);
+        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles,1,1,"Seleziona una Tile dove muoverti!"));
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                this,
+                curPlayer.getVirtualView().getRequestDispatcher(),
+                acceptableTypes);
+        timerCostrainedEventHandler.start();
+    }
+
     private void nextStep(){
         if(subActionIndex == curAction.getSubActions().size()){
             sandboxMatch.restoreMatch(originalMatch);
@@ -116,36 +146,10 @@ public class ActionController extends Observer {
             subActionIndex++;
             switch(curSubAction){
                 case MOVE:
-                    receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
-                    List<Tile> selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
-                    if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
-                        selectableTiles.removeAll(sandboxMatch.
-                                getBoard().
-                                getTiles().
-                                stream().
-                                flatMap(List::stream).
-                                filter(t -> t != null && (!t.isSpawn() && t.getAmmoCard() == null)).
-                                collect(Collectors.toList()));
-                        for (Tile t : sandboxMatch.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.isSpawn()).collect(Collectors.toList())) {
-                            boolean toRemove = true;
-                            for (Weapon weapon : t.getWeapons()) {
-                                if (curPlayer.checkForAmmos(weapon.getCost(), curPlayer.totalAmmoPool()))
-                                    toRemove = false;
-                            }
-                            if (toRemove)
-                                selectableTiles.remove(t);
-                        }
-                    }
-                    acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles,1,1,"Seleziona una Tile dove muoverti!"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
-                            this,
-                            curPlayer.getVirtualView().getRequestDispatcher(),
-                            acceptableTypes);
-                    timerCostrainedEventHandler.start();
+                    nextMove();
                     break;
                 case SHOOT:
-                    selectableWeapon = curPlayer.getWeapons().stream().filter(w -> w.getLoaded()).collect(Collectors.toList());
+                    selectableWeapon = curPlayer.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList());
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon,1,1,"Seleziona un'arma!"));

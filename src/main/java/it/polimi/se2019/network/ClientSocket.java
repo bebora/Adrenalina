@@ -9,6 +9,7 @@ import it.polimi.se2019.model.updatemessage.UpdateDeserializer;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.UpdateVisitor;
 
+import javax.sound.midi.Receiver;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -55,6 +56,14 @@ public class ClientSocket extends Thread{
             throw new UnsupportedOperationException();
 
         }
+    }
+
+    @Override
+    public void run() {
+        Listener listener = new Listener();
+        Updater updater = new Updater();
+        listener.run();
+        updater.run();
     }
 
     public void addEventToQueue(EventVisitable event) {

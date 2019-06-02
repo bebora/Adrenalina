@@ -1,12 +1,8 @@
 package it.polimi.se2019.view.cli;
-
-import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.ViewBoard;
 import it.polimi.se2019.view.ViewPlayer;
 import it.polimi.se2019.view.ViewTile;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
