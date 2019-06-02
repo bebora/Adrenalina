@@ -6,14 +6,17 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,8 +32,19 @@ class WeaponControllerTest {
 
     @Test
     void assignWeapon(){
+        View view = new View();
+        ViewUpdater viewUpdater;
+        try {
+            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        }
+        catch (RemoteException e){
+            assert false;
+            return;
+        }
+        LobbyController lobbyController = new LobbyController(new ArrayList<>(Collections.singleton(Mode.NORMAL)));
+        currentPlayer.setVirtualView(new VirtualView(lobbyController));
+        currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
         currentPlayer.addWeapon(testWeapon);
-        currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
         WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers(),actionController);
         weaponControllerTest.updateOnWeapon(testWeapon);
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);

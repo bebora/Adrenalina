@@ -52,6 +52,8 @@ public class EffectController extends Observer {
 
     private int orderIndex;
 
+    private boolean noInput;
+
     private int enemyWithPowerUps;
 
     private boolean askingForSource;
@@ -239,13 +241,19 @@ public class EffectController extends Observer {
             case TARGETSOURCE:
                 askingForSource = true;
                 processTargetSource(curMove.getTargetSource());
-                //todo ask for tile destination
+                if (!askingForSource) {
+                    acceptableTypes = new AcceptableTypes(receivingTypes);
+                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per i giocatori!"));
+                }
                 break;
             default:
                 break;
         }
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-        timerCostrainedEventHandler.start();
+        if (!askingForSource) {
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
+
     }
 
     /**
@@ -294,12 +302,23 @@ public class EffectController extends Observer {
      */
     private void processTargetSource(Target target){
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
+            askingForSource = false;
             playersToMove = curWeapon.getTargetPlayers();
         }
-        if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
+        else if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
+            askingForSource = false;
             playersToMove = curWeapon.getBlackListPlayers();
         }
-        //todo set visitor to accept only tiles
+        else {
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            int min = target.getMinTargets();
+            int max = target.getMaxTargets();
+            List<Player> players = playerTargets(target);
+            acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players,max,min, "Seleziona i giocatori da muovere!"));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
     }
 
     private List<Player> playerTargets(Target target) {
@@ -435,7 +454,12 @@ public class EffectController extends Observer {
                 pointOfView = players.get(0).getTile();
             askingForSource = false;
             playersToMove = players;
-            //todo ask for targetDestination
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            List<Tile> tiles = tileTargets(curMove.getTargetDestination());
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, "Seleziona una tile di destinazione!"));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
         }
         else{
             throw new IncorrectEvent("Bersagli sbagliati!");

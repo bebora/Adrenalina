@@ -31,7 +31,7 @@ class SocketServerTest {
         }
         EventUpdater eventUpdater = new EventUpdaterSocket("0.0.0.0", 65535);
         try {
-            eventUpdater.login(view, "ciao", "ciao", true, "normal");
+            eventUpdater.login(view, "ciao", "ciao", false, "normal");
         }
         catch (RemoteException e){
             System.out.println("Error!");

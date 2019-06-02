@@ -89,9 +89,12 @@ public class WeaponController extends Observer {
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
             timerCostrainedEventHandler.start();
-        } else {
+        } else if (newWeapon != null){
             weapon = null;
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Arma scarica");
+        }
+        else {
+            weapon = null;
         }
     }
 
