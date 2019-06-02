@@ -1,9 +1,13 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewUpdater;
+
+import java.rmi.RemoteException;
 
 /**
  * Virtual view used by the model and server to:
@@ -27,7 +31,12 @@ public class VirtualView extends View  {
      */
     public void setViewUpdater(ViewUpdater viewUpdater) {
         this.viewUpdater = viewUpdater;
-        this.requestDispatcher = new RequestDispatcher(viewUpdater);
+        try {
+            this.requestDispatcher = new RequestDispatcher(viewUpdater);
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.ERROR, "Unexpected RemoteException while creating RequestDispatcher");
+        }
     }
 
     public ViewUpdater getViewUpdater() {

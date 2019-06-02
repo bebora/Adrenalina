@@ -1,5 +1,7 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
@@ -45,7 +47,12 @@ public class View {
 	private List<ReceivingType> types;
 
 	public View() {
-		this.receiver = new ConcreteViewReceiver(this);
+		try {
+			this.receiver = new ConcreteViewReceiver(this);
+		}
+		catch (RemoteException e) {
+			Logger.log(Priority.ERROR, "Unexpected RemoteException while creating ViewReceiver!");
+		}
 	}
 
 	public List<ViewPlayer> getPlayers() {
@@ -147,14 +154,25 @@ public class View {
 			eventUpdater = new EventUpdaterRMI(url,rmiPort);
 		}
 		else {
-			receiver.receivePopupMessage("Error!");
+			try {
+				receiver.receivePopupMessage("Error!");
+			}
+			catch (RemoteException e) {
+				Logger.log(Priority.ERROR, "Unable to call local method");
+			}
+
 			return;
 		}
 		try {
 			eventUpdater.login(this, username, password, false, "NORMAL");
 		}
 		catch (RemoteException e) {
-			receiver.receivePopupMessage(e.getMessage());
+			try {
+				receiver.receivePopupMessage(e.getMessage());
+			}
+			catch (RemoteException r) {
+				Logger.log(Priority.ERROR, "Unable to call local method");
+			}
 		}
 
 	}

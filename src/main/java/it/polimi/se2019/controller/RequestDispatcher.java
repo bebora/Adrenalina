@@ -12,17 +12,15 @@ import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
  * Dispatcher class used by the VirtualView to allow the use of a EventHandler for each Receiving type; if null, the type can't be accepted.
  * Locking on an object for fixing lack of RMI documentation on synchronization.
  */
-public class RequestDispatcher implements RequestDispatcherInterface{
+public class RequestDispatcher extends UnicastRemoteObject implements RequestDispatcherInterface{
     private EventHelper eventHelper;
     private ViewUpdater viewUpdater;
     private Map<ReceivingType, EventHandler> observerTypes;
@@ -39,7 +37,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
         }
     }
 
-    public RequestDispatcher(ViewUpdater viewUpdater) {
+    public RequestDispatcher(ViewUpdater viewUpdater) throws RemoteException {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;
     }
@@ -120,7 +118,7 @@ public class RequestDispatcher implements RequestDispatcherInterface{
                     List<PowerUp> relatedPowerUps = powerUps.
                             stream().
                             map(eventHelper::getPowerUpFromViewPowerUp).
-                            filter(p -> p != null).collect(Collectors.toList());
+                            filter(Objects::nonNull).collect(Collectors.toList());
                     EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
                     eventHandler.receivePowerUps(relatedPowerUps, discard);
                 } else

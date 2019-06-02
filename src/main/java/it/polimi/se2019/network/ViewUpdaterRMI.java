@@ -1,5 +1,7 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -9,6 +11,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.*;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,15 +29,26 @@ public class ViewUpdaterRMI implements ViewUpdater {
             ArrayList<String> playerAmmos = player.getAmmos().stream().
                     map(Ammo::name).
                     collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveAmmosTaken(player.getId(), playerAmmos);
+            try {
+                remoteReceiver.receiveAmmosTaken(player.getId(), playerAmmos);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send ammos taken");
+            }
         };
         new Thread(task).start();
     }
 
     @Override
     public void sendAttackPlayer(Player attacker, Player receiver, int damageAmount, int marksAmount) {
-        Runnable task = () ->
-            remoteReceiver.receiveAttackPlayer(attacker.getId(), receiver.getId(), damageAmount, marksAmount);
+        Runnable task = () -> {
+            try {
+                remoteReceiver.receiveAttackPlayer(attacker.getId(), receiver.getId(), damageAmount, marksAmount);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send attack player");
+            }
+        };
         new Thread(task).start();
     }
 
@@ -44,44 +58,79 @@ public class ViewUpdaterRMI implements ViewUpdater {
             ArrayList<ViewAction> actions = player.getActions().stream().
                     map(ViewAction::new).
                     collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveAvailableActions(player.getId(), actions);
+            try {
+                remoteReceiver.receiveAvailableActions(player.getId(), actions);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send ammos taken");
+            }
         };
         new Thread(task).start();
     }
 
     @Override
     public void sendCurrentOptions(List<String> options) {
-        Runnable task = () ->
+        Runnable task = () -> {
+            try {
                 remoteReceiver.receiveCurrentOptions(new ArrayList<>(options));
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send current options");
+            }
+        };
         new Thread(task).start();
     }
 
     @Override
     public void sendMovePlayer(Player player) {
-        Runnable task = () ->
+        Runnable task = () -> {
+            try {
                 remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send movement");
+            }
+        };
         new Thread(task).start();
     }
 
     @Override
     public void sendPopupMessage(String message) {
-        Runnable task = () ->
+        Runnable task = () -> {
+            try {
                 remoteReceiver.receivePopupMessage(message);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send popup");
+            }
+        };
         new Thread(task).start();
     }
 
     @Override
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {
-        Runnable task = () ->
+        Runnable task = () -> {
+            try {
                 remoteReceiver.receiveSelectablesWrapper(new SelectableOptionsWrapper(acceptableTypes));
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send acceptable type");
+            }
+        };
         new Thread(task).start();
     }
 
 
     @Override
     public void sendTile(Tile tile) {
-        Runnable task = () ->
+        Runnable task = () -> {
+            try {
                 remoteReceiver.receiveTile(new ViewTile(tile));
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send tile");
+            }
+        };
         new Thread(task).start();
     }
 
@@ -104,9 +153,14 @@ public class ViewUpdaterRMI implements ViewUpdater {
             ArrayList<String> viewLoadedWeapons = loadedWeapons.stream().
                     map(Weapon::getName).
                     collect(Collectors.toCollection(ArrayList::new));
-            remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
-                    viewPlayers, idView, points,
-                    viewPowerUps, viewLoadedWeapons);
+            try {
+                remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
+                        viewPlayers, idView, points,
+                        viewPowerUps, viewLoadedWeapons);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send total update");
+            }
         };
         new Thread(task).start();
     }
@@ -114,10 +168,15 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendWeaponTaken(Weapon takenWeapon, Weapon discardedWeapon, Player player) {
         Runnable task = () -> {
-            if (discardedWeapon == null)
-                remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), null, player.getId());
-            else
-                remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), discardedWeapon.getName(), player.getId());
+            try {
+                if (discardedWeapon == null)
+                    remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), null, player.getId());
+                else
+                    remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), discardedWeapon.getName(), player.getId());
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to send weapon taken");
+            }
         };
         new Thread(task).start();
     }

@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * View use this to send events to server
  */
+//TODO check if logging is the best way to handle RemoteException
 public class EventUpdaterRMI implements EventUpdater{
     /**
      * ConnectInterface used to establish the connection with the remote server
@@ -34,7 +35,6 @@ public class EventUpdaterRMI implements EventUpdater{
     //TODO force login first
     @Override
     public void login(View view, String nickname, String password, boolean existingGame, String mode)  throws RemoteException{
-        //TODO export receiver as remote object
         connectInterface.connect(nickname, password, existingGame, mode, view.getReceiver());
         remoteHandler = connectInterface.getRequestHandler(nickname, password);
         //TODO Manage when login doesn't go as expected!

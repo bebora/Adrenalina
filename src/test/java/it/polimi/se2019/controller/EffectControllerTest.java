@@ -15,6 +15,7 @@ import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +45,13 @@ public class EffectControllerTest {
         originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
         originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
         View view = new View();
-        ViewUpdater viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        ViewUpdater viewUpdater = null;
+        try {
+            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        }
+        catch (RemoteException e) {
+            System.out.println("Unable to create ViewReceiver");
+        }
         originalCurrentPlayer.getVirtualView().setViewUpdater(viewUpdater);
         actionController = new ActionController(testMatch,gameController);
         sandboxMatch = new NormalMatch(testMatch);
@@ -139,6 +146,4 @@ public class EffectControllerTest {
         assertEquals(3,enemy.getDamagesCount());
         assertEquals(testMatch.getBoard().getTile(0,1),enemy.getTile());
     }
-
-
 }

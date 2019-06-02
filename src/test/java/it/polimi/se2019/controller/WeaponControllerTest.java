@@ -11,6 +11,7 @@ import it.polimi.se2019.view.ConcreteViewReceiver;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +44,12 @@ class WeaponControllerTest {
         //test with cannoneVortex(absolutePriority, missing Ammos)
          currentPlayer.addWeapon(testWeapon);
          currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
-         currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
+         try {
+             currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
+         }
+         catch (RemoteException e) {
+             System.out.println("Unable to create ViewReceiver");
+         }
          WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers(),actionController);
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
          for(int i = 0; i<3; i++)

@@ -2,20 +2,22 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.network.ViewReceiverInterface;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ConcreteViewReceiver implements ViewReceiverInterface {
+public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
     private View linkedView;
     private ConcreteViewReceiverHelper helper;
 
-    public ConcreteViewReceiver(View linkedView) {
+    public ConcreteViewReceiver(View linkedView) throws RemoteException {
         this.linkedView = linkedView;
         this.helper = new ConcreteViewReceiverHelper(linkedView);
     }
 
     @Override
-    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         //TODO
     }
 
@@ -25,7 +27,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param playerAmmos
      */
     @Override
-    public void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos) {
+    public void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos) throws RemoteException {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setAmmos(playerAmmos);
     }
@@ -42,7 +44,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param marksAmount
      */
     @Override
-    public void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount) {
+    public void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount) throws RemoteException {
         ViewPlayer attacker = helper.getPlayerFromId(attackerId);
         ViewPlayer receiver = helper.getPlayerFromId(receiverId);
         if (receiver.getDamages().size() + damageAmount > 12)
@@ -59,13 +61,13 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param actions
      */
     @Override
-    public void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) {
+    public void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) throws RemoteException {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setActions(actions);
     }
 
     @Override
-    public void receiveCurrentOptions(ArrayList<String> options) {
+    public void receiveCurrentOptions(ArrayList<String> options) throws RemoteException {
         //TODO show options to player
     }
 
@@ -75,7 +77,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param coords
      */
     @Override
-    public void receiveMovePlayer(String playerId, ViewTileCoords coords) {
+    public void receiveMovePlayer(String playerId, ViewTileCoords coords) throws RemoteException {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setTile(helper.getTileFromCoords(coords));
     }
@@ -85,7 +87,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param message
      */
     @Override
-    public void receivePopupMessage(String message) {
+    public void receivePopupMessage(String message) throws RemoteException {
         if (linkedView.getStatus() == Status.LOGIN && message.equals("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
         }
@@ -95,7 +97,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
 
 
     @Override
-    public void receiveSuccessConnection(String token) {
+    public void receiveSuccessConnection(String token) throws RemoteException {
         //TODO do something with the token
     }
 
@@ -104,7 +106,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param tile
      */
     @Override
-    public void receiveTile(ViewTile tile) {
+    public void receiveTile(ViewTile tile) throws RemoteException {
         ViewTile viewTile = helper.getTileFromCoords(tile.getCoords());
         tile.setAmmos(tile.getAmmos());
         tile.setWeapons(tile.getWeapons());
@@ -149,7 +151,7 @@ public class ConcreteViewReceiver implements ViewReceiverInterface {
      * @param playerId
      */
     @Override
-    public void receiveWeaponTaken(String takenWeapon, String discardedWeapon, String playerId) {
+    public void receiveWeaponTaken(String takenWeapon, String discardedWeapon, String playerId) throws RemoteException {
         //TODO tell clients that a player has taken the weapon
         ViewPlayer player = helper.getPlayerFromId(playerId);
         ViewTile tile = player.getTile();

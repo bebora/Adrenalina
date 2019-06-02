@@ -3,13 +3,15 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
+import java.io.Serializable;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
  * Interface used by RMI server to receive updates
  */
-public interface RequestDispatcherInterface {
+public interface RequestDispatcherInterface extends Remote, Serializable {
 
     void receiveAction(String subAction) throws RemoteException;
 

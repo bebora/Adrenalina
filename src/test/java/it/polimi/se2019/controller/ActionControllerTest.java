@@ -15,6 +15,7 @@ import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +32,13 @@ public class ActionControllerTest {
     void beforeEach() {
         currentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
         View view = new View();
-        ViewUpdater viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        ViewUpdater viewUpdater = null;
+        try {
+            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+        }
+        catch (RemoteException e) {
+            System.out.println("Unable to create ViewReceiver");
+        }
         currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
     }
     @Test
