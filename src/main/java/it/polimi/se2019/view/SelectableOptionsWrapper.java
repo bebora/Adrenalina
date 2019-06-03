@@ -7,10 +7,12 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.Weapon;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SelectableOptionsWrapper {
+public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<String> selectableActions;
     private SelectableOptions<String> selectableEffects;
     private SelectableOptions<String> selectablePlayers;
@@ -66,7 +68,8 @@ public class SelectableOptionsWrapper {
                             getSelectableActions().
                             getOptions().
                             stream().
-                            map(Action::toString).collect(Collectors.toList()));
+                            map(Action::toString).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case EFFECT:
                     selectableEffects = new SelectableOptions<>(acceptableTypes.getSelectableEffects());
@@ -74,7 +77,8 @@ public class SelectableOptionsWrapper {
                             getSelectableEffects().
                             getOptions().
                             stream().
-                            map(Effect::getName).collect(Collectors.toList()));
+                            map(Effect::getName).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case PLAYERS:
                     selectablePlayers = new SelectableOptions<>(acceptableTypes.getSelectablePlayers());
@@ -82,40 +86,42 @@ public class SelectableOptionsWrapper {
                             getSelectablePlayers().
                             getOptions().
                             stream().
-                            map(p -> p.getToken().split("$")[0]).collect(Collectors.toList()));
+                            map(p -> p.getToken().split("$")[0]).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case POWERUP:
                     selectablePowerUps = new SelectableOptions<>(acceptableTypes.getSelectablePowerUps());
                     selectablePowerUps.setOptions(acceptableTypes.getSelectablePowerUps().
                             getOptions().
                             stream().
-                            map(p -> new ViewPowerUp(p)).collect(Collectors.toList()));
+                            map(p -> new ViewPowerUp(p)).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case ROOM:
                     selectableRooms = new SelectableOptions<>(acceptableTypes.getSelectableRooms());
                     selectableRooms.setOptions(acceptableTypes.getSelectableRooms().
                             getOptions().
                             stream().
-                            map(Color::toString).collect(Collectors.toList()));
+                            map(Color::toString).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case TILES:
                     selectableTileCoords = new SelectableOptions<>(acceptableTypes.getSelectableTileCoords());
                     selectableTileCoords.setOptions(acceptableTypes.getSelectableTileCoords().
                             getOptions().
                             stream().
-                            map(t -> new ViewTileCoords(t)).collect(Collectors.toList()));
+                            map(t -> new ViewTileCoords(t)).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case WEAPON:
                     selectableWeapons = new SelectableOptions<>(acceptableTypes.getSelectableWeapons());
                     selectableWeapons.setOptions(acceptableTypes.getSelectableWeapons().
                             getOptions().
                             stream().
-                            map(Weapon::getName).collect(Collectors.toList()));
+                            map(Weapon::getName).
+                            collect(Collectors.toCollection(ArrayList::new)));
                     break;
             }
         }
-
     }
-
-
 }

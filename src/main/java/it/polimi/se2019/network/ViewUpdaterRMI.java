@@ -114,7 +114,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                 remoteReceiver.receiveSelectablesWrapper(new SelectableOptionsWrapper(acceptableTypes));
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send acceptable type");
+                Logger.log(Priority.ERROR, "Unable to send acceptable type: " + e.getMessage());
             }
         };
         new Thread(task).start();

@@ -15,7 +15,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     private transient LobbyController lobbyController;
 
     @Override
-    public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) {
+    public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException{
         VirtualView virtualView = new VirtualView(lobbyController);
         ViewUpdater updater = new ViewUpdaterRMI(receiver);
         virtualView.setViewUpdater(updater);
@@ -26,7 +26,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     }
 
     @Override
-    public RequestDispatcher getRequestHandler(String username, String password) {
+    public RequestDispatcher getRequestHandler(String username, String password) throws RemoteException {
         String token = String.format("%s$%s", username, password.hashCode());
         return lobbyController.getRequestHandler(token);
     }

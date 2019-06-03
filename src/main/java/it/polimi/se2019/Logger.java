@@ -25,5 +25,6 @@ public final class Logger {
                 break;
         }
         //TODO LOG TO RELATIVE FILE
+        System.out.println(toLog);
     }
 }

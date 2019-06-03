@@ -5,10 +5,9 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ConnectHandler;
 import it.polimi.se2019.controller.LobbyController;
 
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 /**
  * Create WorkerServerRMI and export it on the RMI registry
@@ -29,20 +28,13 @@ public class RMIServer extends Thread{
     @Override
     public void run() {
         try {
-            LocateRegistry.createRegistry(port);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Could not create create RMI registry due to RemoteException");
-        }
-        try {
+            Registry registry = LocateRegistry.createRegistry(port);
             ConnectHandler connectHandler = new ConnectHandler(lobbyController);
-            Naming.rebind("//localhost/AdrenalineServer", connectHandler);
+            Logger.log(Priority.DEBUG, "Created registry on port "+port);
+            registry.rebind("AdrenalineServer", connectHandler);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Could not bind connectHandler to RMI registry due to RemoteException");
-        }
-        catch (MalformedURLException e) {
-            Logger.log(Priority.ERROR, "Could not bind connectHandler to RMI registry due to MalformedURLException");
+            Logger.log(Priority.ERROR, "Could not bind connectHandler to RMI registry due to RemoteException: " + e.getMessage());
         }
     }
 

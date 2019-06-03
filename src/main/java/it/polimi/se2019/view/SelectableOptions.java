@@ -1,9 +1,10 @@
 package it.polimi.se2019.view;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectableOptions<T> {
+public class SelectableOptions<T> implements Serializable {
     /**
      * Prompt that describes what the options are for
      */
@@ -11,7 +12,7 @@ public class SelectableOptions<T> {
     /**
      * Options that can be selected
      */
-    List<T> options;
+    ArrayList<T> options;
     /**
      * Minimun number of options that must be selected
      */
@@ -45,7 +46,7 @@ public class SelectableOptions<T> {
         this.minSelectables = minSelectables;
     }
 
-    public void setOptions(List<T> options) {
+    public void setOptions(ArrayList<T> options) {
         this.options = options;
     }
 
@@ -61,7 +62,7 @@ public class SelectableOptions<T> {
     }
 
     public SelectableOptions(List<T> options, int maxSelectables, int minSelectables, String prompt) {
-        this.options = options;
+        this.options = new ArrayList<>(options);
         this.maxSelectables = maxSelectables;
         this.minSelectables = minSelectables;
         this.prompt = prompt;
