@@ -3,13 +3,18 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
+import it.polimi.se2019.model.board.Color;
+import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static it.polimi.se2019.model.ThreeState.TRUE;
 
 public class GameController extends Observer {
     private Match match;
@@ -22,7 +27,19 @@ public class GameController extends Observer {
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
 
-    public GameController(List<Player> players,String boardName, int numSkulls, boolean domination) {
+    @Override
+    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
+            currentPlayer.setAlive(TRUE);
+            Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
+                    filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
+            currentPlayer.setTile(tile);
+            currentPlayer.discardPowerUp(powerUps.get(0));
+            playTurn();
+        }
+    }
+
+    public GameController(List<Player> players, String boardName, int numSkulls, boolean domination) {
         if(!domination){
             match = new NormalMatch(players,boardName,numSkulls);
         }else{
