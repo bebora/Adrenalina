@@ -38,7 +38,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void checkFinished() {
         if (System.currentTimeMillis() >= start + time*1000) {
             endHandler();
-            //TODO OBSERVER NEXT TURN
         }
 
     }
@@ -63,7 +62,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             Logger.log(Priority.DEBUG, "Millis remaining: " + (System.currentTimeMillis() - this.start));
         }
         if (!blocked) {
-            observer.updateOnStopSelection(false, true);
+            observer.updateOnStopSelection(true, true);
         }
     }
 

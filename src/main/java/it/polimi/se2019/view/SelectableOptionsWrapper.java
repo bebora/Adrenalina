@@ -20,6 +20,14 @@ public class SelectableOptionsWrapper {
     private SelectableOptions<String> selectableWeapons;
     private List<ReceivingType> acceptedTypes;
 
+    public SelectableOptions<String> getSelectableEffects() {
+        return selectableEffects;
+    }
+
+    public List<ReceivingType> getAcceptedTypes() {
+        return acceptedTypes;
+    }
+
     public SelectableOptions<String> getSelectableActions() {
         return selectableActions;
     }
@@ -49,7 +57,7 @@ public class SelectableOptionsWrapper {
     }
 
     public SelectableOptionsWrapper(AcceptableTypes acceptableTypes) {
-
+        acceptedTypes = acceptableTypes.getAcceptedTypes();
         for (ReceivingType receivingType : acceptableTypes.getAcceptedTypes()) {
             switch (receivingType) {
                 case ACTION:

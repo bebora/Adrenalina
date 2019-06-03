@@ -4,7 +4,6 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.RequestDispatcher;
-import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.ViewUpdater;
 
 import java.rmi.RemoteException;
@@ -22,6 +21,7 @@ public class VirtualView extends View  {
 
 
     public VirtualView (LobbyController lobbyController) {
+        super();
         this.lobbyController = lobbyController;
     }
 

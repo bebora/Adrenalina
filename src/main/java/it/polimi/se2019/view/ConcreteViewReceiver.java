@@ -18,7 +18,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
 
     @Override
     public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
-        //TODO
+        System.out.println(selectableOptionsWrapper.getAcceptedTypes());
     }
 
     /**

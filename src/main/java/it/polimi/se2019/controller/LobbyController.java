@@ -139,6 +139,7 @@ public class LobbyController extends Thread{
         int rnd = new Random().nextInt(directoryListing.length);
         String boardName = directoryListing[rnd].getName();
         GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION));
+        gameController.startTurn();
         games.add(gameController);
     }
 

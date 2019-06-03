@@ -461,7 +461,7 @@ public class EffectController extends Observer {
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
-        else{
+        else {
             throw new IncorrectEvent("Bersagli sbagliati!");
         }
     }
