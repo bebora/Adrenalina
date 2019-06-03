@@ -1,9 +1,14 @@
 package it.polimi.se2019.view.cli;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewWeapon;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 public class CLI extends View {
@@ -55,10 +60,25 @@ public class CLI extends View {
 
     static void printMessage(String message,String color){
         moveCursor(1, AsciiBoard.boardBottomBorder + 7);
+        cleanRow();
         printInColor(color, message);
     }
 
     public List<ViewWeapon> getDisplayedWeapons() {
         return displayedWeapons;
+    }
+
+    @Override
+    public void refresh(){
+        AsciiBoard.drawBoard(getPlayers());
+        while(!getMessages().isEmpty()) {
+            CLI.printMessage(getMessage(), "W");
+            System.out.print(getMessages().size());
+            try{
+                System.in.read();
+            }catch(IOException e){
+                Logger.log(Priority.DEBUG,e.getMessage());
+            }
+        }
     }
 }

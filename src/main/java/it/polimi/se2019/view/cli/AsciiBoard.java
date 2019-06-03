@@ -65,6 +65,7 @@ public class AsciiBoard {
 
     static void drawPlayers(List<ViewPlayer> players, ViewTile tile){
         List<String> inTile = players.stream()
+                .filter(p->p.getTile()!=null)
                 .filter(p -> p.getTile().equals(tile))
                 .map(ViewPlayer::getColor)
                 .collect(Collectors.toList());

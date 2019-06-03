@@ -129,6 +129,18 @@ public class View {
 		this.receiver = receiver;
 	}
 
+	public String getMessage(){
+		return messages.poll();
+	}
+
+	public Queue<String> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(Queue<String> messages) {
+		this.messages = messages;
+	}
+
 	public ViewPlayer getSelf(){
 		return players.stream()
 				.filter(p -> p.getUsername().equals(username))
@@ -184,4 +196,6 @@ public class View {
 	public void setStatus(Status status) {
 		this.status = status;
 	}
+
+	public void refresh(){};
 }
