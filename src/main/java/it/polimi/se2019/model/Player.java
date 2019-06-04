@@ -89,16 +89,19 @@ public class Player {
 
 	private Object editing;
 
+	private Color color;
+
 	/**
 	 * Tracks how many damages can be allocated in spawnpoints
 	 * Used in Domination Mode
 	 */
 	private int damagesAllocable;
 
+	private boolean firstPlayer;
+
 	private boolean firstShotReward;
 
-	private boolean firstPlayer;
-	private Color color;
+	private Match match;
 
 	/**
 	 * Authentication token saved in this format: {username}$salt${HMAC(password+salt)}
@@ -198,7 +201,6 @@ public class Player {
 	 * Number of time that the player has been killed before FinalFrenzy
 	 */
 	private int trackSkulls;
-
 
 	public Boolean getDominationSpawn() {
 		return FALSE;
@@ -433,6 +435,7 @@ public class Player {
 			alive = ThreeState.FALSE;
 		for(Action a: actions)
 			a.updateOnHealth(damages.size());
+		sendTotalUpdate();
 	}
 
 	/**
@@ -445,6 +448,7 @@ public class Player {
 	public void addPowerUp(PowerUp powerUp, boolean limit) {
 		if (!(limit && powerUps.size() >= 3)) {
 			powerUps.add(powerUp);
+			sendTotalUpdate();
 		}
 	}
 
@@ -455,6 +459,7 @@ public class Player {
 	public void discardPowerUp(PowerUp powerUp) {
 		powerUps.remove(powerUp);
 		addAmmo(powerUp.getDiscardAward());
+		sendTotalUpdate();
 	}
 
 	/**
@@ -509,12 +514,32 @@ public class Player {
 		this.damagesAllocable+=1;
 	}
 
-	public String getToken() {
+    public Match getMatch() {
+        return match;
+    }
+
+    public String getToken() {
 		return token;
 	}
 
+	public String getUsername() {
+	    if (token == null) return null;
+	    else return token.split("$")[0];
+    }
+
 	public void setColor(Color color) {
 		this.color = color;
+	}
+
+	public void setMatch(Match match) {
+		this.match = match;
+	}
+
+	private void sendTotalUpdate(){
+		if (match != null) {
+			//TODO don't send total update if player not online. Could be useless if called only in match and nowhere in player
+			this.match.updateViews();
+		}
 	}
 
 	@Override

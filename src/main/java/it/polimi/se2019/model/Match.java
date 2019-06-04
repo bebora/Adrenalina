@@ -41,6 +41,7 @@ public abstract class Match {
 	public void restoreMatch(Match oldMatch){
     	for(int i = 0; i < players.size(); i++)
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
+    	updateViews();
 	}
 
 
@@ -116,6 +117,7 @@ public abstract class Match {
 				p.getRewardPoints().subList(1,p.getRewardPoints().size()).clear();
 			p.getRewardPoints().addAll(new ArrayList<>(Arrays.asList(2,1,1,1)));
 		}
+		updateViews();
 	}
 
 	/**
@@ -151,11 +153,13 @@ public abstract class Match {
 
 		long onlinePlayers = players.stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count();
 		if (onlinePlayers < 3 || (finalFrenzy && currentPlayer == firstPlayer)) {
+		    updateViews();
 			return true;
 		}
 
 		if (!finalFrenzy && checkFrenzy())
 			startFrenzy();
+		updateViews();
 		return false;
 	}
 
@@ -199,6 +203,7 @@ public abstract class Match {
 		if (player.getDamages().size() >= 11) {
 			scoreDeadShot(player);
 		}
+		updateViews();
 	}
 
 	public abstract void scoreDeadShot(Player player);
@@ -258,5 +263,18 @@ public abstract class Match {
 
 	public UpdateSender getUpdateSender() {
 		return updateSender;
+	}
+
+	/**
+	 * Send total update to each player in match
+	 */
+	public void updateViews() {
+		for (Player p: players) {
+			//TODO check in another way, maybe with online attribute?
+			if (p.getMatch() == null) continue;
+			updateSender.sendTotalUpdate(p.getUsername(), board, players,
+					p.getId(), p.getPoints(), p.getPowerUps(),
+					p.getWeapons());
+		}
 	}
 }
