@@ -1,10 +1,10 @@
-name:fucile a pompa
+name:shotgun
 cost:
   yellow
   yellow
 effects:
-    name:modalità base
-    desc:Dai 3 danni a 1 bersaglio nel quadrato in cui ti trovi. Se vuoi puoi muovere quel bersaglio di 1 quadrato.
+    name:basic mode
+    desc:Deal 3 damage to 1 target on your square. If you want, you may then move the target 1 square.
     absolutePriority:1
     order:
       DEALDAMAGE
@@ -24,8 +24,8 @@ effects:
           maxTargets:0
         targetDestination:
           maxDistance:1
-    name:modalità canna lunga
-    desc:Dai 2 danni a 1 bersaglio in un quadrato distante esattamente 1 movimento.
+    name:in long barrel mode
+    desc:Deal 2 damage to 1 target on any square exactly one move away.
     absolutePriority:1
     order:
       DEALDAMAGE

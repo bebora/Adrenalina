@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 class WeaponControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono"),new Player("cattivo")));
-    private Weapon testWeapon = CardCreator.parseWeapon("cannoneVortex.btl");
+    private Weapon testWeapon = CardCreator.parseWeapon("vortexCannon.btl");
     private GameController gameController = new GameController(testPlayers,"board1.btlb",5,false);
     Match testMatch = gameController.getMatch();
     private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
@@ -54,7 +54,7 @@ class WeaponControllerTest {
 
      @Test
     void getUsableEffects(){
-        //test with cannoneVortex(absolutePriority, missing Ammos)
+        //test with vortexCannon(absolutePriority, missing Ammos)
          currentPlayer.addWeapon(testWeapon);
          currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
          try {
@@ -67,7 +67,7 @@ class WeaponControllerTest {
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
          for(int i = 0; i<3; i++)
              currentPlayer.getAmmos().remove(Ammo.RED);
-         assertEquals(weaponControllerTest.getUsableEffects().get(0),"effetto base");
+         assertEquals(weaponControllerTest.getUsableEffects().get(0),"basic effect");
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
 
          //fill ammos
@@ -77,23 +77,21 @@ class WeaponControllerTest {
              currentPlayer.addAmmo(Ammo.BLUE);
          }
 
-         //test with fucileLaser(equal absolutePriority)
-         testWeapon = CardCreator.parseWeapon("fucileLaser.btl");
+         //test with railgun(equal absolutePriority)
+         testWeapon = CardCreator.parseWeapon("railgun.btl");
          currentPlayer.addWeapon(testWeapon);
          weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(weaponControllerTest.getUsableEffects().size(), 2);
 
-         //test with spadaFotonica(relativePriority)
-         testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
+         //test with cyberblade(relativePriority)
+         testWeapon = CardCreator.parseWeapon("cyberblade.btl");
          currentPlayer.addWeapon(testWeapon);
          weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(3,weaponControllerTest.getUsableEffects().size());
-         assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(1));
+         assertEquals("with shadowstep", weaponControllerTest.getUsableEffects().get(1));
          weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0).getName());
          assertEquals(2,weaponControllerTest.getUsableEffects().size());
-         assertEquals("passo d'ombra",weaponControllerTest.getUsableEffects().get(0));
-         assertEquals("modalità sminuzzare",weaponControllerTest.getUsableEffects().get(1));
+         assertEquals("with shadowstep", weaponControllerTest.getUsableEffects().get(0));
+         assertEquals("with slice and dice", weaponControllerTest.getUsableEffects().get(1));
      }
-
-
 }

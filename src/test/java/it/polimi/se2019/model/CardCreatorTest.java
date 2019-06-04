@@ -24,7 +24,7 @@ class CardCreatorTest {
 
     @Test
     void parseWeapon() {
-        Weapon test = CardCreator.parseWeapon("lanciarazzi.btl");
+        Weapon test = CardCreator.parseWeapon("rocketLauncher.btl");
 
         // Test various elements of the parser
         assertEquals(test.getEffects().get(2).getDamages().get(1).getDamagesAmount(), 1);

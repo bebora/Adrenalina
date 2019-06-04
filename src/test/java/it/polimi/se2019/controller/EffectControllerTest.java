@@ -40,7 +40,7 @@ public class EffectControllerTest {
         testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
         gameController = new GameController(testPlayers,"board1" +".btlb",5,false);
         testMatch = gameController.getMatch();
-        testWeapon = CardCreator.parseWeapon("spadaFotonica.btl");
+        testWeapon = CardCreator.parseWeapon("cyberblade.btl");
         originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
         originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
         VirtualView view = new VirtualView();
@@ -127,7 +127,7 @@ public class EffectControllerTest {
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(testMatch.getBoard().getTile(0,1),originalCurrentPlayer.getTile());
         //move opponent
-        testWeapon = CardCreator.parseWeapon("fucileAPompa.btl");
+        testWeapon = CardCreator.parseWeapon("shotgun.btl");
         Player enemy = new Player("nemico");
         testMatch.addPlayer(enemy);
         enemy.setTile(testMatch.getBoard().getTile(0,0));

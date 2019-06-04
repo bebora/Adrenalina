@@ -1,10 +1,10 @@
-name:lanciarazzi
+name:rocket launcher
  cost:
    red
    red
  effects:
-   name:effetto base
-   desc:Dai 2 danni a 1 bersaglio che puoi vedere e che non si trova nel tuo quadrato. Poi puoi muovere il bersaglio di 1 quadrato.
+   name:basic effect
+   desc:Deal 2 damage to 1 target you can see that is not on your square. Then you may move the target 1 square.
    absolutePriority:1
    order:
      DEALDAMAGE
@@ -32,8 +32,8 @@ name:lanciarazzi
          minDistance:0
          maxDistance:1
          pointOfView:LASTPLAYER
-   name:razzi portatili
-   desc:Muovi di 1 o 2 quadrati. Questo effetto può essere usato prima o dopo l'effetto base.
+   name:with rocket jump
+   desc:Move 1 or 2 squares. This effect can be used either before or after the basic effect.
    relativePriority:
    -1
    +1
@@ -48,9 +48,9 @@ name:lanciarazzi
        targetDestination:
          minDistance:1
          maxDistance:2
-   name:testata a frammentazione
-   desc:Durante l'effetto base, dai 1 danno a ogni giocatore presente nel quadrato in cui si trovava originariamente il bersaglio, incluso il bersaglio, anche se lo hai mosso.
-   relativePriority:
+   name:with fragmenting warhead
+   desc:During the basic effect, deal 1 damage to every player on your target's original square – including the target, even if you move it.
+      relativePriority:
    +1
    order:
      DEALDAMAGE

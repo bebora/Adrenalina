@@ -1,10 +1,10 @@
-name:falce protonica
+name:electroscythe
 cost:
 	blue
 effects:
-		name:modalità base
+		name:basic mode
 		absolutePriority:1
-		desc:Dai 1 danno a ogni altro giocatore presente nel quadrato in cui ti trovi.
+		desc:Deal 1 damage to every other player on your square.
 		order:
 			DEALDAMAGE
 		damages:
@@ -13,9 +13,9 @@ effects:
 				target:
 					maxDistance:0
 					areaDamage:tile
-		name:modalità mietitore
+		name:in reaper mode
 		absolutePriority:1
-		desc:Dai 2 danni a ogni altro giocatore presente nel quadrato in cui ti trovi.
+		desc:Deal 2 damage to every other player on your square
 		order:
 			DEALDAMAGE
 		cost:

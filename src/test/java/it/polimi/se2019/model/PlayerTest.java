@@ -46,7 +46,7 @@ class PlayerTest {
 
     @Test
     void reload() {
-        Weapon testWeapon = CardCreator.parseWeapon("lanciarazzi.btl");
+        Weapon testWeapon = CardCreator.parseWeapon("rocketLauncher.btl");
         for (int i = 0; i < 2; i++)
             testPlayer.addAmmo(Ammo.RED);
 
@@ -60,7 +60,7 @@ class PlayerTest {
 
     @Test
     void checkForAmmos() {
-        Weapon testWeapon = CardCreator.parseWeapon("lanciarazzi.btl");
+        Weapon testWeapon = CardCreator.parseWeapon("rocketLauncher.btl");
         for (int i = 0; i < 2; i++)
             testPlayer.addAmmo(Ammo.RED);
         testPlayer.addAmmo(Ammo.YELLOW);

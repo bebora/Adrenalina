@@ -3,9 +3,9 @@ cost:
   yellow
   red
 effects:
-    name:modalità base
+    name:basic mode
     absolutePriority:1
-    desc:Dai 1 danno e 2 marchi a 1 bersaglio che puoi vedere.
+    desc:Deal 1 damage and 2 marks to 1 target you can see.
     order:
       DEALDAMAGE
     damages:
@@ -15,9 +15,9 @@ effects:
         target:
           maxTargets:1
           visibility:TRUE
-    name:modalità scanner
+    name:in scanner mode
     absolutePriority:1
-    desc:Scegli fino a 3 bersagli che puoi vedere e dai 1 marchio a ciascuno.
+    desc:Choose up to 3 targets you can see and deal 1 mark to each.
     order:
       DEALDAMAGE
     damages:

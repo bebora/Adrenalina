@@ -1,9 +1,9 @@
-name:martello ionico
+name:sledgehammer
 cost:
   yellow
 effects:
-  name:modalità base
-  desc:Dai 2 danni a 1 bersaglio nel quadrato in cui ti trovi.
+  name:basic mode
+  desc:Deal 2 damage to 1 target on your square.
   absolutePriority:1
   order:
     DEALDAMAGE
@@ -13,8 +13,8 @@ effects:
       target:
         maxDistance:0
         maxTargets:1
-  name:modalità polverizzare
-  desc:Dai 3 danni a 1 bersaglio nel quadrato in cui ti trovi, poi muovi quel bersaglio di 0, 1 o 2 quadrati in una direzione.
+  name:in pulverize mode
+  desc:Deal 3 damage to 1 target on your square, then move that target 0, 1, or 2 squares in one direction.
   absolutePriority:1
   cost:
     red

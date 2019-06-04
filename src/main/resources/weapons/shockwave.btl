@@ -1,9 +1,9 @@
-name:onda d'urto
+name:shockwave
 cost:
   yellow
 effects:
-  name:modalità base
-  desc:Scegli fino a 3 bersagli su quadrati differenti, ognuno distante esattamente 1 movimento. Dai 1 danno a ogni bersaglio.
+  name:basic mode
+  desc:Choose up to 3 targets on different squares, each exactly 1 move away. Deal 1 damage to each target.
   absolutePriority:1
   order:
     DEALDAMAGE
@@ -15,8 +15,8 @@ effects:
         minDistance:1
         differentSquare:TRUE
         maxTargets:3
-  name:modalità tsunami
-  desc:Dai 1 danno a tutti i bersagli che sono distanti esattamente 1 movimento.
+  name:in tsunami mode
+  desc:Deal 1 damage to all targets that are exactly 1 move away.
   absolutePriority:1
   order:
     DEALDAMAGE

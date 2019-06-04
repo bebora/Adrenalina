@@ -75,7 +75,7 @@ public class ActionControllerTest {
 
     @Test
     void testAttack(){
-        currentPlayer.addWeapon(CardCreator.parseWeapon("spadaFotonica.btl"));
+        currentPlayer.addWeapon(CardCreator.parseWeapon("cyberblade.btl"));
         actionController.updateOnAction(currentPlayer.getActions().get(2));
         actionController.updateOnWeapon(currentPlayer.getWeapons().get(0));
         assertNotNull(actionController.getWeaponController());
