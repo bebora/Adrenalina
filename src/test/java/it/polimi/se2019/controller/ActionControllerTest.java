@@ -10,7 +10,6 @@ import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
-import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,10 +30,10 @@ public class ActionControllerTest {
     @BeforeEach
     void beforeEach() {
         currentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
-        View view = new View();
+        VirtualView view = new VirtualView();
         ViewUpdater viewUpdater = null;
         try {
-            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view), view);
         }
         catch (RemoteException e) {
             System.out.println("Unable to create ViewReceiver");

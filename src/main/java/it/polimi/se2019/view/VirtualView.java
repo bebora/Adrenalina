@@ -19,10 +19,13 @@ public class VirtualView extends View  {
     private ViewUpdater viewUpdater;
     private RequestDispatcher requestDispatcher;
 
-
     public VirtualView (LobbyController lobbyController) {
         super();
         this.lobbyController = lobbyController;
+    }
+
+    public VirtualView() {
+        super();
     }
 
     /**

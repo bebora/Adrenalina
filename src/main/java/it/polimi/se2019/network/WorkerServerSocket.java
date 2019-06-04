@@ -9,14 +9,12 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
+import it.polimi.se2019.model.updatemessage.PopupMessageUpdate;
 import it.polimi.se2019.model.updatemessage.UpdateSerializer;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.VirtualView;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -64,6 +62,7 @@ public class WorkerServerSocket extends Thread {
                 lobbyController.connectPlayer(username,password,mode, virtualView);
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
+            virtualView.setOnline(true);
             eventVisitor = new EventVisitor(virtualView.getRequestDispatcher(), lobbyController);
         }
         catch (ClassCastException e){
@@ -89,9 +88,12 @@ public class WorkerServerSocket extends Thread {
         updater.start();
         Listener listener = new Listener();
         listener.start();
+        Ping ping = new Ping();
+        ping.start();
+
     }
 
-    public void update(UpdateVisitable update) {
+    public synchronized void update(UpdateVisitable update) {
         String json = gson.toJson(update, UpdateVisitable.class);
         try {
             queue.put(json);
@@ -108,7 +110,7 @@ public class WorkerServerSocket extends Thread {
                     String json;
                     do {
                         try {
-                            json = (String) queue.take() + "\n";
+                            json = queue.take() + "\n";
                             jsonSender.write(json, 0, json.length());
                             jsonSender.flush();
                         }
@@ -137,10 +139,26 @@ public class WorkerServerSocket extends Thread {
                     event.accept(eventVisitor);
                 }
                 catch (IOException e) {
-                    //TODO LOGGER
-                    throw new UnsupportedOperationException();
+                    virtualView.setOnline(false);
                 }
             }
+        }
+    }
+
+    private class Ping extends Thread {
+        @Override
+        public void run() {
+            UpdateVisitable ping = new PopupMessageUpdate("ping");
+            while (!socket.isClosed()) {
+                update(ping);
+                try {
+                    Thread.sleep(50);
+                }
+                catch (InterruptedException e) {
+                    System.out.print("Interrupted");
+                }
+            }
+
         }
     }
 }

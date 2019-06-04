@@ -112,7 +112,7 @@ public class LobbyController extends Thread{
                     collect(Collectors.toList());
             if (allTokens.contains(token)) {
                 Player player = game.getMatch().getPlayers().
-                        stream().filter(p -> p.getVirtualView().getRequestDispatcher().equals(token)).findFirst().orElse(null);
+                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
                 return player.getVirtualView().getRequestDispatcher();
             }
         }

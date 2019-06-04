@@ -25,6 +25,10 @@ public abstract class Match {
         currentPlayer = firstPlayer;
         board = BoardCreator.parseBoard(boardFilename, numSkulls);
         this.updateSender = new UpdateSender(this);
+
+
+
+
     }
 
     public Match(Match originalMatch){

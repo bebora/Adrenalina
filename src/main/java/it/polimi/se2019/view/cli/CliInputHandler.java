@@ -68,32 +68,36 @@ public class CliInputHandler implements Runnable{
     private void parseSelection(String[] inSplit){
         String[] selectedElements = new String[inSplit.length];
         System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-3);
-        switch(inSplit[1]){
-            case "PLAYER":
-                parsePlayers(selectedElements);
-                break;
-            case "TILE":
-                parseTiles(selectedElements);
-                break;
-            case "ROOM":
-                parseRoom(inSplit[2]);
-                break;
-            case "WEAPON":
-                eventUpdater.sendWeapon(inSplit[2]);
-                break;
-            case "DIRECTION":
-                parseDirection(inSplit[2]);
-                break;
-            case "ACTION":
-                parseAction(inSplit[2]);
-                break;
-            case "POWERUP":
-                parsePowerUps(selectedElements);
-                break;
-            default:
-                CLI.printMessage("This is not something you can select!","R");
-                break;
+        if (view.getReceivingTypes().contains(inSplit[1])) {
+            switch (inSplit[1]) {
+                case "PLAYERS":
+                    parsePlayers(selectedElements);
+                    break;
+                case "TILES":
+                    parseTiles(selectedElements);
+                    break;
+                case "ROOM":
+                    parseRoom(inSplit[2]);
+                    break;
+                case "WEAPON":
+                    eventUpdater.sendWeapon(inSplit[2]);
+                    break;
+                case "DIRECTION":
+                    parseDirection(inSplit[2]);
+                    break;
+                case "ACTION":
+                    parseAction(inSplit[2]);
+                    break;
+                case "POWERUP":
+                    parsePowerUps(selectedElements);
+                    break;
+                default:
+                    CLI.printMessage("This is not something you can select!", "R");
+                    break;
+            }
         }
+        else
+            CLI.printMessage("This is not something you can select!", "R");
     }
 
     private void parsePlayers(String[] players){
@@ -190,7 +194,7 @@ public class CliInputHandler implements Runnable{
         String in;
         String answer = "RMI";
         String username = "user";
-        String password = "password";
+        String standard_pw = "password";
         String gameMode = "NORMAL";
         boolean existingGame = false;
         try{
@@ -199,7 +203,7 @@ public class CliInputHandler implements Runnable{
             CLI.printInColor("W","Username: ");
             username = input.readLine();
             CLI.printInColor("W","Password: ");
-            password = input.readLine();
+            standard_pw = input.readLine();
             CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
             if(input.readLine().equals("y"))
                 existingGame = true;
@@ -221,7 +225,7 @@ public class CliInputHandler implements Runnable{
             }catch (Exception e){
                 Logger.log(Priority.ERROR,e.getMessage());
             }
-            view.setupConnection(answer,username,password,connectionProperties,existingGame,gameMode);
+            view.setupConnection(answer,username,standard_pw,connectionProperties,existingGame,gameMode);
             eventUpdater = view.getEventUpdater();
         }
     }

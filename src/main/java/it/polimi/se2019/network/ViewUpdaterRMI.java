@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
  */
 public class ViewUpdaterRMI implements ViewUpdater {
     private ViewReceiverInterface remoteReceiver;
+    private View view;
+    private RMIPinger pinger;
 
     @Override
     public void sendAmmosTaken(Player player) {
@@ -34,6 +36,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send ammos taken");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -47,6 +50,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send attack player");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -63,6 +67,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send ammos taken");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -76,6 +81,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send current options");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -89,6 +95,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send movement");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -102,6 +109,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send popup");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -116,6 +124,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send acceptable type: " + e.getMessage());
             }
+            view.setOnline(false);
         };
         new Thread(task).start();
     }
@@ -129,6 +138,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send tile");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -160,6 +170,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send total update");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -176,6 +187,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send weapon taken");
+                view.setOnline(false);
             }
         };
         new Thread(task).start();
@@ -184,7 +196,14 @@ public class ViewUpdaterRMI implements ViewUpdater {
     /**
      * Constructor which takes the remote ViewReceiverInterface, which will be used to send updates to the client
      */
-    public ViewUpdaterRMI(ViewReceiverInterface remoteReceiver) {
+    public ViewUpdaterRMI(ViewReceiverInterface remoteReceiver, VirtualView view) {
         this.remoteReceiver = remoteReceiver;
+        this.view = view;
+        view.setOnline(true);
+        this.pinger = new RMIPinger(view);
+    }
+
+    public RMIPinger getPinger() {
+        return pinger;
     }
 }

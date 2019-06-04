@@ -9,7 +9,6 @@ import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
-import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +31,10 @@ class WeaponControllerTest {
 
     @Test
     void assignWeapon(){
-        View view = new View();
+        VirtualView view = new VirtualView();
         ViewUpdater viewUpdater;
         try {
-            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view));
+            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view), view);
         }
         catch (RemoteException e){
             assert false;
@@ -59,7 +58,7 @@ class WeaponControllerTest {
          currentPlayer.addWeapon(testWeapon);
          currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
          try {
-             currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView())));
+             currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView()), currentPlayer.getVirtualView()));
          }
          catch (RemoteException e) {
              System.out.println("Unable to create ViewReceiver");

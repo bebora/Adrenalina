@@ -86,6 +86,7 @@ public class SelectableOptionsWrapper implements Serializable {
                             getSelectablePlayers().
                             getOptions().
                             stream().
+                            filter(p -> p.getToken() != null).
                             map(p -> p.getToken().split("$")[0]).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;

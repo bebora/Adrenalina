@@ -17,12 +17,13 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     @Override
     public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException{
         VirtualView virtualView = new VirtualView(lobbyController);
-        ViewUpdater updater = new ViewUpdaterRMI(receiver);
+        ViewUpdater updater = new ViewUpdaterRMI(receiver, virtualView);
         virtualView.setViewUpdater(updater);
         if (!existingGame)
             lobbyController.connectPlayer(username, password, mode, virtualView);
         else
             lobbyController.reconnectPlayer(username, password, virtualView);
+        ((ViewUpdaterRMI) updater).getPinger().start();
     }
 
     @Override

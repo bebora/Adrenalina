@@ -2,7 +2,6 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.EventUpdaterSocket;
@@ -10,8 +9,10 @@ import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.Queue;
+import java.util.stream.Collectors;
 
 /**
  * View used by the clients for:
@@ -44,7 +45,17 @@ public class View {
 
 	protected ViewReceiverInterface receiver;
 
-	private List<ReceivingType> types;
+	private boolean online;
+
+	private SelectableOptionsWrapper selectableOptionsWrapper;
+
+	public void setOnline(boolean online) {
+		this.online = online;
+	}
+
+	public boolean isOnline() {
+		return online;
+	}
 
 	public View() {
 		try {
@@ -53,6 +64,11 @@ public class View {
 		catch (RemoteException e) {
 			Logger.log(Priority.ERROR, "Unexpected RemoteException while creating ViewReceiver!");
 		}
+		online = false;
+	}
+
+	public SelectableOptionsWrapper getSelectableOptionsWrapper() {
+		return selectableOptionsWrapper;
 	}
 
 	public List<ViewPlayer> getPlayers() {
@@ -95,9 +111,6 @@ public class View {
 		this.username = username;
 	}
 
-	public void setTypes(List<ReceivingType> types) {
-		this.types = types;
-	}
 
 	public void setBoard(ViewBoard board) {
 		this.board = board;
@@ -133,9 +146,6 @@ public class View {
 		this.receiver = receiver;
 	}
 
-	public List<ReceivingType> getTypes() {
-		return types;
-	}
 
 	public String getMessage(){
 		return messages.poll();
@@ -195,6 +205,10 @@ public class View {
 			}
 		}
 
+	}
+
+	public List<String> getReceivingTypes() {
+		return selectableOptionsWrapper.getAcceptedTypes().stream().map(Objects::toString).collect(Collectors.toList());
 	}
 
 	public Status getStatus() {

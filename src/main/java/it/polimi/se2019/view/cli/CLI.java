@@ -2,13 +2,10 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewWeapon;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,8 +70,8 @@ public class CLI extends View {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY;
         CLI.moveCursor(x,y);
-        for (ReceivingType r : getTypes()) {
-            CLI.printInColor("w", r.name());
+        for (String r : getReceivingTypes()) {
+            CLI.printInColor("w", r);
             moveCursor(x,++y);
         }
     }

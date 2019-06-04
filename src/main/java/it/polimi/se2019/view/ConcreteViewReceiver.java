@@ -18,7 +18,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
 
     @Override
     public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
-        System.out.println(selectableOptionsWrapper.getAcceptedTypes());
     }
 
     /**
@@ -88,10 +87,14 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
-        if (linkedView.getStatus() == Status.LOGIN && message.equals("SUCCESS")){
+        if (message.equals("ping"))
+            return;
+        else if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
         }
-        System.out.println(message);
+        else if (message.contains("$") && message.split("$")[0].equals("WINNERS")) {
+            //TODO game ended! show winners
+        }
         //TODO show message to the client, e.g. view.showPopup(message)
     }
 
