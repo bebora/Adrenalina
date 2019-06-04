@@ -46,7 +46,7 @@ public class DominationMatch extends Match {
      * Insert spawnPoints if second Turn
      */
     @Override
-    public void newTurn() {
+    public boolean newTurn() {
         Player currentPlayer = super.getPlayers().get(getCurrentPlayer());
         List<Tile> spawnTiles = spawnPoints.stream().map(Player::getTile).collect(Collectors.toList());
 
@@ -68,7 +68,7 @@ public class DominationMatch extends Match {
             }
         }
 
-        super.newTurn();
+        boolean to_return = super.newTurn();
 
         if (super.getCurrentPlayer() == super.getFirstPlayer()) {
             currentTurn++;
@@ -81,6 +81,7 @@ public class DominationMatch extends Match {
         if (currentTurn == 1) {
             insertSpawnPoints();
         }
+        return to_return;
     }
 
     /**

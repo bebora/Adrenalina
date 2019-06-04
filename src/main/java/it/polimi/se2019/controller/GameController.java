@@ -106,7 +106,18 @@ public class GameController extends Observer {
     }
 
     public void endTurn(){
-        match.newTurn();
+        if (match.newTurn()) {
+            List<Player> players = match.getWinners();
+            StringBuffer stringBuffer = new StringBuffer("WINNERS$Winners are ");
+            for (Player p : players) {
+                stringBuffer.append(p.getToken().split("$")[0] + ", ");
+            }
+            players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
+            //TODO @simone send winners to players
+            //TODO stop all the socket connections
+            lobbyController.getGames().remove(this);
+            return;
+        }
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
         spawnablePlayers =match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)

@@ -80,6 +80,8 @@ public abstract class Match {
 	 */
 	boolean finalFrenzy;
 
+
+
 	/**
 	 * Manage the change to frenzy mode
 	 * Update the actions available for each player
@@ -87,6 +89,7 @@ public abstract class Match {
  	 */
 	public void startFrenzy() {
 		finalFrenzy = TRUE;
+		firstPlayer = currentPlayer;
 		Boolean afterFirst;
 		// Update actions
 		if (firstPlayer < currentPlayer) {
@@ -111,7 +114,7 @@ public abstract class Match {
 			p.setFirstShotReward(false);
 			if (!p.getRewardPoints().isEmpty())
 				p.getRewardPoints().subList(1,p.getRewardPoints().size()).clear();
-			p.getRewardPoints().addAll(new ArrayList<Integer>(Arrays.asList(2,1,1,1)));
+			p.getRewardPoints().addAll(new ArrayList<>(Arrays.asList(2,1,1,1)));
 		}
 	}
 
@@ -122,7 +125,7 @@ public abstract class Match {
 	 * Refresh {@link Board#weaponsDeck} and {@link Board#ammoCards} on the board
 	 * Start Frenzy if conditions are met
 	 */
-	public void newTurn() {
+	public boolean newTurn() {
 		// Dead players
 		List<Player> deadPlayers = players.stream().
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
@@ -146,10 +149,14 @@ public abstract class Match {
 					collect(Collectors.toList()).
 					size();
 
-		//TODO add checking for winners and end of the game, finding a way to keep count of when it happens!
+		long onlinePlayers = players.stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count();
+		if (onlinePlayers < 3 || (finalFrenzy && currentPlayer == firstPlayer)) {
+			return true;
+		}
 
 		if (!finalFrenzy && checkFrenzy())
 			startFrenzy();
+		return false;
 	}
 
 	/**

@@ -129,10 +129,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons) {
-        if (linkedView.getStatus() != Status.PLAYING) {
-            linkedView.setStatus(Status.PLAYING);
-            System.out.println("playing!");
-        }
         linkedView.setUsername(username);
         linkedView.setBoard(board);
         linkedView.setPerspective(helper.getTileFromCoords(perspective));
@@ -141,6 +137,10 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         linkedView.setPoints(points);
         linkedView.setPowerUps(powerUps);
         linkedView.setLoadedWeapons(loadedWeapons);
+        if (linkedView.getStatus() != Status.PLAYING) {
+            linkedView.setStatus(Status.PLAYING);
+        }
+        linkedView.refresh();
     }
 
     /**

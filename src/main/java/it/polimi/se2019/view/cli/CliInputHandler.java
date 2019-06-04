@@ -233,7 +233,14 @@ public class CliInputHandler implements Runnable{
             connectionChoice(input);
         else
             LoginScreen.main(args);
-        while(view.getStatus()==Status.WAITING);
+        while(view.getStatus()==Status.WAITING) {
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+            }
+        }
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
         }
