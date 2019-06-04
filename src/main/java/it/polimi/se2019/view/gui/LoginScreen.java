@@ -21,6 +21,7 @@ public class LoginScreen extends Application {
     @FXML PasswordField password;
     @FXML CheckBox existingGame;
     @FXML ComboBox<String> mode;
+    private String gameMode = "NORMAL";
     private String selectedConnection;
     @Override
     public void start(Stage stage) throws Exception {
@@ -33,6 +34,13 @@ public class LoginScreen extends Application {
 
     public void selectConnection(){
         selectedConnection = (String)connectionType.getSelectionModel().getSelectedItem();
+    }
+
+    @FXML
+    public void selectMode(){
+        if(mode.getSelectionModel().getSelectedItem() != null){
+            gameMode = mode.getSelectionModel().getSelectedItem();
+        }
     }
 
     public void login(){
@@ -51,7 +59,7 @@ public class LoginScreen extends Application {
             }catch (Exception e){
                 Logger.log(Priority.ERROR,e.getMessage());
             }
-            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected());
+            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
             stage.setScene(scene);
         }catch (IOException e){
             Logger.log(Priority.DEBUG,e.getMessage());

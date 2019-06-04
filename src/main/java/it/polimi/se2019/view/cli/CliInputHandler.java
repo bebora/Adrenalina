@@ -187,9 +187,11 @@ public class CliInputHandler implements Runnable{
 
     private void connectionChoice(BufferedReader input){
         CLI.printInColor("W","RMI or Socket?\n");
+        String in;
         String answer = "RMI";
         String username = "user";
         String password = "password";
+        String gameMode = "NORMAL";
         boolean existingGame = false;
         try{
             answer = input.readLine();
@@ -201,6 +203,11 @@ public class CliInputHandler implements Runnable{
             CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
             if(input.readLine().equals("y"))
                 existingGame = true;
+            CLI.printInColor("W","Game mode (NORMAL/DOMINATION)");
+            if((in = input.readLine()).equalsIgnoreCase("DOMINATION")){
+                gameMode = "DOMINATION";
+            }
+
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
@@ -214,7 +221,7 @@ public class CliInputHandler implements Runnable{
             }catch (Exception e){
                 Logger.log(Priority.ERROR,e.getMessage());
             }
-            view.setupConnection(answer,username,password,connectionProperties,existingGame);
+            view.setupConnection(answer,username,password,connectionProperties,existingGame,gameMode);
             eventUpdater = view.getEventUpdater();
         }
     }
