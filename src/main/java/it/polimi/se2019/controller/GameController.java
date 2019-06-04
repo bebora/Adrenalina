@@ -27,6 +27,9 @@ public class GameController extends Observer {
     private Random random = new Random();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
+    List<Player> overkillPlayers;
+
+
 
 
     @Override
@@ -127,7 +130,7 @@ public class GameController extends Observer {
     }
 
     public void endTurn(){
-        List<Player> overkillPlayers = match.
+        overkillPlayers = match.
                 getPlayers().
                 stream().
                 filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 8).
@@ -138,13 +141,20 @@ public class GameController extends Observer {
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
         if (!spawnPoints.isEmpty() &&  !overkillPlayers.isEmpty()) {
-
             acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
             acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1,1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
             overkillPlayers.get(0).getDamages().remove(7);
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
-            return;
+            try {
+                timerCostrainedEventHandler.join();
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
+            }
+            if (!timerCostrainedEventHandler.isBlocked()) {
+                   overkillPlayers.stream().forEach(p -> p.getDamages().remove(7));
+            }
         }
         else if (match.newTurn()) {
             List<Player> players = match.getWinners();
@@ -158,6 +168,7 @@ public class GameController extends Observer {
             lobbyController.getGames().remove(this);
             return;
         }
+        actionCounter = 0;
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
         spawnablePlayers =match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)

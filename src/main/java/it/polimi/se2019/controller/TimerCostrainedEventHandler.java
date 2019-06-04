@@ -23,6 +23,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private RequestDispatcher requestDispatcher;
     private AcceptableTypes acceptableTypes;
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
     public TimerCostrainedEventHandler(Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
         time = Integer.parseInt(MyProperties.getInstance().getProperty("time"));
         active = true;

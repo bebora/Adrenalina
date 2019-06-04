@@ -35,7 +35,8 @@ public class Spawner extends Observer {
         }
     }
 
-    public void updateOnEndTime() {
+    @Override
+    public void updateOnStopSelection(boolean reverse, boolean skip) {
         Random random = new Random();
         int rnd = random.nextInt(playerToSpawn.getPowerUps().size());
         updateOnPowerUps(new ArrayList<>(Collections.singleton(playerToSpawn.getPowerUps().get(rnd))), false);
