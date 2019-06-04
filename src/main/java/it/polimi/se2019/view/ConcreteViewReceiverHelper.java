@@ -32,7 +32,10 @@ public class ConcreteViewReceiverHelper {
      */
     public ViewTile getTileFromCoords(ViewTileCoords coords) {
         try {
-            return view.getBoard().getTiles().get(coords.getPosy()).get(coords.getPosx());
+            if(coords!=null)
+                return view.getBoard().getTiles().get(coords.getPosy()).get(coords.getPosx());
+            else
+                return null;
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidUpdateException("Tile with given coords does not exist");
         }

@@ -25,10 +25,10 @@ public abstract class Match {
         currentPlayer = firstPlayer;
         board = BoardCreator.parseBoard(boardFilename, numSkulls);
         this.updateSender = new UpdateSender(this);
-
-
-
-
+        for(Player p: this.players){
+        	p.setMatch(this);
+		}
+        updateViews();
     }
 
     public Match(Match originalMatch){
@@ -38,7 +38,7 @@ public abstract class Match {
     	this.currentPlayer = originalMatch.getCurrentPlayer();
     	this.board = originalMatch.getBoard();
     	this.players = originalMatch.getPlayers().stream()
-				.map(Player::new).collect(Collectors.toList());
+				.map(Player::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
     	this.updateSender = originalMatch.getUpdateSender();
     	//Initialize match and notify player with the first totalUpdate
     	updateViews();

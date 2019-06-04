@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class AsciiBoard {
-    static ViewBoard board;
+    static ViewBoard board = null;
     static int offsetX = 1;
     static int offsetY = 1;
     static int boardRightBorder;

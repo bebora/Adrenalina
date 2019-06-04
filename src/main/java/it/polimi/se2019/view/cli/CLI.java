@@ -78,6 +78,8 @@ public class CLI extends View {
 
     @Override
     public void refresh(){
+        if(AsciiBoard.board == null)
+            AsciiBoard.board = this.getBoard();
         AsciiBoard.drawBoard(getPlayers());
         AsciiPlayer.drawPlayerInfo(getSelf(),getSelf().getUnloadedWeapons());
         AsciiPlayer.printPowerUps(this);

@@ -81,7 +81,11 @@ public class TotalUpdate implements UpdateVisitable {
         Player receivingPlayer = players.stream().
                 filter(p-> p.getToken().equals(username)).
                 findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
-        this.perspective = new ViewTileCoords(receivingPlayer.getTile());
+
+        if(receivingPlayer.getTile() != null)
+            this.perspective = new ViewTileCoords(receivingPlayer.getTile());
+        else
+            this.perspective = null;
         this.idView = idView;
         this.points = points;
         this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
