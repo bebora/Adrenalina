@@ -1,6 +1,9 @@
 package it.polimi.se2019.view.cli;
 
+import it.polimi.se2019.model.board.Color;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPlayer;
+import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewWeapon;
 
 import java.util.List;
@@ -44,6 +47,18 @@ public class AsciiPlayer {
             else
                 CLI.printInColor("g",i +")"+ w.getName() + " ");
             i++;
+        }
+        CLI.displayedWeapons = weapons;
+    }
+
+    static void printPowerUps(View view){
+        CLI.moveCursor(48,AsciiBoard.boardBottomBorder + 2);
+        CLI.saveCursorPosition();
+        CLI.printInColor("w","PowerUps:");
+        CLI.restoreCursorPosition();
+        CLI.shiftCursorDown(1);
+        for(ViewPowerUp p: view.getPowerUps()){
+            CLI.printInColor(p.getDiscardAward(),p.getName());
         }
     }
 

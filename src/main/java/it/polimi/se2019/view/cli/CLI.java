@@ -2,6 +2,7 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewWeapon;
@@ -14,7 +15,7 @@ import java.util.List;
 public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
-    List<ViewWeapon> displayedWeapons;
+    static List<ViewWeapon> displayedWeapons;
 
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
@@ -68,12 +69,24 @@ public class CLI extends View {
         return displayedWeapons;
     }
 
+    private void displayPossibleTypes() {
+        int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
+        int y = AsciiBoard.offsetY;
+        CLI.moveCursor(x,y);
+        for (ReceivingType r : getTypes()) {
+            CLI.printInColor("w", r.name());
+            moveCursor(x,++y);
+        }
+    }
+
     @Override
     public void refresh(){
         AsciiBoard.drawBoard(getPlayers());
+        AsciiPlayer.drawPlayerInfo(getSelf(),getSelf().getUnloadedWeapons());
+        AsciiPlayer.printPowerUps(this);
+        displayPossibleTypes();
         while(!getMessages().isEmpty()) {
             CLI.printMessage(getMessage(), "W");
-            System.out.print(getMessages().size());
             try{
                 System.in.read();
             }catch(IOException e){

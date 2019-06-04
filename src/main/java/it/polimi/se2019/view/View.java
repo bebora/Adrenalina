@@ -95,6 +95,10 @@ public class View {
 		this.username = username;
 	}
 
+	public void setTypes(List<ReceivingType> types) {
+		this.types = types;
+	}
+
 	public void setBoard(ViewBoard board) {
 		this.board = board;
 	}
@@ -127,6 +131,10 @@ public class View {
 
 	public void setReceiver(ViewReceiverInterface receiver) {
 		this.receiver = receiver;
+	}
+
+	public List<ReceivingType> getTypes() {
+		return types;
 	}
 
 	public String getMessage(){

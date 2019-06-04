@@ -13,6 +13,7 @@ public class AsciiBoard {
     static int boardRightBorder;
     static int boardBottomBorder;
     static int infoBoxHeight = 8;
+    static int infoBoxWidth = 40;
 
     static void drawBoard(List<ViewPlayer> players) {
         System.out.print(CLI.escCode + "[J");
