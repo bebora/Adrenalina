@@ -131,7 +131,7 @@ public class DominationMatch extends Match {
 
         return getPlayers().
                 stream().
-                filter(s -> s.getPoints() == getPlayers().stream().max(Comparator.comparing(Player::getPoints)).get().getPoints()).
+                filter(s -> s.getPoints() == getPlayers().stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints()).
                 collect(Collectors.toList());
     }
 

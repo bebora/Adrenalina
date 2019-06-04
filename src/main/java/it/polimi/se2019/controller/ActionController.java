@@ -128,7 +128,7 @@ public class ActionController extends Observer {
         }
         acceptableTypes = new AcceptableTypes(receivingTypes);
         acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles,1,1,"Seleziona una Tile dove muoverti!"));
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                 this,
                 curPlayer.getVirtualView().getRequestDispatcher(),
                 acceptableTypes);
@@ -153,7 +153,7 @@ public class ActionController extends Observer {
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon,1,1,"Seleziona un'arma!"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                             this,
                             curPlayer.getVirtualView().getRequestDispatcher(),
                             acceptableTypes);
@@ -170,7 +170,7 @@ public class ActionController extends Observer {
                                 collect(Collectors.toList());
                         acceptableTypes = new AcceptableTypes(receivingTypes);
                         acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1,0,"Scegli un'arma da grabbare!"));
-                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                                 this,
                                 curPlayer.getVirtualView().getRequestDispatcher(),
                                 acceptableTypes);
@@ -191,7 +191,7 @@ public class ActionController extends Observer {
                             collect(Collectors.toList());
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1,0,"Ricarica un'arma se vuoi"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                             this,
                             curPlayer.getVirtualView().getRequestDispatcher(),
                             acceptableTypes);
@@ -217,7 +217,7 @@ public class ActionController extends Observer {
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"Se vuoi seleziona PowerUp da usare per pagare!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);
@@ -236,7 +236,7 @@ public class ActionController extends Observer {
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"Seleziona assolutamente PowerUp da usare per pagare!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);

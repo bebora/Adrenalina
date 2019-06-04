@@ -84,7 +84,7 @@ public class WeaponController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             List<Effect> selectableEffect = weapon.getEffects().stream().filter(e -> !e.getActivated() && curPlayer.checkForAmmos(e.getCost(), curPlayer.totalAmmoPool())).collect(Collectors.toList());
             acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, "Seleziona un effetto!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
@@ -115,7 +115,7 @@ public class WeaponController extends Observer {
                 List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, "Seleziona PowerUp per pagare!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);

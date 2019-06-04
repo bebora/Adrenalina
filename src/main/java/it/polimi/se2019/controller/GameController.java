@@ -14,6 +14,7 @@ import it.polimi.se2019.view.SelectableOptions;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
 public class GameController extends Observer {
@@ -27,15 +28,32 @@ public class GameController extends Observer {
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
 
+
+    @Override
+    public void updateOnPlayers(List<Player> players) {
+        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
+            players.get(0).receiveShot(currentPlayer, 1, 0);
+            endTurn();
+        }
+        else {
+            throw new IncorrectEvent("Wrong players!");
+        }
+    }
+
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
             currentPlayer.setAlive(TRUE);
             Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
                     filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
             currentPlayer.setTile(tile);
             currentPlayer.discardPowerUp(powerUps.get(0));
             playTurn();
+        }
+        else {
+            throw new IncorrectEvent("PowerUps not acceptable!");
         }
     }
 
@@ -49,6 +67,9 @@ public class GameController extends Observer {
     }
 
     public void startTurn(){
+        if (!currentPlayer.getOnline()) {
+            endTurn();
+        }
         if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i < 2; i++){
                 currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
@@ -56,7 +77,7 @@ public class GameController extends Observer {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(currentPlayer.getPowerUps(), 1,1, "Seleziona un PowerUp!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                     this,
                     currentPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
@@ -82,7 +103,7 @@ public class GameController extends Observer {
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Seleziona un'azione o un powerup"));
         }
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                 this,
                 currentPlayer.getVirtualView().getRequestDispatcher(),
                 acceptableTypes);
@@ -106,11 +127,30 @@ public class GameController extends Observer {
     }
 
     public void endTurn(){
-        if (match.newTurn()) {
+        List<Player> overkillPlayers = match.
+                getPlayers().
+                stream().
+                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 8).
+                collect(Collectors.toList());
+        List<Player> spawnPoints = match.
+                getPlayers().
+                stream().
+                filter(Player::getDominationSpawn).
+                collect(Collectors.toList());
+        if (!spawnPoints.isEmpty() &&  !overkillPlayers.isEmpty()) {
+
+            acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
+            acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1,1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
+            overkillPlayers.get(0).getDamages().remove(7);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
+            return;
+        }
+        else if (match.newTurn()) {
             List<Player> players = match.getWinners();
-            StringBuffer stringBuffer = new StringBuffer("WINNERS$Winners are ");
+            StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
             for (Player p : players) {
-                stringBuffer.append(p.getToken().split("$")[0] + ", ");
+                stringBuffer.append(p.getUsername() + ", ");
             }
             players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
             //TODO @simone send winners to players
@@ -135,7 +175,7 @@ public class GameController extends Observer {
             Observer spawner = new Spawner(p,match.getBoard());
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Seleziona il powerup da scartare!"));
-            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(5,spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
+            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
         }
         for (TimerCostrainedEventHandler t : timerCostrainedEventHandlers) {
             try {

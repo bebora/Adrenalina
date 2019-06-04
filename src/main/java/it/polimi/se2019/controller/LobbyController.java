@@ -128,8 +128,11 @@ public class LobbyController extends Thread{
         if (playing.size() > 5) {
             playing = new ArrayList<>(playing.subList(0,5));
         }
+        else if (playing.size() < 3) {
+            return;
+        }
         else {
-            playing = new ArrayList<>(playing);
+                playing = new ArrayList<>(playing);
         }
         waitingPlayers.get(mode).removeAll(playing);
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();

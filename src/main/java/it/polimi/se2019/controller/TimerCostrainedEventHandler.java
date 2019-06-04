@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
+import it.polimi.se2019.MyProperties;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
@@ -22,8 +23,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private RequestDispatcher requestDispatcher;
     private AcceptableTypes acceptableTypes;
 
-    public TimerCostrainedEventHandler(int time, Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
-        this.time = time;
+    public TimerCostrainedEventHandler(Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
+        time = Integer.parseInt(MyProperties.getInstance().getProperty("time"));
         active = true;
         this.observer = observer;
         this.requestDispatcher = requestDispatcher;

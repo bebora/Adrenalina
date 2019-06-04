@@ -47,6 +47,7 @@ public class View {
 
 	private boolean online;
 
+
 	private SelectableOptionsWrapper selectableOptionsWrapper;
 
 	public void setOnline(boolean online) {

@@ -214,7 +214,7 @@ public class EffectController extends Observer {
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
         else processStep();
@@ -250,7 +250,7 @@ public class EffectController extends Observer {
                 break;
         }
         if (!askingForSource) {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
 
@@ -292,7 +292,7 @@ public class EffectController extends Observer {
             default:
                 break;
         }
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(5,this,player.getVirtualView().getRequestDispatcher(),acceptableTypes);
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler(this,player.getVirtualView().getRequestDispatcher(),acceptableTypes);
         timerCostrainedEventHandler.start();
     }
 
@@ -316,7 +316,7 @@ public class EffectController extends Observer {
             int max = target.getMaxTargets();
             List<Player> players = playerTargets(target);
             acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players,max,min, "Seleziona i giocatori da muovere!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
     }
@@ -414,7 +414,7 @@ public class EffectController extends Observer {
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
                 try {
                     timerCostrainedEventHandler.join();
@@ -432,7 +432,7 @@ public class EffectController extends Observer {
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
                 Observer damagedController = new DamagedController(p, player, applicable);
-                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(5,damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 handlersPowerUp.add(temp);
             }
         }
@@ -458,7 +458,7 @@ public class EffectController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             List<Tile> tiles = tileTargets(curMove.getTargetDestination());
             acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, "Seleziona una tile di destinazione!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(5, this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
         else {

@@ -150,19 +150,17 @@ public abstract class Match {
 		board.refreshWeapons();
 		board.refreshAmmos();
 
-		currentPlayer = (currentPlayer + 1) %
-				players.
-					stream().
-					filter(p->!p.getDominationSpawn()).
-					collect(Collectors.toList()).
-					size();
+		do {
+			currentPlayer = currentPlayer + 1 % players.size();
+		} while (!players.get(currentPlayer).getDominationSpawn());
 
 		long onlinePlayers = players.stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count();
 		if (onlinePlayers < 3 || (finalFrenzy && currentPlayer == firstPlayer)) {
-		    updateViews();
+			updateViews();
 			return true;
 		}
 
+		updateViews();
 		if (!finalFrenzy && checkFrenzy())
 			startFrenzy();
 		updateViews();
