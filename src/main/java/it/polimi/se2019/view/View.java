@@ -155,7 +155,7 @@ public class View {
 
     }
 
-    public void setupConnection(String connectionType,String username,String password,Properties connectionProperties){
+    public void setupConnection(String connectionType,String username,String password,Properties connectionProperties,boolean existingGame,String gameMode){
 		String url = connectionProperties.getProperty("url");
 		int rmiPort = Integer.parseInt(connectionProperties.getProperty("RMIPort"));
 		int socketPort = Integer.parseInt(connectionProperties.getProperty("SocketPort"));
@@ -176,7 +176,7 @@ public class View {
 			return;
 		}
 		try {
-			eventUpdater.login(this, username, password, false, "NORMAL");
+			eventUpdater.login(this, username, password, existingGame, gameMode);
 		}
 		catch (RemoteException e) {
 			try {
