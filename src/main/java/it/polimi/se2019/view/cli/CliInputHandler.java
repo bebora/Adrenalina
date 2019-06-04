@@ -190,13 +190,17 @@ public class CliInputHandler implements Runnable{
         String answer = "RMI";
         String username = "user";
         String password = "password";
+        boolean existingGame = false;
         try{
             answer = input.readLine();
             answer = answer.toUpperCase();
-            CLI.printInColor("W","\nUsername: ");
+            CLI.printInColor("W","Username: ");
             username = input.readLine();
-            CLI.printInColor("W","\nPassword: ");
+            CLI.printInColor("W","Password: ");
             password = input.readLine();
+            CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
+            if(input.readLine().equals("y"))
+                existingGame = true;
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
@@ -210,7 +214,7 @@ public class CliInputHandler implements Runnable{
             }catch (Exception e){
                 Logger.log(Priority.ERROR,e.getMessage());
             }
-            view.setupConnection(answer,username,password,connectionProperties);
+            view.setupConnection(answer,username,password,connectionProperties,existingGame);
             eventUpdater = view.getEventUpdater();
         }
     }
@@ -231,14 +235,16 @@ public class CliInputHandler implements Runnable{
         boolean cliSelected = viewChoice();
         if(cliSelected)
             connectionChoice(input);
-        else
+        else {
             LoginScreen.main(args);
+            return;
+        }
         while(view.getStatus()==Status.WAITING);
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
         }
         AsciiBoard.setBoard(view.getBoard());
-        while(!in.equals("quit") && cliSelected){
+        while(!in.equals("quit")){
             try{
                 in = input.readLine();
             }catch(IOException e){

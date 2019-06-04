@@ -7,10 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -22,6 +19,8 @@ public class LoginScreen extends Application {
     @FXML Button loginButton;
     @FXML TextField username;
     @FXML PasswordField password;
+    @FXML CheckBox existingGame;
+    @FXML ComboBox<String> mode;
     private String selectedConnection;
     @Override
     public void start(Stage stage) throws Exception {
@@ -52,7 +51,7 @@ public class LoginScreen extends Application {
             }catch (Exception e){
                 Logger.log(Priority.ERROR,e.getMessage());
             }
-            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties);
+            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected());
             stage.setScene(scene);
         }catch (IOException e){
             Logger.log(Priority.DEBUG,e.getMessage());
@@ -62,6 +61,4 @@ public class LoginScreen extends Application {
     public static void main(String[] args){
         launch();
     }
-
-
 }
