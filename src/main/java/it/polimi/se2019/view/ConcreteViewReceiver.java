@@ -1,5 +1,7 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
@@ -18,6 +20,11 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
 
     @Override
     public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+    }
+
+    @Override
+    public void receivePing() {
+        Logger.log(Priority.DEBUG, "PING RECEIVED");
     }
 
     /**
@@ -87,9 +94,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
-        if (message.equals("ping"))
-            return;
-        else if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
+        if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
         }
         else if (message.contains("$") && message.split("$")[0].equals("WINNERS")) {

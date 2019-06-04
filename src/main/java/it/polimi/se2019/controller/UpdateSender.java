@@ -22,6 +22,11 @@ public class UpdateSender implements ViewUpdater {
     }
 
     @Override
+    public void sendPing() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void sendAmmosTaken(Player player) {
         match.getPlayers().stream().
                 filter(Player::getOnline).

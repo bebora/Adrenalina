@@ -20,7 +20,7 @@ public class RMIPinger extends Thread{
 
     public void run() {
         do {
-            viewUpdaterRMI.sendPopupMessage("ping");
+            viewUpdaterRMI.sendPing();
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

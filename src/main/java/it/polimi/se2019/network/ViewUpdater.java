@@ -13,6 +13,8 @@ import java.util.List;
  * Sender interface used by controller and model to send updates to a view.
  */
 public interface ViewUpdater {
+
+    void sendPing();
     /**
      * Expect to have the new ammos already in player
      * @param player

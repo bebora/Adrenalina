@@ -15,6 +15,16 @@ public class UpdateVisitor {
     public UpdateVisitor(ViewReceiverInterface concreteViewReceiver) {
         this.concreteViewReceiver = concreteViewReceiver;
     }
+
+    public void visit(PingUpdate pingUpdate) {
+        try {
+            concreteViewReceiver.receivePing();
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
+        }
+    }
+
     public void visit(SelectableOptionsUpdate selectableOptionsWrapper) {
         SelectableOptionsWrapper selectableOptions = selectableOptionsWrapper.getSelectableOptionsWrapper();
         try {

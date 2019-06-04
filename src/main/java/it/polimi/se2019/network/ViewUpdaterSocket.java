@@ -20,6 +20,11 @@ public class ViewUpdaterSocket implements ViewUpdater{
         this.workerServerSocket = workerServerSocket;
     }
 
+    @Override
+    public void sendPing() {
+        UpdateVisitable ping = new PingUpdate();
+        workerServerSocket.update(ping);
+    }
 
     @Override
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {

@@ -9,12 +9,15 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
-import it.polimi.se2019.model.updatemessage.PopupMessageUpdate;
+import it.polimi.se2019.model.updatemessage.PingUpdate;
 import it.polimi.se2019.model.updatemessage.UpdateSerializer;
 import it.polimi.se2019.model.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.VirtualView;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -148,7 +151,7 @@ public class WorkerServerSocket extends Thread {
     private class Ping extends Thread {
         @Override
         public void run() {
-            UpdateVisitable ping = new PopupMessageUpdate("ping");
+            UpdateVisitable ping = new PingUpdate();
             while (!socket.isClosed()) {
                 update(ping);
                 try {
@@ -156,9 +159,9 @@ public class WorkerServerSocket extends Thread {
                 }
                 catch (InterruptedException e) {
                     System.out.print("Interrupted");
+                    virtualView.setOnline(false);
                 }
             }
-
         }
     }
 }

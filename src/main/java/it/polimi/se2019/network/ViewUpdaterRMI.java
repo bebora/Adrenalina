@@ -25,6 +25,28 @@ public class ViewUpdaterRMI implements ViewUpdater {
     private View view;
     private RMIPinger pinger;
 
+    public void sendPing() {
+        Runnable task = () -> {
+            try {
+                remoteReceiver.receivePing();
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unable to Ping!");
+                view.setOnline(false);
+            }
+        };
+        Thread ping = new Thread(task);
+        try {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException e) {
+            Logger.log(Priority.ERROR, e.getMessage());
+        }
+        if (ping.isAlive()) {
+            view.setOnline(false);
+            ping.interrupt();
+        }
+    }
     @Override
     public void sendAmmosTaken(Player player) {
         Runnable task = () -> {

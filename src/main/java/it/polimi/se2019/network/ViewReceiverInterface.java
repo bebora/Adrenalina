@@ -24,4 +24,5 @@ public interface ViewReceiverInterface extends Remote, Serializable {
                              ArrayList<ViewPlayer> players, String idView, int points,
                              ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons) throws RemoteException;
     void receiveWeaponTaken(String takenWeapon, String discardedWeapon, String playerId) throws RemoteException;
+    void receivePing() throws RemoteException;
 }
