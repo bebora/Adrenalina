@@ -36,6 +36,8 @@ public abstract class Match {
     	this.players = originalMatch.getPlayers().stream()
 				.map(Player::new).collect(Collectors.toList());
     	this.updateSender = originalMatch.getUpdateSender();
+    	//Initialize match and notify player with the first totalUpdate
+    	updateViews();
 	}
 
 	public void restoreMatch(Match oldMatch){

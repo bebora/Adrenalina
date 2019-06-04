@@ -85,6 +85,7 @@ public class Player {
 		oldPlayer.actions = this.actions;
 		oldPlayer.ammos = this.ammos;
 		oldPlayer.powerUps = this.powerUps;
+		//sendTotalUpdate is not needed due to being already sent in match.restoreMatch()
 	}
 
 	private Object editing;
@@ -269,10 +270,6 @@ public class Player {
 		}
 	}
 
-	public void setActions(List<Action> actions) {
-		this.actions = actions;
-	}
-
 	public List<Action> getActions() {
 		return actions;
 	}
@@ -284,6 +281,7 @@ public class Player {
 	public void addWeapon(Weapon weapon) {
 		if(weapons.size()<3)
 			weapons.add(weapon);
+		//sendTotalUpdate not needed due to being already called in match.newTurn()
 	}
 
 	public List<Weapon> getWeapons() {
@@ -418,6 +416,7 @@ public class Player {
 		}
 		for(Action a: actions)
 			a.updateOnFrenzy(afterFirst);
+		//sendTotalUpdate is not needed due to being already sent in match.startFrenzy()
 	}
 
 	/**
