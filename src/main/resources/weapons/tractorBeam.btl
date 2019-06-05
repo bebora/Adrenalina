@@ -1,0 +1,58 @@
+name:tractor beam
+cost:
+  blue
+effects:
+  name:basic mode
+  desc:Move a target 0, 1, or 2 squares to a square you can see, and give it 1 damage.
+  absolutePriority:1
+  order:
+    MOVE
+    MOVE
+    DEALDAMAGE
+  moves:
+    move:
+      objectToMove:PERSPECTIVE
+      targetDestination:
+        visibility:TRUE
+    move:
+      objectToMove:TARGETSOURCE
+      targeting:TRUE
+      targetSource:
+        minTargets:1
+        maxTargets:1
+        maxDistance:2
+        pointOfView:PERSPECTIVE
+      targetDestination:
+        maxDistance:0
+        pointOfView:PERSPECTIVE
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        checkTargetList:TRUE
+  name:in punisher mode
+  desc:Choose a target 0, 1, or 2 moves away from you. Move the target to your square and deal 3 damage to it.
+  absolutePriority:1
+  order:
+    MOVE
+    DEALDAMAGE
+  cost:
+    red
+    yellow
+  moves:
+    move:
+      objectToMove:TARGETSOURCE
+      targeting:TRUE
+      targetSource:
+        minTargets:1
+        maxTargets:1
+        maxDistance:2
+        pointOfView:OWN
+      targetDestination:
+        maxDistance:0
+        pointOfView:OWN
+  damages:
+    damage:
+      damagesAmount:3
+      target:
+        checkTargetList:TRUE

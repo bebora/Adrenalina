@@ -1,0 +1,51 @@
+name:t.h.o.r.
+cost:
+  blue
+  red
+effects:
+  name:basic effect
+  desc:Deal 2 damage to 1 target you can see.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:2
+      targeting:TRUE
+      target:
+        visibility:TRUE
+  name:with chain reaction
+  desc:Deal 1 damage to a second target that your first target can see.
+  relativePriority:
+    +1
+  order:
+    DEALDAMAGE
+  cost:
+    blue
+  damages:
+    damage:
+      damagesAmount:1
+      targeting:TRUE
+      target:
+        visibility:TRUE
+        minTargets:1
+        maxTargets:1
+        checkTargetList:FALSE
+        pointOfView:LASTPLAYER
+  name:with high voltage
+  desc:Deal 2 damage to a third target that your second target can see. You cannot use this effect unless you first use the chain reaction.
+  relativePriority:
+    +2
+  order:
+    DEALDAMAGE
+  cost:
+    blue
+  damages:
+    damage:
+      damagesAmount:2
+      target:
+        visibility:TRUE
+        minTargets:1
+        maxTargets:1
+        checkTargetList:FALSE
+        pointOfView:LASTPLAYER
