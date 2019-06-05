@@ -209,6 +209,7 @@ public class CliInputHandler implements Runnable{
             answer = answer.toUpperCase();
             CLI.printInColor("W","Username: ");
             username = input.readLine();
+            Logger.setLogFileSuffix(username);
             CLI.printInColor("W","Password: ");
             standard_pw = input.readLine();
             CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
