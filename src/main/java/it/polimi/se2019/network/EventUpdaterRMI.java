@@ -2,10 +2,7 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.ConnectHandler;
-import it.polimi.se2019.controller.ConnectInterface;
-import it.polimi.se2019.controller.LobbyController;
-import it.polimi.se2019.controller.RequestDispatcher;
+import it.polimi.se2019.controller.*;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
@@ -29,7 +26,7 @@ public class EventUpdaterRMI implements EventUpdater{
     /**
      * remote RequestDispatcher on which methods will be called
      */
-    private RequestDispatcher remoteHandler;
+    private RequestDispatcherInterface remoteHandler;
 
 
     //TODO force login first

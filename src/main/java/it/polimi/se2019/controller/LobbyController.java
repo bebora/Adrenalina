@@ -90,7 +90,6 @@ public class LobbyController extends Thread{
             view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
             throw new AuthenticationErrorException();
         }
-        allUsername.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).map(Player::getUsername).collect(Collectors.toList()));
         String token = String.format("%s$%s", username, password.hashCode());
         Player player = new Player(token);
         player.setVirtualView(view);
@@ -117,18 +116,12 @@ public class LobbyController extends Thread{
     }
 
     public RequestDispatcher getRequestHandler(String token) {
-        for (GameController game :games) {
-            List<String> allTokens = game.getMatch().getPlayers().stream().
-                    filter(p -> !p.getOnline()).
-                    map(Player::getToken).
-                    collect(Collectors.toList());
-            if (allTokens.contains(token)) {
-                Player player = game.getMatch().getPlayers().
-                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
-                return player.getVirtualView().getRequestDispatcher();
-            }
-        }
-        return null;
+        List<Player> allPlayers = new ArrayList<>();
+        allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
+        allPlayers = allPlayers.stream().filter(Player::getOnline).collect(Collectors.toList());
+        Player requestingPlayer = allPlayers.stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
+        if (requestingPlayer == null) return null;
+        return requestingPlayer.getVirtualView().getRequestDispatcher();
     }
 
     public Map<Mode, List<Player>> getWaitingPlayers() {

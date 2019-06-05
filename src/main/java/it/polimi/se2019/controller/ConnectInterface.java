@@ -11,5 +11,5 @@ import java.rmi.RemoteException;
  */
 public interface ConnectInterface extends Remote, Serializable {
     void connect(String username, String hashedPassword, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException;
-    RequestDispatcher getRequestHandler(String username, String password) throws RemoteException;
+    RequestDispatcherInterface getRequestHandler(String username, String password) throws RemoteException;
 }

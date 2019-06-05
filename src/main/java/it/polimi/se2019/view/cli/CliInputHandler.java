@@ -8,10 +8,7 @@ import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -203,6 +200,7 @@ public class CliInputHandler implements Runnable{
             CLI.printInColor("W","Username: ");
             username = input.readLine();
             Logger.setLogFileSuffix(username);
+            System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
             standard_pw = input.readLine();
             CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");

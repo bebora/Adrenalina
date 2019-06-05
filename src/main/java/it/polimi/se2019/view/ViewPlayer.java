@@ -35,6 +35,8 @@ public class ViewPlayer implements Serializable {
 		this.alive = player.getAlive();
 		this.dominationSpawn = player.getDominationSpawn();
 		this.maxActions = player.getMaxActions();
+		if (player.getTile() == null) this.tile = null;
+		else this.tile = new ViewTile(player.getTile());
 	}
 
 	private ViewTile tile;
