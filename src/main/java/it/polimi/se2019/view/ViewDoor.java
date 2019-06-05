@@ -2,7 +2,9 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.model.board.Door;
 
-public class ViewDoor {
+import java.io.Serializable;
+
+public class ViewDoor implements Serializable {
     private ViewTile tile1;
     private ViewTile tile2;
     public ViewDoor(Door door) {

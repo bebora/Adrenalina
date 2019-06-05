@@ -21,7 +21,6 @@ public class RMIPinger extends Thread{
         viewUpdaterRMI = (ViewUpdaterRMI) view.getViewUpdater();
         do {
             viewUpdaterRMI.sendPing();
-            System.out.println("pinging");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {

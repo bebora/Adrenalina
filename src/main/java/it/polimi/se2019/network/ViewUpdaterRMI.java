@@ -37,24 +37,6 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
         };
         Thread ping = new Thread(task);
-        long time = System.currentTimeMillis();
-        while (System.currentTimeMillis() > time + 3000) {
-            if (!ping.isAlive()) {
-                error = false;
-                break;
-            }
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, e.getMessage());
-            }
-        }
-        if (error) {
-            view.setOnline(false);
-            ping.interrupt();
-            Logger.log(Priority.ERROR, "Error in pinging!");
-        }
     }
     @Override
     public void sendAmmosTaken(Player player) {
@@ -182,9 +164,13 @@ public class ViewUpdaterRMI implements ViewUpdater {
         Runnable task = () -> {
             ViewBoard viewBoard = new ViewBoard(board);
             Player receivingPlayer = players.stream().
-                    filter(p-> p.getToken().equals(username)).
+                    filter(p-> p.getUsername().equals(username)).
                     findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
-            ViewTileCoords perspective = new ViewTileCoords(receivingPlayer.getTile());
+            ViewTileCoords perspective;
+            if (receivingPlayer.getTile() != null) {
+                perspective = new ViewTileCoords(receivingPlayer.getTile());
+            }
+            else perspective = null;
             ArrayList<ViewPlayer> viewPlayers = players.stream().
                     map(ViewPlayer::new).
                     collect(Collectors.toCollection(ArrayList::new));
@@ -200,7 +186,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                         viewPowerUps, viewLoadedWeapons);
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send total update");
+                Logger.log(Priority.ERROR, "Unable to send total update" + e.getMessage());
                 view.setOnline(false);
             }
         };
