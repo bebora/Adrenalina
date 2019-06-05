@@ -54,7 +54,9 @@ public class LobbyController extends Thread{
                 player.setVirtualView(view);
                 player.setOnline(true);
                 view.getViewUpdater().sendPopupMessage("Reconnected succesfully!");
-                player.getVirtualView().getViewUpdater().sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(), view.getIdView(), player.getPoints(), player.getPowerUps(), player.getWeapons());
+                player.getVirtualView().getViewUpdater().sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(),
+                        view.getIdView(), player.getPoints(), player.getPowerUps(),
+                        player.getWeapons(), ownGame.getPlayers().get(ownGame.getCurrentPlayer()));
                 break;
             }
         }

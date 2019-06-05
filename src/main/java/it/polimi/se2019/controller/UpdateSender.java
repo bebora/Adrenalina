@@ -119,15 +119,17 @@ public class UpdateSender implements ViewUpdater {
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
-                                List<Weapon> loadedWeapons) {
+                                List<Weapon> loadedWeapons, Player currentPlayer) {
         throw new UnsupportedOperationException("Can't send a TotalUpdate to everyone with the same arguments");
 
     }
 
     public void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
-                                List<Weapon> loadedWeapons) {
-        receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons);
+                                List<Weapon> loadedWeapons, Player currentPlayer) {
+        receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
+                idView, points, powerUps,
+                loadedWeapons, currentPlayer);
     }
 
     @Override

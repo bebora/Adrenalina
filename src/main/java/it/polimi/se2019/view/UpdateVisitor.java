@@ -126,6 +126,7 @@ public class UpdateVisitor {
         int points = update.getPoints();
         List<ViewPowerUp> powerUps = update.getPowerUps();
         List<String> loadedWeapons = update.getLoadedWeapons();
+        String currentPlayerId = update.getCurrentPlayerId();
         try {
             concreteViewReceiver.receiveTotalUpdate(username,
                     board,
@@ -134,7 +135,8 @@ public class UpdateVisitor {
                     idView,
                     points,
                     new ArrayList<>(powerUps),
-                    new ArrayList<>(loadedWeapons));
+                    new ArrayList<>(loadedWeapons),
+                    currentPlayerId);
         }
         catch (RemoteException e) {
             Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");

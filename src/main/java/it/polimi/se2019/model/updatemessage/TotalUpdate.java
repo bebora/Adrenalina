@@ -21,6 +21,7 @@ public class TotalUpdate implements UpdateVisitable {
     private int points;
     private List<ViewPowerUp> powerUps;
     private List<String> loadedWeapons;
+    private String currentPlayerId;
 
     public String getUsername() {
         return username;
@@ -54,6 +55,10 @@ public class TotalUpdate implements UpdateVisitable {
         return loadedWeapons;
     }
 
+    public String getCurrentPlayerId() {
+        return currentPlayerId;
+    }
+
     @Override
     public void accept(UpdateVisitor visitor) {
         visitor.visit(this);
@@ -71,10 +76,11 @@ public class TotalUpdate implements UpdateVisitable {
      * @param points
      * @param powerUps
      * @param loadedWeapons
+     * @param currentPlayer
      */
     public TotalUpdate(String username, Board board, List<Player> players,
                        String idView, int points, List<PowerUp> powerUps,
-                       List<Weapon> loadedWeapons) {
+                       List<Weapon> loadedWeapons, Player currentPlayer) {
         this.username = username;
         this.board = new ViewBoard(board);
         this.players = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
@@ -90,6 +96,7 @@ public class TotalUpdate implements UpdateVisitable {
         this.points = points;
         this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
         this.loadedWeapons = loadedWeapons.stream().map(Weapon::getName).collect(Collectors.toList());
+        this.currentPlayerId = currentPlayer.getId();
     }
 
 }

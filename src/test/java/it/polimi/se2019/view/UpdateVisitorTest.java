@@ -22,6 +22,7 @@ class UpdateVisitorTest {
     static Weapon weapon;
     static List<PowerUp> powerUps;
     static List<Weapon> loadedWeapons;
+    static Player currentPlayer;
     @BeforeAll
     static void setup() {
         firstView = new View();
@@ -41,7 +42,8 @@ class UpdateVisitorTest {
         powerUps = Arrays.asList(powerUp);
         weapon = board.drawWeapon();
         loadedWeapons = Arrays.asList(weapon);
-        TotalUpdate update = new TotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons);
+        currentPlayer = players.get(0);
+        TotalUpdate update = new TotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
         //firstView.update(update);
     }
     /*

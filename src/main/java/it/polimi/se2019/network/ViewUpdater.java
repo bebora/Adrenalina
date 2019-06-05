@@ -29,6 +29,6 @@ public interface ViewUpdater {
     void sendTile(Tile tile);
     void sendTotalUpdate(String username, Board board, List<Player> players,
                          String idView, int points, List<PowerUp> powerUps,
-                         List<Weapon> loadedWeapons);
+                         List<Weapon> loadedWeapons, Player currentPlayer);
     void sendWeaponTaken(Weapon takenWeapon, Weapon discardedWeapon, Player player);
 }

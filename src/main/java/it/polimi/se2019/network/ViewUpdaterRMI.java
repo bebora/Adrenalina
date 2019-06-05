@@ -160,7 +160,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
-                                List<Weapon> loadedWeapons) {
+                                List<Weapon> loadedWeapons, Player currentPlayer) {
         Runnable task = () -> {
             ViewBoard viewBoard = new ViewBoard(board);
             Player receivingPlayer = players.stream().
@@ -183,7 +183,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
             try {
                 remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
                         viewPlayers, idView, points,
-                        viewPowerUps, viewLoadedWeapons);
+                        viewPowerUps, viewLoadedWeapons, currentPlayer.getId());
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send total update" + e.getMessage());

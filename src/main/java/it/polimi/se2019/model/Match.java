@@ -284,7 +284,7 @@ public abstract class Match {
 			if (p.getMatch() == null) continue;
 			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,
 					p.getId(), p.getPoints(), p.getPowerUps(),
-					p.getWeapons());
+					p.getWeapons(), players.get(currentPlayer));
 		}
 	}
 }

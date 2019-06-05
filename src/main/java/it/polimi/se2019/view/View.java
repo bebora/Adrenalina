@@ -154,6 +154,9 @@ public class View {
 		this.receiver = receiver;
 	}
 
+	public void setCurrentPlayer(ViewPlayer currentPlayer) {
+		this.currentPlayer = currentPlayer;
+	}
 
 	public String getMessage(){
 		return messages.poll();
@@ -227,5 +230,5 @@ public class View {
 		this.status = status;
 	}
 
-	public void refresh(){};
+	public synchronized void refresh(){};
 }

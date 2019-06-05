@@ -140,7 +140,7 @@ public class CLI extends View {
 
 
     @Override
-    public void refresh(){
+    public synchronized void refresh(){
         if(AsciiBoard.board == null)
             AsciiBoard.board = this.getBoard();
         AsciiBoard.drawBoard(getPlayers());
