@@ -59,14 +59,13 @@ public class AsciiPlayer {
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(1);
         for(ViewPowerUp p: view.getPowerUps()){
-            CLI.printInColor(p.getDiscardAward(),p.getName());
+            CLI.printInColor(p.getDiscardAward(),p.getName() + " ");
         }
     }
 
     static void drawPlayerInfo(ViewPlayer player,List<ViewWeapon> weapons){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder + 1,AsciiBoard.boardBottomBorder + 6, AsciiBoard.offsetX);
-        CLI.printInColor(player.getColor(),player.getColor());
         printMarks(player);
         printDamages(player);
         printAmmos(player);

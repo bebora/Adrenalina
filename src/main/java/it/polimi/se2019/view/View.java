@@ -24,6 +24,8 @@ public class View {
 
 	private Queue<String> messages;
 
+	private ViewPlayer currentPlayer;
+
 	private EventUpdater eventUpdater;
 
 	private String username;

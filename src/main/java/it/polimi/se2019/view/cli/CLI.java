@@ -70,6 +70,7 @@ public class CLI extends View {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY;
         moveCursor(x,y);
+        clearUntilEndOfLine(y,y+4,x);
         for (String r : getReceivingTypes()) {
             printInColor("w", r);
             moveCursor(x,++y);
@@ -80,6 +81,7 @@ public class CLI extends View {
         int x = AsciiBoard.offsetX;
         int y = AsciiBoard.boardBottomBorder +AsciiPlayer.playerInfoHeight;
         moveCursor(x,y);
+        clearUntilEndOfLine(y,y+16,x);
         for(ReceivingType r: getSelectableOptionsWrapper().getAcceptedTypes()){
             moveCursor(x,++y);
             printInColor("w",r.name() + ":");
@@ -113,20 +115,26 @@ public class CLI extends View {
     }
 
     private void displaySelectablePowerUps(SelectableOptions<ViewPowerUp> selectablePowerUps){
+        int index = 0;
         for(ViewPowerUp v: selectablePowerUps.getOptions()){
-            printInColor(v.getDiscardAward(),v.getName() + " ");
+            index++;
+            printInColor(v.getDiscardAward(),index + ")" + v.getName() + " ");
         }
     }
 
     private void displaySelectableCoords(SelectableOptions<ViewTileCoords> selectableTileCoords){
+        int index = 0;
         for(ViewTileCoords v: selectableTileCoords.getOptions()){
-            printInColor("w",v.toString() + " ");
+            index++;
+            printInColor("w",index + ")" + v.toString() + " ");
         }
     }
 
     private void displayStringSelectable(SelectableOptions selectableOptions){
+        int index = 0;
         for(Object o : selectableOptions.getOptions()){
-            printInColor("w", (String)o);
+            index++;
+            printInColor("w", index + ")" + o + " ");
         }
     }
 
@@ -148,5 +156,6 @@ public class CLI extends View {
                 Logger.log(Priority.DEBUG,e.getMessage());
             }
         }
+        moveCursor(1, AsciiBoard.boardBottomBorder + 6);
     }
 }

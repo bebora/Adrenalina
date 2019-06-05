@@ -7,6 +7,7 @@ import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -66,8 +67,8 @@ public class CliInputHandler implements Runnable{
     }
 
     private void parseSelection(String[] inSplit){
-        String[] selectedElements = new String[inSplit.length];
-        System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-3);
+        String[] selectedElements = new String[inSplit.length-2];
+        System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-2);
         if (view.getReceivingTypes().contains(inSplit[1])) {
             switch (inSplit[1]) {
                 case "PLAYERS":
@@ -100,23 +101,28 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage("This is not something you can select!", "R");
     }
 
-    private void parsePlayers(String[] players){
+    private void parsePlayers(String[] players) {
         List<String> selectedViewPlayers = new ArrayList<>();
+        SelectableOptions<String> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePlayers();
+        String singlePlayer;
         boolean error = false;
-        for(String p: players){
-            ViewPlayer viewP = view.getPlayers().stream()
-                    .filter(viewPlayer -> viewPlayer.getColor().equals(p))
-                    .findAny().orElse(null);
-            if(viewP != null){
-                selectedViewPlayers.add(viewP.getId());
-            }else {
+        for (String p : players) {
+            if (p.matches("\\d")) {
+                singlePlayer = selectableOptions.getOption(Integer.parseInt(p));
+                if (singlePlayer != null)
+                    selectedViewPlayers.add(singlePlayer);
+            } else {
                 CLI.printMessage(wrongInputMessage, "R");
-                error=true;
+                error = true;
                 break;
             }
         }
-        if(!error)
-            eventUpdater.sendPlayers(selectedViewPlayers);
+        if (!error){
+            if (selectableOptions.checkForCoherency(selectedViewPlayers))
+                eventUpdater.sendPlayers(selectedViewPlayers);
+            else
+                CLI.printMessage("You did not respect selection limits", "R");
+        }
     }
 
     private void parseTiles(String[] tiles){
@@ -166,18 +172,16 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage(wrongInputMessage, "R");
     }
 
-    private void parsePowerUps(String[] selection){
+    private void parsePowerUps(String[] powerUps){
+        SelectableOptions<ViewPowerUp> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePowerUps();
         List<ViewPowerUp> selectedPowerUps = new ArrayList<>();
-        String[] powerUps = new String[selection.length - 1];
-        boolean discard = Boolean.parseBoolean(powerUps[0]);
+        ViewPowerUp singleSelection;
         boolean error = false;
-        System.arraycopy(selection,1,powerUps,0,selection.length - 1);
         for(String p: powerUps){
-            ViewPowerUp singlePowerUp = view.getPowerUps().stream()
-                    .filter(viewPowerUp -> viewPowerUp.getName().equals(p))
-                    .findAny().orElse(null);
-            if(singlePowerUp != null){
-                selectedPowerUps.add(singlePowerUp);
+            if(p.matches("\\d")){
+                singleSelection = selectableOptions.getOption(Integer.parseInt(p));
+                if(singleSelection != null)
+                    selectedPowerUps.add(singleSelection);
             }else{
                 CLI.printMessage(wrongInputMessage, "R");
                 error = true;
@@ -185,7 +189,10 @@ public class CliInputHandler implements Runnable{
             }
         }
         if(!error){
-            eventUpdater.sendPowerUp(selectedPowerUps,discard);
+            if(view.getSelectableOptionsWrapper().getSelectablePowerUps().checkForCoherency(selectedPowerUps))
+                eventUpdater.sendPowerUp(selectedPowerUps,false);
+            else
+                CLI.printMessage("You did not respect selection limits", "R");
         }
     }
 
@@ -263,6 +270,7 @@ public class CliInputHandler implements Runnable{
         }
         AsciiBoard.setBoard(view.getBoard());
         while(!in.equals("quit")){
+            CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+6);
             try{
                 in = input.readLine();
             }catch(IOException e){
@@ -285,7 +293,7 @@ public class CliInputHandler implements Runnable{
                             CLI.printMessage("Wrong format", "R");
                         break;
                     default:
-                        AsciiBoard.drawBoard(view.getPlayers());
+                        view.refresh();
                         break;
                 }
             }

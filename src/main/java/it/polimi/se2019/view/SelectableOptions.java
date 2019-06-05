@@ -58,6 +58,14 @@ public class SelectableOptions<T> implements Serializable {
         this.prompt = prompt;
     }
 
+    public T getOption(int i){
+        if(i > 0 && i<options.size()){
+            return options.get(i);
+        }
+        else
+            return null;
+    }
+
     public SelectableOptions(){
         this.maxSelectables = 0;
         this.minSelectables = 0;

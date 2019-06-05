@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
-public class Server {
+public class    Server {
     public static void main(String[] args) {
         Properties connectionProperties = new Properties();
         FileInputStream fin;
