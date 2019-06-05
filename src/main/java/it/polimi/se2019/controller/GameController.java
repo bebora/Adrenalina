@@ -5,6 +5,7 @@ import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
+import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
@@ -36,6 +37,11 @@ public class GameController extends Observer {
             sendWinners();
     }
 
+    @Override
+    public void updateOnAction(Action action){
+        actionController = new ActionController(match,this);
+        actionController.updateOnAction(action);
+    }
 
     @Override
     public void updateOnPlayers(List<Player> players) {

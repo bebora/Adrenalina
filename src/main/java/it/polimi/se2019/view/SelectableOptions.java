@@ -59,8 +59,8 @@ public class SelectableOptions<T> implements Serializable {
     }
 
     public T getOption(int i){
-        if(i > 0 && i<options.size()){
-            return options.get(i);
+        if(i > 0 && i<=options.size()){
+            return options.get(i-1);
         }
         else
             return null;

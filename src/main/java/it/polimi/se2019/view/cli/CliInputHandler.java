@@ -271,6 +271,7 @@ public class CliInputHandler implements Runnable{
         AsciiBoard.setBoard(view.getBoard());
         while(!in.equals("quit")){
             CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+6);
+            CLI.cleanRow();
             try{
                 in = input.readLine();
             }catch(IOException e){

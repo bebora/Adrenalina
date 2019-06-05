@@ -100,6 +100,10 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         else if (message.contains("$") && message.split("\\$")[0].equals("WINNERS")) {
             //TODO game ended! show winners
         }
+        else{
+            if(linkedView.getMessages() != null)
+                linkedView.getMessages().add(message);
+        }
     }
 
 
@@ -149,7 +153,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         if (linkedView.getStatus() != Status.PLAYING) {
             linkedView.setStatus(Status.PLAYING);
         }
-        linkedView.refresh();
+            linkedView.refresh();
     }
 
     /**
