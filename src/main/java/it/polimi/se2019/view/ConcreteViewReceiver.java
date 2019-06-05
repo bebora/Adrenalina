@@ -97,7 +97,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
         }
-        else if (message.contains("$") && message.split("\\$")[0].equals("WINNERS")) {
+        else if (message.contains("\\$") && message.split("\\$")[0].equals("WINNERS")) {
             //TODO game ended! show winners
         }
     }

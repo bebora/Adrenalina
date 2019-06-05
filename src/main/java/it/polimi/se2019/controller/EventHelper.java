@@ -103,7 +103,7 @@ public class EventHelper {
     public Action getActionFromString(String action) {
         List<Action> actions = match.getPlayers().get(match.getCurrentPlayer()).getActions();
         return  actions.stream().
-                filter(a -> a.toString() == action).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
+                filter(a -> a.toString().equals(action)).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
     }
 
     public Direction getDirectionFromString(String direction) {
