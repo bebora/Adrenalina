@@ -112,13 +112,16 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendTile(tile);
     }
 
+    /**
+     * Sending a TotalUpdate to everyone with the same arguments does not make sense,
+     * players could see other players' hidden attributes
+     */
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons) {
-        match.getPlayers().stream().
-                filter(Player::getOnline).
-                forEach(p -> sendTotalUpdate(p, username, board, players, idView, points, powerUps, loadedWeapons));
+        throw new UnsupportedOperationException("Can't send a TotalUpdate to everyone with the same arguments");
+
     }
 
     public void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,

@@ -64,7 +64,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "FINISHING SLEEP");
             }
-            Logger.log(Priority.DEBUG, "Millis remaining: " + (System.currentTimeMillis() - this.start));
+            Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
         if (!blocked) {
             observer.updateOnStopSelection(true, true);

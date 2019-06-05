@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * ClientSocket, need to be inside EventUpdaterSocket and used to send events to connected server.
@@ -23,7 +23,7 @@ import java.util.concurrent.SynchronousQueue;
 public class ClientSocket extends Thread{
     private Socket socket;
     private boolean keepAlive;
-    private BlockingQueue<EventVisitable> queue = new SynchronousQueue<>();
+    private BlockingQueue<EventVisitable> queue = new LinkedBlockingQueue<>();
     private UpdateVisitor updateVisitor;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;

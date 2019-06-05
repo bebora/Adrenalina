@@ -275,7 +275,7 @@ public abstract class Match {
 		for (Player p: players) {
 			//TODO check in another way, maybe with online attribute?
 			if (p.getMatch() == null) continue;
-			updateSender.sendTotalUpdate(p.getUsername(), board, players,
+			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,
 					p.getId(), p.getPoints(), p.getPowerUps(),
 					p.getWeapons());
 		}
