@@ -9,6 +9,7 @@ import it.polimi.se2019.view.ViewWeapon;
 import java.util.List;
 
 public class AsciiPlayer {
+    static final int playerInfoHeight = 8;
     static void printMarks(ViewPlayer player){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+2);
         CLI.printInColor("w","Marchi:\n");

@@ -46,6 +46,10 @@ public class SelectableOptions<T> implements Serializable {
         this.minSelectables = minSelectables;
     }
 
+    public String getNumericalCostraints(){
+        return String.format("You can select from a minimum of %d elements, to a maximum of %d elements",minSelectables,maxSelectables);
+    }
+
     public void setOptions(ArrayList<T> options) {
         this.options = options;
     }

@@ -29,4 +29,9 @@ public class ViewTileCoords implements Serializable {
         this.posx = tile.getPosx();
         this.posy = tile.getPosy();
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%d,%d)",posx,posy);
+    }
 }

@@ -2,9 +2,11 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.view.View;
-import it.polimi.se2019.view.ViewWeapon;
+import it.polimi.se2019.model.cards.PowerUp;
+import it.polimi.se2019.view.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,12 +71,64 @@ public class CLI extends View {
     private void displayPossibleTypes() {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY;
-        CLI.moveCursor(x,y);
+        moveCursor(x,y);
         for (String r : getReceivingTypes()) {
-            CLI.printInColor("w", r);
+            printInColor("w", r);
             moveCursor(x,++y);
         }
     }
+
+    private void displaySelectableOptions(){
+        int x = AsciiBoard.offsetX;
+        int y = AsciiBoard.boardBottomBorder +AsciiPlayer.playerInfoHeight;
+        moveCursor(x,y);
+        for(ReceivingType r: getSelectableOptionsWrapper().getAcceptedTypes()){
+            moveCursor(x,++y);
+            printInColor("w",r.name() + ":");
+           switch (r){
+               case POWERUP:
+                   displaySelectablePowerUps(getSelectableOptionsWrapper().getSelectablePowerUps());
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectablePowerUps().getPrompt());
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectablePowerUps().getNumericalCostraints());
+                   break;
+               case TILES:
+                   displaySelectableCoords(getSelectableOptionsWrapper().getSelectableTileCoords());
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectableTileCoords().getPrompt());
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectableTileCoords().getNumericalCostraints());
+                   break;
+               default:
+                   displayStringSelectable(getSelectableOptionsWrapper().getSelectableOptions(r));
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectableOptions(r).getPrompt());
+                   moveCursor(x,++y);
+                   printInColor("w",getSelectableOptionsWrapper().getSelectableOptions(r).getNumericalCostraints());
+
+           }
+       }
+    }
+
+    private void displaySelectablePowerUps(SelectableOptions<ViewPowerUp> selectablePowerUps){
+        for(ViewPowerUp v: selectablePowerUps.getOptions()){
+            printInColor(v.getDiscardAward(),v.getName() + " ");
+        }
+    }
+
+    private void displaySelectableCoords(SelectableOptions<ViewTileCoords> selectableTileCoords){
+        for(ViewTileCoords v: selectableTileCoords.getOptions()){
+            printInColor("w",v.toString() + " ");
+        }
+    }
+
+    private void displayStringSelectable(SelectableOptions selectableOptions){
+        for(Object o : selectableOptions.getOptions()){
+            printInColor("w", (String)o);
+        }
+    }
+
 
     @Override
     public void refresh(){
@@ -84,7 +138,8 @@ public class CLI extends View {
         AsciiPlayer.drawPlayerInfo(getSelf(),getSelf().getUnloadedWeapons());
         AsciiPlayer.printPowerUps(this);
         displayPossibleTypes();
-        while(!getMessages().isEmpty()) {
+        displaySelectableOptions();
+        while(getMessages()!= null && !getMessages().isEmpty()) {
             CLI.printMessage(getMessage(), "W");
             try{
                 System.in.read();

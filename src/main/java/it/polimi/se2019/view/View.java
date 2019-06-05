@@ -112,6 +112,9 @@ public class View {
 		this.username = username;
 	}
 
+	public void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+		this.selectableOptionsWrapper = selectableOptionsWrapper;
+	}
 
 	public void setBoard(ViewBoard board) {
 		this.board = board;

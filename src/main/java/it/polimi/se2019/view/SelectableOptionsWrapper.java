@@ -95,7 +95,7 @@ public class SelectableOptionsWrapper implements Serializable {
                     selectablePowerUps.setOptions(acceptableTypes.getSelectablePowerUps().
                             getOptions().
                             stream().
-                            map(p -> new ViewPowerUp(p)).
+                            map(ViewPowerUp::new).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case ROOM:
@@ -111,7 +111,7 @@ public class SelectableOptionsWrapper implements Serializable {
                     selectableTileCoords.setOptions(acceptableTypes.getSelectableTileCoords().
                             getOptions().
                             stream().
-                            map(t -> new ViewTileCoords(t)).
+                            map(ViewTileCoords::new).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case WEAPON:
@@ -123,6 +123,27 @@ public class SelectableOptionsWrapper implements Serializable {
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
             }
+        }
+    }
+
+    public SelectableOptions getSelectableOptions(ReceivingType selected){
+        switch (selected){
+            case ROOM:
+                return getSelectableRooms();
+            case POWERUP:
+                return getSelectablePowerUps();
+            case PLAYERS:
+                return getSelectablePlayers();
+            case TILES:
+                return getSelectableTileCoords();
+            case WEAPON:
+                return getSelectableWeapons();
+            case ACTION:
+                return getSelectableActions();
+            case EFFECT:
+                return getSelectabeEffects();
+            default:
+                return null;
         }
     }
 }
