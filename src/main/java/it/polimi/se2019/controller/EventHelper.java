@@ -126,7 +126,7 @@ public class EventHelper {
                get(match.getCurrentPlayer()).
                getPowerUps().
                stream().
-                filter(p -> p.getName() == powerup.getName() && p.getDiscardAward().toString() == powerup.getDiscardAward()).
+                filter(p -> p.getName().equals(powerup.getName()) && p.getDiscardAward().toString().equals(powerup.getDiscardAward())).
                findAny().orElse(null);
     }
 }

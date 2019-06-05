@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * ClientSocket, need to be inside EventUpdaterSocket and used to send events to connected server.
@@ -23,7 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ClientSocket extends Thread{
     private Socket socket;
     private boolean keepAlive;
-    private BlockingQueue<EventVisitable> queue = new LinkedBlockingQueue<>();
+    private BlockingQueue<EventVisitable> queue = new LinkedBlockingDeque<>();
     private UpdateVisitor updateVisitor;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
@@ -61,8 +61,8 @@ public class ClientSocket extends Thread{
     public void run() {
         Listener listener = new Listener();
         Updater updater = new Updater();
-        listener.run();
-        updater.run();
+        listener.start();
+        updater.start();
     }
 
     public void addEventToQueue(EventVisitable event) {
@@ -72,24 +72,24 @@ public class ClientSocket extends Thread{
     private class Updater extends Thread {
         @Override
         public void run() {
-            try {
                 String json;
                 do {
                     try {
-                        json = gson.toJson(queue.take(), EventVisitable.class);
+                        EventVisitable event = queue.take();
+                        json = gson.toJson(event, EventVisitable.class) + "\n";
                         jsonSender.write(json, 0 ,json.length());
                         jsonSender.flush();
                     }
                     catch (InterruptedException e) {
                         //TODO exception for queue taking
                     }
+                    catch (IOException e) {
+                        //TODO log somehow
+                    }
                 } while (!socket.isClosed());
             }
-            catch (IOException e) {
-                //TODO exception for socket IO, consider throwing remote
-            }
-        }
     }
+
 
     private class Listener extends Thread {
         @Override

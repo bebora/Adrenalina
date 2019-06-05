@@ -19,6 +19,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
+        linkedView.refresh();
     }
 
     @Override
@@ -99,7 +100,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         else if (message.contains("$") && message.split("\\$")[0].equals("WINNERS")) {
             //TODO game ended! show winners
         }
-        //TODO show message to the client, e.g. view.showPopup(message)
     }
 
 

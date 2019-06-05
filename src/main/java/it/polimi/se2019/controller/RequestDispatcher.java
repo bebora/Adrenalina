@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
@@ -40,6 +41,10 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public RequestDispatcher(ViewUpdater viewUpdater) throws RemoteException {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;
+    }
+
+    public void setMatch(Match match) {
+        eventHelper = new EventHelper(match);
     }
 
     public Map<ReceivingType, EventHandler> getObserverTypes() {

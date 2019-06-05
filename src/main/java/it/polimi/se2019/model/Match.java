@@ -5,6 +5,7 @@ import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
 import java.util.function.Function;
@@ -19,6 +20,12 @@ public abstract class Match {
 
     public Match(List<Player> players, String boardFilename, int numSkulls) {
         this.players = players;
+        for (Player p : players) {
+        	VirtualView v= p.getVirtualView();
+        	if (v != null && v.getRequestDispatcher() != null) {
+        		v.getRequestDispatcher().setMatch(this);
+			}
+		}
         finalFrenzy = false;
         turnEnd = false;
         firstPlayer = rand.nextInt(players.size());
