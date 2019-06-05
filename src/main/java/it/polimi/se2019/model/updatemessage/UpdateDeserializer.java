@@ -55,6 +55,9 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
             case "WeaponTakenUpdate":
                 updateVisitable = gson.fromJson(update, WeaponTakenUpdate.class);
                 break;
+            case "PingUpdate":
+                updateVisitable = gson.fromJson(update, PingUpdate.class);
+                break;
 
             default:
                 throw new JsonParseException("WRONG FORMAT");

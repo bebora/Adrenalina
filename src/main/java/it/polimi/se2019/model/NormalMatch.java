@@ -54,8 +54,10 @@ public class NormalMatch extends Match {
 				deadTrackPoints.put(p, Long.valueOf(0));
 			}
 		}
-
-		List<Player> maxPlayers = players.stream().filter(p -> p.getPoints() == players.stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints()).collect(Collectors.toList());
+		if (players.stream().noneMatch(Player::getOnline)) {
+			return new ArrayList<>();
+		}
+		List<Player> maxPlayers = players.stream().filter(p -> p.getOnline() && p.getPoints() == players.stream().max(Comparator.comparing(Player::getPoints)).get().getPoints()).collect(Collectors.toList());
 		if (maxPlayers.size() == 1) {
 			return maxPlayers;
 		} else {

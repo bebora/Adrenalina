@@ -26,6 +26,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
     private RMIPinger pinger;
 
     public void sendPing() {
+        boolean error = true;
         Runnable task = () -> {
             try {
                 remoteReceiver.receivePing();
@@ -36,15 +37,23 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
         };
         Thread ping = new Thread(task);
-        try {
-            Thread.sleep(3000);
+        long time = System.currentTimeMillis();
+        while (System.currentTimeMillis() > time + 3000) {
+            if (!ping.isAlive()) {
+                error = false;
+                break;
+            }
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.ERROR, e.getMessage());
+            }
         }
-        catch (InterruptedException e) {
-            Logger.log(Priority.ERROR, e.getMessage());
-        }
-        if (ping.isAlive()) {
+        if (error) {
             view.setOnline(false);
             ping.interrupt();
+            Logger.log(Priority.ERROR, "Error in pinging!");
         }
     }
     @Override

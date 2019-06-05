@@ -79,7 +79,7 @@ public class TotalUpdate implements UpdateVisitable {
         this.board = new ViewBoard(board);
         this.players = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
         Player receivingPlayer = players.stream().
-                filter(p-> p.getToken().equals(username)).
+                filter(p-> p.getUsername().equals(username)).
                 findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
 
         if(receivingPlayer.getTile() != null)

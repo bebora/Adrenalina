@@ -5,5 +5,5 @@ import it.polimi.se2019.model.Player;
 import java.util.Arrays;
 
 public class GameControllerTest {
-    GameController gameController = new GameController(Arrays.asList(new Player("pinco"),new Player("pallino")),"board1.btlb",8, false);
+    GameController gameController = new GameController(Arrays.asList(new Player("pinco"),new Player("pallino")),"board1.btlb",8, false, null);
 }

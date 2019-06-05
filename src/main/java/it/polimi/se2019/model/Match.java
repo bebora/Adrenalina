@@ -28,7 +28,6 @@ public abstract class Match {
         for(Player p: this.players){
         	p.setMatch(this);
 		}
-        updateViews();
     }
 
     public Match(Match originalMatch){
@@ -151,8 +150,8 @@ public abstract class Match {
 		board.refreshAmmos();
 
 		do {
-			currentPlayer = currentPlayer + 1 % players.size();
-		} while (!players.get(currentPlayer).getDominationSpawn());
+			currentPlayer = (currentPlayer + 1)% players.size();
+		} while (players.get(currentPlayer).getDominationSpawn());
 
 		long onlinePlayers = players.stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count();
 		if (onlinePlayers < 3 || (finalFrenzy && currentPlayer == firstPlayer)) {
@@ -192,7 +191,7 @@ public abstract class Match {
 		Set<Player> damagingPlayers = new HashSet<>(player.getDamages());
 
 		List<Player> damageOrder = damagingPlayers.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
-		while (damageOrder.isEmpty()) {
+		while (!damageOrder.isEmpty()) {
 			if (currentReward < player.getRewardPoints().size()) {
 				damageOrder.get(0).addPoints(player.getRewardPoints().get(currentReward));
 			} else {

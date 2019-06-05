@@ -2,16 +2,15 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.EventUpdaterSocket;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -66,6 +65,9 @@ public class View {
 			Logger.log(Priority.ERROR, "Unexpected RemoteException while creating ViewReceiver!");
 		}
 		online = false;
+		List<ReceivingType> temp = new ArrayList<>();
+		AcceptableTypes acceptableTypes = new AcceptableTypes(temp);
+		selectableOptionsWrapper = new SelectableOptionsWrapper(acceptableTypes);
 	}
 
 	public SelectableOptionsWrapper getSelectableOptionsWrapper() {

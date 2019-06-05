@@ -38,7 +38,7 @@ public class EffectControllerTest {
     @BeforeEach
     void prepareWeapon(){
         testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
-        gameController = new GameController(testPlayers,"board1" +".btlb",5,false);
+        gameController = new GameController(testPlayers,"board1" +".btlb",5,false, null);
         testMatch = gameController.getMatch();
         testWeapon = CardCreator.parseWeapon("cyberblade.btl");
         originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());

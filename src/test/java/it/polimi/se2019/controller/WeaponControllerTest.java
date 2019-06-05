@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class WeaponControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono"),new Player("cattivo")));
     private Weapon testWeapon = CardCreator.parseWeapon("vortexCannon.btl");
-    private GameController gameController = new GameController(testPlayers,"board1.btlb",5,false);
+    private GameController gameController = new GameController(testPlayers,"board1.btlb",5,false, null);
     Match testMatch = gameController.getMatch();
     private Player currentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
     private ActionController actionController = new ActionController(testMatch,gameController);

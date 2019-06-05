@@ -53,7 +53,6 @@ class LobbyControllerTest {
             EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
             View view = new View();
             views.add(view);
-
             try {
                 eventUpdater.login(view, "ciao" + i, "ciao", false, "normal");
             } catch (RemoteException e) {

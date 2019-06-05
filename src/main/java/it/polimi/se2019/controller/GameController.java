@@ -15,6 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
+import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
 public class GameController extends Observer {
@@ -60,7 +61,8 @@ public class GameController extends Observer {
         }
     }
 
-    public GameController(List<Player> players, String boardName, int numSkulls, boolean domination) {
+    public GameController(List<Player> players, String boardName, int numSkulls, boolean domination, LobbyController lobbyController) {
+        this.lobbyController = lobbyController;
         if(!domination){
             match = new NormalMatch(players,boardName,numSkulls);
         }else{
@@ -165,6 +167,7 @@ public class GameController extends Observer {
             players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
             //TODO @simone send winners to players
             //TODO stop all the socket connections
+
             lobbyController.getGames().remove(this);
             return;
         }
@@ -201,6 +204,9 @@ public class GameController extends Observer {
     @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
         currentPlayer.getVirtualView().getRequestDispatcher().clear();
+        if (currentPlayer.getAlive() == OPTIONAL) {
+            updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
+        }
         if (reverse) {
             actionCounter ++;
             actionController = null;

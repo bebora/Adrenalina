@@ -15,17 +15,19 @@ public class RMIPinger extends Thread{
 
     public RMIPinger(VirtualView view) {
         this.view = view;
-        viewUpdaterRMI = (ViewUpdaterRMI) view.getViewUpdater();
     }
 
     public void run() {
+        viewUpdaterRMI = (ViewUpdaterRMI) view.getViewUpdater();
         do {
             viewUpdaterRMI.sendPing();
+            System.out.println("pinging");
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
             }
         } while (view.isOnline());
+        Logger.log(Priority.DEBUG, "PLAYER DISCONNECTED");
     }
 }

@@ -2,10 +2,8 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.view.*;
 
 import java.io.IOException;
@@ -99,6 +97,9 @@ public class CLI extends View {
                    printInColor("w",getSelectableOptionsWrapper().getSelectableTileCoords().getPrompt());
                    moveCursor(x,++y);
                    printInColor("w",getSelectableOptionsWrapper().getSelectableTileCoords().getNumericalCostraints());
+                   break;
+               case STOP:
+                   printInColor("r", "TURN BACK!");
                    break;
                default:
                    displayStringSelectable(getSelectableOptionsWrapper().getSelectableOptions(r));

@@ -10,11 +10,11 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class Server {
-    public void main() {
+    public static void main(String[] args) {
         Properties connectionProperties = new Properties();
         FileInputStream fin;
         try{
-            fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+            fin = new FileInputStream(Server.class.getClassLoader().getResource("connection.properties").getPath());
             connectionProperties.load(fin);
         }catch (Exception e){
             Logger.log(Priority.ERROR,e.getMessage());

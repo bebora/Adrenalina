@@ -12,7 +12,7 @@ public class ViewPlayer implements Serializable {
 
 	public ViewPlayer(Player player) {
 		this.color = player.getColor().name();
-		this.username = player.getToken().split("$")[0];
+		this.username = player.getToken().split("\\$")[0];
 		this.id = player.getId();
 		this.damages = player.getDamages().stream().
 				map(p -> p.getColor().name()).

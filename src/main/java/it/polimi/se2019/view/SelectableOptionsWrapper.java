@@ -2,6 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.ReceivingType;
+import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.Effect;
@@ -87,7 +88,7 @@ public class SelectableOptionsWrapper implements Serializable {
                             getOptions().
                             stream().
                             filter(p -> p.getToken() != null).
-                            map(p -> p.getToken().split("$")[0]).
+                            map(Player::getUsername).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case POWERUP:

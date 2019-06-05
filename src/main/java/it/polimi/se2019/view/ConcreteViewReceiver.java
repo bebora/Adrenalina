@@ -1,7 +1,5 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.Logger;
-import it.polimi.se2019.Priority;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
@@ -20,11 +18,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
 
     @Override
     public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+        linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
     }
 
     @Override
     public void receivePing() {
-        Logger.log(Priority.DEBUG, "PING RECEIVED");
+        //Logger.log(Priority.DEBUG, "PING RECEIVED");
     }
 
     /**
@@ -97,7 +96,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
         }
-        else if (message.contains("$") && message.split("$")[0].equals("WINNERS")) {
+        else if (message.contains("$") && message.split("\\$")[0].equals("WINNERS")) {
             //TODO game ended! show winners
         }
         //TODO show message to the client, e.g. view.showPopup(message)

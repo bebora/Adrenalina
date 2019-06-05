@@ -1,8 +1,11 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.network.AuthenticationErrorException;
 import it.polimi.se2019.view.VirtualView;
 
 import java.io.File;
@@ -38,11 +41,12 @@ public class LobbyController extends Thread{
         Player player = null;
         String token = String.format("%s$%s", username, password.hashCode());
         Match ownGame;
+        List<String> allTokens = new ArrayList<>();
         for (GameController game : games) {
-            List<String> allTokens = game.getMatch().getPlayers().stream().
+             allTokens.addAll(game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
                     map(Player::getToken).
-                    collect(Collectors.toList());
+                    collect(Collectors.toList()));
             if (allTokens.contains(token)) {
                 player = game.getMatch().getPlayers().
                         stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
@@ -70,24 +74,28 @@ public class LobbyController extends Thread{
      */
     public synchronized void connectPlayer(String username, String password, String mode, VirtualView view) {
         mode = mode.toUpperCase();
+        List<String> allUsername = new ArrayList<>();
+        allUsername.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).map(Player::getUsername).collect(Collectors.toList()));
         for (GameController game : games) {
-            List<String> allUsername = game.getMatch().getPlayers().stream().
+            allUsername.addAll(game.getMatch().getPlayers().stream().
                     filter(p -> !p.getOnline()).
-                    map(Player::getToken).
-                    map(s -> s = s.split("\\$")[0]).
-                    collect(Collectors.toList());
-            if (allUsername.contains(username)) {
-                view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
+                    map(Player::getUsername).
+                    collect(Collectors.toList()));
                 //TODO throw exception to close the connection
-            }
         }
+        if (allUsername.contains(username)) {
+            view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
+            throw new AuthenticationErrorException();
+        }
+        allUsername.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).map(Player::getUsername).collect(Collectors.toList()));
         String token = String.format("%s$%s", username, password.hashCode());
         Player player = new Player(token);
         player.setVirtualView(view);
+        Logger.log(Priority.DEBUG, "PLAYER CONNECTED");
         List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
         if (modeWaiting == null) {
             view.getViewUpdater().sendPopupMessage("Selected mode does not exist! Can't connect.");
-            //TODO throw exception to close the connection
+            throw new AuthenticationErrorException();
         } else {
             modeWaiting.add(player);
             view.getViewUpdater().sendPopupMessage("SUCCESS");
@@ -95,6 +103,7 @@ public class LobbyController extends Thread{
                 Timer timer = new Timer();
                 waitingTimers.put(Mode.valueOf(mode), timer);
                 timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
+                Logger.log(Priority.DEBUG, "TIMER STARTED");
             }
             else if (modeWaiting.size() == 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();
@@ -124,11 +133,15 @@ public class LobbyController extends Thread{
     }
 
     public synchronized void startGame(Mode mode) {
-        List<Player> playing = new ArrayList<>(waitingPlayers.get(mode));
+        Logger.log(Priority.DEBUG, "GAME TRYING TO START");
+        List<Player> currentWaiting = waitingPlayers.get(mode);
+        currentWaiting.removeAll(currentWaiting.stream().filter(p -> !p.getOnline()).collect(Collectors.toList()));
+        List<Player> playing = new ArrayList<>(currentWaiting);
         if (playing.size() > 5) {
             playing = new ArrayList<>(playing.subList(0,5));
         }
         else if (playing.size() < 3) {
+            Logger.log(Priority.DEBUG, "GAME NOT STARTING");
             return;
         }
         else {
@@ -141,8 +154,9 @@ public class LobbyController extends Thread{
         File[] directoryListing = dir.listFiles();
         int rnd = new Random().nextInt(directoryListing.length);
         String boardName = directoryListing[rnd].getName();
-        GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION));
+        GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION), this);
         gameController.startTurn();
+        gameController.getMatch().updateViews();
         games.add(gameController);
     }
 

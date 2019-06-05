@@ -18,6 +18,7 @@ public class RMIServerTest {
     void before() {
         lobbyController = new LobbyController(Collections.singletonList(Mode.NORMAL));
         view = new View();
+
     }
 
     @Test
@@ -36,11 +37,6 @@ public class RMIServerTest {
         }
         catch (RemoteException e){
             System.out.println("Error!");
-        }try {
-            Thread.sleep(100);
-        }
-        catch (InterruptedException e) {
-            System.out.print("Interrupted");
         }
         assertEquals(1, lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
     }

@@ -133,8 +133,7 @@ public class WorkerServerSocket extends Thread {
     private class Listener extends Thread {
         @Override
         public void run() {
-           //TODO edit conditions to run
-            while(!socket.isClosed()) {
+            while(!socket.isClosed() && virtualView.isOnline()) {
                 String json;
                 try {
                     json = jsonReader.readLine();

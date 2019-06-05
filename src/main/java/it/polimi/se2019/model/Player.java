@@ -37,7 +37,7 @@ public class Player {
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(2);
-		firstShotReward = Boolean.TRUE;
+		firstShotReward = Boolean.FALSE;
 		damagesAllocable = 0;
 	}
 	public Player(Player originalPlayer){
@@ -288,8 +288,13 @@ public class Player {
 		return weapons;
 	}
 
-	public Boolean getOnline() {
-		return online;
+	public boolean getOnline() {
+		if (virtualView != null) {
+			return virtualView.isOnline();
+		}
+		else {
+			return false;
+		}
 	}
 
 	public List<Integer> getRewardPoints() {
@@ -501,8 +506,8 @@ public class Player {
 		return virtualView;
 	}
 
-	public void setOnline(Boolean online) {
-		this.online = online;
+	public void setOnline(boolean online) {
+		virtualView.setOnline(online);
 	}
 
 	public void setVirtualView(VirtualView virtualView) {
@@ -523,7 +528,7 @@ public class Player {
 
 	public String getUsername() {
 	    if (token == null) return null;
-	    else return token.split("$")[0];
+	    else return token.split("\\$")[0];
     }
 
 	public void setColor(Color color) {
