@@ -88,6 +88,8 @@ public class Player {
 		//sendTotalUpdate is not needed due to being already sent in match.restoreMatch()
 	}
 
+	private boolean skipping;
+
 	private Object editing;
 
 	private Color color;

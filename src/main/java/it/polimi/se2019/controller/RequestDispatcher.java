@@ -55,12 +55,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveAction(String subAction) throws RemoteException {
         synchronized (lock) {
             try {
-                if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
+                if (observerTypes.keySet().contains(ReceivingType.ACTION)) {
                     Action action = eventHelper.getActionFromString(subAction);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.ACTION);
                     eventHandler.receiveAction(action);
                 } else {
-                    throw new IncorrectEvent("Non posso accettare ROOM!");
+                    throw new IncorrectEvent("Non posso accettare Action!");
                 }
             } catch (IncorrectEvent e) {
                 viewUpdater.sendPopupMessage(e.getMessage());

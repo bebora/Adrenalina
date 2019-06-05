@@ -48,7 +48,6 @@ public class GameController extends Observer {
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
             players.get(0).receiveShot(currentPlayer, 1, 0);
-            endTurn();
         }
         else {
             throw new IncorrectEvent("Wrong players!");
@@ -83,7 +82,7 @@ public class GameController extends Observer {
 
     public void startTurn(){
         if (!currentPlayer.getOnline()) {
-            endTurn();
+            endTurn(false);
         }
         if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i < 2; i++){
@@ -137,11 +136,11 @@ public class GameController extends Observer {
             playTurn();
         }
         else {
-            endTurn();
+            endTurn(false);
         }
     }
 
-    public void endTurn(){
+    public void endTurn(boolean skip){
         overkillPlayers = match.
                 getPlayers().
                 stream().
@@ -153,19 +152,30 @@ public class GameController extends Observer {
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
         if (!spawnPoints.isEmpty() &&  !overkillPlayers.isEmpty()) {
-            acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
-            acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1,1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
-            overkillPlayers.get(0).getDamages().remove(7);
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
-            try {
-                timerCostrainedEventHandler.join();
+            if (skip) {
+                acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
+                for (Player current : overkillPlayers) {
+                    current.getDamages().remove(7);
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                    timerCostrainedEventHandler.start();
+                    try {
+                        timerCostrainedEventHandler.join();
+                    } catch (InterruptedException e) {
+                        Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
+                    }
+                    if (!timerCostrainedEventHandler.isBlocked()) {
+                        overkillPlayers.forEach(p -> p.getDamages().remove(7));
+                        break;
+                    }
+                }
             }
-            catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
-            }
-            if (!timerCostrainedEventHandler.isBlocked()) {
-                   overkillPlayers.stream().forEach(p -> p.getDamages().remove(7));
+            else {
+                Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
+                if (spawnPoint != null) {
+                    spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0);
+                }
+                overkillPlayers.forEach(p -> p.getDamages().remove(7));
             }
         }
         else if (match.newTurn()) {
@@ -185,6 +195,7 @@ public class GameController extends Observer {
     }
 
     public void sendWinners() {
+        Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();
         StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
         for (Player p : players) {
@@ -221,14 +232,12 @@ public class GameController extends Observer {
         if (currentPlayer.getAlive() == OPTIONAL) {
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
         }
-        else {
+        else if (reverse) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
-        }
-        if (reverse) {
             actionCounter ++;
             actionController = null;
             if (skip || actionCounter == currentPlayer.getMaxActions()) {
-                endTurn();
+                endTurn(skip);
             }
             else {
                 playTurn();
