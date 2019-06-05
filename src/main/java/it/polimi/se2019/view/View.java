@@ -3,6 +3,7 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.GameController;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
@@ -48,6 +49,8 @@ public class View {
 
 	private boolean online;
 
+	private GameController gameController;
+
 
 	private SelectableOptionsWrapper selectableOptionsWrapper;
 
@@ -57,6 +60,14 @@ public class View {
 
 	public boolean isOnline() {
 		return online;
+	}
+
+	public void setGameController(GameController gameController) {
+		this.gameController = gameController;
+	}
+
+	public GameController getGameController() {
+		return gameController;
 	}
 
 	public View() {

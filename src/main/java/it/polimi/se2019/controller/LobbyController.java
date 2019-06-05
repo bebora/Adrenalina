@@ -31,6 +31,7 @@ public class LobbyController extends Thread{
 
     }
 
+
     /**
      * Reconnect a player to a game already started
      * @param username
@@ -157,6 +158,7 @@ public class LobbyController extends Thread{
         int rnd = new Random().nextInt(directoryListing.length);
         String boardName = directoryListing[rnd].getName();
         GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION), this);
+        playing.stream().forEach(p -> p.getVirtualView().setGameController(gameController));
         gameController.startTurn();
         gameController.getMatch().updateViews();
         games.add(gameController);

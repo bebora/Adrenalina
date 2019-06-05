@@ -31,6 +31,10 @@ public class GameController extends Observer {
     List<Player> overkillPlayers;
 
 
+    public void checkEnd() {
+        if (match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3)
+            sendWinners();
+    }
 
 
     @Override
@@ -159,15 +163,7 @@ public class GameController extends Observer {
             }
         }
         else if (match.newTurn()) {
-            List<Player> players = match.getWinners();
-            StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
-            for (Player p : players) {
-                stringBuffer.append(p.getUsername() + ", ");
-            }
-            players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
-            //TODO @simone send winners to players
-            //TODO stop all the socket connections
-
+            sendWinners();
             lobbyController.getGames().remove(this);
             return;
         }
@@ -180,6 +176,19 @@ public class GameController extends Observer {
             startTurn();
         else
             startSpawning();
+    }
+
+    public void sendWinners() {
+        List<Player> players = match.getWinners();
+        StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
+        for (Player p : players) {
+            stringBuffer.append(p.getUsername() + ", ");
+        }
+        players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
+        //TODO @simone send winners to players
+        //TODO stop all the socket connections
+        match.getPlayers().stream().filter(p -> p.getOnline()).forEach(p -> p.setOnline(false));
+
     }
 
     public void startSpawning(){

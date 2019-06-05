@@ -160,8 +160,7 @@ public abstract class Match {
 			currentPlayer = (currentPlayer + 1)% players.size();
 		} while (players.get(currentPlayer).getDominationSpawn());
 
-		long onlinePlayers = players.stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count();
-		if (onlinePlayers < 3 || (finalFrenzy && currentPlayer == firstPlayer)) {
+		if (finalFrenzy && currentPlayer == firstPlayer) {
 			updateViews();
 			return true;
 		}
