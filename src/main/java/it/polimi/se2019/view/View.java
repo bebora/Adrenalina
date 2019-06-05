@@ -169,6 +169,10 @@ public class View {
 		this.currentPlayer = currentPlayer;
 	}
 
+	public ViewPlayer getCurrentPlayer() {
+		return currentPlayer;
+	}
+
 	public String getMessage(){
 		return messages.poll();
 	}

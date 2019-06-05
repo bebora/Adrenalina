@@ -123,10 +123,8 @@ public class CLI extends View {
     }
 
     private void displaySelectableCoords(SelectableOptions<ViewTileCoords> selectableTileCoords){
-        int index = 0;
         for(ViewTileCoords v: selectableTileCoords.getOptions()){
-            index++;
-            printInColor("w",index + ")" + v.toString() + " ");
+            printInColor("w",v.toString() + " ");
         }
     }
 
@@ -136,6 +134,14 @@ public class CLI extends View {
             index++;
             printInColor("w", index + ")" + o + " ");
         }
+    }
+
+    private void displayTurnInfo(){
+        moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
+        printInColor("w","You:");
+        printInColor(getSelf().getColor(),getUsername() + " ");
+        printInColor("w","Current player:");
+        printInColor(getCurrentPlayer().getColor(),getCurrentPlayer().getUsername());
     }
 
 
@@ -148,6 +154,7 @@ public class CLI extends View {
         AsciiPlayer.printPowerUps(this);
         displayPossibleTypes();
         displaySelectableOptions();
+        displayTurnInfo();
         while(getMessages()!= null && !getMessages().isEmpty()) {
             CLI.printMessage(getMessage(), "W");
             try{

@@ -42,6 +42,11 @@ public class Player {
 	}
 	public Player(Player originalPlayer){
 		this.id = originalPlayer.getId();
+		this.color = originalPlayer.color;
+		this.token = originalPlayer.token;
+		this.actionCount = originalPlayer.actionCount;
+		this.dominationSpawn = originalPlayer.dominationSpawn;
+		this.maxActions = originalPlayer.maxActions;
 		this.tile = originalPlayer.getTile();
 		this.firstPlayer = originalPlayer.getFirstPlayer();
 		this.virtualView = originalPlayer.getVirtualView();

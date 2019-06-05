@@ -104,25 +104,29 @@ public class CliInputHandler implements Runnable{
     private void parsePlayers(String[] players) {
         List<String> selectedViewPlayers = new ArrayList<>();
         SelectableOptions<String> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePlayers();
-        String singlePlayer;
-        boolean error = false;
-        for (String p : players) {
-            if (p.matches("\\d")) {
-                singlePlayer = selectableOptions.getOption(Integer.parseInt(p));
-                if (singlePlayer != null)
-                    selectedViewPlayers.add(singlePlayer);
-            } else {
-                CLI.printMessage(wrongInputMessage, "R");
-                error = true;
-                break;
-            }
-        }
-        if (!error){
+        boolean success;
+        success = selectFromOptions(players,selectedViewPlayers,selectableOptions);
+        if (success){
             if (selectableOptions.checkForCoherency(selectedViewPlayers))
                 eventUpdater.sendPlayers(selectedViewPlayers);
             else
                 CLI.printMessage("You did not respect selection limits", "R");
         }
+    }
+
+    private <T> boolean selectFromOptions(String[] toBeParsed, List<T> selected,SelectableOptions<T> selectableOptions){
+        T singleParsed;
+        for (String p : toBeParsed) {
+            if (p.matches("\\d")) {
+                singleParsed = selectableOptions.getOption(Integer.parseInt(p));
+                if (singleParsed != null)
+                    selected.add(singleParsed);
+            } else {
+                CLI.printMessage(wrongInputMessage, "R");
+                return false;
+            }
+        }
+        return true;
     }
 
     private void parseTiles(String[] tiles){
@@ -148,7 +152,7 @@ public class CliInputHandler implements Runnable{
     }
 
     private void parseRoom(String room){
-        if(Color.initialToColor(room.charAt(0)) != null)
+        if(view.getSelectableOptionsWrapper().getSelectableRooms().getOptions().contains(room))
             eventUpdater.sendRoom(room);
         else
             CLI.printMessage("Wrong input","R");
@@ -163,11 +167,11 @@ public class CliInputHandler implements Runnable{
     }
 
     private void parseAction(String action){
-        List<String> actions = view.getSelf().getActions().stream()
-                .map(ViewAction::getType)
-                .collect(Collectors.toList());
-        if(actions.contains(action))
-            eventUpdater.sendAction(action);
+        String selectedOption = null;
+        if(action.matches("\\d"))
+            selectedOption = view.getSelectableOptionsWrapper().getSelectableActions().getOption(Integer.parseInt(action));
+        if(selectedOption != null)
+            eventUpdater.sendAction(selectedOption);
         else
             CLI.printMessage(wrongInputMessage, "R");
     }
@@ -175,20 +179,9 @@ public class CliInputHandler implements Runnable{
     private void parsePowerUps(String[] powerUps){
         SelectableOptions<ViewPowerUp> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePowerUps();
         List<ViewPowerUp> selectedPowerUps = new ArrayList<>();
-        ViewPowerUp singleSelection;
-        boolean error = false;
-        for(String p: powerUps){
-            if(p.matches("\\d")){
-                singleSelection = selectableOptions.getOption(Integer.parseInt(p));
-                if(singleSelection != null)
-                    selectedPowerUps.add(singleSelection);
-            }else{
-                CLI.printMessage(wrongInputMessage, "R");
-                error = true;
-                break;
-            }
-        }
-        if(!error){
+        boolean success;
+        success = selectFromOptions(powerUps,selectedPowerUps,selectableOptions);
+        if(success){
             if(view.getSelectableOptionsWrapper().getSelectablePowerUps().checkForCoherency(selectedPowerUps))
                 eventUpdater.sendPowerUp(selectedPowerUps,false);
             else
