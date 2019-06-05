@@ -136,8 +136,8 @@ public class ViewUpdaterRMI implements ViewUpdater {
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send acceptable type: " + e.getMessage());
+                view.setOnline(false);
             }
-            view.setOnline(false);
         };
         new Thread(task).start();
     }

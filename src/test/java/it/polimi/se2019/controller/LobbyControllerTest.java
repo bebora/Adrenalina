@@ -65,6 +65,12 @@ class LobbyControllerTest {
                 assertEquals(false, true);
             }
         }
+        try {
+            Thread.sleep(100);
+        }
+        catch (InterruptedException e){
+            assertEquals(false, true);
+        }
         assertEquals(2, lobbyController.getGames().size());
     }
 }

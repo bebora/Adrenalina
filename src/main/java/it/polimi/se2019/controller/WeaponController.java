@@ -138,7 +138,7 @@ public class WeaponController extends Observer {
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        powerUps.forEach(p -> curPlayer.discardPowerUp(p));
+        powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
         for (Ammo a : curPlayer.getAmmos()) {
             if (stillToPay.remove(a))
                 curPlayer.getAmmos().remove(a);

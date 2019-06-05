@@ -499,7 +499,7 @@ public class EffectController extends Observer {
         int marksAmount;
         powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());
         for(PowerUp p: powerUps){
-            player.discardPowerUp(p);
+            player.discardPowerUp(p, false);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
             player.receiveShot(currentEnemy,damagesAmount,marksAmount);

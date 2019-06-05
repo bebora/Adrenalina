@@ -346,7 +346,7 @@ public class Player {
 
 	public void setTile(Tile tile){
 		this.tile = tile;
-		//TODO update view with new update(tile)
+		sendTotalUpdate();
 	}
 
 	public boolean getFirstPlayer() {
@@ -460,9 +460,9 @@ public class Player {
 	 * Discard the powerUp and add the corresponding ammo
 	 * @param powerUp powerUp to discard from {@link #powerUps}
 	 */
-	public void discardPowerUp(PowerUp powerUp) {
+	public void discardPowerUp(PowerUp powerUp, boolean award) {
 		powerUps.remove(powerUp);
-		addAmmo(powerUp.getDiscardAward());
+		if (award) addAmmo(powerUp.getDiscardAward());
 		sendTotalUpdate();
 	}
 

@@ -53,7 +53,7 @@ public class GameController extends Observer {
             Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
                     filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
             currentPlayer.setTile(tile);
-            currentPlayer.discardPowerUp(powerUps.get(0));
+            currentPlayer.discardPowerUp(powerUps.get(0), false);
             playTurn();
         }
         else {
@@ -203,9 +203,11 @@ public class GameController extends Observer {
 
     @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
-        currentPlayer.getVirtualView().getRequestDispatcher().clear();
         if (currentPlayer.getAlive() == OPTIONAL) {
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
+        }
+        else {
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
         }
         if (reverse) {
             actionCounter ++;
