@@ -433,6 +433,7 @@ public class EffectController extends Observer {
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
                 Observer damagedController = new DamagedController(p, player, applicable);
                 TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler.setNotifyOnEnd(false);
                 handlersPowerUp.add(temp);
             }
         }

@@ -37,12 +37,9 @@ public class GameController extends Observer {
         checkEnd();
     }
     public synchronized void checkEnd() {
-        if (match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
+        if (!end && match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
             end = true;
             sendWinners();
-        }
-        else {
-
         }
     }
 

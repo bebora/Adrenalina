@@ -24,7 +24,7 @@ public class SocketServer extends Thread{
     @Override
     public void run() {
         initializeSocket();
-        Socket clientSocket = null;
+        Socket clientSocket;
         while (true) {
             try {
                 clientSocket = this.serverSocket.accept();
