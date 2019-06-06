@@ -20,7 +20,7 @@ class BoardTest {
     Board test;
     @BeforeEach
     void Before() {
-        test = BoardCreator.parseBoard("board1.btlb",8);
+        test = BoardCreator.parseBoard("board3.btlb",8);
     }
 
     @Test

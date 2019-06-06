@@ -22,7 +22,7 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ActionControllerTest {
-    GameController gameController = new GameController(Arrays.asList(new Player("Nicola"),new Player("Rosetti")),"board1.btlb",8,false, null);
+    GameController gameController = new GameController(Arrays.asList(new Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null);
     ActionController actionController = new ActionController(gameController.getMatch(),gameController);
     Player currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
     Board board = gameController.getMatch().getBoard();

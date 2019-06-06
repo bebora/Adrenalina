@@ -11,7 +11,7 @@ class BoardCreatorTest {
 
     @Test
     void parseBoard() {
-        Board test = BoardCreator.parseBoard("board1.btlb",8);
+        Board test = BoardCreator.parseBoard("board3.btlb",8);
         // Test skull setter
         assertEquals(test.getSkulls(),8);
 

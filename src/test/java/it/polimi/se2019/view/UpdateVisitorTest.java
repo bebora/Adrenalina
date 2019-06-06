@@ -27,7 +27,7 @@ class UpdateVisitorTest {
     static void setup() {
         firstView = new View();
         username = "Noobmaster69";
-        board = BoardCreator.parseBoard("board1.btlb",8);
+        board = BoardCreator.parseBoard("board3.btlb",8);
         players = Arrays.asList(
                 new Player("Noobmaster69"),
                 new Player("Korg"),
