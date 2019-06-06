@@ -2,18 +2,12 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
-import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class CliInputHandler implements Runnable{
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -219,7 +213,7 @@ public class CliInputHandler implements Runnable{
         CLI.printInColor("W","RMI or Socket?\n");
         String answer = "RMI";
         String username = "user";
-        String standard_pw = "password";
+        String password = "password";
         String gameMode = "NORMAL";
         boolean existingGame = false;
         try{
@@ -236,10 +230,20 @@ public class CliInputHandler implements Runnable{
             }
             CLI.printInColor("W","Username: ");
             username = input.readLine();
+            if (username.equals("")) {
+                Random rand = new Random();
+                username = String.format("Player-%05d",rand.nextInt(99999));
+                CLI.printInColor("w", "Your auto username is "+username+"\n");
+            }
             Logger.setLogFileSuffix(username);
             System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
-            standard_pw = input.readLine();
+            password = input.readLine();
+            if (password.equals("")) {
+                Random rand = new Random();
+                password = String.format("%04d", rand.nextInt(9999));
+                Logger.log(Priority.DEBUG, "Automatic password: "+password);
+            }
             CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
             switch (input.readLine().toLowerCase()){
                 case "y":
@@ -251,7 +255,7 @@ public class CliInputHandler implements Runnable{
                     CLI.printInColor("Y", "Assuming \"n\"\n");
                     break;
             }
-            CLI.printInColor("W","Game mode (NORMAL/DOMINATION)");
+            CLI.printInColor("W", "Game mode (NORMAL/DOMINATION)");
             switch (input.readLine().toUpperCase()){
                 case "NORMAL":
                     break;
@@ -273,7 +277,7 @@ public class CliInputHandler implements Runnable{
         }catch (Exception e){
             Logger.log(Priority.ERROR, e.getMessage());
         }
-        view.setupConnection(answer, username, standard_pw, connectionProperties, existingGame, gameMode);
+        view.setupConnection(answer, username, password, connectionProperties, existingGame, gameMode);
         eventUpdater = view.getEventUpdater();
     }
 
@@ -299,7 +303,7 @@ public class CliInputHandler implements Runnable{
                 break;
             default:
                 ret = true;
-                CLI.printInColor("Y", "Wrong view mode, assuming GUI\n");
+                CLI.printInColor("Y", "Wrong view mode, assuming CLI\n");
         }
         return ret;
     }
