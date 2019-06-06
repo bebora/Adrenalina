@@ -217,7 +217,6 @@ public class CliInputHandler implements Runnable{
 
     private void connectionChoice(BufferedReader input){
         CLI.printInColor("W","RMI or Socket?\n");
-        String in;
         String answer = "RMI";
         String username = "user";
         String standard_pw = "password";
@@ -226,38 +225,61 @@ public class CliInputHandler implements Runnable{
         try{
             answer = input.readLine();
             answer = answer.toUpperCase();
+            switch (answer){
+                case "RMI":
+                    break;
+                case "SOCKET":
+                    break;
+                default:
+                    CLI.printInColor("Y", "Wrong network mode, assuming RMI\n");
+                    answer = "RMI";
+            }
             CLI.printInColor("W","Username: ");
             username = input.readLine();
             Logger.setLogFileSuffix(username);
             System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
             standard_pw = input.readLine();
-            CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
-            if(input.readLine().equals("y"))
-                existingGame = true;
-            CLI.printInColor("W","Game mode (NORMAL/DOMINATION)");
-            if((in = input.readLine()).equalsIgnoreCase("DOMINATION")){
-                gameMode = "DOMINATION";
+            CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
+            switch (input.readLine().toLowerCase()){
+                case "y":
+                    existingGame = true;
+                    break;
+                case "n":
+                    break;
+                default:
+                    CLI.printInColor("Y", "Assuming \"n\"\n");
+                    break;
             }
-
+            CLI.printInColor("W","Game mode (NORMAL/DOMINATION)");
+            switch (input.readLine().toUpperCase()){
+                case "NORMAL":
+                    break;
+                case "DOMINATION":
+                    gameMode = "DOMINATION";
+                    break;
+                default:
+                    CLI.printInColor("Y", "Wrong game mode, assuming NORMAL\n");
+            }
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
-        if(answer.equals("RMI") || answer.equals("SOCKET")) {
-            view = new CLI();
-            Properties connectionProperties = new Properties();
-            FileInputStream fin;
-            try{
-                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
-                connectionProperties.load(fin);
-            }catch (Exception e){
-                Logger.log(Priority.ERROR,e.getMessage());
-            }
-            view.setupConnection(answer,username,standard_pw,connectionProperties,existingGame,gameMode);
-            eventUpdater = view.getEventUpdater();
+        view = new CLI();
+        Properties connectionProperties = new Properties();
+        FileInputStream fin;
+        try{
+            fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+            connectionProperties.load(fin);
+        }catch (Exception e){
+            Logger.log(Priority.ERROR, e.getMessage());
         }
+        view.setupConnection(answer, username, standard_pw, connectionProperties, existingGame, gameMode);
+        eventUpdater = view.getEventUpdater();
     }
 
+    /**
+     * @return cli selected or not
+     */
     private boolean viewChoice(){
         CLI.printInColor("W","GUI or CLI?\n");
         String answer = "CLI";
@@ -267,7 +289,19 @@ public class CliInputHandler implements Runnable{
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
         }
-        return answer.equals("CLI");
+        boolean ret;
+        switch (answer){
+            case "CLI":
+                ret = true;
+                break;
+            case "GUI":
+                ret = false;
+                break;
+            default:
+                ret = false;
+                CLI.printInColor("Y", "Wrong view mode, assuming GUI\n");
+        }
+        return ret;
     }
 
     public void run(){
