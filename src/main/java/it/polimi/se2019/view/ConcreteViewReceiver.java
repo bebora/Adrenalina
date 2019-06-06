@@ -96,6 +96,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public void receivePopupMessage(String message) throws RemoteException {
         if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
             linkedView.setStatus(Status.WAITING);
+            System.out.println("WAITING TO PLAY...");
         }
         else if (message.contains("\\$") && message.split("\\$")[0].equals("WINNERS")) {
             //TODO game ended! show winners

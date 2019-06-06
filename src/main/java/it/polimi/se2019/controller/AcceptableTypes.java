@@ -19,7 +19,17 @@ public class AcceptableTypes {
     private SelectableOptions<Color> selectableRooms;
     private SelectableOptions<Tile> selectableTileCoords;
     private SelectableOptions<Weapon> selectableWeapons;
+    private boolean reverse;
     private List<ReceivingType> acceptedTypes;
+
+
+    public boolean isReverse() {
+        return reverse;
+    }
+
+    public void setReverse(boolean reverse) {
+        this.reverse = reverse;
+    }
 
     public AcceptableTypes(List<ReceivingType> receivingTypes) {
         this.acceptedTypes = receivingTypes;

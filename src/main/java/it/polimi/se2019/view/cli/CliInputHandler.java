@@ -298,7 +298,7 @@ public class CliInputHandler implements Runnable{
                 ret = false;
                 break;
             default:
-                ret = false;
+                ret = true;
                 CLI.printInColor("Y", "Wrong view mode, assuming GUI\n");
         }
         return ret;

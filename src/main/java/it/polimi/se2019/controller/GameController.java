@@ -29,12 +29,21 @@ public class GameController extends Observer {
     private Random random = new Random();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    List<Player> overkillPlayers;
+    private boolean end;
+    private boolean skip;
 
-
-    public void checkEnd() {
-        if (match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3)
+    public synchronized void checkEnd(String username) {
+        match.getUpdateSender().sendPopupMessage(String.format("Player %s is offline!", username));
+        checkEnd();
+    }
+    public synchronized void checkEnd() {
+        if (match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
+            end = true;
             sendWinners();
+        }
+        else {
+
+        }
     }
 
     @Override
@@ -63,7 +72,12 @@ public class GameController extends Observer {
                     filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
             currentPlayer.setTile(tile);
             currentPlayer.discardPowerUp(powerUps.get(0), false);
-            playTurn();
+            if (!skip)
+                playTurn();
+            else {
+                skip = false;
+                endTurn(true);
+            }
         }
         else {
             throw new IncorrectEvent("PowerUps not acceptable!");
@@ -78,11 +92,14 @@ public class GameController extends Observer {
             match = new DominationMatch(players,boardName,numSkulls);
         }
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
+        end = false;
+        skip = false;
     }
 
     public void startTurn(){
-        if (!currentPlayer.getOnline()) {
-            endTurn(false);
+        if (!currentPlayer.getOnline() || skip) {
+            skip = false;
+            endTurn(true);
         }
         if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i < 2; i++){
@@ -104,10 +121,11 @@ public class GameController extends Observer {
 
     public void playTurn() {
         List<ReceivingType> receivingTypes = new ArrayList<>();
+        acceptableTypes = new AcceptableTypes(receivingTypes);
         if(actionCounter < currentPlayer.getMaxActions()) {
             receivingTypes.add(ReceivingType.ACTION);
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Seleziona un'azione"));
+            acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Select an Action!"));
         }
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
@@ -115,7 +133,7 @@ public class GameController extends Observer {
             receivingTypes.addAll(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
             List<PowerUp> usablePowerups = currentPlayer.getPowerUps().stream().
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Seleziona un'azione o un powerup"));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
         }
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                 this,
@@ -140,8 +158,8 @@ public class GameController extends Observer {
         }
     }
 
-    public void endTurn(boolean skip){
-        overkillPlayers = match.
+    public synchronized void endTurn(boolean skip){
+        List<Player> overkillPlayers = match.
                 getPlayers().
                 stream().
                 filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 8).
@@ -158,6 +176,7 @@ public class GameController extends Observer {
                 for (Player current : overkillPlayers) {
                     current.getDamages().remove(7);
                     timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                    timerCostrainedEventHandler.setNotifyOnEnd(false);
                     timerCostrainedEventHandler.start();
                     try {
                         timerCostrainedEventHandler.join();
@@ -179,6 +198,7 @@ public class GameController extends Observer {
             }
         }
         else if (match.newTurn()) {
+            end = true;
             sendWinners();
             lobbyController.getGames().remove(this);
             return;
@@ -188,10 +208,13 @@ public class GameController extends Observer {
         spawnablePlayers =match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)
                 .collect(Collectors.toList());
-        if(spawnablePlayers.isEmpty())
-            startTurn();
-        else
-            startSpawning();
+
+        if (!end) {
+            if(spawnablePlayers.isEmpty())
+                startTurn();
+            else
+                startSpawning();
+        }
     }
 
     public void sendWinners() {
@@ -230,6 +253,7 @@ public class GameController extends Observer {
     @Override
     public void updateOnStopSelection(boolean reverse, boolean skip){
         if (currentPlayer.getAlive() == OPTIONAL) {
+            this.skip = true;
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
         }
         else if (reverse) {

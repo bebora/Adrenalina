@@ -25,7 +25,6 @@ public class Player {
 		editing = new Object();
 		this.firstPlayer = false;
 		this.token = token;
-		this.color = Color.WHITE;
 		id = UUID.randomUUID().toString();
 		alive = ThreeState.OPTIONAL;
 		dominationSpawn = false;

@@ -45,8 +45,9 @@ public class VirtualView extends View  {
     @Override
     public void setOnline(boolean online) {
         super.setOnline(online);
-        if (!online)
-            getGameController().checkEnd();
+        if (!online) {
+            getGameController().checkEnd(getUsername());
+        }
     }
 
     public ViewUpdater getViewUpdater() {

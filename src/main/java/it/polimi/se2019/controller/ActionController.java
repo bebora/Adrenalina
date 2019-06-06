@@ -287,6 +287,7 @@ public class ActionController extends Observer {
     public void updateOnStopSelection(boolean reverse, boolean skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (reverse) {
+            originalMatch.updateViews();
             gameController.updateOnStopSelection(true, skip);
         }
     }

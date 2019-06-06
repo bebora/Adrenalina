@@ -22,6 +22,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private Observer observer;
     private RequestDispatcher requestDispatcher;
     private AcceptableTypes acceptableTypes;
+    private boolean notifyOnEnd;
 
     public boolean isBlocked() {
         return blocked;
@@ -34,6 +35,11 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         this.requestDispatcher = requestDispatcher;
         this.acceptableTypes = acceptableTypes;
         this.blocked = false;
+        this.notifyOnEnd = true;
+    }
+
+    public void setNotifyOnEnd(boolean notifyOnEnd) {
+        this.notifyOnEnd = notifyOnEnd;
     }
 
     public void endHandler() {
@@ -66,7 +72,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             }
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
-        if (!blocked) {
+        if (!blocked && notifyOnEnd) {
             observer.updateOnStopSelection(true, true);
         }
     }

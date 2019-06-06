@@ -220,7 +220,9 @@ public class Board {
 	}
 
 	public Tile getTile(int posy, int posx) {
-	    return tiles.get(posy).get(posx);
+		if (posy < tiles.size() && posx < tiles.get(posy).size())
+	    	return tiles.get(posy).get(posx);
+		else return null;
     }
 
     public List<List<Tile>> getTiles() {

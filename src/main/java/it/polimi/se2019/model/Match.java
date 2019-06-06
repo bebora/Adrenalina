@@ -20,7 +20,12 @@ public abstract class Match {
 
     public Match(List<Player> players, String boardFilename, int numSkulls) {
         this.players = players;
+        List<Color> colors = Arrays.asList(Color.values());
+        Collections.shuffle(colors);
+        int i = 0;
         for (Player p : players) {
+        	p.setColor(colors.get(i));
+        	i = (i + 1) % colors.size();
         	VirtualView v= p.getVirtualView();
         	if (v != null && v.getRequestDispatcher() != null) {
         		v.getRequestDispatcher().setMatch(this);
