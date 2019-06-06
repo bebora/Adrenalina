@@ -47,7 +47,7 @@ public class ViewTile implements Serializable {
                 collect(Collectors.toCollection(ArrayList::new));
         this.spawn = tile.isSpawn();
         //Spawn tiles have a null ammoCard, so getting their ammoCard name would throw a NullPointerException
-        this.ammos = tile.isSpawn() ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
+        this.ammos = (tile.isSpawn() || tile.getAmmoCard() == null) ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
                 map(Ammo::name).
                 collect(Collectors.toCollection(ArrayList::new));
     }

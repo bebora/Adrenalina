@@ -78,7 +78,7 @@ public class CliInputHandler implements Runnable{
                     parseRoom(inSplit[2]);
                     break;
                 case "WEAPON":
-                    eventUpdater.sendWeapon(inSplit[2]);
+                    parseWeapon(inSplit[2]);
                     break;
                 case "DIRECTION":
                     parseDirection(inSplit[2]);
@@ -111,6 +111,19 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    private void parseWeapon(String weaponIndex){
+        String selectedWeapon = null;
+        if(weaponIndex.matches("\\d")){
+            selectedWeapon = view.getSelectableOptionsWrapper().getSelectableWeapons().getOption(Integer.parseInt(weaponIndex));
+        }
+        if(selectedWeapon != null){
+            eventUpdater.sendWeapon(selectedWeapon);
+        }else{
+            CLI.printMessage("R","Selected weapon does not exist");
+        }
+
+    }
+
     private <T> boolean selectFromOptions(String[] toBeParsed, List<T> selected,SelectableOptions<T> selectableOptions){
         T singleParsed;
         for (String p : toBeParsed) {
@@ -134,8 +147,8 @@ public class CliInputHandler implements Runnable{
         for(String tile: tiles){
             if(tile.matches(".+,.+")) {
                 String[] coords = tile.split(",");
-                x = Integer.parseInt(coords[0]);
-                y = Integer.parseInt(coords[1]);
+                x = Integer.parseInt(coords[1]);
+                y = Integer.parseInt(coords[0]);
                 selectedCoords.add(new ViewTileCoords(x,y));
             }else
             {
