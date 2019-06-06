@@ -27,6 +27,6 @@ public class RMIPinger extends Thread{
                 Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
             }
         } while (view.isOnline());
-        Logger.log(Priority.DEBUG, "PLAYER DISCONNECTED");
+        Logger.log(Priority.DEBUG, "PLAYER DISCONNECTED - " + view.getUsername());
     }
 }

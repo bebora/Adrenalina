@@ -58,6 +58,7 @@ public class WorkerServerSocket extends Thread {
             ViewUpdater viewUpdater = new ViewUpdaterSocket(this);
             virtualView.setViewUpdater(viewUpdater);
             String username = connection.getUsername();
+            virtualView.setUsername(username);
             String password = connection.getPassword();
             String mode = connection.getMode();
             boolean existingGame = connection.getExistingGame();

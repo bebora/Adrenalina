@@ -174,7 +174,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                         viewPowerUps, viewLoadedWeapons, currentPlayer.getId());
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send total update" + e.getMessage());
+                Logger.log(Priority.ERROR, String.format("Unable to send total update to %s:%n%s", username, e.getMessage()));
             }
         });
     }

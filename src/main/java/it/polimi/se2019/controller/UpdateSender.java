@@ -1,5 +1,7 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
@@ -127,9 +129,14 @@ public class UpdateSender implements ViewUpdater {
     public void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
-        receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
-                idView, points, powerUps,
-                loadedWeapons, currentPlayer);
+        if (!receivingPlayer.getOnline()) {
+            Logger.log(Priority.DEBUG, "Can't send total update to offline player " + receivingPlayer.getUsername());
+        }
+        else {
+            receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
+                    idView, points, powerUps,
+                    loadedWeapons, currentPlayer);
+        }
     }
 
     @Override
