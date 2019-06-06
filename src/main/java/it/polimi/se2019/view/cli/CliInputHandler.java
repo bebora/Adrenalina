@@ -89,6 +89,9 @@ public class CliInputHandler implements Runnable{
                 case "POWERUP":
                     parsePowerUps(selectedElements);
                     break;
+                case "EFFECT":
+                    parseEffect(inSplit[2]);
+                    break;
                 default:
                     CLI.printMessage("This is not something you can select!", "R");
                     break;
@@ -120,6 +123,19 @@ public class CliInputHandler implements Runnable{
             eventUpdater.sendWeapon(selectedWeapon);
         }else{
             CLI.printMessage("R","Selected weapon does not exist");
+        }
+
+    }
+
+    private void parseEffect(String effectIndex){
+        String selectedEffect = null;
+        if(effectIndex.matches("\\d")){
+            selectedEffect = view.getSelectableOptionsWrapper().getSelectableEffects().getOption(Integer.parseInt(effectIndex));
+        }
+        if(selectedEffect != null){
+            eventUpdater.sendEffect(selectedEffect);
+        }else{
+            CLI.printMessage("R","Selected effect does not exist");
         }
 
     }
