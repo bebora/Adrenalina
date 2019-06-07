@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class View {
 	private Status status;
 
-	private Queue<String> messages;
+	private List<String> messages;
 
 	private ViewPlayer currentPlayer;
 
@@ -173,15 +173,18 @@ public class View {
 		return currentPlayer;
 	}
 
-	public String getMessage(){
-		return messages.poll();
+	public void addMessage(String message){
+		if(messages.size() > 4){
+			messages.remove(0);
+		}
+		messages.add(message);
 	}
 
-	public Queue<String> getMessages() {
+	public List<String> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(Queue<String> messages) {
+	public void setMessages(List<String> messages) {
 		this.messages = messages;
 	}
 

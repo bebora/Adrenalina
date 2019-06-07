@@ -51,7 +51,7 @@ public class ViewBoard implements Serializable {
 		else return ViewTile.cabDistance(tile1,tile2) == 1;
 	}
 
-	private String getName(){
+	public String getName(){
 		return name;
 	}
 }

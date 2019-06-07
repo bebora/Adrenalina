@@ -66,14 +66,17 @@ public class CLI extends View {
         return displayedWeapons;
     }
 
-    private void displayPossibleTypes() {
+    private void displayMessages() {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY;
         moveCursor(x,y);
-        clearUntilEndOfLine(y,y+4,x);
-        for (String r : getReceivingTypes()) {
-            printInColor("w", r);
-            moveCursor(x,++y);
+        printInColor("w","MESSAGES:");
+        moveCursor(x,++y);
+        clearUntilEndOfLine(y,y+40,x);
+        for (String m : getMessages()) {
+            fixedWidthPrint(40,m);
+            restoreCursorPosition();
+            shiftCursorDown(1);
         }
     }
 
@@ -152,17 +155,9 @@ public class CLI extends View {
         AsciiBoard.drawBoard(getPlayers());
         AsciiPlayer.drawPlayerInfo(getSelf(),getSelf().getUnloadedWeapons());
         AsciiPlayer.printPowerUps(this);
-        displayPossibleTypes();
+        displayMessages();
         displaySelectableOptions();
         displayTurnInfo();
-        while(getMessages()!= null && !getMessages().isEmpty()) {
-            CLI.printMessage(getMessage(), "W");
-            try{
-                System.in.read();
-            }catch(IOException e){
-                Logger.log(Priority.DEBUG,e.getMessage());
-            }
-        }
         moveCursor(1, AsciiBoard.boardBottomBorder + 6);
     }
 }

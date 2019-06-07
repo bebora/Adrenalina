@@ -100,7 +100,7 @@ public class WeaponController extends Observer {
 
     public synchronized void updateOnEffect(String effect) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        selectedEffect = weapon.getEffects().stream().filter(e -> e.getName() == effect).findFirst().orElse(null);
+        selectedEffect = weapon.getEffects().stream().filter(e -> e.getName().equals(effect)).findFirst().orElse(null);
         if (selectedEffect != null) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             stillToPay = new ArrayList<>();
