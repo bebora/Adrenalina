@@ -5,6 +5,7 @@ cost:
 effects:
   name:basic effect
   desc:Deal 2 damage and 1 mark to 1 target you can see.
+  absolutePriority:1
   order:
     DEALDAMAGE
   damages:

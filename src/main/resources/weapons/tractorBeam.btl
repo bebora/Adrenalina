@@ -12,6 +12,7 @@ effects:
   moves:
     move:
       objectToMove:PERSPECTIVE
+      prompt:Select the tile where you want to move the player
       targetDestination:
         visibility:TRUE
     move:

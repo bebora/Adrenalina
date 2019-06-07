@@ -1,0 +1,44 @@
+name:furnace
+cost:
+  red
+  blue
+effects:
+  name:basic mode
+  desc:Choose a room you can see, but not the room you are in. Deal 1 damage to everyone in that room.
+  order:
+    MOVE
+    DEALDAMAGE
+  absolutePriority:1
+  moves:
+    move:
+      objectToMove:PERSPECTIVE
+      prompt:Select the room you want to attack
+      targetDestination:
+        visibility:TRUE
+        samePlayerRoom:FALSE
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        areaDamage:ROOM
+        pointOfView:PERSPECTIVE
+  name:in cozy fire mode
+  desc:Choose a square exactly one move away. Deal 1 damage and 1 mark to everyone on that square.
+  order:
+      MOVE
+      DEALDAMAGE
+  absolutePriority:1
+  moves:
+    move:
+      objectToMove:PERSPECTIVE
+      prompt:Select the square you want to attack
+      targetDestination:
+        minDistance:1
+        maxDistance:1
+  damages:
+    damage:
+      damagesAmount:1
+      marksAmount:1
+      target:
+        areaDamage:TILE
+        pointOfView:PERSPECTIVE

@@ -399,6 +399,7 @@ public class CardCreator {
         Target targetDestination = new Target.Builder().build();
         ThreeState targeting = ThreeState.OPTIONAL;
         Target targetSource = new Target.Builder().build();
+        String prompt = null;
         Boolean empty = Boolean.TRUE;
         while(true){
             bufRead.mark(20);
@@ -407,6 +408,7 @@ public class CardCreator {
                 bufRead.reset();
                 moves.add(new Move.Builder().setTargetSource(targetSource).
                         setObjectToMove(objectToMove).
+                        setPrompt(prompt).
                         setTargetDestination(targetDestination).
                         setTargeting(targeting).build());
                 return moves;
@@ -417,6 +419,7 @@ public class CardCreator {
                     if(empty.equals(Boolean.FALSE)) {
                         moves.add(new Move.Builder().setTargetSource(targetSource).
                                 setObjectToMove(objectToMove).
+                                setPrompt(prompt).
                                 setTargetDestination(targetDestination).
                                 setTargeting(targeting).build());
                     }
@@ -429,6 +432,8 @@ public class CardCreator {
                 case "objecttomove":
                     objectToMove = ObjectToMove.valueOf(splitLine[1].toUpperCase());
                     break;
+                case "prompt":
+                    prompt = splitLine[1];
                 case "targetdestination":
                     targetDestination = parseTarget(bufRead);
                     break;
@@ -442,6 +447,7 @@ public class CardCreator {
                     bufRead.reset();
                     moves.add(new Move.Builder().setTargetSource(targetSource).
                             setObjectToMove(objectToMove).
+                            setPrompt(prompt).
                             setTargetDestination(targetDestination).
                             setTargeting(targeting).build());
                     return moves;

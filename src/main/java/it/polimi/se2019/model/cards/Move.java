@@ -30,14 +30,26 @@ public class Move {
 	 */
 	private Target targetSource;
 
+	/**
+	 * Prompt string that may be associated with some special moves
+	 * e.g. when moving the player perspective
+	 */
+	private String prompt;
+
 	public static class Builder{
 		private ObjectToMove objectToMove = ObjectToMove.SELF;
 		private Target targetDestination = new Target.Builder().build();
 		private ThreeState targeting;
 		private Target targetSource = new Target.Builder().build();
+		private String prompt;
 
 		public Builder setObjectToMove(ObjectToMove objectToMove) {
 			this.objectToMove = objectToMove;
+			return this;
+		}
+
+		public Builder setPrompt(String prompt) {
+			this.prompt = prompt;
 			return this;
 		}
 
@@ -62,6 +74,7 @@ public class Move {
 
 	public Move(Builder builder) {
 		this.objectToMove = builder.objectToMove;
+		this.prompt = builder.prompt;
 		this.targetDestination = builder.targetDestination;
 		this.targeting = builder.targeting;
 		this.targetSource = builder.targetSource;
@@ -95,4 +108,12 @@ public class Move {
 	}
 
 	public ObjectToMove getObjectToMove(){ return this.objectToMove; }
+
+	public void setPrompt(String prompt) {
+		this.prompt = prompt;
+	}
+
+	public String getPrompt() {
+		return prompt;
+	}
 }

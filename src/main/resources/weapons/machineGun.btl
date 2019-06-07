@@ -5,6 +5,7 @@ cost:
 effects:
   name:basic effect
   desc:Choose 1 or 2 targets you can see and deal 1 damage to each.
+  absolutePriority:1
   order:
     DEALDAMAGE
   damages:
@@ -26,7 +27,7 @@ effects:
     yellow
   damages:
     damage:
-      damageAmount:1
+      damagesAmount:1
       targeting:FALSE
       target:
         minTargets:1
@@ -45,7 +46,7 @@ effects:
     blue
   damages:
     damage:
-      damageAmount:1
+      damagesAmount:1
       targeting:FALSE
       target:
         minTargets:0
@@ -53,10 +54,10 @@ effects:
         checkBlackList:FALSE
         checkTargetList:TRUE
     damage:
-      damageAmount:1
+      damagesAmount:1
       target:
         minTargets:0
         maxTargets:1
         checkBlackList:FALSE
         checkTargetList:FALSE
-        visibility: TRUE
+        visibility:TRUE

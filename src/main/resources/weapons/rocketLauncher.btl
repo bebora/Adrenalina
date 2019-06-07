@@ -21,6 +21,7 @@ name:rocket launcher
    moves:
     move:
        objectToMove:PERSPECTIVE
+       prompt:Select the tile of the player you just attacked
        targetDestination:
          checkTargetList:TRUE
     move:
