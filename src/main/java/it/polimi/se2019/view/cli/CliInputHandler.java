@@ -2,6 +2,7 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
@@ -86,6 +87,14 @@ public class CliInputHandler implements Runnable{
                 case "EFFECT":
                     parseEffect(inSplit[2]);
                     break;
+                case "STOP":
+                    if (view.getSelectableOptionsWrapper().getAcceptedTypes().contains(ReceivingType.STOP)) {
+                        eventUpdater.sendStop();
+                    }
+                    else {
+                        CLI.printMessage("This is not something you can select!", "R");
+                    }
+                    break;
                 default:
                     CLI.printMessage("This is not something you can select!", "R");
                     break;
@@ -99,7 +108,8 @@ public class CliInputHandler implements Runnable{
         List<String> selectedViewPlayers = new ArrayList<>();
         SelectableOptions<String> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePlayers();
         boolean success;
-        success = selectFromOptions(players,selectedViewPlayers,selectableOptions);
+        success =
+                selectFromOptions(players,selectedViewPlayers,selectableOptions);
         if (success){
             if (selectableOptions.checkForCoherency(selectedViewPlayers))
                 eventUpdater.sendPlayers(selectedViewPlayers);
@@ -136,6 +146,10 @@ public class CliInputHandler implements Runnable{
 
     private <T> boolean selectFromOptions(String[] toBeParsed, List<T> selected,SelectableOptions<T> selectableOptions){
         T singleParsed;
+        String temp = toBeParsed[0];
+        if (temp.matches("\\d") && Integer.parseInt(temp) == 0) {
+            return true;
+        }
         for (String p : toBeParsed) {
             if (p.matches("\\d")) {
                 singleParsed = selectableOptions.getOption(Integer.parseInt(p));
@@ -213,7 +227,7 @@ public class CliInputHandler implements Runnable{
         CLI.printInColor("W","RMI or Socket?\n");
         String answer = "RMI";
         String username = "user";
-        String password = "password";
+        String pw = "password";
         String gameMode = "NORMAL";
         boolean existingGame = false;
         try{
@@ -238,11 +252,11 @@ public class CliInputHandler implements Runnable{
             Logger.setLogFileSuffix(username);
             System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
-            password = input.readLine();
-            if (password.equals("")) {
+            pw = input.readLine();
+            if (pw.equals("")) {
                 Random rand = new Random();
-                password = String.format("%04d", rand.nextInt(9999));
-                Logger.log(Priority.DEBUG, "Automatic password: "+password);
+                pw = String.format("%04d", rand.nextInt(9999));
+                Logger.log(Priority.DEBUG, "Automatic password: "+pw);
             }
             CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
             switch (input.readLine().toLowerCase()){
@@ -277,7 +291,7 @@ public class CliInputHandler implements Runnable{
         }catch (Exception e){
             Logger.log(Priority.ERROR, e.getMessage());
         }
-        view.setupConnection(answer, username, password, connectionProperties, existingGame, gameMode);
+        view.setupConnection(answer, username, pw, connectionProperties, existingGame, gameMode);
         eventUpdater = view.getEventUpdater();
     }
 

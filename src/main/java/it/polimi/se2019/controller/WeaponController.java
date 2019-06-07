@@ -4,6 +4,7 @@ import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
@@ -165,9 +166,9 @@ public class WeaponController extends Observer {
         }
     }
 
-    public void updateOnStopSelection(boolean reverse, boolean skip) {
-        if (reverse) {
-            actionController.updateOnStopSelection(true, skip);
+    public void updateOnStopSelection(ThreeState skip) {
+        if (skip.toBoolean() || acceptableTypes.isReverse()) {
+            actionController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         } else {
             if (weapon.getEffects().get(0).getActivated()) {
                 actionController.updateOnConclusion();

@@ -5,6 +5,7 @@ import it.polimi.se2019.MyProperties;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
@@ -73,7 +74,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
         if (!blocked && notifyOnEnd) {
-            observer.updateOnStopSelection(true, true);
+            observer.updateOnStopSelection(ThreeState.TRUE);
         }
     }
 
@@ -125,8 +126,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         }
     }
 
-    public synchronized  void receiveStop(boolean reverse) {
-        observer.updateOnStopSelection(reverse, false);
+    public synchronized void receiveStop() {
+        observer.updateOnStopSelection(ThreeState.FALSE);
         endHandler();
     }
 

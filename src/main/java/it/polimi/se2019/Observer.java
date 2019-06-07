@@ -2,7 +2,9 @@ package it.polimi.se2019;
 
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Direction;
@@ -44,7 +46,11 @@ public class Observer {
         throw new IncorrectEvent("Non accetto azioni");
     }
 
-    public void updateOnStopSelection(boolean reverse, boolean skip) {
+    public void updateOnStopSelection(ThreeState skip) {
         throw new IncorrectEvent("Non accetto reset!");
+    }
+
+    public void updateOnAmmo(Ammo ammo) {
+        throw new IncorrectEvent("Non accetto weapon!");
     }
 }

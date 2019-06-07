@@ -26,6 +26,12 @@ public class EventUpdaterSocket implements EventUpdater{
     }
 
     @Override
+    public void sendStop() {
+        EventVisitable stopEvent = new SelectStop();
+        socket.addEventToQueue(stopEvent);
+    }
+
+    @Override
     public void sendDirection(String direction) {
         EventVisitable directionEvent = new SelectDirection(direction);
         socket.addEventToQueue(directionEvent);

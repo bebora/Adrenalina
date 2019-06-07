@@ -28,6 +28,17 @@ public class EventUpdaterRMI implements EventUpdater{
      */
     private RequestDispatcherInterface remoteHandler;
 
+    @Override
+    public void sendStop() {
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveStopAction();
+            } catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send stop!");
+            }
+        };
+        new Thread(task).start();
+    }
 
     //TODO force login first
     @Override

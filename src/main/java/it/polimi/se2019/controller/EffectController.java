@@ -200,9 +200,15 @@ public class EffectController extends Observer {
         }
     }
     @Override
-    public void updateOnStopSelection(boolean reverse, boolean skip){
-        if (reverse)
-            weaponController.updateOnStopSelection(true, skip);
+    public void updateOnStopSelection(ThreeState skip){
+        if (skip.toBoolean() || acceptableTypes.isReverse()) {
+            weaponController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
+        }
+        else {
+            //TODO WHAT IF NOT REVERSING HERE, CHECK
+        }
+
+
     }
 
     /**

@@ -22,7 +22,11 @@ public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<ViewTileCoords> selectableTileCoords;
     private SelectableOptions<String> selectableWeapons;
     private List<ReceivingType> acceptedTypes;
-    private boolean reverse;
+    private String stopPrompt;
+
+    public String getStopPrompt() {
+        return stopPrompt;
+    }
 
     public SelectableOptions<String> getSelectableEffects() {
         return selectableEffects;
@@ -125,7 +129,7 @@ public class SelectableOptionsWrapper implements Serializable {
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case STOP:
-                    reverse = acceptableTypes.isReverse();
+                    stopPrompt = acceptableTypes.getStopPrompt();
                     break;
             }
         }

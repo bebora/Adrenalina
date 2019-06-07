@@ -58,7 +58,7 @@ public abstract class Match {
     	for(int i = 0; i < players.size(); i++)
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
     	// Set event helper to original player
-		this.players.stream().map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(this));
+		this.players.stream().map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(oldMatch));
 	}
 
 

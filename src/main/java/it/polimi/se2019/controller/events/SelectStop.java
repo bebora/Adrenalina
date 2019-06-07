@@ -10,13 +10,6 @@ import it.polimi.se2019.controller.EventVisitor;
  * -
  */
 public class SelectStop implements EventVisitable {
-    private boolean revertAction;
-    public SelectStop(boolean revertAction){this.revertAction = revertAction;}
-
-    public boolean isRevertAction() {
-        return revertAction;
-    }
-
     public void accept(EventVisitor visitor) {
         visitor.visit(this);
     }

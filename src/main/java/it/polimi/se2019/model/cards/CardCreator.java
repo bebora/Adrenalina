@@ -434,6 +434,7 @@ public class CardCreator {
                     break;
                 case "prompt":
                     prompt = splitLine[1];
+                    break;
                 case "targetdestination":
                     targetDestination = parseTarget(bufRead);
                     break;

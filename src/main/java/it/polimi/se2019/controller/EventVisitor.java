@@ -88,7 +88,7 @@ public class EventVisitor {
 
     public void visit(SelectStop selectStop) {
         try {
-            requestHandler.receiveStopAction(selectStop.isRevertAction());
+            requestHandler.receiveStopAction();
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());

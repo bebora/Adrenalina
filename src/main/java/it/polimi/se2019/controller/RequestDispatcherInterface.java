@@ -25,7 +25,7 @@ public interface RequestDispatcherInterface extends Remote, Serializable {
 
     void receiveRoom(String room) throws RemoteException ;
 
-    void receiveStopAction(boolean reverse) throws RemoteException;
+    void receiveStopAction() throws RemoteException;
 
     void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException;
 

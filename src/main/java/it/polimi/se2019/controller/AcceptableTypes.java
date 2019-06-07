@@ -20,15 +20,21 @@ public class AcceptableTypes {
     private SelectableOptions<Tile> selectableTileCoords;
     private SelectableOptions<Weapon> selectableWeapons;
     private boolean reverse;
+    private String stopPrompt;
     private List<ReceivingType> acceptedTypes;
 
+
+    public String getStopPrompt() {
+        return stopPrompt;
+    }
 
     public boolean isReverse() {
         return reverse;
     }
 
-    public void setReverse(boolean reverse) {
+    public void setStop(boolean reverse, String stopPrompt) {
         this.reverse = reverse;
+        this.stopPrompt = stopPrompt;
     }
 
     public AcceptableTypes(List<ReceivingType> receivingTypes) {

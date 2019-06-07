@@ -24,7 +24,7 @@ public interface EventHandler {
 
     void receiveRoom(Color color);
 
-    void receiveStop(boolean reverse);
+    void receiveStop();
 
     void receiveTiles(List<Tile> tiles);
 

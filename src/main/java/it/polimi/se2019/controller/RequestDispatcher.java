@@ -157,12 +157,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     }
 
     @Override
-    public void receiveStopAction(boolean reverse) throws RemoteException {
+    public void receiveStopAction() throws RemoteException {
         synchronized (lock) {
             try {
                 if (observerTypes.keySet().contains(ReceivingType.STOP)) {
                     EventHandler eventHandler = observerTypes.get(ReceivingType.STOP);
-                    eventHandler.receiveStop(reverse);
+                    eventHandler.receiveStop();
                 } else
                     throw new IncorrectEvent("Non posso accettare uno stop!");
             } catch (IncorrectEvent e) {

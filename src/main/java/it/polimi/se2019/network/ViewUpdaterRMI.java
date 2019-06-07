@@ -28,6 +28,8 @@ public class ViewUpdaterRMI implements ViewUpdater {
     private RMIPinger pinger;
     private ThreadPoolExecutor executor;
 
+
+
     public void sendPing() {
         try {
             remoteReceiver.receivePing();

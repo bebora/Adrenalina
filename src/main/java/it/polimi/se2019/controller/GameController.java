@@ -16,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
+import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
@@ -132,10 +133,14 @@ public class GameController extends Observer {
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
-            receivingTypes.addAll(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+            receivingTypes.addAll(Arrays.asList(ReceivingType.POWERUP));
             List<PowerUp> usablePowerups = currentPlayer.getPowerUps().stream().
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
+        }
+        if (receivingTypes.isEmpty()) {
+            receivingTypes.add(STOP);
+            acceptableTypes.setStop(false, "End turn");
         }
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                 this,
@@ -151,7 +156,7 @@ public class GameController extends Observer {
     public void updateOnConclusion(){
         actionCounter++;
         actionController = null;
-
+        match.getPlayers().stream().forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(match));
         if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
             playTurn();
         }
@@ -257,17 +262,17 @@ public class GameController extends Observer {
     }
 
     @Override
-    public void updateOnStopSelection(boolean reverse, boolean skip){
+    public void updateOnStopSelection(ThreeState skip){
         if (currentPlayer.getAlive() == OPTIONAL) {
             this.skip = true;
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
         }
-        else if (reverse) {
+        else if (skip.toSkip() || acceptableTypes.isReverse()) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
-            actionCounter ++;
+            actionCounter++;
             actionController = null;
-            if (skip || actionCounter == currentPlayer.getMaxActions()) {
-                endTurn(skip);
+            if (skip.toSkip() || actionCounter == currentPlayer.getMaxActions()) {
+                endTurn(skip.toSkip());
             }
             else {
                 playTurn();

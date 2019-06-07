@@ -35,4 +35,17 @@ public abstract class Action {
 	 * @param afterFirst
 	 */
 	public void updateOnFrenzy(Boolean afterFirst){}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Action) {
+			return obj.toString() == this.toString();
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		return this.toString().hashCode();
+	}
 }

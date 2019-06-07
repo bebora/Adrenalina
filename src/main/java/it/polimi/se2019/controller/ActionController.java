@@ -2,10 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
-import it.polimi.se2019.model.DominationMatch;
-import it.polimi.se2019.model.Match;
-import it.polimi.se2019.model.NormalMatch;
-import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -322,11 +319,11 @@ public class ActionController extends Observer {
     }
 
     @Override
-    public void updateOnStopSelection(boolean reverse, boolean skip){
+    public void updateOnStopSelection(ThreeState skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
-        if (reverse) {
+        if (skip.toBoolean() || acceptableTypes.isReverse()) {
             originalMatch.updateViews();
-            gameController.updateOnStopSelection(true, skip);
+            gameController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         }
     }
 

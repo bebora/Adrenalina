@@ -101,7 +101,8 @@ public class CLI extends View {
                    printInColor("w",getSelectableOptionsWrapper().getSelectableTileCoords().getNumericalCostraints());
                    break;
                case STOP:
-                   printInColor("r", "TURN BACK!");
+                   printInColor("w", getSelectableOptionsWrapper().getStopPrompt());
+                   moveCursor(x,++y);
                    break;
                default:
                    displayStringSelectable(getSelectableOptionsWrapper().getSelectableOptions(r));
