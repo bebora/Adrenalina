@@ -40,6 +40,7 @@ public class Player {
 		damagesAllocable = 0;
 	}
 	public Player(Player originalPlayer){
+		this.match = originalPlayer.getMatch();
 		this.id = originalPlayer.getId();
 		this.color = originalPlayer.color;
 		this.token = originalPlayer.token;
@@ -287,7 +288,7 @@ public class Player {
 	public void addWeapon(Weapon weapon) {
 		if(weapons.size()<3)
 			weapons.add(weapon);
-		//sendTotalUpdate not needed due to being already called in match.newTurn()
+		sendTotalUpdate();
 	}
 
 	public List<Weapon> getWeapons() {

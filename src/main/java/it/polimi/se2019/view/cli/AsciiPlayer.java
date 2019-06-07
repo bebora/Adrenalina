@@ -1,11 +1,11 @@
 package it.polimi.se2019.view.cli;
 
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPlayer;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewWeapon;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AsciiPlayer {
@@ -35,21 +35,24 @@ public class AsciiPlayer {
             CLI.printInColor(a,	"\u2610 ");
     }
 
-    static void printWeapons(List<ViewWeapon> weapons){
+    static void printWeapons(List<ViewWeapon> unloadedWeapons, List<ViewWeapon> loadedWeapons){
         int i = 1;
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(1);
         CLI.printInColor("w","Armi:");
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(2);
-        for(ViewWeapon w: weapons){
-            if(w.getLoaded())
-                CLI.printInColor("r",i +")"+ w.getName() + " ");
-            else
-                CLI.printInColor("g",i +")"+ w.getName() + " ");
+        for(ViewWeapon w: unloadedWeapons){
+            CLI.printInColor("g",i +")"+ w.getName() + " ");
             i++;
         }
-        CLI.displayedWeapons = weapons;
+        for(ViewWeapon w: loadedWeapons) {
+            CLI.printInColor("r", i + ")" + w.getName() + " ");
+            i++;
+        }
+        List<ViewWeapon> allWeapons = new ArrayList<>(unloadedWeapons);
+        allWeapons.addAll(loadedWeapons);
+        CLI.displayedWeapons = allWeapons;
     }
 
     static void printPowerUps(View view){
@@ -63,13 +66,13 @@ public class AsciiPlayer {
         }
     }
 
-    static void drawPlayerInfo(ViewPlayer player,List<ViewWeapon> weapons){
+    static void drawPlayerInfo(ViewPlayer player,List<ViewWeapon> loadedWeapons, List<ViewWeapon> unloadedWeapons){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder + 1,AsciiBoard.boardBottomBorder + 6, AsciiBoard.offsetX);
         printMarks(player);
         printDamages(player);
         printAmmos(player);
-        printWeapons(weapons);
+        printWeapons(unloadedWeapons, loadedWeapons);
     }
 
 }

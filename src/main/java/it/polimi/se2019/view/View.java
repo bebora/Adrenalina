@@ -41,7 +41,7 @@ public class View {
 
 	private List<ViewPowerUp> powerUps;
 
-	private List<String> loadedWeapons;
+	private List<ViewWeapon> loadedWeapons;
 
 	private ViewTile perspective;
 
@@ -77,6 +77,7 @@ public class View {
 		catch (RemoteException e) {
 			Logger.log(Priority.ERROR, "Unexpected RemoteException while creating ViewReceiver!");
 		}
+		messages = new ArrayList<>();
 		online = false;
 		List<ReceivingType> temp = new ArrayList<>();
 		AcceptableTypes acceptableTypes = new AcceptableTypes(temp);
@@ -99,7 +100,7 @@ public class View {
 		return powerUps;
 	}
 
-	public List<String> getLoadedWeapons() {
+	public List<ViewWeapon> getLoadedWeapons() {
 		return loadedWeapons;
 	}
 
@@ -149,7 +150,7 @@ public class View {
 		this.powerUps = powerUps;
 	}
 
-	public void setLoadedWeapons(List<String> loadedWeapons) {
+	public void setLoadedWeapons(List<ViewWeapon> loadedWeapons) {
 		this.loadedWeapons = loadedWeapons;
 	}
 

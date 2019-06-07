@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.DominationMatch;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
@@ -60,14 +61,18 @@ public class ActionController extends Observer {
     @Override
     public void updateOnWeapon(Weapon weapon){
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
-                if (curPlayer.getTile().getWeapons().contains(weapon)) {
-                    curPlayer.getVirtualView().getRequestDispatcher().clear();
+                if (curPlayer.getWeapons().size() == 3) {
+                    curPlayer.getWeapons().remove(weapon);
+                    curPlayer.getTile().addWeapon(weapon);
+                    sandboxMatch.updateViews();
+                    nextStep();
+                }
+                else {
                     selectedWeapon = weapon;
                     stillToPay.add(weapon.getCost().get(0));
                     startPayingProcess();
-                } else {
-                    curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You don't have the chosen weapon!");
                 }
             } else if (curSubAction == SubAction.SHOOT) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
@@ -78,6 +83,9 @@ public class ActionController extends Observer {
                 stillToPay.addAll(weapon.getCost());
                 startPayingProcess();
             }
+        }
+        else {
+            throw new IncorrectEvent("Incorrect weapon choice!");
         }
     }
 
@@ -103,6 +111,8 @@ public class ActionController extends Observer {
         }else{
             sandboxMatch = new DominationMatch(originalMatch);
         }
+        // Set event helper for sandbox players
+        sandboxMatch.getPlayers().stream().map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(sandboxMatch));
     }
 
     private void nextMove() {
@@ -126,13 +136,19 @@ public class ActionController extends Observer {
                     selectableTiles.remove(t);
             }
         }
-        acceptableTypes = new AcceptableTypes(receivingTypes);
-        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles,1,1,"Seleziona una Tile dove muoverti!"));
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                this,
-                curPlayer.getVirtualView().getRequestDispatcher(),
-                acceptableTypes);
-        timerCostrainedEventHandler.start();
+        if (!selectableTiles.isEmpty()) {
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, "Seleziona una Tile dove muoverti!"));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                    this,
+                    curPlayer.getVirtualView().getRequestDispatcher(),
+                    acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
+        else {
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't move nowhere!");
+            nextStep();
+        }
     }
 
     private void nextStep(){
@@ -160,21 +176,33 @@ public class ActionController extends Observer {
                     timerCostrainedEventHandler.start();
                     break;
                 case GRAB:
+                    String prompt;
                     if (curPlayer.getTile().isSpawn()) {
                         receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
-                        selectableWeapon = curPlayer.
-                                getTile().
-                                getWeapons().
-                                stream().
-                                filter(p -> curPlayer.checkForAmmos(p.getCost(), curPlayer.totalAmmoPool())).
-                                collect(Collectors.toList());
                         acceptableTypes = new AcceptableTypes(receivingTypes);
-                        acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1,0,"Scegli un'arma da grabbare!"));
-                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                                this,
-                                curPlayer.getVirtualView().getRequestDispatcher(),
-                                acceptableTypes);
-                        timerCostrainedEventHandler.start();
+                        if (curPlayer.getWeapons().size() < 3) {
+                            selectableWeapon = curPlayer.
+                                    getTile().
+                                    getWeapons().
+                                    stream().
+                                    filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)), curPlayer.totalAmmoPool())).
+                                    collect(Collectors.toList());
+                            prompt = "Select a weapon to grab!";
+                        } else {
+                            selectableWeapon = curPlayer.
+                                    getWeapons();
+                            prompt = "Select a weapon to discard!";
+                        }
+                        if (selectableWeapon.isEmpty()) {
+                            nextStep();
+                        } else {
+                            acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, prompt));
+                            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                                    this,
+                                    curPlayer.getVirtualView().getRequestDispatcher(),
+                                    acceptableTypes);
+                            timerCostrainedEventHandler.start();
+                        }
                     }
                     else {
                         curPlayer.getTile().getAmmoCard().getAmmos().forEach(a -> curPlayer.addAmmo(a));
@@ -210,13 +238,17 @@ public class ActionController extends Observer {
         if(curPlayer.checkForAmmos(stillToPay,curPlayer.totalAmmoPool())){
             // if player can use powerup to pay some ammos
             if(curPlayer.canDiscardPowerUp(stillToPay)){
+                for(Ammo a: stillToPay)
+                    curPlayer.getAmmos().remove(a);
                 receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
                 selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"Se vuoi seleziona PowerUp da usare per pagare!"));
+                stillToPay = new ArrayList<>();
+                sandboxMatch.updateViews();
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"If you want, select a PowerUp!"));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
@@ -228,14 +260,16 @@ public class ActionController extends Observer {
                 for(Ammo a: curPlayer.getAmmos()){
                     if(stillToPay.remove(a))
                         curPlayer.getAmmos().remove(a);
-                }
+                }for(Ammo a: stillToPay)
+                    curPlayer.getAmmos().remove(a);
                 receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
                 selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
                         filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
+                sandboxMatch.updateViews();
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"Seleziona assolutamente PowerUp da usare per pagare!"));
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"You MUST select a PowerUp, my dear!"));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
@@ -248,7 +282,7 @@ public class ActionController extends Observer {
                 concludePayment();
             }
         }else{
-            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Yoi don't have enough ammos!");
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You don't have enough ammos!");
         }
     }
 
@@ -265,15 +299,19 @@ public class ActionController extends Observer {
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
-        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
+        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps) && powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList()).containsAll(stillToPay)) {
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
             for (Ammo a : curPlayer.getAmmos()) {
                 if (stillToPay.remove(a))
                     curPlayer.getAmmos().remove(a);
             }
             if (stillToPay.isEmpty()) {
-                concludePayment();
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
+                concludePayment();
+            }
+            else {
+                assert false;
+                throw new IncorrectEvent("PowerUps are not enough! Try again!");
             }
         }
     }

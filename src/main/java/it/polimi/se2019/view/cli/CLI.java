@@ -1,12 +1,9 @@
 package it.polimi.se2019.view.cli;
 
-import it.polimi.se2019.Logger;
-import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.*;
 
-import java.io.IOException;
 import java.util.List;
 
 public class CLI extends View {
@@ -153,7 +150,7 @@ public class CLI extends View {
         if(AsciiBoard.board == null)
             AsciiBoard.board = this.getBoard();
         AsciiBoard.drawBoard(getPlayers());
-        AsciiPlayer.drawPlayerInfo(getSelf(),getSelf().getUnloadedWeapons());
+        AsciiPlayer.drawPlayerInfo(getSelf(),getLoadedWeapons(), getSelf().getUnloadedWeapons());
         AsciiPlayer.printPowerUps(this);
         displayMessages();
         displaySelectableOptions();

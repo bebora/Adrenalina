@@ -125,7 +125,7 @@ public class UpdateVisitor {
         String idView = update.getIdView();
         int points = update.getPoints();
         List<ViewPowerUp> powerUps = update.getPowerUps();
-        List<String> loadedWeapons = update.getLoadedWeapons();
+        List<ViewWeapon> loadedWeapons = update.getLoadedWeapons();
         String currentPlayerId = update.getCurrentPlayerId();
         try {
             concreteViewReceiver.receiveTotalUpdate(username,
@@ -143,8 +143,8 @@ public class UpdateVisitor {
         }
     }
     public void visit(WeaponTakenUpdate update) {
-        String takenWeapon = update.getTakenWeapon();
-        String discardedWeapon = update.getDiscardedWeapon();
+        ViewWeapon takenWeapon = update.getTakenWeapon();
+        ViewWeapon discardedWeapon = update.getDiscardedWeapon();
         String playerId = update.getPlayerId();
         try {
             concreteViewReceiver.receiveWeaponTaken(takenWeapon, discardedWeapon, playerId);

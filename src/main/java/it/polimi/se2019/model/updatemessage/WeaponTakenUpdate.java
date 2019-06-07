@@ -3,28 +3,29 @@ package it.polimi.se2019.model.updatemessage;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;
+import it.polimi.se2019.view.ViewWeapon;
 
 /**
  * Represent Weapon Card taken from a spawn tile but not already replaced
  */
 public class WeaponTakenUpdate implements UpdateVisitable {
-    private String takenWeapon;
+    private ViewWeapon takenWeapon;
 
     /**
      * Weapon which has been removed due to weapon number limit
      */
-    private String discardedWeapon;
+    private ViewWeapon discardedWeapon;
 
     /**
      * Player who takes the weapon
      */
     private String playerId;
 
-    public String getTakenWeapon() {
+    public ViewWeapon getTakenWeapon() {
         return takenWeapon;
     }
 
-    public String getDiscardedWeapon() {
+    public ViewWeapon getDiscardedWeapon() {
         return discardedWeapon;
     }
 
@@ -41,7 +42,7 @@ public class WeaponTakenUpdate implements UpdateVisitable {
      * @param player
      */
     public WeaponTakenUpdate(Weapon weapon, Player player) {
-        this.takenWeapon = weapon.getName();
+        this.takenWeapon = new ViewWeapon(weapon);
         this.playerId = player.getId();
         this.discardedWeapon = null;
     }
@@ -54,6 +55,6 @@ public class WeaponTakenUpdate implements UpdateVisitable {
      */
     public WeaponTakenUpdate(Weapon weapon, Weapon discardedWeapon, Player player) {
         this(weapon, player);
-        this.discardedWeapon = discardedWeapon.getName();
+        this.discardedWeapon = new ViewWeapon(discardedWeapon);
     }
 }

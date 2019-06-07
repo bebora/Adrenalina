@@ -10,14 +10,12 @@ import java.util.stream.Collectors;
 
 public class ViewWeapon implements Serializable {
     private String name;
-    private boolean loaded;
     private ArrayList<String> cost;
     private ArrayList<ViewEffect> effects;
 
 
     public ViewWeapon(Weapon weapon){
         this.name = weapon.getName();
-        this.loaded = weapon.getLoaded();
         this.effects = weapon.getEffects().stream()
                 .map(ViewEffect::new)
                 .collect(Collectors.toCollection(ArrayList::new));
@@ -34,9 +32,5 @@ public class ViewWeapon implements Serializable {
 
     public List<String> getCost() {
         return cost;
-    }
-
-    public boolean getLoaded(){
-        return loaded;
     }
 }

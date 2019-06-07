@@ -3,10 +3,11 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.Effect;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ViewEffect {
+public class ViewEffect implements Serializable {
     private String name;
     private String desc;
     private List<String> cost;

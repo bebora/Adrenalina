@@ -52,13 +52,13 @@ public abstract class Match {
 				.map(Player::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
     	this.updateSender = originalMatch.getUpdateSender();
     	//Initialize match and notify player with the first totalUpdate
-    	updateViews();
 	}
 
 	public void restoreMatch(Match oldMatch){
     	for(int i = 0; i < players.size(); i++)
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
-    	updateViews();
+    	// Set event helper to original player
+		this.players.stream().map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(this));
 	}
 
 

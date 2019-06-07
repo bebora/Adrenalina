@@ -165,8 +165,8 @@ public class ViewUpdaterRMI implements ViewUpdater {
             ArrayList<ViewPowerUp> viewPowerUps = powerUps.stream().
                     map(ViewPowerUp::new).
                     collect(Collectors.toCollection(ArrayList::new));
-            ArrayList<String> viewLoadedWeapons = loadedWeapons.stream().
-                    map(Weapon::getName).
+            ArrayList<ViewWeapon> viewLoadedWeapons = loadedWeapons.stream().
+                    map(w -> new ViewWeapon(w)).
                     collect(Collectors.toCollection(ArrayList::new));
             try {
                 remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
@@ -184,9 +184,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
         Runnable task = () -> {
             try {
                 if (discardedWeapon == null)
-                    remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), null, player.getId());
+                    remoteReceiver.receiveWeaponTaken(new ViewWeapon(takenWeapon), null, player.getId());
                 else
-                    remoteReceiver.receiveWeaponTaken(takenWeapon.getName(), discardedWeapon.getName(), player.getId());
+                    remoteReceiver.receiveWeaponTaken(new ViewWeapon(takenWeapon), new ViewWeapon(discardedWeapon), player.getId());
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send weapon taken");

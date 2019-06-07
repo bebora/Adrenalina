@@ -38,6 +38,10 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    public void setEventHelper(Match match) {
+        eventHelper = new EventHelper(match);
+    }
+
     public RequestDispatcher(ViewUpdater viewUpdater) throws RemoteException {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;

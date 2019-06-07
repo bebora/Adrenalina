@@ -99,11 +99,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             System.out.println("WAITING TO PLAY...");
         }
         else if (message.contains("\\$") && message.split("\\$")[0].equals("WINNERS")) {
-            //TODO game ended! show winners
+            if(linkedView.getMessages() != null)
+                linkedView.addMessage(message);
         }
         else{
             if(linkedView.getMessages() != null)
-                linkedView.getMessages().add(message);
+                linkedView.addMessage(message);
         }
     }
 
@@ -141,7 +142,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
                                    ArrayList<ViewPlayer> players, String idView, int points,
-                                   ArrayList<ViewPowerUp> powerUps, ArrayList<String> loadedWeapons, String currentPlayerId) {
+                                   ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
         linkedView.setUsername(username);
         linkedView.setBoard(board);
         linkedView.setPerspective(helper.getTileFromCoords(perspective));
@@ -165,7 +166,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      * @param playerId
      */
     @Override
-    public void receiveWeaponTaken(String takenWeapon, String discardedWeapon, String playerId) throws RemoteException {
+    public void receiveWeaponTaken(ViewWeapon takenWeapon, ViewWeapon discardedWeapon, String playerId) throws RemoteException {
         //TODO tell clients that a player has taken the weapon
         ViewPlayer player = helper.getPlayerFromId(playerId);
         ViewTile tile = player.getTile();

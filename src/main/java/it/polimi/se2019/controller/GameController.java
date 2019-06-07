@@ -63,17 +63,22 @@ public class GameController extends Observer {
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
-            currentPlayer.setAlive(TRUE);
-            Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                    filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
-            currentPlayer.setTile(tile);
-            currentPlayer.discardPowerUp(powerUps.get(0), false);
-            if (!skip)
-                playTurn();
+            if (currentPlayer.getAlive() == OPTIONAL) {
+                currentPlayer.getVirtualView().getRequestDispatcher().clear();
+                currentPlayer.setAlive(TRUE);
+                Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
+                        filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
+                currentPlayer.setTile(tile);
+                currentPlayer.discardPowerUp(powerUps.get(0), false);
+                if (!skip)
+                    playTurn();
+                else {
+                    skip = false;
+                    endTurn(true);
+                }
+            }
             else {
-                skip = false;
-                endTurn(true);
+                //TODO powerup ownround
             }
         }
         else {
@@ -222,10 +227,14 @@ public class GameController extends Observer {
             stringBuffer.append(p.getUsername() + ", ");
         }
         players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
-        //TODO @simone send winners to players
+        try {
+            wait(500);
+        }
+        catch (InterruptedException e) {
+            assert false;
+        }
         //TODO stop all the socket connections
-        match.getPlayers().stream().filter(p -> p.getOnline()).forEach(p -> p.setOnline(false));
-
+        match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));
     }
 
     public void startSpawning(){
