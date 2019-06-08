@@ -16,6 +16,7 @@ effects:
           maxTargets:1
           maxDistance:1
           minDistance:1
+          throughWalls:FALSE
     damages:
       damage:
         damagesAmount:1
@@ -39,12 +40,14 @@ effects:
         targetDestination:
           maxDistance:1
           minDistance:1
+          throughWalls:FALSE
           cardinal:TRUE
       move:
         objectToMove:SELF
         targetDestination:
           maxDistance:1
           minDistance:1
+          throughWalls:FALSE
           cardinal:TRUE
     damages:
       damage:

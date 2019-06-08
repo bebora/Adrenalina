@@ -1,0 +1,55 @@
+name:flamethrower
+cost:
+  red
+effects:
+  name:basic mode
+  desc:Choose a square 1 move away and possibly a second square 1 more move away in the same direction. On each square, you may choose 1 target and give it 1 damage.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        maxTargets:1
+        minTargets:0
+        maxDistance:1
+        minDistance:1
+        cardinal:TRUE
+        throughWalls:FALSE
+    damage:
+      damagesAmount:1
+      target:
+        maxTargets:1
+        minTargets:0
+        maxDistance:2
+        minDistance:2
+        cardinal:TRUE
+        throughWalls:FALSE
+  name:in barbecue mode
+  desc:Choose 2 squares as above. Deal 2 damage to everyone on the first square and 1 damage to everyone on the second square.
+  absolutePriority:1
+  cost:
+    yellow
+    yellow
+  order:
+    DEALDAMAGE
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:2
+      target:
+        areaDamage:TILE
+        maxDistance:1
+        minDistance:1
+        cardinal:TRUE
+        throughWalls:FALSE
+    damage:
+      damagesAmount:1
+      target:
+        areaDamage:TILE
+        maxDistance:2
+        minDistance:2
+        cardinal:TRUE
+        throughWalls:FALSE

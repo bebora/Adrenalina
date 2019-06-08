@@ -24,6 +24,7 @@ effects:
           maxTargets:0
         targetDestination:
           maxDistance:1
+          throughWalls:FALSE
     name:in long barrel mode
     desc:Deal 2 damage to 1 target on any square exactly one move away.
     absolutePriority:1
@@ -35,3 +36,4 @@ effects:
         target:
             maxDistance:1
             minDistance:1
+            throughWalls:FALSE

@@ -20,13 +20,14 @@ name:rocket launcher
          maxTargets:1
          visibility:TRUE
          minDistance:1
+         throughWalls:FALSE
    moves:
-    move:
+     move:
        objectToMove:PERSPECTIVE
        prompt:Select the tile of the player you just attacked
        targetDestination:
          checkTargetList:TRUE
-    move:
+     move:
        objectToMove:TARGETSOURCE
        targetSource:
          checkTargetList:TRUE
@@ -34,6 +35,7 @@ name:rocket launcher
        targetDestination:
          minDistance:0
          maxDistance:1
+         throughWalls:FALSE
          pointOfView:LASTPLAYER
    name:with rocket jump
    desc:Move 1 or 2 squares. This effect can be used either before or after the basic effect.
@@ -51,6 +53,7 @@ name:rocket launcher
        targetDestination:
          minDistance:1
          maxDistance:2
+         throughWalls:FALSE
    name:with fragmenting warhead
    desc:During the basic effect, deal 1 damage to every player on your target's original square – including the target, even if you move it.
       relativePriority:

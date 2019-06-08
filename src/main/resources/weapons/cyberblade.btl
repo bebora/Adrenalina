@@ -32,6 +32,7 @@ effects:
       objectToMove:SELF
       targetDestination:
         maxDistance:1
+        throughWalls:FALSE
   name:with slice and dice
   desc:Deal 2 damage to a different target on your square. The shadowstep may be used before or after this effect.
   cost:

@@ -25,6 +25,6 @@ effects:
     damage:
       damagesAmount:2
       target:
-        troughWalls:TRUE
+        throughWalls:TRUE
         cardinal:TRUE
         maxTargets:2

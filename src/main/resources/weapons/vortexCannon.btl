@@ -17,6 +17,7 @@ effects:
       targetDestination:
         visibility:TRUE
         minDistance:1
+        throughWalls:FALSE
     move:
       objectToMove:TARGETSOURCE
       targeting:TRUE
@@ -24,6 +25,7 @@ effects:
         maxDistance:1
         maxTargets:1
         pointOfView:PERSPECTIVE
+        throughWalls:FALSE
       targetDestination:
         maxDistance:0
         pointOfView:PERSPECTIVE
@@ -48,6 +50,7 @@ effects:
         maxTargets:2
         maxDistance:1
         pointOfView:PERSPECTIVE
+        throughWalls:FALSE
       targetDestination:
         maxDistance:0
         pointOfView:PERSPECTIVE

@@ -35,6 +35,7 @@ effects:
       targetDestination:
         minDistance:1
         maxDistance:1
+        throughWalls:FALSE
   damages:
     damage:
       damagesAmount:1

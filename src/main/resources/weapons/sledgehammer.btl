@@ -35,3 +35,4 @@ effects:
         cardinal:TRUE
         maxTargets:0
         maxDistance:2
+        throughWalls:FALSE

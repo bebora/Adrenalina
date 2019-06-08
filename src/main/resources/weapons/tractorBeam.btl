@@ -23,6 +23,7 @@ effects:
         maxTargets:1
         maxDistance:2
         pointOfView:PERSPECTIVE
+        throughWalls:FALSE
       targetDestination:
         maxDistance:0
         pointOfView:PERSPECTIVE
@@ -49,6 +50,7 @@ effects:
         maxTargets:1
         maxDistance:2
         pointOfView:OWN
+        throughWalls:FALSE
       targetDestination:
         maxDistance:0
         pointOfView:OWN

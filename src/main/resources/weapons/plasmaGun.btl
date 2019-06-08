@@ -1,0 +1,47 @@
+name:plasma gun
+cost:
+  blue
+  yellow
+effects:
+  name:basic effect
+  desc:Deal 2 damage to 1 target you can see.
+  relativePriority:
+    +0
+    +2
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:2
+      targeting:TRUE
+      target:
+        maxTargets:1
+        visibility:TRUE
+  name:with phase glide
+  desc:Move 1 or 2 squares. This effect can be used either before or after the basic effect.
+  relativePriority:
+    +0
+    +1
+  order:
+    MOVE
+  moves:
+    move:
+      objectToMove:SELF
+      targetDestination:
+        minDistance:1
+        maxDistance:2
+        throughWalls:FALSE
+  name:with charged shot
+  desc:Deal 1 additional damage to your target.
+  relativePriority:
+    +1
+    +2
+  cost:
+    blue
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        checkTargetList:TRUE
