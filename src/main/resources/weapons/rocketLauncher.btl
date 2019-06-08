@@ -5,7 +5,9 @@ name:rocket launcher
  effects:
    name:basic effect
    desc:Deal 2 damage to 1 target you can see that is not on your square. Then you may move the target 1 square.
-   absolutePriority:1
+   relativePriority:
+     +0
+     +2
    order:
      DEALDAMAGE
      MOVE
@@ -36,9 +38,9 @@ name:rocket launcher
    name:with rocket jump
    desc:Move 1 or 2 squares. This effect can be used either before or after the basic effect.
    relativePriority:
-   -1
-   +1
-   +3
+     -1
+     +1
+     +3
    order:
      MOVE
    cost:

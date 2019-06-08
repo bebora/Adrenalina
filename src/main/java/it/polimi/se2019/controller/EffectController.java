@@ -161,6 +161,7 @@ public class EffectController extends Observer {
                     playersToMove.forEach(p -> p.setTile(tiles.get(0)));
                 else
                     player.setPerspective(tiles.get(0));
+                handleTargeting(curMove.getTargeting(), playersToMove);
                 nextStep();
             }
             else if (curActionType == DEALDAMAGE) {

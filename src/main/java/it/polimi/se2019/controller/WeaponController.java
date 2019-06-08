@@ -79,7 +79,7 @@ public class WeaponController extends Observer {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if (curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
             curEffect = 1;
-            lastUsedIndex = -1;
+            lastUsedIndex = 0;
             weapon = newWeapon;
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
             acceptableTypes = new AcceptableTypes(receivingTypes);

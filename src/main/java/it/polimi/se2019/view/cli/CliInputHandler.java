@@ -226,8 +226,8 @@ public class CliInputHandler implements Runnable{
     private void connectionChoice(BufferedReader input){
         CLI.printInColor("W","RMI or Socket?\n");
         String answer = "RMI";
-        String username = "user";
-        String pw = "password";
+        String username;
+        String pw;
         String gameMode = "NORMAL";
         boolean existingGame = false;
         try{
@@ -255,7 +255,7 @@ public class CliInputHandler implements Runnable{
             pw = input.readLine();
             if (pw.equals("")) {
                 Random rand = new Random();
-                pw = String.format("%04d", rand.nextInt(9999));
+                pw = String.format("%05d", rand.nextInt(99999));
                 Logger.log(Priority.DEBUG, "Automatic password: "+pw);
             }
             CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
@@ -279,20 +279,20 @@ public class CliInputHandler implements Runnable{
                 default:
                     CLI.printInColor("Y", "Wrong game mode, assuming NORMAL\n");
             }
-        }catch (IOException e){
-            Logger.log(Priority.ERROR, "Can't read from stdin");
+            view = new CLI();
+            Properties connectionProperties = new Properties();
+            FileInputStream fin;
+            try{
+                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+                connectionProperties.load(fin);
+            }catch (Exception e){
+                Logger.log(Priority.ERROR, e.getMessage());
+            }
+            view.setupConnection(answer, username, pw, connectionProperties, existingGame, gameMode);
+            eventUpdater = view.getEventUpdater();
+        }catch (IOException e) {
+            Logger.log(Priority.ERROR, "Can't read from stdin, aborting connection setup");
         }
-        view = new CLI();
-        Properties connectionProperties = new Properties();
-        FileInputStream fin;
-        try{
-            fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
-            connectionProperties.load(fin);
-        }catch (Exception e){
-            Logger.log(Priority.ERROR, e.getMessage());
-        }
-        view.setupConnection(answer, username, pw, connectionProperties, existingGame, gameMode);
-        eventUpdater = view.getEventUpdater();
     }
 
     /**

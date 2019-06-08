@@ -5,15 +5,18 @@ cost:
 effects:
   name:basic effect
   desc:Deal 2 damage to 1 target on your square.
-  absolutePriority:1
+  relativePriority:
+    +0
+    +2
   order:
     DEALDAMAGE
   damages:
     damage:
       damagesAmount:2
       targeting:FALSE
-      target:	 
+      target:
         maxDistance:0
+        checkBlackList:FALSE
 	maxTargets:1
   name:with shadowstep
   desc:Move 1 square before or after the basic effect.
@@ -42,7 +45,8 @@ effects:
   damages:
     damage:
       damagesAmount:2
+      targeting:FALSE
       target:
         checkBlackList:FALSE
-	maxDistance:0
-	maxTargets:1
+	    maxDistance:0
+	    maxTargets:1
