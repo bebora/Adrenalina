@@ -13,4 +13,6 @@ public enum ReceivingType {
     ROOM,
     TILES,
     WEAPON,
+    COLOR,
+    NULL
 }

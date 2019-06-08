@@ -5,6 +5,7 @@ import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
@@ -289,7 +290,7 @@ public abstract class Match {
 			if (p.getMatch() == null || p.getVirtualView() == null ) continue;
 			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,
 					p.getId(), p.getPoints(), p.getPowerUps(),
-					p.getWeapons(), players.get(currentPlayer));
+					p.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList()), players.get(currentPlayer));
 		}
 	}
 }

@@ -13,6 +13,7 @@ import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
+import java.util.Collections;
 import java.util.List;
 
 public class TimerCostrainedEventHandler extends Thread implements EventHandler {
@@ -80,7 +81,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receiveAction(Action action) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableActions().checkForCoherency(Collections.singletonList(action))) {
             observer.updateOnAction(action);
             endHandler();
         }
@@ -88,7 +89,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public void receiveDirection(Direction direction) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableDirections().checkForCoherency(Collections.singletonList(direction))) {
             observer.updateOnDirection(direction);
             endHandler();
         }
@@ -96,7 +97,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receiveEffect(String effect) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableEffects().checkForCoherency(Collections.singletonList(effect))) {
             observer.updateOnEffect(effect);
             endHandler();
         }
@@ -104,7 +105,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receivePlayer(List<Player> players) {
-        if (active) {
+        if (active && acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
             observer.updateOnPlayers(players);
             endHandler();
         }
@@ -112,7 +113,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (active) {
+        if (active && acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
             observer.updateOnPowerUps(powerUps, discard);
             endHandler();
         }
@@ -120,20 +121,22 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receiveRoom(Color color) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(color))) {
             observer.updateOnRoom(color);
             endHandler();
         }
     }
 
     public synchronized void receiveStop() {
-        observer.updateOnStopSelection(ThreeState.FALSE);
-        endHandler();
+        if (active){
+            observer.updateOnStopSelection(ThreeState.FALSE);
+            endHandler();
+        }
     }
 
     @Override
     public synchronized void receiveTiles(List<Tile> tiles) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
             observer.updateOnTiles(tiles);
             endHandler();
         }
@@ -141,7 +144,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     @Override
     public synchronized void receiveWeapon(Weapon weapon) {
-        if (active) {
+        if (active && acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             observer.updateOnWeapon(weapon);
             endHandler();
         }

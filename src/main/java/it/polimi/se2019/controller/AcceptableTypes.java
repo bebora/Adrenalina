@@ -2,9 +2,10 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Effect;
+import it.polimi.se2019.model.cards.Direction;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
@@ -13,16 +14,39 @@ import java.util.List;
 
 public class AcceptableTypes {
     private SelectableOptions<Action> selectableActions;
-    private SelectableOptions<Effect> selectabeEffects;
+    private SelectableOptions<String> selectabeEffects;
     private SelectableOptions<Player> selectablePlayers;
     private SelectableOptions<PowerUp> selectablePowerUps;
     private SelectableOptions<Color> selectableRooms;
     private SelectableOptions<Tile> selectableTileCoords;
     private SelectableOptions<Weapon> selectableWeapons;
+    private SelectableOptions<Ammo> selectableAmmos;
+    private SelectableOptions<Direction> selectableDirections;
+
     private boolean reverse;
     private String stopPrompt;
     private List<ReceivingType> acceptedTypes;
 
+
+    public SelectableOptions<String> getSelectabeEffects() {
+        return selectabeEffects;
+    }
+
+    public SelectableOptions<Ammo> getSelectableAmmos() {
+        return selectableAmmos;
+    }
+
+    public void setSelectableAmmos(SelectableOptions<Ammo> selectableAmmos) {
+        this.selectableAmmos = selectableAmmos;
+    }
+
+    public SelectableOptions<Direction> getSelectableDirections() {
+        return selectableDirections;
+    }
+
+    public void setSelectableDirections(SelectableOptions<Direction> selectableDirections) {
+        this.selectableDirections = selectableDirections;
+    }
 
     public String getStopPrompt() {
         return stopPrompt;
@@ -37,6 +61,9 @@ public class AcceptableTypes {
         this.stopPrompt = stopPrompt;
     }
 
+
+
+
     public AcceptableTypes(List<ReceivingType> receivingTypes) {
         this.acceptedTypes = receivingTypes;
     }
@@ -49,11 +76,11 @@ public class AcceptableTypes {
         this.selectableActions = selectableActions;
     }
 
-    public SelectableOptions<Effect> getSelectableEffects() {
+    public SelectableOptions<String> getSelectableEffects() {
         return selectabeEffects;
     }
 
-    public void setSelectabeEffects(SelectableOptions<Effect> selectabeEffects) {
+    public void setSelectabeEffects(SelectableOptions<String> selectabeEffects) {
         this.selectabeEffects = selectabeEffects;
     }
 

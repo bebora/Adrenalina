@@ -5,7 +5,6 @@ import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.io.Serializable;
@@ -21,6 +20,7 @@ public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<String> selectableRooms;
     private SelectableOptions<ViewTileCoords> selectableTileCoords;
     private SelectableOptions<String> selectableWeapons;
+    private SelectableOptions<String> selectableDirections;
     private List<ReceivingType> acceptedTypes;
     private String stopPrompt;
 
@@ -83,7 +83,6 @@ public class SelectableOptionsWrapper implements Serializable {
                             getSelectableEffects().
                             getOptions().
                             stream().
-                            map(Effect::getName).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case PLAYERS:
@@ -127,6 +126,10 @@ public class SelectableOptionsWrapper implements Serializable {
                             stream().
                             map(Weapon::getName).
                             collect(Collectors.toCollection(ArrayList::new)));
+                    break;
+                case DIRECTION:
+                    selectableDirections = new SelectableOptions<>(acceptableTypes.getSelectableDirections());
+                    selectableDirections.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case STOP:
                     stopPrompt = acceptableTypes.getStopPrompt();
