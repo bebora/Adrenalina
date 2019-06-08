@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.controller.ReceivingType.WEAPON;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
+import static it.polimi.se2019.model.actions.SubAction.RELOAD;
 
 public class ActionController extends Observer {
     private GameController gameController;
@@ -60,7 +61,8 @@ public class ActionController extends Observer {
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
-                if (curPlayer.getWeapons().size() == 3) {
+                if (curPlayer.getWeapons().size() == 1) {
+                    subActionIndex--;
                     curPlayer.getWeapons().remove(weapon);
                     curPlayer.getTile().addWeapon(weapon);
                     sandboxMatch.updateViews();
@@ -74,7 +76,7 @@ public class ActionController extends Observer {
             } else if (curSubAction == SubAction.SHOOT) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
-            } else if (curSubAction == SubAction.RELOAD && curPlayer.getWeapons().contains(weapon)) {
+            } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 selectedWeapon = weapon;
                 stillToPay.addAll(weapon.getCost());
@@ -109,11 +111,11 @@ public class ActionController extends Observer {
             sandboxMatch = new DominationMatch(originalMatch);
         }
         // Set event helper for sandbox players
-        sandboxMatch.getPlayers().stream().map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(sandboxMatch));
+        sandboxMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(sandboxMatch));
     }
 
     private void nextMove() {
-        List <ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES, ReceivingType.STOP));
+        List <ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
         List<Tile> selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
         if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
             selectableTiles.removeAll(sandboxMatch.
@@ -133,7 +135,10 @@ public class ActionController extends Observer {
                     selectableTiles.remove(t);
             }
         }
-        if (!selectableTiles.isEmpty()) {
+        if (selectableTiles.size() == 1) {
+            updateOnTiles(selectableTiles);
+        }
+        else if (!selectableTiles.isEmpty()) {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, "Seleziona una Tile dove muoverti!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(
@@ -162,22 +167,30 @@ public class ActionController extends Observer {
                     nextMove();
                     break;
                 case SHOOT:
-                    selectableWeapon = curPlayer.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList());
-                    receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
+                    receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon,1,1,"Seleziona un'arma!"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                            this,
-                            curPlayer.getVirtualView().getRequestDispatcher(),
-                            acceptableTypes);
-                    timerCostrainedEventHandler.start();
+                    selectableWeapon = curPlayer.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList());
+                    acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 1, "Seleziona un'arma!"));
+                    if (selectableWeapon.isEmpty()) {
+                        nextStep();
+                    }
+                    else if (selectableWeapon.size() == 1) {
+                        updateOnWeapon(selectableWeapon.get(0));
+                    }
+                    else {
+                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                                this,
+                                curPlayer.getVirtualView().getRequestDispatcher(),
+                                acceptableTypes);
+                        timerCostrainedEventHandler.start();
+                    }
                     break;
                 case GRAB:
                     String prompt;
                     if (curPlayer.getTile().isSpawn()) {
-                        receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, ReceivingType.STOP));
+                        receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                         acceptableTypes = new AcceptableTypes(receivingTypes);
-                        if (curPlayer.getWeapons().size() < 3) {
+                        if (curPlayer.getWeapons().size() < 1) {
                             selectableWeapon = curPlayer.
                                     getTile().
                                     getWeapons().
@@ -286,11 +299,16 @@ public class ActionController extends Observer {
     public void concludePayment(){
         if(curSubAction == GRAB){
             curPlayer.addWeapon(curPlayer.getTile().grabWeapon(selectedWeapon));
+            selectedWeapon.setLoaded(false);
+            sandboxMatch.updateViews();
             nextStep();
         }
         else if(curSubAction == SubAction.SHOOT){
             selectedWeapon.setLoaded(true);
             nextStep();
+        }
+        else if (curSubAction == RELOAD) {
+            curPlayer.reload(selectedWeapon);
         }
     }
 

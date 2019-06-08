@@ -11,7 +11,9 @@ import java.util.stream.Collectors;
 public class ViewPlayer implements Serializable {
 
 	public ViewPlayer(Player player) {
-		this.color = player.getColor().name();
+		if (player.getColor() != null) {
+			this.color = player.getColor().name();
+		}
 		this.username = player.getToken().split("\\$")[0];
 		this.id = player.getId();
 		this.damages = player.getDamages().stream().

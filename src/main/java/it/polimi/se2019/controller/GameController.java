@@ -6,6 +6,7 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.actions.Reload;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
@@ -15,8 +16,7 @@ import it.polimi.se2019.view.SelectableOptions;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
-import static it.polimi.se2019.controller.ReceivingType.STOP;
+import static it.polimi.se2019.controller.ReceivingType.*;
 import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
@@ -68,7 +68,7 @@ public class GameController extends Observer {
                 currentPlayer.getVirtualView().getRequestDispatcher().clear();
                 currentPlayer.setAlive(TRUE);
                 Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                        filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Errore nel powerUp!"));
+                        filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
                 currentPlayer.setTile(tile);
                 currentPlayer.discardPowerUp(powerUps.get(0), false);
                 if (!skip)
@@ -123,13 +123,18 @@ public class GameController extends Observer {
     }
 
     public void playTurn() {
+        boolean end = false;
         List<ReceivingType> receivingTypes = new ArrayList<>();
         acceptableTypes = new AcceptableTypes(receivingTypes);
         if(actionCounter < currentPlayer.getMaxActions()) {
             receivingTypes.add(ReceivingType.ACTION);
-            acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Select an Action!"));
+        } else if (!match.getFinalFrenzy() && currentPlayer.getWeapons().stream().anyMatch(w -> !w.getLoaded())) {
+            end = true;
+            receivingTypes.add(ReceivingType.ACTION);
+            acceptableTypes.setSelectableActions(new SelectableOptions<>(Arrays.asList(new Reload()), 1, 1, "Select an Action!"));
         }
+        else end = true;
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
@@ -138,7 +143,7 @@ public class GameController extends Observer {
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
         }
-        if (receivingTypes.isEmpty()) {
+        if (end && receivingTypes.size() != 0) {
             receivingTypes.add(STOP);
             acceptableTypes.setStop(false, "End turn");
         }
@@ -156,11 +161,12 @@ public class GameController extends Observer {
     public void updateOnConclusion(){
         actionCounter++;
         actionController = null;
-        match.getPlayers().stream().forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(match));
+        match.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(match));
         if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
             playTurn();
         }
         else {
+            //TODO manage RELOAD possibility!
             endTurn(false);
         }
     }
