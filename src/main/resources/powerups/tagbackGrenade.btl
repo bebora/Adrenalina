@@ -1,0 +1,13 @@
+name:tagback grenade
+applicability:DAMAGED
+effect:
+  name:basic effect
+  desc:You may play this card when you receive damage from a player you can see. Give that player 1 mark.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      marksAmount:1
+      target:
+        visibility:TRUE

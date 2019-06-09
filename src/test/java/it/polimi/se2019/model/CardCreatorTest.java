@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class CardCreatorTest {
     @Test
     void parsePowerUp() {
-        PowerUp test = CardCreator.parsePowerUp("mirino.btl", Ammo.RED);
+        PowerUp test = CardCreator.parsePowerUp("targetingScope.btl", Ammo.RED);
 
         // Test various elements of the parser
         assertEquals(test.getEffect().getDamages().get(0).getDamagesAmount(), 1);
         assertEquals(test.getEffect().getCost().get(0), Ammo.ANY);
         assertEquals(test.getApplicability(), Moment.DAMAGING);
-        assertEquals(test.getName(),"mirino");
+        assertEquals(test.getName(),"targeting scope");
         assertEquals(test.getDiscardAward(),Ammo.RED);
     }
 

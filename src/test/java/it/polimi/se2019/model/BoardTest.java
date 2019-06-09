@@ -130,6 +130,6 @@ class BoardTest {
     @Test
     void getSpawnPointFromAmmo() {
         Ammo ammo = Ammo.RED;
-        assertEquals(test.getTile(1,0), test.getSpawningPoint(CardCreator.parsePowerUp("mirino.btl", Ammo.RED)));
+        assertEquals(test.getTile(1,0), test.getSpawningPoint(CardCreator.parsePowerUp("targetingScope.btl", Ammo.RED)));
     }
 }

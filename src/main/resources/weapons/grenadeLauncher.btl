@@ -28,7 +28,7 @@ effects:
         maxDistance:1
         minDistance:1
         throughWalls:FALSE
-        pointOfViev:TARGET
+        pointOfView:TARGET
   name:with extra grenade
   desc:Deal 1 damage to every player on a square you can see. You can use this before or after the basic effect's move.
   cost:

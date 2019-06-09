@@ -1,0 +1,18 @@
+name:newton
+applicability:OWNROUND
+effect:
+  name:basic effect
+  desc:You may play this card on your turn before or after any action. Choose any other player's figure and move it 1 or 2 squares in one direction. (You can't use this to move a figure after it respawns at the end of your turn. That would be too late.)
+  absolutePriority:1
+  order:
+    MOVE
+  moves:
+    move:
+      objectToMove:TARGETSOURCE
+      targetSource:
+        maxTargets:1
+      targetDestination:
+        minDistance:1
+        maxDistance:2
+        cardinal:TRUE
+        pointOfView:TARGET

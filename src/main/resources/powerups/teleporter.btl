@@ -1,0 +1,11 @@
+name:teleporter
+applicability:OWNROUND
+effect:
+  name:basic effect
+  desc:You may play this card on your turn before or after any action. Pick up your figure and set it down on any square of the board. (You can't use this after you see where someone respawns at the end of your turn. By then it is too late.)
+  absolutePriority:1
+  order:
+    MOVE
+  moves:
+    move:
+      objectToMove:SELF
