@@ -1,0 +1,17 @@
+name:heatseeker
+cost:
+  red
+  red
+  yellow
+effects:
+  name:effect
+  desc:Choose 1 target you cannot see and deal 3 damage to it.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:3
+    target:
+      maxTargets:1
+      visibility:FALSE

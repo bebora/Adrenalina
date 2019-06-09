@@ -1,0 +1,47 @@
+name:grenade launcher
+cost:
+  red
+effects:
+  name:basic effect
+  desc:Deal 1 damage to 1 target you can see. Then you may move the target 1 square.
+  relativePriority:
+    +0
+    +2
+  order:
+    DEALDAMAGE
+    MOVE
+  damages:
+    damage:
+      damagesAmount:1
+      targeting:TRUE
+      target:
+        minTargets:1
+        maxTargets:1
+        visibility:TRUE
+  moves:
+    move:
+      objectToMove:TARGETSOURCE
+      targetSource:
+        checkTargetList:TRUE
+        minTargets:0
+      targetDestination:
+        maxDistance:1
+        minDistance:1
+        throughWalls:FALSE
+        pointOfViev:TARGET
+  name:with extra grenade
+  desc:Deal 1 damage to every player on a square you can see. You can use this before or after the basic effect's move.
+  cost:
+    red
+  relativePriority:
+    +0
+    +1
+  order:
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:1
+      target:
+        maxTargets:1
+        visibility:TRUE
+        areaDamage:TILE

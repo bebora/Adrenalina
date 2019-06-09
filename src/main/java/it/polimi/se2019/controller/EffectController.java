@@ -269,7 +269,7 @@ public class EffectController extends Observer {
     private void processDealDamage(){
         Area targetType = curDealDamage.getTarget().getAreaDamage();
         List<ReceivingType> receivingTypes;
-        int min = curDealDamage.getTarget().getMinDistance();
+        int min = curDealDamage.getTarget().getMinTargets();
         int max = curDealDamage.getTarget().getMaxTargets();
         switch(targetType){
             case TILE:

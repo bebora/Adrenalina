@@ -1,0 +1,45 @@
+name:hellion
+cost:
+  red
+  yellow
+effects:
+  name:basic mode
+  desc:Deal 1 damage to 1 target you can see at least 1 move away. Then give 1 mark to that target and everyone else on that square.
+  absolutePriority:1
+  order:
+    DEALDAMAGE
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:1
+      targeting:TRUE
+      target:
+        minDistance:1
+        maxTargets:1
+        visibility:TRUE
+    damage:
+      marksAmount:1
+        areaDamage:TILE
+        maxDistance:0
+        pointOfView:LASTPLAYER
+  name:in nano-tracer mode
+  desc:Deal 1 damage to 1 target you can see at least 1 move away. Then give 2 marks to that target and everyone else on that square.
+  absolutePriority:1
+  cost:
+    red
+  order:
+    DEALDAMAGE
+    DEALDAMAGE
+  damages:
+    damage:
+      damagesAmount:1
+      targeting:TRUE
+      target:
+        minDistance:1
+        maxTargets:1
+        visibility:TRUE
+    damage:
+      marksAmount:2
+        areaDamage:TILE
+        maxDistance:0
+        pointOfView:LASTPLAYER
