@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Choice;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
@@ -16,7 +17,8 @@ import it.polimi.se2019.view.SelectableOptions;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2019.controller.ReceivingType.*;
+import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
+import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
@@ -79,7 +81,25 @@ public class GameController extends Observer {
                 }
             }
             else {
-                //TODO powerup ownround
+                AcceptableTypes tilesAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.TILES));
+                List<Tile> tiles = new ArrayList<>(match.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t!= null).collect(Collectors.toList()));
+                tilesAccepted.setSelectableTileCoords(new SelectableOptions<>(tiles, 1 , 1, "Select a tile to move!"));
+                Choice tileRequest = new Choice(currentPlayer.getVirtualView().getRequestDispatcher(), tilesAccepted);
+                switch (tileRequest.getReceivingType()) {
+                    case STOP:
+                        updateOnStopSelection(TRUE);
+                        break;
+                    case TILES:
+                        currentPlayer.discardPowerUp(powerUps.get(0), false);
+                        currentPlayer.setTile(tiles.get(0));
+                        break;
+                }
+                if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
+                    playTurn();
+                }
+                else {
+                    endTurn(false);
+                }
             }
         }
         else {
@@ -168,7 +188,6 @@ public class GameController extends Observer {
             playTurn();
         }
         else {
-            //TODO manage RELOAD possibility!
             endTurn(false);
         }
     }

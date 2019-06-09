@@ -37,10 +37,6 @@ public class Choice extends Observer{
     public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
         receivingType = ReceivingType.NULL;
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, requestDispatcher, acceptableTypes);
-    }
-
-
-    public void receive() {
         timerCostrainedEventHandler.start();
         try {
             timerCostrainedEventHandler.join();
@@ -107,7 +103,7 @@ public class Choice extends Observer{
     @Override
     public void updateOnAmmo(Ammo ammo) {
         this.ammo = ammo;
-        receivingType = ReceivingType.COLOR;
+        receivingType = ReceivingType.AMMO;
     }
 
     public void setReceivingType(ReceivingType receivingType) {
