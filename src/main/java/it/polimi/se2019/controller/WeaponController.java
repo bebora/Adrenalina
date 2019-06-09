@@ -10,6 +10,7 @@ import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
+import javafx.fxml.FXML;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,7 +75,7 @@ public class WeaponController extends Observer {
         return Stream.concat(checkAbsolute, checkRelative).collect(Collectors.toList());
     }
 
-
+    @Override
     public void updateOnWeapon(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         if (curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
@@ -99,6 +100,7 @@ public class WeaponController extends Observer {
         }
     }
 
+    @Override
     public synchronized void updateOnEffect(String effect) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName().equals(effect)).findFirst().orElse(null);
@@ -161,16 +163,23 @@ public class WeaponController extends Observer {
 
     public void updateOnConclusion() {
         effectController = null;
-        if (getUsableEffects().isEmpty() && weapon.getEffects().get(0).getActivated()) {
+        boolean modalWeaponActivated = weapon.getEffects().get(0).getAbsolutePriority() == 1
+                && weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority()
+                && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
+        if (getUsableEffects().isEmpty() && (weapon.getEffects().get(0).getActivated() || modalWeaponActivated)) {
             actionController.updateOnConclusion();
         }
     }
 
+    @Override
     public void updateOnStopSelection(ThreeState skip) {
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             actionController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         } else {
-            if (weapon.getEffects().get(0).getActivated()) {
+            boolean modalWeaponActivated = weapon.getEffects().get(0).getAbsolutePriority() == 1
+                    && weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority()
+                    && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
+            if (weapon.getEffects().get(0).getActivated() || modalWeaponActivated) {
                 actionController.updateOnConclusion();
             } else {
                 //tell the player he must use the main effect or takeback the action

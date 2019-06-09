@@ -458,7 +458,7 @@ public class EffectController extends Observer {
         List<Player> players = getSandboxPlayers(originalTargetPlayers);
         if(checkPlayerTargets(curMove.getTargetSource(),players)) {
             player.getVirtualView().getRequestDispatcher().clear();
-            if (curMove.getTargetSource().getPointOfView() == PointOfView.TARGET)
+            if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
                 pointOfView = players.get(0).getTile();
             askingForSource = false;
             playersToMove = players;
