@@ -53,4 +53,8 @@ public class Observer {
     public void updateOnAmmo(Ammo ammo) {
         throw new IncorrectEvent("Non accetto weapon!");
     }
+
+    public void updateOnConclusion() {
+        throw new IncorrectEvent("Can't process!");
+    }
 }

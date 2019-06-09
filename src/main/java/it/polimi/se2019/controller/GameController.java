@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.Choice;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
@@ -34,6 +33,8 @@ public class GameController extends Observer {
     private AcceptableTypes acceptableTypes;
     private boolean end;
     private boolean skip;
+    private boolean action;
+    private PowerUp toDiscard;
 
     public synchronized void checkEnd(String username) {
         match.getUpdateSender().sendPopupMessage(String.format("Player %s is offline!", username));
@@ -48,6 +49,7 @@ public class GameController extends Observer {
 
     @Override
     public void updateOnAction(Action action){
+        this.action = true;
         actionController = new ActionController(match,this);
         actionController.updateOnAction(action);
     }
@@ -81,7 +83,8 @@ public class GameController extends Observer {
                 }
             }
             else {
-                AcceptableTypes tilesAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.TILES));
+                this.action = false;
+                /*AcceptableTypes tilesAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.TILES));
                 List<Tile> tiles = new ArrayList<>(match.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t!= null).collect(Collectors.toList()));
                 tilesAccepted.setSelectableTileCoords(new SelectableOptions<>(tiles, 1 , 1, "Select a tile to move!"));
                 Choice tileRequest = new Choice(currentPlayer.getVirtualView().getRequestDispatcher(), tilesAccepted);
@@ -99,7 +102,11 @@ public class GameController extends Observer {
                 }
                 else {
                     endTurn(false);
-                }
+                }*/
+                toDiscard = (powerUps.get(0));
+                currentPlayer.discardPowerUp(toDiscard, false);
+                EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
+                effectController.nextStep();
             }
         }
         else {
@@ -165,7 +172,7 @@ public class GameController extends Observer {
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
         }
-        if (end && receivingTypes.size() != 0) {
+        if (end && !receivingTypes.isEmpty()) {
             receivingTypes.add(STOP);
             acceptableTypes.setStop(false, "End turn");
         }
@@ -181,7 +188,8 @@ public class GameController extends Observer {
     }
 
     public void updateOnConclusion(){
-        actionCounter++;
+        if (action)
+            actionCounter++;
         actionController = null;
         match.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(match));
         if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
@@ -296,9 +304,10 @@ public class GameController extends Observer {
         }
         else if (skip.toSkip() || acceptableTypes.isReverse()) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
-            actionCounter++;
+            if(action)
+                actionCounter++;
             actionController = null;
-            if (skip.toSkip() || actionCounter == currentPlayer.getMaxActions()) {
+            if (skip.toSkip() || (actionCounter == currentPlayer.getMaxActions() && currentPlayer.hasPowerUp(Moment.OWNROUND))) {
                 endTurn(skip.toSkip());
             }
             else {

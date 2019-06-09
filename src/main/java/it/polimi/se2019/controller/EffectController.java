@@ -30,7 +30,7 @@ public class EffectController extends Observer {
     private Player player;
     private Weapon curWeapon;
     private Match curMatch;
-    private WeaponController weaponController;
+    private Observer controller;
     private List<Player> originalPlayers;
 
     private Effect curEffect;
@@ -61,7 +61,7 @@ public class EffectController extends Observer {
     private Player currentEnemy;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, WeaponController weaponController){
+    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, Observer controller){
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
@@ -72,7 +72,7 @@ public class EffectController extends Observer {
         this.board = match.getBoard();
         this.playersToMove = new ArrayList<>();
         this.originalPlayers = originalPlayers;
-        this.weaponController = weaponController;
+        this.controller = controller;
     }
 
     /**
@@ -100,7 +100,7 @@ public class EffectController extends Observer {
             }
         }
         else{
-            weaponController.updateOnConclusion();
+            controller.updateOnConclusion();
         }
     }
 
@@ -203,7 +203,7 @@ public class EffectController extends Observer {
     @Override
     public void updateOnStopSelection(ThreeState skip){
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            weaponController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
+            controller.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         }
         else {
             //TODO WHAT IF NOT REVERSING HERE, CHECK
@@ -231,15 +231,19 @@ public class EffectController extends Observer {
      * Ask the player for the proper target after checking the current Move
      */
     private void processMove(){
-        List<Tile> selectableTiles = tileTargets(curMove.getTargetDestination());
-        List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
+        List<Tile> selectableTiles;
+        List<ReceivingType> receivingTypes;
         switch(curMove.getObjectToMove()){
             case PERSPECTIVE:
+                selectableTiles = tileTargets(curMove.getTargetDestination());
+                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 askingForSource = false;
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per il tuo punto di vista!"));
                 break;
             case SELF:
+                selectableTiles = tileTargets(curMove.getTargetDestination());
+                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 askingForSource = false;
                 playersToMove.add(player);
                 acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -249,6 +253,8 @@ public class EffectController extends Observer {
                 askingForSource = true;
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
+                    selectableTiles = tileTargets(curMove.getTargetDestination());
+                    receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per i giocatori!"));
                 }
@@ -332,7 +338,7 @@ public class EffectController extends Observer {
         checkPointOfView(target);
         List<Player> acceptablePlayer = curMatch.getPlayers().
                 stream().
-                filter(target.getPlayerListFilter(player,curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers())).
+                filter(curWeapon!=null?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers()): s->true).
                 collect(Collectors.toList());
         List<Tile> acceptableTiles = curMatch.getBoard().getTiles().
                 stream().flatMap(List::stream).
@@ -416,7 +422,7 @@ public class EffectController extends Observer {
     private void checkPowerUps(List<Player> players){
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
         for (Player p : players) {
-            if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING)) {
+            if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -431,6 +437,7 @@ public class EffectController extends Observer {
                 }
                 player.getVirtualView().getRequestDispatcher().clear();
             }
+            else break;
         }
         List<TimerCostrainedEventHandler> handlersPowerUp = new ArrayList<>();
         for(Player p: players){

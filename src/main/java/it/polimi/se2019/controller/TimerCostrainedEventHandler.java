@@ -46,6 +46,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     public void endHandler() {
         active = false;
+        blocked = true;
     }
 
     public synchronized void checkFinished() {
@@ -74,8 +75,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             }
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
-        if (!blocked && notifyOnEnd) {
-            observer.updateOnStopSelection(ThreeState.TRUE);
+        synchronized (this) {
+            if (!blocked && notifyOnEnd) {
+                observer.updateOnStopSelection(ThreeState.TRUE);
+            }
         }
     }
 
@@ -114,8 +117,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     @Override
     public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
         if (active && acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
-            observer.updateOnPowerUps(powerUps, discard);
             endHandler();
+            observer.updateOnPowerUps(powerUps, discard);
         }
     }
 
@@ -130,6 +133,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveStop() {
         if (active){
             observer.updateOnStopSelection(ThreeState.FALSE);
+            setBlocked(true);
             endHandler();
         }
     }
