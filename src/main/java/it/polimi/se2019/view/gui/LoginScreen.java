@@ -2,6 +2,8 @@ package it.polimi.se2019.view.gui;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.view.Status;
+import it.polimi.se2019.view.View;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,26 +46,26 @@ public class LoginScreen extends Application {
     }
 
     public void login(){
-        Stage stage = (Stage)loginButton.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("fxml/BoardScreen.fxml"));
-
-        try {
-            Parent root = loader.load();
-            Scene scene = new Scene(root, 1024, 576);
-            BoardScreen boardScreen = loader.getController();
-            Properties connectionProperties = new Properties();
-            FileInputStream fin;
-            try{
-                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
-                connectionProperties.load(fin);
-            }catch (Exception e){
-                Logger.log(Priority.ERROR,e.getMessage());
-            }
-            boardScreen.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-            stage.setScene(scene);
-        }catch (IOException e){
-            Logger.log(Priority.DEBUG,e.getMessage());
+        View view = new View();
+        Properties connectionProperties = new Properties();
+        FileInputStream fin;
+        try{
+            fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
+            connectionProperties.load(fin);
+        }catch (Exception e){
+            Logger.log(Priority.ERROR,e.getMessage());
         }
+        view.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
+        while(view.getStatus() != Status.PLAYING){
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+            }
+        }
+        Stage stage = (Stage)loginButton.getScene().getWindow();
+
     }
 
     public static void main(String[] args){

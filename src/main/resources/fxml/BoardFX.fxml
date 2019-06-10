@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
 <fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="956.0" type="StackPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -31,25 +32,85 @@
                 <RowConstraints maxHeight="171.0" minHeight="10.0" prefHeight="171.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
+               <children>
+                  <TilePane hgap="10.0" prefHeight="200.0" prefRows="2" prefWidth="200.0" vgap="10.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="0" GridPane.valignment="CENTER">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                  <GridPane.margin>
+                     <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                  </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                  <GridPane.margin>
+                     <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                  </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">                     <GridPane.margin>
+                     <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                  </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+
+                  <TilePane vgap="10.0" hgap="10.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="30.0" left="30.0" right="30.0" top="40.0" />
+                     </GridPane.margin></TilePane>
+               </children>
             </GridPane>
             <VBox layoutY="259.0" prefHeight="304.0" prefWidth="142.0" spacing="15.0" AnchorPane.bottomAnchor="157.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="815.0" AnchorPane.topAnchor="259.0">
                <children>
-                  <ImageView fx:id="redWeaponView1" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
-                  <ImageView fx:id="redWeaponView2" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
-                  <ImageView fx:id="redWeaponView3" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
+                  <ImageView fx:id="redWeaponView1" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateRightAndZoomImage" onMouseExited="#deZoom" />
+                  <ImageView fx:id="redWeaponView2" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateRightAndZoomImage" onMouseExited="#deZoom" />
+                  <ImageView fx:id="redWeaponView3" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateRightAndZoomImage" onMouseExited="#deZoom" />
                </children>
             </VBox>
             <HBox fillHeight="false" layoutX="503.0" prefHeight="141.0" prefWidth="306.0" spacing="15.0" AnchorPane.bottomAnchor="579.0" AnchorPane.leftAnchor="503.0" AnchorPane.rightAnchor="148.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <ImageView fx:id="blueWeaponView1" fitHeight="136.0" fitWidth="90.0" pickOnBounds="true">
+                  <ImageView fx:id="blueWeaponView1" fitHeight="136.0" fitWidth="90.0" onMouseEntered="#zoomImage" onMouseExited="#deZoom" pickOnBounds="true">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></ImageView>
-                  <ImageView fx:id="blueWeaponView2" fitHeight="136.0" fitWidth="90.0" pickOnBounds="true">
+                  <ImageView fx:id="blueWeaponView2" fitHeight="136.0" fitWidth="90.0" onMouseEntered="#zoomImage" onMouseExited="#deZoom" pickOnBounds="true">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></ImageView>
-                  <ImageView fx:id="blueWeaponView3" fitHeight="136.0" fitWidth="90.0" pickOnBounds="true">
+                  <ImageView fx:id="blueWeaponView3" fitHeight="136.0" fitWidth="90.0" onMouseEntered="#zoomImage" onMouseExited="#deZoom" pickOnBounds="true">
                      <HBox.margin>
                         <Insets />
                      </HBox.margin></ImageView>
@@ -57,9 +118,9 @@
             </HBox>
             <VBox layoutX="815.0" layoutY="403.0" prefHeight="304.0" prefWidth="142.0" spacing="15.0" AnchorPane.bottomAnchor="13.0" AnchorPane.leftAnchor="815.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="403.0">
                <children>
-                  <ImageView fx:id="yellowWeaponView1" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
-                  <ImageView fx:id="yellowWeaponView2" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
-                  <ImageView fx:id="yellowWeaponView3" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" />
+                  <ImageView fx:id="yellowWeaponView1" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateLeftAndZoomImage" onMouseExited="#deZoom" />
+                  <ImageView fx:id="yellowWeaponView2" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateLeftAndZoomImage" onMouseExited="#deZoom" />
+                  <ImageView fx:id="yellowWeaponView3" fitHeight="90.0" fitWidth="136.0" pickOnBounds="true" onMouseEntered="#rotateLeftAndZoomImage" onMouseExited="#deZoom" />
                </children>
             </VBox>
             <ImageView fitHeight="158.0" fitWidth="97.0" layoutX="826.0" layoutY="189.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="373.0" AnchorPane.leftAnchor="826.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="189.0">
