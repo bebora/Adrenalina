@@ -4,7 +4,10 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
-import it.polimi.se2019.view.*;
+import it.polimi.se2019.view.SelectableOptions;
+import it.polimi.se2019.view.Status;
+import it.polimi.se2019.view.ViewPowerUp;
+import it.polimi.se2019.view.ViewTileCoords;
 import it.polimi.se2019.view.gui.LoginScreen;
 
 import java.io.*;
@@ -228,8 +231,10 @@ public class CliInputHandler implements Runnable{
         String answer = "RMI";
         String username;
         String pw;
-        String gameMode = "NORMAL";
+        String gameMode = "DOMINATION";
         boolean existingGame = false;
+
+
         try{
             answer = input.readLine();
             answer = answer.toUpperCase();

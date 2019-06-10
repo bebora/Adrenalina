@@ -5,6 +5,7 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
@@ -150,7 +151,7 @@ public class CLI extends View {
     public synchronized void  refresh(){
         if(AsciiBoard.board == null)
             AsciiBoard.board = this.getBoard();
-        AsciiBoard.drawBoard(getPlayers());
+        AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));
         AsciiPlayer.drawPlayerInfo(getSelf(),getLoadedWeapons(), getSelf().getUnloadedWeapons());
         AsciiPlayer.printPowerUps(this);
         displayMessages();

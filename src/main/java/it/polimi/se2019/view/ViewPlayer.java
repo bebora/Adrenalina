@@ -120,4 +120,12 @@ public class ViewPlayer implements Serializable {
 	public void setMarks(List<String> marks) {
 		this.marks = new ArrayList<>(marks);
 	}
+
+	public Boolean getDominationSpawn() {
+		return dominationSpawn;
+	}
+
+	public void setDominationSpawn(Boolean dominationSpawn) {
+		this.dominationSpawn = dominationSpawn;
+	}
 }

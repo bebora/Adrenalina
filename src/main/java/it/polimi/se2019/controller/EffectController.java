@@ -157,6 +157,7 @@ public class EffectController extends Observer {
     @Override
     public void updateOnTiles(List<Tile> tiles){
         if (acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
+            player.getVirtualView().getRequestDispatcher().clear();
             if(curActionType == MOVE) {
                 if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
                     playersToMove.forEach(p -> p.setTile(tiles.get(0)));
@@ -203,6 +204,7 @@ public class EffectController extends Observer {
     }
     @Override
     public void updateOnStopSelection(ThreeState skip){
+        player.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             controller.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         }
@@ -317,18 +319,18 @@ public class EffectController extends Observer {
     private void processTargetSource(Target target){
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
             askingForSource = false;
-            playersToMove = curWeapon.getTargetPlayers();
+            playersToMove = new ArrayList<>(curWeapon.getTargetPlayers());
         }
         else if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
             askingForSource = false;
-            playersToMove = curWeapon.getBlackListPlayers();
+            playersToMove = new ArrayList<>(curWeapon.getBlackListPlayers());
         }
         else {
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
             int max = target.getMaxTargets();
-            List<Player> players = playerTargets(target);
+            List<Player> players = playerTargets(target).stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList());
             players.remove(player);
             if (players.isEmpty()) {
                 player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");

@@ -300,12 +300,12 @@ public class GameController extends Observer {
 
     @Override
     public void updateOnStopSelection(ThreeState skip){
+        currentPlayer.getVirtualView().getRequestDispatcher().clear();
         if (currentPlayer.getAlive() == OPTIONAL) {
             this.skip = true;
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
         }
         else if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
             if(action)
                 actionCounter++;
             actionController = null;
@@ -317,7 +317,6 @@ public class GameController extends Observer {
             }
         }
         else if (skip == FALSE) {
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
             endTurn(false);
         }
     }

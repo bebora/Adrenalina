@@ -13,7 +13,7 @@ public class MyProperties extends Properties {
         if (instance == null) {
             try {
                 instance = new MyProperties();
-                FileInputStream in = new FileInputStream(MyProperties.class.getClassLoader().getResource("timer.properties").getPath());
+                FileInputStream in = new FileInputStream(MyProperties.class.getClassLoader().getResource("game.properties").getPath());
                 instance.load(in);
                 in.close();
             } catch (Exception e) {

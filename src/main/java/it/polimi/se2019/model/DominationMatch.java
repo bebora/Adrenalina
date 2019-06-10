@@ -78,8 +78,9 @@ public class DominationMatch extends Match {
             p.resetPlayer();
         }
 
-        if (currentTurn == 1) {
+        if (currentTurn == 0) {
             insertSpawnPoints();
+            currentTurn++;
         }
         return to_return;
     }
@@ -97,12 +98,12 @@ public class DominationMatch extends Match {
             Tile relatedTile = getBoard().
                     getTiles().stream().
                     flatMap(List::stream).
-                    filter(t -> t.isSpawn() && t.getRoom().equals(color)).
+                    filter(t -> t!= null && t.isSpawn() && t.getRoom().equals(color)).
                     findFirst().orElseThrow(UnsupportedOperationException::new);
             temp.setTile(relatedTile);
+            getPlayers().add(temp);
         }
         spawnPoints = getPlayers().stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
-
     }
 
     /**

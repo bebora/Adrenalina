@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.MyProperties;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
@@ -63,7 +64,7 @@ public class ActionController extends Observer {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
                 //TODO comparison should be to 3, it's 1 for debug purposes
-                if (curPlayer.getWeapons().size() == 1) {
+                if (curPlayer.getWeapons().size() == Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                     subActionIndex--;
                     curPlayer.getWeapons().remove(weapon);
                     curPlayer.getTile().addWeapon(weapon);
@@ -192,7 +193,7 @@ public class ActionController extends Observer {
                     if (curPlayer.getTile().isSpawn()) {
                         receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                         acceptableTypes = new AcceptableTypes(receivingTypes);
-                        if (curPlayer.getWeapons().size() < 1) {
+                        if (curPlayer.getWeapons().size() < Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                             selectableWeapon = curPlayer.
                                     getTile().
                                     getWeapons().
