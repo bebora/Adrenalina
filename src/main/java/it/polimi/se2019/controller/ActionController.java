@@ -6,6 +6,7 @@ import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
+import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
@@ -61,6 +62,7 @@ public class ActionController extends Observer {
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
+                //TODO comparison should be to 3, it's 1 for debug purposes
                 if (curPlayer.getWeapons().size() == 1) {
                     subActionIndex--;
                     curPlayer.getWeapons().remove(weapon);
@@ -215,8 +217,16 @@ public class ActionController extends Observer {
                         }
                     }
                     else {
-                        curPlayer.getTile().getAmmoCard().getAmmos().forEach(a -> curPlayer.addAmmo(a));
-                        curPlayer.getTile().grabAmmoCard();
+                        AmmoCard ammoCard = curPlayer.getTile().grabAmmoCard();
+                        List<Ammo> ammos = ammoCard.getAmmos().stream().
+                                filter(a -> !a.equals(Ammo.POWERUP)).
+                                collect(Collectors.toList());
+                        List<Ammo> powerUps = ammoCard.getAmmos().stream().
+                                filter(a -> a.equals(Ammo.POWERUP)).
+                                collect(Collectors.toList());
+                        ammos.forEach(a -> curPlayer.addAmmo(a));
+                        powerUps.forEach(p -> curPlayer.addPowerUp(sandboxMatch.getBoard().drawPowerUp(), true));
+                        sandboxMatch.getBoard().discardAmmoCard(ammoCard);
                         updateOnConclusion();
                     }
                     break;

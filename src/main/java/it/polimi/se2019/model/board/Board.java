@@ -215,6 +215,10 @@ public class Board {
 	    powerUps.addToDiscarded(powerUp);
     }
 
+    public void discardAmmoCard(AmmoCard ammoCard) {
+		ammoCards.addToDiscarded(ammoCard);
+	}
+
 	public Deck<Weapon> getWeaponsDeck() {
 		return weaponsDeck;
 	}

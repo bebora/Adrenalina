@@ -25,6 +25,7 @@ public class Spawner extends Observer {
         if (powerUps.size() == 1 && playerToSpawn.getPowerUps().contains(powerUps.get(0))) {
             Random random = new Random();
             PowerUp discarded = playerToSpawn.getPowerUps().get(random.nextInt(playerToSpawn.getPowerUps().size()));
+            playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
             playerToSpawn.getPowerUps().remove(discarded);
             playerToSpawn.setTile(board.getTiles().stream()
                     .flatMap(Collection::stream)

@@ -469,6 +469,7 @@ public class Player {
 	 */
 	public void discardPowerUp(PowerUp powerUp, boolean award) {
 		powerUps.remove(powerUp);
+		match.getBoard().getPowerUps().addToDiscarded(powerUp);
 		if (award) addAmmo(powerUp.getDiscardAward());
 		sendTotalUpdate();
 	}
