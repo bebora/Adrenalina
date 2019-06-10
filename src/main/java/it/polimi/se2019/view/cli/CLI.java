@@ -11,6 +11,7 @@ public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
     static List<ViewWeapon> displayedWeapons;
+    private ViewPlayer displayedPlayer;
 
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
@@ -138,17 +139,24 @@ public class CLI extends View {
         }
     }
 
-    private void displayTurnInfo(){
+    void displayTurnInfo(){
         moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         printInColor("w","You:");
-        printInColor(getSelf().getColor(),getUsername() + " ");
+        printInColor(getSelf().getColor(),getUsername() + "  ");
         printInColor("w","Current player:");
-        printInColor(getCurrentPlayer().getColor(),getCurrentPlayer().getUsername());
+        printInColor(getCurrentPlayer().getColor(),getCurrentPlayer().getUsername() + "  ");
+        printInColor("w","Displayed player:");
+        printInColor(displayedPlayer.getColor(),displayedPlayer.getUsername());
+    }
+
+    public void setDisplayedPlayer(ViewPlayer displayedPlayer){
+        this.displayedPlayer = displayedPlayer;
     }
 
 
     @Override
     public synchronized void  refresh(){
+        displayedPlayer = getSelf();
         if(AsciiBoard.board == null)
             AsciiBoard.board = this.getBoard();
         AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));

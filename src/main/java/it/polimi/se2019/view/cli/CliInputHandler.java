@@ -4,14 +4,12 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
-import it.polimi.se2019.view.SelectableOptions;
-import it.polimi.se2019.view.Status;
-import it.polimi.se2019.view.ViewPowerUp;
-import it.polimi.se2019.view.ViewTileCoords;
+import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CliInputHandler implements Runnable{
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
@@ -59,6 +57,21 @@ public class CliInputHandler implements Runnable{
         }else{
             CLI.printMessage("The selected weapon does not exist!","R");
         }
+    }
+
+    private void infoPlayer(String color){
+        List<String> possibleColors = view.getPlayers().stream()
+                .map(ViewPlayer::getColor)
+                .collect(Collectors.toList());
+        if(possibleColors.contains(color)) {
+            ViewPlayer requestedPlayer = view.getPlayers().stream()
+                    .filter(p -> p.getColor().equalsIgnoreCase(color))
+                    .findAny().orElse(null);
+            AsciiPlayer.drawPlayerInfo(requestedPlayer, new ArrayList<>(), requestedPlayer.getUnloadedWeapons());
+            view.setDisplayedPlayer(requestedPlayer);
+            view.displayTurnInfo();
+        }else
+            CLI.printMessage("No valid player", "R");
     }
 
     private void parseSelection(String[] inSplit){
@@ -244,8 +257,8 @@ public class CliInputHandler implements Runnable{
                 case "SOCKET":
                     break;
                 default:
-                    CLI.printInColor("Y", "Wrong network mode, assuming RMI\n");
                     answer = "RMI";
+                    CLI.printInColor("Y", "Wrong network mode, assuming " + answer + "\n");
             }
             CLI.printInColor("W","Username: ");
             username = input.readLine();
@@ -277,12 +290,13 @@ public class CliInputHandler implements Runnable{
             CLI.printInColor("W", "Game mode (NORMAL/DOMINATION)");
             switch (input.readLine().toUpperCase()){
                 case "NORMAL":
+                    gameMode = "NORMAL";
                     break;
                 case "DOMINATION":
                     gameMode = "DOMINATION";
                     break;
                 default:
-                    CLI.printInColor("Y", "Wrong game mode, assuming NORMAL\n");
+                    CLI.printInColor("Y", "Wrong game mode, assuming " + gameMode + "\n");
             }
             view = new CLI();
             Properties connectionProperties = new Properties();
@@ -365,6 +379,9 @@ public class CliInputHandler implements Runnable{
                     case "TILE":
                         tileInfoMode(input);
                         break;
+                    case "PLAYER":
+                        infoPlayer(inSplit[1]);
+                        break;
                     case "WEAPON":
                         if(inSplit.length > 2 && inSplit[2].matches("\\d"))
                             infoWeapon(Integer.parseInt(inSplit[2]));
@@ -372,10 +389,10 @@ public class CliInputHandler implements Runnable{
                             CLI.printMessage("Wrong format", "R");
                         break;
                     default:
-                        view.refresh();
                         break;
                 }
-            }
+            }else
+                view.refresh();
         }
     }
 }
