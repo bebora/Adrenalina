@@ -5,8 +5,9 @@ public class SpawnPlayer extends Player{
     private Boolean damaged;
     public SpawnPlayer(Color color) {
         super(color.toString()+ "$");
+        setColor(color);
         damaged  = Boolean.FALSE;
-
+        setDominationSpawn(true);
     }
 
     @Override
@@ -27,8 +28,8 @@ public class SpawnPlayer extends Player{
 
 
     @Override
-    public Boolean getDominationSpawn() {
-        return Boolean.TRUE;
+    public boolean getDominationSpawn() {
+        return true;
     }
 
 

@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,7 +70,7 @@ public class ActionControllerTest {
         currentPlayer.getAmmos().remove(Ammo.RED);
         currentPlayer.getAmmos().remove(Ammo.YELLOW);
         currentPlayer.getAmmos().remove(Ammo.BLUE);
-        assertEquals(grabbableAmmocard.getAmmos(),currentPlayer.getAmmos());
+        assertEquals(grabbableAmmocard.getAmmos().stream().filter(p -> !p.equals(Ammo.POWERUP)).collect(Collectors.toList()), currentPlayer.getAmmos());
         assertNull(currentPlayer.getTile().getAmmoCard());
     }
 

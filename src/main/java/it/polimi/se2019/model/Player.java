@@ -210,7 +210,11 @@ public class Player {
 	 */
 	private int trackSkulls;
 
-	public Boolean getDominationSpawn() {
+	public void setDominationSpawn(Boolean dominationSpawn) {
+		this.dominationSpawn = dominationSpawn;
+	}
+
+	public boolean getDominationSpawn() {
 		return FALSE;
 	}
 
