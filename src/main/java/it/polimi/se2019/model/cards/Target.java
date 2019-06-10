@@ -11,19 +11,19 @@ import java.util.function.Predicate;
 public class Target {
 
 	public static class Builder {
-		ThreeState visibility;
-		int minTargets;
-		int maxTargets;
-		int minDistance;
+		ThreeState visibility = ThreeState.OPTIONAL;
+		int minTargets = 1;
+		int maxTargets = -1;
+		int minDistance = 0;
 		int maxDistance = -1;
-		Area areaDamage;
-		ThreeState cardinal;
-		ThreeState checkTargetList;
-		ThreeState differentSquare;
-		ThreeState samePlayerRoom;
-		boolean throughWalls;
-		PointOfView pointOfView;
-		ThreeState checkBlackList;
+		Area areaDamage = Area.SINGLE;
+		ThreeState cardinal = ThreeState.OPTIONAL;
+		ThreeState checkTargetList = ThreeState.OPTIONAL;
+		ThreeState differentSquare = ThreeState.OPTIONAL;
+		ThreeState samePlayerRoom = ThreeState.OPTIONAL;
+		boolean throughWalls = true;
+		PointOfView pointOfView = PointOfView.OWN;
+		ThreeState checkBlackList = ThreeState.OPTIONAL;
 
 		public Builder setVisibility(ThreeState visibility) {
 			this.visibility = visibility;
