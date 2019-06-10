@@ -8,9 +8,16 @@ public class UnlimitedDeck<T> implements Deck<T>{
     private Queue<T> discardedCards = new LinkedList<>();
     private Queue<T> remainingCards;
 
+    public UnlimitedDeck (List<T> cards) {
+        remainingCards = new LinkedList<>();
+        discardedCards = new LinkedList<>(cards);
+    }
+
     public UnlimitedDeck () {
         remainingCards = new LinkedList<>();
     }
+
+
 
     @Override
     public void add(T t) {

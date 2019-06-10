@@ -6,4 +6,6 @@ public interface Deck<T>{
     void add(T t);
 
     void addToDiscarded(T t);
+
+
 }

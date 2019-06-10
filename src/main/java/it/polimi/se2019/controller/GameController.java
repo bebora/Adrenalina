@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
 import static it.polimi.se2019.controller.ReceivingType.STOP;
+import static it.polimi.se2019.model.ThreeState.FALSE;
 import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.ThreeState.TRUE;
 
@@ -103,6 +104,7 @@ public class GameController extends Observer {
                 else {
                     endTurn(false);
                 }*/
+                currentPlayer.getVirtualView().getRequestDispatcher().clear();
                 toDiscard = (powerUps.get(0));
                 currentPlayer.discardPowerUp(toDiscard, false);
                 EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
@@ -302,7 +304,7 @@ public class GameController extends Observer {
             this.skip = true;
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
         }
-        else if (skip.toSkip() || acceptableTypes.isReverse()) {
+        else if (skip.toBoolean() || acceptableTypes.isReverse()) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
             if(action)
                 actionCounter++;
@@ -313,6 +315,10 @@ public class GameController extends Observer {
             else {
                 playTurn();
             }
+        }
+        else if (skip == FALSE) {
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
+            endTurn(false);
         }
     }
 

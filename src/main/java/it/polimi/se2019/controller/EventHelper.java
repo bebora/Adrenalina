@@ -37,7 +37,7 @@ public class EventHelper {
      */
     private Player getSinglePlayerFromId(String id){
         return match.getPlayers().stream()
-                .filter(p -> p.getId().equals(id))
+                .filter(p -> p.getUsername().equals(id))
                 .findAny()
                 .orElse(null);
     }

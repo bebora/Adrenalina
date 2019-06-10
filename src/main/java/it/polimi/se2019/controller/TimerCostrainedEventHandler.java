@@ -45,15 +45,15 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     public void endHandler() {
-        active = false;
         blocked = true;
+        active = false;
     }
 
-    public synchronized void checkFinished() {
+    public synchronized boolean checkFinished() {
         if (System.currentTimeMillis() >= start + time*1000) {
-            endHandler();
+            return true;
         }
-
+        return false;
     }
 
     public synchronized void setBlocked(boolean blocked) {
@@ -65,8 +65,9 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
         requestDispatcher.getViewUpdater().sendAcceptableType(acceptableTypes);
         this.start = System.currentTimeMillis();
-        while (active && !blocked) {
-            checkFinished();
+        while (!blocked) {
+            if (checkFinished())
+                break;
             try {
                 Thread.sleep(1000);
             }
@@ -75,42 +76,40 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             }
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
-        synchronized (this) {
-            if (!blocked && notifyOnEnd) {
-                observer.updateOnStopSelection(ThreeState.TRUE);
-            }
+        if (!blocked && notifyOnEnd) {
+            observer.updateOnStopSelection(ThreeState.TRUE);
         }
     }
 
     @Override
     public synchronized void receiveAction(Action action) {
         if (active && acceptableTypes.getSelectableActions().checkForCoherency(Collections.singletonList(action))) {
-            observer.updateOnAction(action);
             endHandler();
+            observer.updateOnAction(action);
         }
     }
 
     @Override
     public void receiveDirection(Direction direction) {
         if (active && acceptableTypes.getSelectableDirections().checkForCoherency(Collections.singletonList(direction))) {
-            observer.updateOnDirection(direction);
             endHandler();
+            observer.updateOnDirection(direction);
         }
     }
 
     @Override
     public synchronized void receiveEffect(String effect) {
         if (active && acceptableTypes.getSelectableEffects().checkForCoherency(Collections.singletonList(effect))) {
-            observer.updateOnEffect(effect);
             endHandler();
+            observer.updateOnEffect(effect);
         }
     }
 
     @Override
     public synchronized void receivePlayer(List<Player> players) {
         if (active && acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
-            observer.updateOnPlayers(players);
             endHandler();
+            observer.updateOnPlayers(players);
         }
     }
 
@@ -125,32 +124,31 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     @Override
     public synchronized void receiveRoom(Color color) {
         if (active && acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(color))) {
-            observer.updateOnRoom(color);
             endHandler();
+            observer.updateOnRoom(color);
         }
     }
 
     public synchronized void receiveStop() {
         if (active){
-            observer.updateOnStopSelection(ThreeState.FALSE);
-            setBlocked(true);
             endHandler();
+            observer.updateOnStopSelection(ThreeState.FALSE);
         }
     }
 
     @Override
     public synchronized void receiveTiles(List<Tile> tiles) {
         if (active && acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
-            observer.updateOnTiles(tiles);
             endHandler();
+            observer.updateOnTiles(tiles);
         }
     }
 
     @Override
     public synchronized void receiveWeapon(Weapon weapon) {
         if (active && acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
-            observer.updateOnWeapon(weapon);
             endHandler();
+            observer.updateOnWeapon(weapon);
         }
     }
 }

@@ -8,6 +8,10 @@ public class LimitedDeck<T> implements Deck<T> {
         remainingCards = new LinkedList<>();
     }
 
+    public LimitedDeck (List<T> cards) {
+        remainingCards = new LinkedList<>(cards);
+    }
+
     @Override
     public void addToDiscarded(T t) { throw new UnsupportedOperationException();}
 

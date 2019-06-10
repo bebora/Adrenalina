@@ -10,6 +10,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -84,7 +85,7 @@ public class BoardCreator {
     }
 
     public static Deck parseWeapon(ClassLoader classloader, String weaponPath) {
-        Deck<Weapon> weapons = new LimitedDeck<>();
+        List<Weapon> weapons = new ArrayList<>();
         String nameDir = classloader.getResource(weaponPath).getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
@@ -93,27 +94,30 @@ public class BoardCreator {
                 weapons.add(CardCreator.parseWeapon(weapon.getName()));
             }
         }
-
-        return weapons;
+        Collections.shuffle(weapons);
+        return new UnlimitedDeck<>(weapons);
     }
 
     public static Deck parsePowerUps(ClassLoader classloader, String powerUpsPath) {
-        Deck<PowerUp> powerUps = new UnlimitedDeck<>();
+        List<PowerUp> powerUps = new ArrayList<>();
         String nameDir = classloader.getResource(powerUpsPath).getPath();
         File dir = new File(nameDir);
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File powerUp : directoryListing) {
-                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
-                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.RED));
-                powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
+                for (int i = 0; i < 2; i++) {
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.RED));
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
+                }
             }
         }
-        return powerUps;
+        Collections.shuffle(powerUps);
+        return new UnlimitedDeck<>(powerUps);
     }
 
     public static Deck generateAmmos() {
-        Deck <AmmoCard> ammoCards = new UnlimitedDeck<>();
+        List <AmmoCard> ammoCards = new ArrayList<>();
         List <Ammo> ammosColor = new ArrayList<>(Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW));
         // Create ammosCards according to the game mechanics
         for (int i = 0; i < 3; i++) {
@@ -133,6 +137,7 @@ public class BoardCreator {
             ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.BLUE));
             ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.BLUE, Ammo.YELLOW));
         }
-        return ammoCards;
+        Collections.shuffle(ammoCards);
+        return new UnlimitedDeck<>(ammoCards);
     }
 }

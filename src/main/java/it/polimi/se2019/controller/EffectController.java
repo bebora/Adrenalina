@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Choice;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
@@ -7,6 +8,7 @@ import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
@@ -16,8 +18,7 @@ import it.polimi.se2019.view.SelectableOptions;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.se2019.model.ThreeState.FALSE;
-import static it.polimi.se2019.model.ThreeState.TRUE;
+import static it.polimi.se2019.model.ThreeState.*;
 import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
@@ -89,7 +90,7 @@ public class EffectController extends Observer {
             if(curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
-                if(curMove.getTargetSource() != null)
+                if(curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null)
                     processDirection(curMove.getTargetSource());
                 else
                     processDirection(curMove.getTargetDestination());
@@ -328,9 +329,16 @@ public class EffectController extends Observer {
             int min = target.getMinTargets();
             int max = target.getMaxTargets();
             List<Player> players = playerTargets(target);
-            acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players,max,min, "Seleziona i giocatori da muovere!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+            players.remove(player);
+            if (players.isEmpty()) {
+                player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");
+                updateOnStopSelection(OPTIONAL);
+            }
+            else {
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Seleziona i giocatori da muovere!"));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler.start();
+            }
         }
     }
 
@@ -364,7 +372,7 @@ public class EffectController extends Observer {
                          .map(Player::getTile)
                          .allMatch(target.getFilterTiles(board,pointOfView)) &&
                  players.stream()
-                         .allMatch(target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()));
+                         .allMatch((curWeapon!=null)?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()): p -> true);
         return result;
     }
 
@@ -424,6 +432,20 @@ public class EffectController extends Observer {
         for (Player p : players) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
+                AcceptableTypes ammosAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.AMMO));
+                List<Ammo> ammos = new ArrayList<>(new HashSet<>(player.getAmmos()));
+                ammosAccepted.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
+                Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), ammosAccepted);
+                Ammo toPay;
+                switch (ammoRequest.getReceivingType()) {
+                    case STOP:
+                        updateOnStopSelection(TRUE);
+                        return;
+                    case AMMO:
+                        toPay = ammoRequest.getAmmo();
+                        player.getAmmos().remove(toPay);
+                        break;
+                }
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
