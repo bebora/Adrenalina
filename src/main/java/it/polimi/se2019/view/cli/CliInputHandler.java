@@ -239,8 +239,22 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Helper method that checks validity of user input
+     * @param acceptedOptions options that can be accepted
+     * @param bannedOptions options that must be rejected. If null, reject all values not in {@code acceptedOptions}
+     * @param defaultChoice option returned if {@code inputChoice} is not valid
+     * @param inputChoice option to check
+     * @param description description of option name
+     * @return {@code inputChoice} is valid
+     */
     private String parseOption(List<String> acceptedOptions, List<String> bannedOptions, String defaultChoice, String inputChoice, String description){
-        if (acceptedOptions.contains(inputChoice) || !bannedOptions.contains(inputChoice)) return inputChoice;
+        if (acceptedOptions.contains(inputChoice)) {
+            return inputChoice;
+        }
+        else if (bannedOptions != null && !bannedOptions.contains(inputChoice)) {
+            return inputChoice;
+        }
         else {
             CLI.printInColor("Y", "Invalid "+description+", assuming " + defaultChoice + "\n");
             return defaultChoice;
@@ -259,7 +273,7 @@ public class CliInputHandler implements Runnable{
 
         CLI.printInColor("W","RMI or Socket?\n");
         try{
-            String connectionType = parseOption(Arrays.asList("rmi", "socket"), Arrays.asList(""), DEFAULTNETWORK, input.readLine().toLowerCase(), "network mode");
+            String connectionType = parseOption(Arrays.asList("rmi", "socket"), null, DEFAULTNETWORK, input.readLine().toLowerCase(), "network mode");
             CLI.printInColor("W","URL: ");
             String url = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTURL, input.readLine(), "url");
             CLI.printInColor("W","Port: ");
@@ -277,11 +291,11 @@ public class CliInputHandler implements Runnable{
             CLI.printInColor("W","Password: ");
             String pw = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTPW, input.readLine(), "password");
             CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
-            String existingGame = parseOption(Arrays.asList("y", "n"), Arrays.asList(""), DEFAULTEXISTINGGAME, input.readLine().toLowerCase(), "existing game");
+            String existingGame = parseOption(Arrays.asList("y", "n"), null, DEFAULTEXISTINGGAME, input.readLine().toLowerCase(), "existing game");
             if (existingGame.equals("y")) existingGame = "true";
             else if (existingGame.equals("n")) existingGame = "false";
             CLI.printInColor("W", "Game mode (NORMAL/DOMINATION)");
-            String gameMode = parseOption(Arrays.asList("NORMAL", "DOMINATION"), Arrays.asList(""), DEFAULTGAMEMODE, input.readLine().toUpperCase(), "gamemode");
+            String gameMode = parseOption(Arrays.asList("NORMAL", "DOMINATION"), null, DEFAULTGAMEMODE, input.readLine().toUpperCase(), "gamemode");
 
             view = new CLI();
             Properties connectionProperties = new Properties();
@@ -299,26 +313,14 @@ public class CliInputHandler implements Runnable{
      */
     private boolean viewChoice(){
         CLI.printInColor("W","GUI or CLI?\n");
-        String answer = "CLI";
+        final String DEFAULTVIEW = "CLI";
         try{
-            answer = input.readLine();
-            answer = answer.toUpperCase();
+            String choice = parseOption(Arrays.asList("CLI", "GUI"), null, DEFAULTVIEW, input.readLine().toUpperCase(), "view mode");
+            return choice.equals("CLI");
         }catch (IOException e){
             Logger.log(Priority.ERROR, "Can't read from stdin");
+            return true;
         }
-        boolean ret;
-        switch (answer){
-            case "CLI":
-                ret = true;
-                break;
-            case "GUI":
-                ret = false;
-                break;
-            default:
-                ret = true;
-                CLI.printInColor("Y", "Wrong view mode, assuming CLI\n");
-        }
-        return ret;
     }
 
     public void run(){
