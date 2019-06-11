@@ -1,10 +1,14 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.network.ViewReceiverInterface;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.VirtualView;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -35,5 +39,10 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
 
     public ConnectHandler(LobbyController lobbyController) throws RemoteException {
         this.lobbyController = lobbyController;
+        try {
+            Logger.log(Priority.DEBUG, "Server hostname: "+InetAddress.getLocalHost().getHostAddress());
+        } catch (UnknownHostException e) {
+            Logger.log(Priority.DEBUG, e.getMessage());
+        }
     }
 }

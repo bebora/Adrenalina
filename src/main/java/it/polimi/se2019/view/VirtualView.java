@@ -46,7 +46,8 @@ public class VirtualView extends View  {
     public void setOnline(boolean online) {
         super.setOnline(online);
         if (!online) {
-            getGameController().checkEnd(getUsername());
+            if (getGameController() != null)
+                getGameController().checkEnd(getUsername());
         }
     }
 

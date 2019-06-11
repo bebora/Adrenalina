@@ -117,7 +117,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                 remoteReceiver.receivePopupMessage(message);
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send popup");
+                Logger.log(Priority.ERROR, "Unable to send popup "+ e.getMessage());
             }
         });
     }
