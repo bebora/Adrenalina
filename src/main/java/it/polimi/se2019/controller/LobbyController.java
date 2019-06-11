@@ -21,6 +21,11 @@ public class LobbyController extends Thread{
     private Map<Mode, List<Player>> waitingPlayers;
     private Map<Mode, Timer> waitingTimers;
 
+    /**
+     * Create a lobby allowing creation of games for the modes {@code #modes}
+     * Initialize timers for starting game on each Mode
+     * @param modes allowed modes to play a game
+     */
     public LobbyController(List<Mode> modes) {
         waitingPlayers = new EnumMap<>(Mode.class);
         for (Mode mode : modes) {
@@ -36,7 +41,7 @@ public class LobbyController extends Thread{
      * Reconnect a player to a game already started
      * @param username
      * @param password
-     * @param view
+     * @param view Related client's VirtualView
      */
     public synchronized void reconnectPlayer(String username, String password, VirtualView view) {
         Player player = null;
@@ -70,7 +75,7 @@ public class LobbyController extends Thread{
     /**
      * Add a player to the waiting Players list, linking the VirtualView to the Player.
      * Manage the start of the timeout to start the game if enough players are in.
-     *
+     * Manage the start of the timer in case of {@link #waitingPlayers} greater or equal than 3; start game if they are 5.
      * @param username
      * @param password
      * @param mode
@@ -115,6 +120,11 @@ public class LobbyController extends Thread{
         }
     }
 
+    /**
+     * Get the RequestHandler related to the {@code token}
+     * @param token token of the related player
+     * @return
+     */
     public RequestDispatcher getRequestHandler(String token) {
         List<Player> allPlayers = new ArrayList<>();
         allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
@@ -128,6 +138,11 @@ public class LobbyController extends Thread{
         return waitingPlayers;
     }
 
+    /**
+     * Start a game using the {@link GameController}.
+     * Check and remove offline players from the waiting List
+     * @param mode
+     */
     public synchronized void startGame(Mode mode) {
         Logger.log(Priority.DEBUG, "GAME TRYING TO START");
         List<Player> currentWaiting = waitingPlayers.get(mode);

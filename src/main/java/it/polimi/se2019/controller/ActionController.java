@@ -240,7 +240,10 @@ public class ActionController extends Observer {
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost(), curPlayer.totalAmmoPool())).
                             collect(Collectors.toList());
                     if (selectableWeapon.isEmpty()) {
-                        updateOnStopSelection(OPTIONAL);
+                        if (curAction.toString().equals("RELOAD"))
+                            updateOnStopSelection(OPTIONAL);
+                        else
+                            nextStep();
                     }else {
                         acceptableTypes = new AcceptableTypes(receivingTypes);
                         acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, "Ricarica un'arma se vuoi"));
@@ -315,7 +318,6 @@ public class ActionController extends Observer {
     public void concludePayment(){
         if(curSubAction == GRAB){
             curPlayer.addWeapon(curPlayer.getTile().grabWeapon(selectedWeapon));
-            selectedWeapon.setLoaded(false);
             sandboxMatch.updateViews();
             nextStep();
         }
@@ -325,13 +327,14 @@ public class ActionController extends Observer {
         }
         else if (curSubAction == RELOAD) {
             curPlayer.reload(selectedWeapon);
+            sandboxMatch.restoreMatch(originalMatch);
             nextStep();
         }
     }
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
-        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps) && powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList()).containsAll(stillToPay)) {
+        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps) && PowerUp.checkCompatibility(powerUps, stillToPay)) {
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
             for (Ammo a : curPlayer.getAmmos()) {
                 if (stillToPay.remove(a))
@@ -346,6 +349,9 @@ public class ActionController extends Observer {
                 throw new IncorrectEvent("PowerUps are not enough! Try again!");
             }
         }
+        else {
+            throw new IncorrectEvent("Error! PowerUps aren't enough!");
+        }
     }
 
     public void updateOnConclusion(){
@@ -358,7 +364,7 @@ public class ActionController extends Observer {
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             originalMatch.updateViews();
-            gameController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
+            gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);
         }
     }
 

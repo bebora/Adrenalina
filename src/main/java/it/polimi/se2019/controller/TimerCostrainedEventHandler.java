@@ -60,6 +60,9 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         this.blocked = blocked;
     }
 
+    public synchronized boolean checkIfNotify() {
+        return !blocked && notifyOnEnd;
+    }
     @Override
     public void run() {
         requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
@@ -76,7 +79,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             }
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
-        if (!blocked && notifyOnEnd) {
+        if (checkIfNotify()) {
             observer.updateOnStopSelection(ThreeState.TRUE);
         }
     }

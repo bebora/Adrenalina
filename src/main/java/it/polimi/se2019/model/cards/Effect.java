@@ -55,6 +55,7 @@ public class Effect {
 
 	/**
 	 * Represent the order (absolute) in which the Effect need to be activated.
+	 * If 0, look at relativePriority.
 	 */
 	private int absolutePriority;
 

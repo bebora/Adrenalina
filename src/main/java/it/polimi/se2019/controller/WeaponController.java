@@ -10,7 +10,6 @@ import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
-import javafx.fxml.FXML;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -71,8 +70,27 @@ public class WeaponController extends Observer {
                 .map(Effect::getName);
 
         Stream<String> checkRelative = Stream.concat(checkRelativeAfter, checkRelativeBefore).distinct();
-
         return Stream.concat(checkAbsolute, checkRelative).collect(Collectors.toList());
+    }
+
+    public void askForEffect(Weapon weapon) {
+        List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
+        acceptableTypes = new AcceptableTypes(receivingTypes);
+        List<String> selectableEffect = getUsableEffects();
+        if (selectableEffect.isEmpty()) {
+            updateOnStopSelection(ThreeState.OPTIONAL);
+        }
+        else if (selectableEffect.size() == 1) {
+            updateOnEffect(selectableEffect.get(0));
+        }
+        else {
+            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, "Seleziona un effetto!"));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                    this,
+                    curPlayer.getVirtualView().getRequestDispatcher(),
+                    acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
     }
 
     @Override
@@ -82,15 +100,7 @@ public class WeaponController extends Observer {
             curEffect = 1;
             lastUsedIndex = 0;
             weapon = newWeapon;
-            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
-            acceptableTypes = new AcceptableTypes(receivingTypes);
-            List<Effect> selectableEffect = weapon.getEffects().stream().filter(e -> !e.getActivated() && curPlayer.checkForAmmos(e.getCost(), curPlayer.totalAmmoPool())).collect(Collectors.toList());
-            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect.stream().map(Effect::getName).collect(Collectors.toList()), 1, 1, "Seleziona un effetto!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                    this,
-                    curPlayer.getVirtualView().getRequestDispatcher(),
-                    acceptableTypes);
-            timerCostrainedEventHandler.start();
+            askForEffect(weapon);
         } else if (newWeapon != null){
             weapon = null;
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Arma scarica");
@@ -111,6 +121,8 @@ public class WeaponController extends Observer {
             if (selectedEffect.getCost().isEmpty()) {
                 startEffect();
             } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
+                for (Ammo a : stillToPay)
+                    curPlayer.getAmmos().remove(a);
                 List<PowerUp> selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
@@ -123,33 +135,25 @@ public class WeaponController extends Observer {
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);
                 timerCostrainedEventHandler.start();
-            } else if (!curPlayer.checkForAmmos(stillToPay, curPlayer.getAmmos())) {
-                for (Ammo a : curPlayer.getAmmos()) {
-                    if (stillToPay.remove(a))
-                        curPlayer.getAmmos().remove(a);
-                }
-                //ask to discard for missing ammos
-            } else {
-                for (Ammo a : stillToPay)
-                    curPlayer.getAmmos().remove(a);
-                startEffect();
             }
         } else {
-            throw new IncorrectEvent("Effetto non presente!");
+            throw new IncorrectEvent("Effect not present!");
         }
     }
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
-        for (Ammo a : curPlayer.getAmmos()) {
-            if (stillToPay.remove(a))
-                curPlayer.getAmmos().remove(a);
-        }
-        if (stillToPay.isEmpty()) {
-            startEffect();
+        if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
+            powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
+            for (Ammo a : curPlayer.getAmmos()) {
+                if (stillToPay.remove(a))
+                    curPlayer.getAmmos().remove(a);
+            }
+            if (stillToPay.isEmpty()) {
+                startEffect();
+            }
         } else {
-            //ask for missing ammos
+            throw new IncorrectEvent("Error! Not enough ammosto pay!");
         }
     }
 
@@ -163,11 +167,14 @@ public class WeaponController extends Observer {
 
     public void updateOnConclusion() {
         effectController = null;
-        boolean modalWeaponActivated = weapon.getEffects().get(0).getAbsolutePriority() == 1
-                && weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority()
+        boolean modalWeaponActivated = (weapon.getEffects().get(0).getAbsolutePriority() == 1)
+                && (weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority())
                 && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
         if (getUsableEffects().isEmpty() && (weapon.getEffects().get(0).getActivated() || modalWeaponActivated)) {
             actionController.updateOnConclusion();
+        }
+        else {
+            askForEffect(weapon);
         }
     }
 
@@ -182,7 +189,7 @@ public class WeaponController extends Observer {
             if (weapon.getEffects().get(0).getActivated() || modalWeaponActivated) {
                 actionController.updateOnConclusion();
             } else {
-                //tell the player he must use the main effect or takeback the action
+                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You must use the basic effect!");
             }
         }
     }

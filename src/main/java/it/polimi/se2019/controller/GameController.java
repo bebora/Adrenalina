@@ -20,6 +20,10 @@ import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
 import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.model.ThreeState.*;
 
+/**
+ * Controller class related to a single game.
+ * Handles the game flow, using {@link #match} properties.
+ */
 public class GameController extends Observer {
     private Match match;
     private LobbyController lobbyController;
@@ -35,10 +39,20 @@ public class GameController extends Observer {
     private boolean action;
     private PowerUp toDiscard;
 
+    /**
+     * Handles the disconnection of a player, communicating to other players that the player got disconnected.
+     * Calls the related checkEnd method, checking if the game needs to stop.
+     * @param username
+     */
     public synchronized void checkEnd(String username) {
         match.getUpdateSender().sendPopupMessage(String.format("Player %s is offline!", username));
         checkEnd();
     }
+
+    /**
+     * Checks if the game needs to stop prematurely for lack of players.
+     * Notify the players sending the winners if the game ends.
+     */
     public synchronized void checkEnd() {
         if (!end && match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
             end = true;
@@ -46,6 +60,10 @@ public class GameController extends Observer {
         }
     }
 
+    /**
+     * Handles receiving an action from the client, starting the related {@link #actionController}.
+     * @param action chose by the corresponding client.
+     */
     @Override
     public void updateOnAction(Action action){
         this.action = true;
@@ -53,6 +71,11 @@ public class GameController extends Observer {
         actionController.updateOnAction(action);
     }
 
+    /**
+     * Handles receiving a List of players from the client.
+     * Used for domination spawn overkill, in Domination mode.
+     * @param players
+     */
     @Override
     public void updateOnPlayers(List<Player> players) {
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
@@ -64,6 +87,14 @@ public class GameController extends Observer {
         }
     }
 
+    /**
+     * Handles receiving a List of powerUps from the client.
+     * Used for:
+     * <li>Spawning players at the start of the Game</li>
+     * <li>Choosing powerUps, and start the related {@code #effectController}.</li>
+     * @param powerUps
+     * @param discard
+     */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
@@ -113,6 +144,7 @@ public class GameController extends Observer {
             throw new IncorrectEvent("PowerUps not acceptable!");
         }
     }
+
 
     public GameController(List<Player> players, String boardName, int numSkulls, boolean domination, LobbyController lobbyController) {
         this.lobbyController = lobbyController;

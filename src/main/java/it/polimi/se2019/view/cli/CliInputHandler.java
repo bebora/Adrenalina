@@ -155,7 +155,7 @@ public class CliInputHandler implements Runnable{
         if(selectedEffect != null){
             eventUpdater.sendEffect(selectedEffect);
         }else{
-            CLI.printMessage("R","Selected effect does not exist");
+            CLI.printMessage("r","Selected effect does not exist");
         }
 
     }

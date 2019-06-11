@@ -324,6 +324,8 @@ public class Player {
 	public void reload(Weapon weapon) {
 		weapon.getCost().forEach(cost->ammos.remove(cost));
 		weapon.setLoaded(true);
+		weapon.getEffects().forEach(e -> e.setActivated(false));
+		sendTotalUpdate();
 	}
 
 	/**

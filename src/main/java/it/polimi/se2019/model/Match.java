@@ -60,6 +60,7 @@ public abstract class Match {
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
     	// Set event helper to original player
 		this.players.stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(oldMatch));
+		oldMatch.updateViews();
 	}
 
 

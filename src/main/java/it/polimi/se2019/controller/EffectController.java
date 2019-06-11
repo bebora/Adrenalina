@@ -184,7 +184,7 @@ public class EffectController extends Observer {
 
     /**
      * Checks if the room is valid and apply the current DealDamage
-     * to all the Player in the room. If the room is not a valid target
+     * to all the Player in the room (but the player itself). If the room is not a valid target
      * signals the mistake to the player.
      * Only check for using samePlayerRoom and Visibility filters.
      * @param room the color of the target room
@@ -192,6 +192,7 @@ public class EffectController extends Observer {
     @Override
     public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
+        possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
         if(acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(room))){
             possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
             handleTargeting(curDealDamage.getTargeting(),possibleTargets);
@@ -355,7 +356,7 @@ public class EffectController extends Observer {
                 filter(target.getFilterTiles(board,pointOfView)).
                 collect(Collectors.toList());
         return acceptablePlayer.stream().
-                filter(p -> acceptableTiles.contains(p.getTile())).
+                filter(p -> acceptableTiles.contains(p.getTile()) && !p.getUsername().equals(player.getUsername())).
                 collect(Collectors.toList());
     }
 

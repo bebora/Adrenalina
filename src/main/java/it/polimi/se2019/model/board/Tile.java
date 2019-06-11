@@ -101,7 +101,7 @@ public class Tile {
 		if (isSpawn())
 			weapons.remove(weapon);
 		else throw new UnsupportedOperationException();
-		weapon.setLoaded(false);
+		weapon.setLoaded(true);
 		return weapon;
 	}
 

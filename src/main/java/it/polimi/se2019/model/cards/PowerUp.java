@@ -4,6 +4,10 @@ package it.polimi.se2019.model.cards;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 public class PowerUp {
 
 	/**
@@ -84,5 +88,23 @@ public class PowerUp {
 		return name;
 	}
 
+	public static boolean checkCompatibility(List<PowerUp> powerUps, List<Ammo> ammos) {
+		List<Ammo> relativeAmmos = powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList());
+		return relativeAmmos.containsAll(ammos);
 
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PowerUp powerUp = (PowerUp) o;
+		return discardAward == powerUp.discardAward &&
+				Objects.equals(name, powerUp.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(discardAward, name);
+	}
 }
