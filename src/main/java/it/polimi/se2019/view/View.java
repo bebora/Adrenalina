@@ -203,15 +203,14 @@ public class View {
 
     }
 
-    public void setupConnection(String connectionType,String username,String password,Properties connectionProperties,boolean existingGame,String gameMode){
+    public void setupConnection(String connectionType, String username, String password, Properties connectionProperties, boolean existingGame, String gameMode){
 		String url = connectionProperties.getProperty("url");
-		int rmiPort = Integer.parseInt(connectionProperties.getProperty("RMIPort"));
-		int socketPort = Integer.parseInt(connectionProperties.getProperty("SocketPort"));
+		int port = Integer.parseInt(connectionProperties.getProperty("port"));
 		if (connectionType.equalsIgnoreCase("socket")) {
-			eventUpdater = new EventUpdaterSocket(url,socketPort);
+			eventUpdater = new EventUpdaterSocket(url, port);
 		}
 		else if (connectionType.equalsIgnoreCase("rmi")) {
-			eventUpdater = new EventUpdaterRMI(url,rmiPort);
+			eventUpdater = new EventUpdaterRMI(url, port);
 		}
 		else {
 			try {

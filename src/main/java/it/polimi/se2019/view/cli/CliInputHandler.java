@@ -239,75 +239,55 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    private String parseOption(List<String> acceptedOptions, List<String> bannedOptions, String defaultChoice, String inputChoice, String description){
+        if (acceptedOptions.contains(inputChoice) || !bannedOptions.contains(inputChoice)) return inputChoice;
+        else {
+            CLI.printInColor("Y", "Invalid "+description+", assuming " + defaultChoice + "\n");
+            return defaultChoice;
+        }
+    }
+
     private void connectionChoice(BufferedReader input){
+        final String DEFAULTNETWORK = "rmi";
+        final String DEFAULTURL = "localhost";
+        final String DEFAULTRMIPORT = "1099";
+        final String DEFAULTSOCKETPORT = "1337";
+        final String DEFAULTUSERNAME = String.format("Player-%05d",new Random().nextInt(99999));
+        final String DEFAULTPW = String.format("%05d", new Random().nextInt(99999));
+        final String DEFAULTGAMEMODE = "DOMINATION";
+        final String DEFAULTEXISTINGGAME = "n";
+
         CLI.printInColor("W","RMI or Socket?\n");
-        String answer = "RMI";
-        String username;
-        String pw;
-        String gameMode = "DOMINATION";
-        boolean existingGame = false;
-
-
         try{
-            answer = input.readLine();
-            answer = answer.toUpperCase();
-            switch (answer){
-                case "RMI":
-                    break;
-                case "SOCKET":
-                    break;
-                default:
-                    answer = "RMI";
-                    CLI.printInColor("Y", "Wrong network mode, assuming " + answer + "\n");
+            String connectionType = parseOption(Arrays.asList("rmi", "socket"), Arrays.asList(""), DEFAULTNETWORK, input.readLine().toLowerCase(), "network mode");
+            CLI.printInColor("W","URL: ");
+            String url = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTURL, input.readLine(), "url");
+            CLI.printInColor("W","Port: ");
+            String port;
+            if (connectionType.equalsIgnoreCase("RMI")) {
+                port = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTRMIPORT, input.readLine(), "RMI port");
+            }
+            else {
+                port = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTSOCKETPORT, input.readLine(), "socket port");
             }
             CLI.printInColor("W","Username: ");
-            username = input.readLine();
-            if (username.equals("")) {
-                Random rand = new Random();
-                username = String.format("Player-%05d",rand.nextInt(99999));
-                CLI.printInColor("w", "Your auto username is "+username+"\n");
-            }
+            String username = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTUSERNAME, input.readLine(), "username");
             Logger.setLogFileSuffix(username);
             System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
-            pw = input.readLine();
-            if (pw.equals("")) {
-                Random rand = new Random();
-                pw = String.format("%05d", rand.nextInt(99999));
-                Logger.log(Priority.DEBUG, "Automatic password: "+pw);
-            }
+            String pw = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTPW, input.readLine(), "password");
             CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
-            switch (input.readLine().toLowerCase()){
-                case "y":
-                    existingGame = true;
-                    break;
-                case "n":
-                    break;
-                default:
-                    CLI.printInColor("Y", "Assuming \"n\"\n");
-                    break;
-            }
+            String existingGame = parseOption(Arrays.asList("y", "n"), Arrays.asList(""), DEFAULTEXISTINGGAME, input.readLine().toLowerCase(), "existing game");
+            if (existingGame.equals("y")) existingGame = "true";
+            else if (existingGame.equals("n")) existingGame = "false";
             CLI.printInColor("W", "Game mode (NORMAL/DOMINATION)");
-            switch (input.readLine().toUpperCase()){
-                case "NORMAL":
-                    gameMode = "NORMAL";
-                    break;
-                case "DOMINATION":
-                    gameMode = "DOMINATION";
-                    break;
-                default:
-                    CLI.printInColor("Y", "Wrong game mode, assuming " + gameMode + "\n");
-            }
+            String gameMode = parseOption(Arrays.asList("NORMAL", "DOMINATION"), Arrays.asList(""), DEFAULTGAMEMODE, input.readLine().toUpperCase(), "gamemode");
+
             view = new CLI();
             Properties connectionProperties = new Properties();
-            FileInputStream fin;
-            try{
-                fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
-                connectionProperties.load(fin);
-            }catch (Exception e){
-                Logger.log(Priority.ERROR, e.getMessage());
-            }
-            view.setupConnection(answer, username, pw, connectionProperties, existingGame, gameMode);
+            connectionProperties.setProperty("url", url);
+            connectionProperties.setProperty("port", port);
+            view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode);
             eventUpdater = view.getEventUpdater();
         }catch (IOException e) {
             Logger.log(Priority.ERROR, "Can't read from stdin, aborting connection setup");
