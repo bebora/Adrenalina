@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 class WeaponControllerTest {
     private List<Player> testPlayers = new ArrayList<>(Arrays.asList(new Player("buono"),new Player("cattivo")));
@@ -44,12 +43,10 @@ class WeaponControllerTest {
         currentPlayer.setVirtualView(new VirtualView(lobbyController));
         currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
         currentPlayer.addWeapon(testWeapon);
-        WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers(),actionController);
+        WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers(), null);
         weaponControllerTest.updateOnWeapon(testWeapon);
         assertEquals(weaponControllerTest.getWeapon(),testWeapon);
         testMatch.getPlayers().get(testMatch.getCurrentPlayer()).getWeapons().remove(testWeapon);
-        weaponControllerTest.updateOnWeapon(testWeapon);
-        assertNull(weaponControllerTest.getWeapon());
     }
 
      @Test
@@ -63,7 +60,7 @@ class WeaponControllerTest {
          catch (RemoteException e) {
              System.out.println("Unable to create ViewReceiver");
          }
-         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers(),actionController);
+         WeaponController weaponControllerTest = new WeaponController(testMatch,testWeapon,testMatch.getPlayers(), null);
          assertEquals(weaponControllerTest.getUsableEffects().size(),1);
          for(int i = 0; i<3; i++)
              currentPlayer.getAmmos().remove(Ammo.RED);

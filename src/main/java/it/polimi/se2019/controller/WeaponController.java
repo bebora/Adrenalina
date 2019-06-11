@@ -96,18 +96,11 @@ public class WeaponController extends Observer {
     @Override
     public void updateOnWeapon(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        if (curPlayer.getWeapons().contains(newWeapon) && newWeapon.getLoaded()) {
-            curEffect = 1;
-            lastUsedIndex = 0;
-            weapon = newWeapon;
+        curEffect = 1;
+        lastUsedIndex = 0;
+        weapon = newWeapon;
+        if (actionController != null)
             askForEffect(weapon);
-        } else if (newWeapon != null){
-            weapon = null;
-            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Arma scarica");
-        }
-        else {
-            weapon = null;
-        }
     }
 
     @Override
@@ -120,21 +113,27 @@ public class WeaponController extends Observer {
             stillToPay.addAll(selectedEffect.getCost());
             if (selectedEffect.getCost().isEmpty()) {
                 startEffect();
-            } else if (curPlayer.canDiscardPowerUp(stillToPay)) {
-                for (Ammo a : stillToPay)
-                    curPlayer.getAmmos().remove(a);
-                List<PowerUp> selectablePowerUps = curPlayer.
-                        getPowerUps().
-                        stream().
-                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
-                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, "Seleziona PowerUp per pagare!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                        this,
-                        curPlayer.getVirtualView().getRequestDispatcher(),
-                        acceptableTypes);
-                timerCostrainedEventHandler.start();
+            } else
+            {
+                List<Ammo> toPay = new ArrayList<>(stillToPay);
+                stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
+                if (curPlayer.canDiscardPowerUp(toPay)) {
+                    List<PowerUp> selectablePowerUps = curPlayer.
+                            getPowerUps().
+                            stream().
+                            filter(p -> toPay.contains(p.getDiscardAward())).collect(Collectors.toList());
+                    List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+                    acceptableTypes = new AcceptableTypes(receivingTypes);
+                    acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, "Seleziona PowerUp per pagare!"));
+                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                            this,
+                            curPlayer.getVirtualView().getRequestDispatcher(),
+                            acceptableTypes);
+                    timerCostrainedEventHandler.start();
+                }
+                else {
+                    startEffect();
+                }
             }
         } else {
             throw new IncorrectEvent("Effect not present!");
@@ -174,7 +173,9 @@ public class WeaponController extends Observer {
             actionController.updateOnConclusion();
         }
         else {
-            askForEffect(weapon);
+            //Unit test purposes
+            if (actionController != null)
+                askForEffect(weapon);
         }
     }
 
@@ -209,5 +210,9 @@ public class WeaponController extends Observer {
 
     public EffectController getEffectController() {
         return effectController;
+    }
+
+    public void setActionController(ActionController actionController) {
+        this.actionController = actionController;
     }
 }

@@ -57,7 +57,7 @@ public class EffectControllerTest {
         currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
         currentPlayer.addWeapon(testWeapon);
         testWeapon.setLoaded(true);
-        wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),actionController);
+        wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),null);
         wp.updateOnWeapon(testWeapon);
     }
     @Test
@@ -140,6 +140,7 @@ public class EffectControllerTest {
 
         wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
         actionController.updateOnAction(originalCurrentPlayer.getActions().get(0));
+        wp.setActionController(actionController);
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(3,enemy.getDamagesCount());

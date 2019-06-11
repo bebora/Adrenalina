@@ -336,10 +336,7 @@ public class ActionController extends Observer {
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
         if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps) && PowerUp.checkCompatibility(powerUps, stillToPay)) {
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
-            for (Ammo a : curPlayer.getAmmos()) {
-                if (stillToPay.remove(a))
-                    curPlayer.getAmmos().remove(a);
-            }
+            curPlayer.getAmmos().removeIf(a -> stillToPay.remove(a));
             if (stillToPay.isEmpty()) {
                 curPlayer.getVirtualView().getRequestDispatcher().clear();
                 concludePayment();
