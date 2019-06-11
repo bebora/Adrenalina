@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
 import static it.polimi.se2019.controller.ReceivingType.STOP;
-import static it.polimi.se2019.model.ThreeState.FALSE;
-import static it.polimi.se2019.model.ThreeState.OPTIONAL;
-import static it.polimi.se2019.model.ThreeState.TRUE;
+import static it.polimi.se2019.model.ThreeState.*;
 
 public class GameController extends Observer {
     private Match match;
@@ -189,12 +187,18 @@ public class GameController extends Observer {
         return match;
     }
 
+    public boolean checkEndTurn() {
+        if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && !currentPlayer.canReload())) || actionCounter == currentPlayer.getMaxActions() +1)
+            return true;
+        else return false;
+    }
+
     public void updateOnConclusion(){
         if (action)
             actionCounter++;
         actionController = null;
         match.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(match));
-        if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
+        if(currentPlayer.hasPowerUp(Moment.OWNROUND) || !checkEndTurn()){
             playTurn();
         }
         else {
@@ -203,6 +207,7 @@ public class GameController extends Observer {
     }
 
     public synchronized void endTurn(boolean skip){
+        currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
         List<Player> overkillPlayers = match.
                 getPlayers().
                 stream().
@@ -309,7 +314,7 @@ public class GameController extends Observer {
             if(action)
                 actionCounter++;
             actionController = null;
-            if (skip.toSkip() || (actionCounter == currentPlayer.getMaxActions() && currentPlayer.hasPowerUp(Moment.OWNROUND))) {
+            if (skip.toSkip() || checkEndTurn()) {
                 endTurn(skip.toSkip());
             }
             else {

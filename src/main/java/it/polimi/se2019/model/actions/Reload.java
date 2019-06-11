@@ -6,7 +6,9 @@ public class Reload extends Action{
     public Reload() {
         movements = 0;
         subActions = new ArrayList<>();
-        subActions.add(SubAction.SHOOT);
+        for (int i = 0; i < 3; i++) {
+            subActions.add(SubAction.RELOAD);
+        }
     }
 
     @Override

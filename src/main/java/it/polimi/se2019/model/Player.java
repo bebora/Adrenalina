@@ -281,6 +281,10 @@ public class Player {
 		}
 	}
 
+	public boolean canReload() {
+		return weapons.stream().anyMatch(p -> (!p.getLoaded() && checkForAmmos(p.getCost(), totalAmmoPool())));
+	}
+
 	public List<Action> getActions() {
 		return actions;
 	}

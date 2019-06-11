@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.controller.ReceivingType.WEAPON;
+import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
 import static it.polimi.se2019.model.actions.SubAction.RELOAD;
 
@@ -63,7 +64,6 @@ public class ActionController extends Observer {
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
-                //TODO comparison should be to 3, it's 1 for debug purposes
                 if (curPlayer.getWeapons().size() == Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                     subActionIndex--;
                     curPlayer.getWeapons().remove(weapon);
@@ -169,6 +169,7 @@ public class ActionController extends Observer {
                 case MOVE:
                     nextMove();
                     break;
+
                 case SHOOT:
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -238,13 +239,17 @@ public class ActionController extends Observer {
                             stream().
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost(), curPlayer.totalAmmoPool())).
                             collect(Collectors.toList());
-                    acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1,0,"Ricarica un'arma se vuoi"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                            this,
-                            curPlayer.getVirtualView().getRequestDispatcher(),
-                            acceptableTypes);
-                    timerCostrainedEventHandler.start();
+                    if (selectableWeapon.isEmpty()) {
+                        updateOnStopSelection(OPTIONAL);
+                    }else {
+                        acceptableTypes = new AcceptableTypes(receivingTypes);
+                        acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, "Ricarica un'arma se vuoi"));
+                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                                this,
+                                curPlayer.getVirtualView().getRequestDispatcher(),
+                                acceptableTypes);
+                        timerCostrainedEventHandler.start();
+                    }
                     break;
                 default:
                     break;
@@ -320,6 +325,7 @@ public class ActionController extends Observer {
         }
         else if (curSubAction == RELOAD) {
             curPlayer.reload(selectedWeapon);
+            nextStep();
         }
     }
 

@@ -389,10 +389,11 @@ public class CliInputHandler implements Runnable{
                             CLI.printMessage("Wrong format", "R");
                         break;
                     default:
+                        view.refresh();
                         break;
                 }
-            }else
-                view.refresh();
+            }
+
         }
     }
 }
