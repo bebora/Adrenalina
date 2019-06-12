@@ -5,9 +5,7 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PowerUp {
@@ -92,21 +90,15 @@ public class PowerUp {
 
 	/**
 	 * Check if {@code ammos} can be payed discarding {@code powerUps}.
-	 * Creates frequency map to check the frequency of each ammo
+	 * Uses Player static function to check.
 	 * @param powerUps discarded powerups
 	 * @param ammos remaining ammo to pay
 	 * @return
 	 */
 	public static boolean checkCompatibility(List<PowerUp> powerUps, List<Ammo> ammos) {
-		Map<Ammo, Long> countToPay = ammos.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-		Map<Ammo, Long> countPowerUps = powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-		if (!countPowerUps.keySet().containsAll(countToPay.keySet()))
-			return false;
-		for (Ammo ammo : countToPay.keySet()) {
-			if (countToPay.get(ammo) > countPowerUps.get(ammo))
-				return false;
-		}
-		return true;
+
+		List<Ammo> relatedAmmos = powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList());
+		return Player.checkForAmmos(ammos, relatedAmmos);
 
 
 	}

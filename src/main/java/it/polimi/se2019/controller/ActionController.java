@@ -9,7 +9,6 @@ import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
 
@@ -288,25 +287,6 @@ public class ActionController extends Observer {
         }
     }
 
-    @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
-        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps) && PowerUp.checkCompatibility(powerUps, stillToPay)) {
-            powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
-            curPlayer.getAmmos().removeIf(a -> stillToPay.remove(a));
-            if (stillToPay.isEmpty()) {
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
-                concludePayment();
-            }
-            else {
-                assert false;
-                throw new IncorrectEvent("PowerUps are not enough! Try again!");
-            }
-        }
-        else {
-            throw new IncorrectEvent("Error! PowerUps aren't enough!");
-        }
-    }
-
     public void updateOnConclusion(){
         weaponController = null;
         nextStep();
@@ -324,5 +304,13 @@ public class ActionController extends Observer {
 
     public WeaponController getWeaponController(){
         return weaponController;
+    }
+
+    public void setOriginalMatch(Match originalMatch) {
+        this.originalMatch = originalMatch;
+    }
+
+    public Match getOriginalMatch() {
+        return originalMatch;
     }
 }

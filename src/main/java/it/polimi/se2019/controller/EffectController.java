@@ -101,7 +101,9 @@ public class EffectController extends Observer {
             }
         }
         else{
-            controller.updateOnConclusion();
+            //Unit test purposes check
+            if (controller != null)
+                controller.updateOnConclusion();
         }
     }
 
@@ -188,7 +190,7 @@ public class EffectController extends Observer {
             }
         }
         else {
-            throw new IncorrectEvent("Tile sbagliate!");
+            throw new IncorrectEvent("Wrong tiles!");
         }
     }
 
@@ -245,7 +247,7 @@ public class EffectController extends Observer {
      * Ask the player for the proper target after checking the current Move
      */
     private void processMove(){
-        List<Tile> selectableTiles;
+        List<Tile> selectableTiles = new ArrayList<>();
         List<ReceivingType> receivingTypes;
         switch(curMove.getObjectToMove()){
             case PERSPECTIVE:
@@ -268,6 +270,10 @@ public class EffectController extends Observer {
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
                     selectableTiles = tileTargets(curMove.getTargetDestination());
+                    if (selectableTiles.isEmpty()) {
+                        updateOnStopSelection(OPTIONAL);
+                        return;
+                    }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per i giocatori!"));
@@ -277,8 +283,13 @@ public class EffectController extends Observer {
                 break;
         }
         if (!askingForSource) {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+            if (selectableTiles.isEmpty()) {
+                updateOnStopSelection(OPTIONAL);
+                return;
+            }else {
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler.start();
+            }
         }
 
     }
@@ -294,6 +305,9 @@ public class EffectController extends Observer {
         switch(targetType){
             case TILE:
                 List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
+                if (selectableTiles.isEmpty()) {
+                    updateOnStopSelection(OPTIONAL);
+                }
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, max, min, "Seleziona la tile dove attaccare"));
@@ -306,12 +320,16 @@ public class EffectController extends Observer {
                         map(Tile::getRoom).
                         distinct().
                         collect(Collectors.toList());
+                if (selectableRoom.isEmpty())
+                    updateOnStopSelection(OPTIONAL);
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.ROOM));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom,max,min,"Seleziona una room"));
                 break;
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
+                if (players.isEmpty())
+                    updateOnStopSelection(OPTIONAL);
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Seleziona i players da attaccare"));
@@ -495,12 +513,14 @@ public class EffectController extends Observer {
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             List<Tile> tiles = tileTargets(curMove.getTargetDestination());
-            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, "Seleziona una tile di destinazione!"));
+            if (tiles.isEmpty())
+                updateOnStopSelection(TRUE);
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, "Select a destination tile!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
         else {
-            throw new IncorrectEvent("Bersagli sbagliati!");
+            throw new IncorrectEvent("Can't move the targets!");
         }
     }
 

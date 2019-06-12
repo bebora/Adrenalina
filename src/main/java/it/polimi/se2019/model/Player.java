@@ -334,7 +334,7 @@ public class Player {
 	 * @return <code>true</code> if the player has enough ammo
 	 * 		   <cose>false</cose> otherwise
 	 */
-	public Boolean checkForAmmos(List<Ammo> cost, List<Ammo> ammoPool){
+	public static boolean checkForAmmos(List<Ammo> cost, List<Ammo> ammoPool){
 		for (Ammo c : cost)
 			if (Collections.frequency(cost, c) > Collections.frequency(ammoPool, c))
 				return false;

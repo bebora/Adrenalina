@@ -187,6 +187,11 @@ public class WeaponController extends Observer {
                 curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Weapon can't be used this way! Try another time");
             }
         else {
+            if (finished) {
+                weapon.setLoaded(false);
+                if (actionController!= null)
+                    match.restoreMatch(actionController.getOriginalMatch());
+            }
             //Control for unit test purposes, actionController is always!=null
             if (actionController != null)
                 askForEffect(finished);
