@@ -5,9 +5,9 @@ public class SpawnPlayer extends Player{
     private Boolean damaged;
     public SpawnPlayer(Color color) {
         super(color.toString()+ "$");
+        setDominationSpawn(true);
         setColor(color);
         damaged  = Boolean.FALSE;
-        setDominationSpawn(true);
     }
 
     @Override

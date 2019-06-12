@@ -237,6 +237,8 @@ public class EffectController extends Observer {
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
             acceptableTypes = new AcceptableTypes(receivingTypes);
+            List<Direction> directions = Arrays.asList(Direction.values());
+            acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1,1,"Select a direction!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
@@ -255,7 +257,7 @@ public class EffectController extends Observer {
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 askingForSource = false;
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per il tuo punto di vista!"));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 break;
             case SELF:
                 selectableTiles = tileTargets(curMove.getTargetDestination());
@@ -263,7 +265,7 @@ public class EffectController extends Observer {
                 askingForSource = false;
                 playersToMove.add(player);
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per te stesso!"));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 break;
             case TARGETSOURCE:
                 askingForSource = true;
@@ -276,7 +278,7 @@ public class EffectController extends Observer {
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, "Seleziona una tile di arrivo per i giocatori!"));
+                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 }
                 break;
             default:
@@ -310,7 +312,7 @@ public class EffectController extends Observer {
                 }
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, max, min, "Seleziona la tile dove attaccare"));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, max, min, "Select the tile where you attack!"));
                 break;
             case ROOM:
                 List<Color> selectableRoom = board.getTiles().
@@ -324,7 +326,7 @@ public class EffectController extends Observer {
                     updateOnStopSelection(OPTIONAL);
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.ROOM));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom,max,min,"Seleziona una room"));
+                acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom,max,min,"Select a room to BOMB!"));
                 break;
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
@@ -332,13 +334,24 @@ public class EffectController extends Observer {
                     updateOnStopSelection(OPTIONAL);
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Seleziona i players da attaccare"));
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Select players to attack!"));
                 break;
             default:
                 break;
         }
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(this,player.getVirtualView().getRequestDispatcher(),acceptableTypes);
         timerCostrainedEventHandler.start();
+    }
+
+    private void filterPlayers(List<Player> playersToFilter, Target target) {
+        List<Player> players = playerTargets(target).stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList());
+        List<Player> spawnPoints = playerTargets(target.getMoveDominationTarget()).stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
+        players.addAll(spawnPoints);
+        players.remove(player);
+        playersToFilter.retainAll(players);
+        Set<Player> playerSet = new HashSet<>(playersToFilter);
+        playersToFilter.clear();
+        playersToFilter.addAll(playerSet);
     }
 
     /**
@@ -349,24 +362,26 @@ public class EffectController extends Observer {
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
             askingForSource = false;
             playersToMove = new ArrayList<>(curWeapon.getTargetPlayers());
+            filterPlayers(playersToMove, target);
         }
         else if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
             askingForSource = false;
             playersToMove = new ArrayList<>(curWeapon.getBlackListPlayers());
+            filterPlayers(playersToMove, target);
         }
         else {
+            List<Player> players = curMatch.getPlayers();
+            filterPlayers(players, target);
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
             int max = target.getMaxTargets();
-            List<Player> players = playerTargets(target).stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList());
-            players.remove(player);
             if (players.isEmpty()) {
                 player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");
                 updateOnStopSelection(OPTIONAL);
             }
             else {
-                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Seleziona i giocatori da muovere!"));
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min,curMove.getPrompt()));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
             }
@@ -514,7 +529,7 @@ public class EffectController extends Observer {
             List<Tile> tiles = tileTargets(curMove.getTargetDestination());
             if (tiles.isEmpty())
                 updateOnStopSelection(TRUE);
-            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, "Select a destination tile!"));
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
         }
@@ -547,6 +562,7 @@ public class EffectController extends Observer {
      * and prepare the controller for executing its effect
      * Assumptions:
      * <li>Moment.damaging powerup inflict damage</li>
+     * <li>Moment.damaging powerup require a {@code Ammo.ANY} ammo.
      * @param powerUps a single powerUp to be used
      * @param discard whether you are discarding the powerup (mostly deprecated)
      */

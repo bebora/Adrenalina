@@ -76,10 +76,11 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Thread.sleep(1000);
             }
             catch (InterruptedException e) {
-                Logger.log(Priority.WARNING, "FINISHING SLEEP");
+                Logger.log(Priority.WARNING, "Sleep interrupted");
             }
             Logger.log(Priority.DEBUG, "Millis elapsed: " + (System.currentTimeMillis() - this.start));
         }
+        Logger.log(Priority.DEBUG,"Ended event related to " + acceptableTypes.getAcceptedTypes());
         if (checkIfNotify()) {
             observer.updateOnStopSelection(ThreeState.TRUE);
         }

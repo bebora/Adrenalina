@@ -36,7 +36,7 @@ class PlayerTest {
         testPlayer.receiveShot(enemyPlayer, 9,1, true);
 
         // Test order and correct marks selection
-        assertTrue(testPlayer.getDamages().size() == 11);
+        assertEquals(11,testPlayer.getDamages().size());
         assertTrue(testPlayer.getMarks().stream().filter(p->p.getId().equals(enemyPlayer.getId())).collect(Collectors.toList()).size() == 1);
         assertTrue(testPlayer.getMarks().stream().filter(p->p.getId().equals(thirdPlayer.getId())).collect(Collectors.toList()).size() == 2);
 

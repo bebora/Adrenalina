@@ -41,7 +41,7 @@ public class Move {
 		private Target targetDestination = new Target.Builder().build();
 		private ThreeState targeting;
 		private Target targetSource = new Target.Builder().build();
-		private String prompt;
+		private String prompt = "";
 
 		public Builder setObjectToMove(ObjectToMove objectToMove) {
 			this.objectToMove = objectToMove;
@@ -74,6 +74,22 @@ public class Move {
 
 	public Move(Builder builder) {
 		this.objectToMove = builder.objectToMove;
+		if (builder.prompt == null || builder.prompt.equals("")) {
+			switch (objectToMove) {
+				case SELF:
+					this.prompt = "Choose a destination tile for yourself";
+					break;
+				case PERSPECTIVE:
+					this.prompt = "Move your perspective (central point of the current effect) to the desired tile";
+					break;
+				case TARGETSOURCE:
+					this.prompt = "Move the chosen player(s) to the tile you want";
+					break;
+			}
+		}
+		else {
+			this.prompt = builder.prompt;
+		}
 		this.prompt = builder.prompt;
 		this.targetDestination = builder.targetDestination;
 		this.targeting = builder.targeting;

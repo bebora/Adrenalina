@@ -206,7 +206,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
         this.view = view;
         view.setOnline(true);
         this.pinger = new RMIPinger(view);
-        executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
     }
 
     public RMIPinger getPinger() {

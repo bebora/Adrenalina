@@ -108,8 +108,7 @@ public class EventHelper {
 
     public Direction getDirectionFromString(String direction) {
         try {
-            Direction ret = Direction.valueOf(direction.toUpperCase());
-            return ret;
+            return Direction.valueOf(direction.toUpperCase());
         }
         catch (IllegalArgumentException e) {
             throw new IncorrectEvent("La direzione non esiste!");

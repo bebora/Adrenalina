@@ -21,6 +21,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         synchronized (lock) {
             linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
+            linkedView.addMessage("RECEIVED OPTIONS " + selectableOptionsWrapper.getAcceptedTypes());
             linkedView.refresh();
         }
     }
@@ -159,6 +160,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             if (linkedView.getStatus() != Status.PLAYING) {
                 linkedView.setStatus(Status.PLAYING);
             }
+            linkedView.addMessage("RECEIVED TOTAL UPDATE");
             linkedView.refresh();
         }
     }
