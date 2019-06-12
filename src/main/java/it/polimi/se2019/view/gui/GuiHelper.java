@@ -9,6 +9,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 
 import java.util.List;
+import java.util.Map;
 
 public class GuiHelper {
 
@@ -19,6 +20,7 @@ public class GuiHelper {
         params.setFill(Color.TRANSPARENT);
         return temp.snapshot(params, null);
     }
+
 
     static Node getNodeByIndex(GridPane grid, int xIndex,int yIndex){
          Node result = null;
@@ -51,4 +53,5 @@ public class GuiHelper {
             return null;
         }
     }
+
 }

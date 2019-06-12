@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="492.0" type="Pane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fx:id="playerBoardView" fitHeight="490.0" fitWidth="191.0" layoutX="185.0" layoutY="-185.0" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+         <image>
+            <Image url="@../assets/player_board/blue_player_board.png" />
+         </image>
+      </ImageView>
+      <HBox fx:id="damagesList" layoutX="40.0" layoutY="38.0" prefHeight="42.0" prefWidth="336.0" spacing="12.0">
+         <children>
+            <ImageView fitHeight="28.0" fitWidth="16.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets left="7.0" top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="17.0" layoutY="20.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+               <effect>
+                  <ColorAdjust />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="45.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="73.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="101.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="129.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="157.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="185.0" layoutY="20.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="213.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="26.0" fitWidth="101.0" layoutX="241.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="269.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+            <ImageView fitHeight="28.0" fitWidth="16.0" layoutX="297.0" layoutY="10.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../assets/red_damage.png" />
+               </image>
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+            </ImageView>
+         </children>
+      </HBox>
+   </children>
+</fx:root>

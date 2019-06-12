@@ -6,14 +6,14 @@ import it.polimi.se2019.view.ViewPlayer;
 import it.polimi.se2019.view.ViewWeapon;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 
 import java.io.IOException;
@@ -21,23 +21,11 @@ import java.util.List;
 
 public class BoardFX extends StackPane {
     @FXML
-    ImageView redWeaponView1;
+    VBox yellowWeaponsBox;
     @FXML
-    ImageView redWeaponView2;
+    VBox redWeaponsBox;
     @FXML
-    ImageView redWeaponView3;
-    @FXML
-    ImageView blueWeaponView1;
-    @FXML
-    ImageView blueWeaponView2;
-    @FXML
-    ImageView blueWeaponView3;
-    @FXML
-    ImageView yellowWeaponView1;
-    @FXML
-    ImageView yellowWeaponView2;
-    @FXML
-    ImageView yellowWeaponView3;
+    HBox blueWeaponsBox;
     @FXML
     ImageView powerUpsDeck;
     @FXML
@@ -61,50 +49,50 @@ public class BoardFX extends StackPane {
     }
 
 
-    //TODO:choose the correct image instead of these test templates
-    public void setBlueWeapons(List<ViewWeapon> blueWeapons){
+    public void setBlueWeapons(List<String> blueWeapons){
+        int i = 0;
         try{
-            Image blueWeapon1 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_022.png"));
-            Image blueWeapon2 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_023.png"));
-            Image blueWeapon3 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_024.png"));
-            blueWeaponView1.setImage(blueWeapon1);
-            blueWeaponView2.setImage(blueWeapon2);
-            blueWeaponView3.setImage(blueWeapon3);
+            for(String w: blueWeapons) {
+                Image blueWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
+                        "assets/cards/" + AssetMaps.weaponsAssetsMap.get(w)));
+                ImageView blueWeaponView = (ImageView)blueWeaponsBox.getChildren().get(i);
+                blueWeaponView.setImage(blueWeapon);
+                blueWeaponView.setVisible(true);
+                i++;
+            }
         }catch (Exception e){
             Logger.log(Priority.DEBUG,e.getMessage());
         }
     }
 
-    public void setRedWeapons(List<ViewWeapon> redWeapons){
+    public void setRedWeapons(List<String> redWeapons){
+        int i = 0;
         try{
-            Image redWeapon1 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0210.png"));
-            Image redWeapon2 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0211.png"));
-            Image redWeapon3 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0212.png"));
-            redWeaponView1.setImage(GuiHelper.rotateImage(-90.0,redWeapon1));
-            redWeaponView2.setImage(GuiHelper.rotateImage(-90.0,redWeapon2));
-            redWeaponView3.setImage(GuiHelper.rotateImage(-90.0,redWeapon3));
+            for(String w: redWeapons){
+                Image redWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
+                        "assets/cards/" + AssetMaps.weaponsAssetsMap.get(w)));
+                ImageView redWeaponView = (ImageView)redWeaponsBox.getChildren().get(i);
+                redWeaponView.setImage(GuiHelper.rotateImage(-90.0,redWeapon));
+                redWeaponView.setVisible(true);
+                i++;
+            }
         }catch (Exception e){
             Logger.log(Priority.DEBUG,e.getMessage());
         }
+
     }
 
-    public void setYellowWeapons(List<ViewWeapon> yellowWeapons){
+    public void setYellowWeapons(List<String> yellowWeapons){
+        int i = 0;
         try{
-            Image yellowWeapon1 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0220.png"));
-            Image yellowWeapon2 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0221.png"));
-            Image yellowWeapon3 = new Image(getClass().getClassLoader().getResourceAsStream(
-                    "assets/cards/AD_weapons_IT_0222.png"));
-            yellowWeaponView1.setImage(GuiHelper.rotateImage(90.0,yellowWeapon1));
-            yellowWeaponView2.setImage(GuiHelper.rotateImage(90.0,yellowWeapon2));
-            yellowWeaponView3.setImage(GuiHelper.rotateImage(90.0,yellowWeapon3));
+            for(String w: yellowWeapons){
+                Image yellowWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
+                        "assets/cards/" + AssetMaps.weaponsAssetsMap.get(w)));
+                ImageView yellowWeaponView = (ImageView)yellowWeaponsBox.getChildren().get(i);
+                yellowWeaponView.setImage(GuiHelper.rotateImage(90.0,yellowWeapon));
+                yellowWeaponView.setVisible(true);
+                i++;
+            }
         }catch (Exception e){
             Logger.log(Priority.DEBUG,e.getMessage());
         }
@@ -162,6 +150,15 @@ public class BoardFX extends StackPane {
         zoomable.setScaleY(1);
         zoomable.setTranslateX(0);
         zoomable.setTranslateY(0);
+    }
+
+    @FXML
+    public void testSelectable(MouseEvent event){
+        Rectangle selectable = (Rectangle)event.getSource();
+        if(selectable.getOpacity() == 0.50)
+            selectable.setOpacity(0.0);
+        else if(selectable.getOpacity() == 0.0)
+            selectable.setOpacity(0.50);
     }
 
 }

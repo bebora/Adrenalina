@@ -9,89 +9,99 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2019.view.gui.LoginScreen">
+
+<GridPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2019.view.gui.LoginScreen">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="156.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="244.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="98.0" minHeight="0.0" prefHeight="48.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="262.0" minHeight="0.0" prefHeight="51.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="299.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="299.0" minHeight="10.0" prefHeight="140.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="299.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="299.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <GridPane prefHeight="400.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="156.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="244.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="62.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="98.0" minHeight="0.0" prefHeight="48.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="262.0" minHeight="0.0" prefHeight="228.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="299.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </Text>
-            <TextField fx:id="username" GridPane.columnIndex="1">
-               <GridPane.margin>
-                  <Insets right="20.0" />
-               </GridPane.margin>
-            </TextField>
-            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="160.0" />
-               </GridPane.margin>
-            </Button>
-            <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets right="20.0" />
-               </GridPane.margin>
-            </PasswordField>
-            <ListView fx:id="connectionType" onMouseClicked="#selectConnection" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="3">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="RMI" />
-                        <String fx:value="Socket" />
-                    </FXCollections>
-                </items>
-               <GridPane.margin>
-                  <Insets bottom="20.0" left="20.0" />
-               </GridPane.margin>
-            </ListView>
-            <CheckBox fx:id="existingGame" mnemonicParsing="false" text="existingGame" GridPane.columnIndex="1" GridPane.rowIndex="3">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin>
-            </CheckBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-               <children>
-                   <ComboBox fx:id="mode" onMouseClicked="#selectMode" promptText="MODE">
-                       <items>
-                           <FXCollections fx:factory="observableArrayList">
-                               <String fx:value="NORMAL" />
-                               <String fx:value="DOMINATION" />
-                           </FXCollections>
-                       </items>
-                     <VBox.margin>
-                        <Insets left="20.0" top="20.0" />
-                     </VBox.margin>
-                   </ComboBox>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select connection type:">
-                     <VBox.margin>
-                        <Insets left="20.0" top="160.0" />
-                     </VBox.margin>
-                  </Text>
-               </children>
-            </VBox>
-         </children>
-      </GridPane>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <TextField fx:id="username" GridPane.columnIndex="1">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+      </TextField>
+      <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" text="Log in" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets left="160.0" />
+         </GridPane.margin>
+      </Button>
+      <PasswordField fx:id="password" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+      </PasswordField>
+      <ListView fx:id="connectionType" onMouseClicked="#selectConnection" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">
+          <items>
+              <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="RMI" />
+                  <String fx:value="Socket" />
+              </FXCollections>
+          </items>
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" />
+         </GridPane.margin>
+      </ListView>
+      <CheckBox fx:id="existingGame" mnemonicParsing="false" text="existingGame" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </CheckBox>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select connection type:" GridPane.rowIndex="5" />
+       <ComboBox fx:id="mode" onMouseClicked="#selectMode" promptText="MODE" GridPane.rowIndex="4">
+           <items>
+               <FXCollections fx:factory="observableArrayList">
+                   <String fx:value="NORMAL" />
+                   <String fx:value="DOMINATION" />
+               </FXCollections>
+           </items>
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+       </ComboBox>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="URL:" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <TextField fx:id="url" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+      </TextField>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Port:" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </Text>
+      <TextField fx:id="port" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="20.0" />
+         </GridPane.margin>
+      </TextField>
    </children>
-</AnchorPane>
+</GridPane>
