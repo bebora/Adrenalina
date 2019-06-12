@@ -68,12 +68,12 @@ public class ActionController extends Observer {
                 if (curPlayer.getWeapons().size() == Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                     subActionIndex--;
                     toDiscard = weapon;
+                    curPlayer.getWeapons().remove(toDiscard);
                     sandboxMatch.updateViews();
                     nextStep();
                 }
                 else {
                     if (toDiscard != null) {
-                        curPlayer.getWeapons().remove(toDiscard);
                         curPlayer.getTile().addWeapon(toDiscard);
                     }
                     toDiscard = null;
@@ -266,60 +266,12 @@ public class ActionController extends Observer {
     }
 
     private void startPayingProcess(){
-        List<ReceivingType> receivingTypes;
-        List<PowerUp> selectablePowerUps;
-        if(curPlayer.checkForAmmos(stillToPay,curPlayer.totalAmmoPool())){
-            // if player can use powerup to pay some ammos
-            if(curPlayer.canDiscardPowerUp(stillToPay)){
-                for(Ammo a: stillToPay)
-                    curPlayer.getAmmos().remove(a);
-                receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-                selectablePowerUps = curPlayer.
-                        getPowerUps().
-                        stream().
-                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                stillToPay = new ArrayList<>();
-                sandboxMatch.updateViews();
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"If you want, select a PowerUp!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                        this,
-                        curPlayer.getVirtualView().getRequestDispatcher(),
-                        acceptableTypes);
-                timerCostrainedEventHandler.start();
-            }
-            // if player HAVE to use powerup to pay for some ammos
-            else if (!curPlayer.checkForAmmos(stillToPay,curPlayer.getAmmos())) {
-                for(Ammo a: curPlayer.getAmmos()){
-                    if(stillToPay.remove(a))
-                        curPlayer.getAmmos().remove(a);
-                }for(Ammo a: stillToPay)
-                    curPlayer.getAmmos().remove(a);
-                receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-                selectablePowerUps = curPlayer.
-                        getPowerUps().
-                        stream().
-                        filter(p -> stillToPay.contains(p.getDiscardAward())).collect(Collectors.toList());
-                sandboxMatch.updateViews();
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(),0,"You MUST select a PowerUp, my dear!"));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                        this,
-                        curPlayer.getVirtualView().getRequestDispatcher(),
-                        acceptableTypes);
-                timerCostrainedEventHandler.start();
-            }
-            else {
-                for(Ammo a: stillToPay)
-                    curPlayer.getAmmos().remove(a);
-                concludePayment();
-            }
-        }else{
-            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You don't have enough ammos!");
-        }
+        PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
+        paymentController.startPaying();
     }
 
     public void concludePayment(){
+        sandboxMatch.updateViews();
         if(curSubAction == GRAB){
             curPlayer.addWeapon(curPlayer.getTile().grabWeapon(selectedWeapon));
             sandboxMatch.updateViews();
@@ -364,7 +316,7 @@ public class ActionController extends Observer {
     public void updateOnStopSelection(ThreeState skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
+            if (selectedWeapon != null)    selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
             originalMatch.updateViews();
             gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);
         }

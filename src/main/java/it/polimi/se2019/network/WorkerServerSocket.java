@@ -123,10 +123,12 @@ public class WorkerServerSocket extends Thread {
                         }
                     }
                     //TODO edit conditions to run
-                    while (!socket.isClosed());
+                    while (virtualView.isOnline());
                 }
                 catch (IOException e) {
                     Logger.log(Priority.ERROR, e.toString());
+                    Logger.log(Priority.ERROR, "PLAYER DISCONNECTED (socket)" + virtualView.getUsername());
+                    virtualView.setOnline(false);
                 }
             }
     }
@@ -142,7 +144,6 @@ public class WorkerServerSocket extends Thread {
                     event.accept(eventVisitor);
                 }
                 catch (IOException e) {
-                    virtualView.setOnline(false);
                 }
             }
         }

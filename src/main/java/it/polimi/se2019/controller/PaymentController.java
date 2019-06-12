@@ -3,12 +3,15 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static it.polimi.se2019.model.ThreeState.TRUE;
 
 public class PaymentController extends Observer{
     private Observer observer;
@@ -39,7 +42,7 @@ public class PaymentController extends Observer{
                         getPowerUps().
                         stream().
                         filter(p -> toPay.contains(p.getDiscardAward())).collect(Collectors.toList());
-                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
+                List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
                 if (stillToPay.isEmpty()) {
                     prompt = "Select a powerUp to discard if you want!";
                 }
@@ -73,7 +76,12 @@ public class PaymentController extends Observer{
                 observer.concludePayment();
             }
         } else {
-            throw new IncorrectEvent("Error! Not enough ammos to pay!");
+            throw new IncorrectEvent("Error! Not enough powerUps to pay remaining cost! Give me more!");
         }
+    }
+
+    @Override
+    public void updateOnStopSelection(ThreeState skip) {
+        observer.updateOnStopSelection(TRUE);
     }
 }

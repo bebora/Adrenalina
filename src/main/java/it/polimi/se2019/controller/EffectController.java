@@ -137,12 +137,22 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnPlayers(List<Player> players){
-        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
+        Target target;
+        if (curActionType == MOVE) {
+            target = curMove.getTargetSource();
+        }
+        else {
+            target = curDealDamage.getTarget();
+        }
+        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players) && target.checkDifferentSquare(players)) {
             if (curActionType == MOVE && askingForSource) {
                 updateMoveOnPlayers(players);
             } else {
                 updateDealDamageOnPlayers(players);
             }
+        }
+        else {
+            throw new IncorrectEvent("Players aren't coherent with effect description!");
         }
     }
 

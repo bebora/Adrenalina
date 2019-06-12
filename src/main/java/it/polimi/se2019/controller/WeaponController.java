@@ -7,7 +7,6 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.Effect;
-import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
 
@@ -116,8 +115,10 @@ public class WeaponController extends Observer {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             stillToPay = new ArrayList<>();
             stillToPay.addAll(selectedEffect.getCost());
-            if (selectedEffect.getCost().isEmpty()) {
-                startEffect();
+            PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
+            paymentController.startPaying();
+            /*if (selectedEffect.getCost().isEmpty()) {
+                concludePayment();
             } else
             {
                 List<Ammo> toPay = new ArrayList<>(stillToPay);
@@ -137,15 +138,15 @@ public class WeaponController extends Observer {
                     timerCostrainedEventHandler.start();
                 }
                 else {
-                    startEffect();
+                    concludePayment();
                 }
-            }
+            }*/
         } else {
             throw new IncorrectEvent("Effect not present!");
         }
     }
 
-    @Override
+    /*@Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
@@ -154,14 +155,15 @@ public class WeaponController extends Observer {
                     curPlayer.getAmmos().remove(a);
             }
             if (stillToPay.isEmpty()) {
-                startEffect();
+                concludePayment();
             }
         } else {
             throw new IncorrectEvent("Error! Not enough ammos to pay!");
         }
-    }
+    }*/
 
-    public void startEffect() {
+    public void concludePayment() {
+        match.updateViews();
         curEffect++;
         selectedEffect.setActivated(true);
         lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
