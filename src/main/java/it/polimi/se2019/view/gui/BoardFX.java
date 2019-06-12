@@ -2,8 +2,7 @@ package it.polimi.se2019.view.gui;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.view.ViewPlayer;
-import it.polimi.se2019.view.ViewWeapon;
+import it.polimi.se2019.view.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -34,7 +33,9 @@ public class BoardFX extends StackPane {
     GridPane tileBoard;
     @FXML
     ImageView boardView;
+    @FXML GridPane selectionBoard;
 
+    SelectableOptionsWrapper selectableOptionsWrapper;
 
     public BoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
@@ -107,9 +108,14 @@ public class BoardFX extends StackPane {
     public void drawPlayer(ViewPlayer player){
         int playerX = player.getTile().getCoords().getPosx();
         int playerY = player.getTile().getCoords().getPosy();
-
         TilePane tile = (TilePane)GuiHelper.getNodeByIndex(tileBoard,playerX,playerY);
         tile.getChildren().add(new Circle(15.0,Paint.valueOf(GuiHelper.getColorHexValue(player.getColor()))));
+    }
+
+    public void clearPlayers(){
+        for(Node n:tileBoard.getChildren()){
+            ((TilePane) n).getChildren().clear();
+        }
     }
 
     @FXML
@@ -159,6 +165,13 @@ public class BoardFX extends StackPane {
             selectable.setOpacity(0.0);
         else if(selectable.getOpacity() == 0.0)
             selectable.setOpacity(0.50);
+    }
+
+    public void showPossibleTiles(List<ViewTileCoords> tileCoords){
+        for(ViewTileCoords t: tileCoords){
+            Rectangle selectionRectangle = (Rectangle)GuiHelper.getNodeByIndex(selectionBoard,t.getPosx(),t.getPosy());
+            selectionRectangle.setOpacity(0.50);
+        }
     }
 
 }
