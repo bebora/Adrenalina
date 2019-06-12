@@ -330,6 +330,14 @@ public class Player {
 		sendTotalUpdate();
 	}
 
+	public boolean checkForAmmos(List<Ammo> cost) {
+		List<Ammo> pool = totalAmmoPool();
+		for (Ammo c : cost)
+			if (Collections.frequency(cost, c) > Collections.frequency(pool, c))
+				return false;
+		return true;
+	}
+
 	/**
 	 * Return true if the player has enough ammo.
 	 * @param cost list of Ammo to pay
@@ -521,6 +529,8 @@ public class Player {
 		totalPool.addAll(ammos);
 		return totalPool;
 	}
+
+
 
 	public VirtualView getVirtualView() {
 		return virtualView;

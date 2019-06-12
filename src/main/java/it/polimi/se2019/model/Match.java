@@ -29,7 +29,7 @@ public abstract class Match {
         	i = (i + 1) % colors.size();
         	VirtualView v= p.getVirtualView();
         	if (v != null && v.getRequestDispatcher() != null) {
-        		v.getRequestDispatcher().setMatch(this);
+        		v.getRequestDispatcher().setEventHelper(this);
 			}
 		}
         finalFrenzy = false;

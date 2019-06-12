@@ -134,23 +134,24 @@ public class EffectController extends Observer {
     /**
      * players is a list of players provided from the user to which the
      * current Move or DealDamage is applied.
-     * @param players a List of Player to which the current subeffect is applied
-     * @see Player
+     * @param originalPlayers a List of Player to which the current subeffect is applied
      */
     @Override
-    public void updateOnPlayers(List<Player> players){
+    public void updateOnPlayers(List<Player> originalPlayers){
         Target target;
-        if (curActionType == MOVE) {
-            target = curMove.getTargetSource();
-        }
-        else {
-            target = curDealDamage.getTarget();
-        }
-        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players) && target.checkDifferentSquare(players)) {
-            if (curActionType == MOVE && askingForSource) {
-                updateMoveOnPlayers(players);
+        List<Player> players = getSandboxPlayers(originalPlayers);
+        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
+            if (curActionType == MOVE) {
+                target = curMove.getTargetSource();
             } else {
-                updateDealDamageOnPlayers(players);
+                target = curDealDamage.getTarget();
+            }
+            if (target.checkDifferentSquare(players)) {
+                if (curActionType == MOVE && askingForSource) {
+                    updateMoveOnPlayers(players);
+                } else {
+                    updateDealDamageOnPlayers(players);
+                }
             }
         }
         else {
@@ -389,7 +390,8 @@ public class EffectController extends Observer {
     }
 
     private List<Player> playerTargets(Target target) {
-        checkPointOfView(target);
+        if (!checkPointOfView(target))
+            return new ArrayList<>();
         List<Player> acceptablePlayer = curMatch.getPlayers().
                 stream().
                 filter(curWeapon!=null?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers()): s->true).
@@ -456,7 +458,7 @@ public class EffectController extends Observer {
      * current sub effect and set it accordingly.
      * @param target
      */
-    private void checkPointOfView(Target target){
+    private boolean checkPointOfView(Target target){
         switch(target.getPointOfView()){
             case OWN:
                 pointOfView = player.getTile();
@@ -465,17 +467,27 @@ public class EffectController extends Observer {
                 pointOfView = player.getPerspective();
                 break;
             case LASTPLAYER:
-                pointOfView = curWeapon.getTargetPlayers().get(0).getTile();
+                int size = curWeapon.getTargetPlayers().size();
+                if (size != 0) {
+                    Player temp = curWeapon.getTargetPlayers().get(0);
+                    if (temp.getDominationSpawn())
+                        return false;
+                    else {
+                        pointOfView = temp.getTile();
+                    }
+                }
+                else return false;
                 break;
-            //case TARGET is already handled when askingForSource
+            //case TARGET ihs already handled when askingForSource
             default:
                 break;
         }
+        return true;
     }
 
     private void checkPowerUps(List<Player> players){
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-        damagingLoop: for (Player p : players) {
+        for (Player p : players) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
                 receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
@@ -516,30 +528,23 @@ public class EffectController extends Observer {
         }
     }
 
-    private void updateMoveOnPlayers(List<Player> originalTargetPlayers){
-        List<Player> players = getSandboxPlayers(originalTargetPlayers);
-        if(checkPlayerTargets(curMove.getTargetSource(),players)) {
-            player.getVirtualView().getRequestDispatcher().clear();
-            if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
-                pointOfView = players.get(0).getTile();
-            askingForSource = false;
-            playersToMove = players;
-            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
-            acceptableTypes = new AcceptableTypes(receivingTypes);
-            List<Tile> tiles = tileTargets(curMove.getTargetDestination());
-            if (tiles.isEmpty())
-                updateOnStopSelection(TRUE);
-            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+    private void updateMoveOnPlayers(List<Player> players){
+        player.getVirtualView().getRequestDispatcher().clear();
+        if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
+            pointOfView = players.get(0).getTile();
+        askingForSource = false;
+        playersToMove = players;
+        List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
+        acceptableTypes = new AcceptableTypes(receivingTypes);
+        List<Tile> tiles = tileTargets(curMove.getTargetDestination());
+        if (tiles.isEmpty())
+            updateOnStopSelection(TRUE);
+        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
+        timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+        timerCostrainedEventHandler.start();
         }
-        else {
-            throw new IncorrectEvent("Can't move the targets!");
-        }
-    }
 
-    private void updateDealDamageOnPlayers(List<Player> originalTargetPlayers){
-        List<Player> players = getSandboxPlayers(originalTargetPlayers);
+    private void updateDealDamageOnPlayers(List<Player> players){
         if(curDealDamage.getTarget().getMaxTargets() == 0){
             if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
                 curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));

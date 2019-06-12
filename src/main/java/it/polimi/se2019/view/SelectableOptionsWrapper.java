@@ -21,6 +21,7 @@ public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<ViewTileCoords> selectableTileCoords;
     private SelectableOptions<String> selectableWeapons;
     private SelectableOptions<String> selectableDirections;
+    private SelectableOptions<String> selectableAmmos;
     private List<ReceivingType> acceptedTypes;
     private String stopPrompt;
 
@@ -130,6 +131,10 @@ public class SelectableOptionsWrapper implements Serializable {
                 case DIRECTION:
                     selectableDirections = new SelectableOptions<>(acceptableTypes.getSelectableDirections());
                     selectableDirections.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new)));
+                    break;
+                case AMMO:
+                    selectableAmmos = new SelectableOptions<>(acceptableTypes.getSelectableAmmos());
+                    selectableAmmos.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(a -> a.toString()).collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case STOP:
                     stopPrompt = acceptableTypes.getStopPrompt();

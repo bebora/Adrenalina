@@ -182,7 +182,7 @@ public class GameController extends Observer {
     }
 
     public void playTurn() {
-        boolean end = false;
+        end = false;
         List<ReceivingType> receivingTypes = new ArrayList<>();
         acceptableTypes = new AcceptableTypes(receivingTypes);
         if(actionCounter < currentPlayer.getMaxActions()) {
@@ -191,9 +191,9 @@ public class GameController extends Observer {
         } else if (!match.getFinalFrenzy() && currentPlayer.getWeapons().stream().anyMatch(w -> !w.getLoaded())) {
             end = true;
             receivingTypes.add(ReceivingType.ACTION);
-            Action action = new Reload();
-            currentPlayer.getActions().add(action);
-            acceptableTypes.setSelectableActions(new SelectableOptions<>(Arrays.asList(action), 1, 1, "Select an Action!"));
+            Action reload = new Reload();
+            currentPlayer.getActions().add(reload);
+            acceptableTypes.setSelectableActions(new SelectableOptions<>(Arrays.asList(reload), 1, 1, "Select an Action!"));
         }
         else end = true;
         if (currentPlayer.getPowerUps().stream().
@@ -225,6 +225,7 @@ public class GameController extends Observer {
         else return false;
     }
 
+    @Override
     public void updateOnConclusion(){
         if (action)
             actionCounter++;
@@ -308,6 +309,7 @@ public class GameController extends Observer {
         players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
         try {
             wait(500);
+
         }
         catch (InterruptedException e) {
             assert false;
