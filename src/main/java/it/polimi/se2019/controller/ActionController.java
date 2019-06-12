@@ -360,6 +360,7 @@ public class ActionController extends Observer {
     public void updateOnStopSelection(ThreeState skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
+            selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
             originalMatch.updateViews();
             gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);
         }

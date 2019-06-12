@@ -270,6 +270,22 @@ public class Target {
 		return checkBlackList;
 	}
 
+	/**
+	 * Get a Boolean to use to check if players are consistent with {@link #differentSquare}
+	 * @param players targets to check
+	 * @return whether the players passes the {@link #differentSquare} check.
+	 */
+	public boolean checkDifferentSquare(List<Player> players) {
+		switch (differentSquare) {
+			case TRUE:
+				return players.stream().map(Player::getTile).distinct().count() == 0;
+			case FALSE:
+				return players.stream().map(Player::getTile).distinct().count() == players.size();
+			default:
+				return true;
+		}
+	}
+
     /**
      * Get a Predicate for visibility option regarding the target
      * @param board the corresponding board where analyze visibility

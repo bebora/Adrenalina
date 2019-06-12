@@ -73,18 +73,23 @@ public class WeaponController extends Observer {
         return Stream.concat(checkAbsolute, checkRelative).collect(Collectors.toList());
     }
 
-    public void askForEffect(Weapon weapon) {
+    public void askForEffect(boolean stopAllowed) {
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
+        String prompt;
         acceptableTypes = new AcceptableTypes(receivingTypes);
         List<String> selectableEffect = getUsableEffects();
         if (selectableEffect.isEmpty()) {
             updateOnStopSelection(ThreeState.OPTIONAL);
         }
-        else if (selectableEffect.size() == 1) {
-            updateOnEffect(selectableEffect.get(0));
-        }
         else {
-            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, "Seleziona un effetto!"));
+            if (stopAllowed) {
+                receivingTypes.add(ReceivingType.STOP);
+                acceptableTypes.setStop(false, "Finish using weapon!");
+                prompt = "Select an effect if you want!";
+            }else {
+                prompt = "You have to select an effect!";
+            }
+            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, prompt));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
@@ -100,7 +105,7 @@ public class WeaponController extends Observer {
         lastUsedIndex = 0;
         weapon = newWeapon;
         if (actionController != null)
-            askForEffect(weapon);
+            askForEffect(false);
     }
 
     @Override
@@ -164,18 +169,25 @@ public class WeaponController extends Observer {
         effectController.nextStep();
     }
 
+    @Override
     public void updateOnConclusion() {
         effectController = null;
         boolean modalWeaponActivated = (weapon.getEffects().get(0).getAbsolutePriority() == 1)
                 && (weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority())
                 && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
-        if (getUsableEffects().isEmpty() && (weapon.getEffects().get(0).getActivated() || modalWeaponActivated)) {
-            actionController.updateOnConclusion();
-        }
+        boolean finished = weapon.getEffects().get(0).getActivated() || modalWeaponActivated;
+        if (getUsableEffects().isEmpty())
+            if (finished) {
+                weapon.setLoaded(false);
+                actionController.updateOnConclusion();
+            }
+            else {
+                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Weapon can't be used this way! Try another time");
+            }
         else {
-            //Unit test purposes
+            //Control for unit test purposes, actionController is always!=null
             if (actionController != null)
-                askForEffect(weapon);
+                askForEffect(finished);
         }
     }
 

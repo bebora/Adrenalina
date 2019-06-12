@@ -20,10 +20,16 @@ public enum ThreeState {
 	}
 
 	public ThreeState compare(boolean reverse) {
-		if (this == TRUE) return TRUE;
-		else if (this == FALSE && reverse) {
-			return OPTIONAL;
+		switch (this) {
+			case TRUE:
+				return TRUE;
+			case OPTIONAL:
+				return OPTIONAL;
+			case FALSE:
+				if (reverse) return OPTIONAL;
+				else return FALSE;
+
 		}
-		else return this;
+		return TRUE;
 	}
 }
