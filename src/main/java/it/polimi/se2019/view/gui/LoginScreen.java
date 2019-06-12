@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
@@ -21,12 +22,22 @@ public class LoginScreen extends Application {
     @FXML Button loginButton;
     @FXML TextField username;
     @FXML PasswordField password;
+    @FXML TextField port;
+    @FXML TextField url;
     @FXML CheckBox existingGame;
     @FXML ComboBox<String> mode;
     private String gameMode = "NORMAL";
     private String selectedConnection;
+
+    private static Stage primaryStage;
+
+    public static Stage getPrimaryStage(){
+        return primaryStage;
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
+        primaryStage = stage;
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("fxml/LoginScreen.fxml"));
         Scene scene = new Scene(root,400,400);
         stage.setTitle("LoginScreen");
@@ -46,26 +57,12 @@ public class LoginScreen extends Application {
     }
 
     public void login(){
-        View view = new View();
+        GUIView view = new GUIView();
         Properties connectionProperties = new Properties();
-        FileInputStream fin;
-        try{
-            fin = new FileInputStream(getClass().getClassLoader().getResource("connection.properties").getPath());
-            connectionProperties.load(fin);
-        }catch (Exception e){
-            Logger.log(Priority.ERROR,e.getMessage());
-        }
+        connectionProperties.setProperty("url", url.getText());
+        connectionProperties.setProperty("port", port.getText());
         view.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-        while(view.getStatus() != Status.PLAYING){
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-            }
-        }
-        Stage stage = (Stage)loginButton.getScene().getWindow();
-
+        //TODO:prevent further input and display some kind of loading screen
     }
 
     public static void main(String[] args){
