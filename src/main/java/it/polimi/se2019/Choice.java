@@ -46,6 +46,8 @@ public class Choice extends Observer{
         }
     }
 
+
+
     @Override
     public void updateOnTiles(List<Tile> tiles) {
         this.tiles = tiles;

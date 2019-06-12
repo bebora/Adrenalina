@@ -157,7 +157,7 @@ public class WeaponController extends Observer {
                 startEffect();
             }
         } else {
-            throw new IncorrectEvent("Error! Not enough ammosto pay!");
+            throw new IncorrectEvent("Error! Not enough ammos to pay!");
         }
     }
 

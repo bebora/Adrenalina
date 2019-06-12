@@ -15,43 +15,47 @@ import java.util.List;
 
 public class Observer {
     public void updateOnTiles(List<Tile> tiles) {
-        throw new IncorrectEvent("Non accetto tiles");
+        throw new IncorrectEvent("Can't accept tiles!");
     }
 
     public void updateOnPlayers(List<Player> players) {
-        throw new IncorrectEvent("Non accetto tiles");
+        throw new IncorrectEvent("Can't accept players");
     }
 
     public void updateOnDirection(Direction direction) {
-        throw new IncorrectEvent("Non accetto direzioni");
+        throw new IncorrectEvent("Can't accept direction");
     }
 
     public void updateOnRoom(Color room) {
-        throw new IncorrectEvent("Non accetto stanze");
+        throw new IncorrectEvent("Can't accept room");
     }
 
     public void updateOnEffect(String effect) {
-        throw new IncorrectEvent("Non accetto effetti");
+        throw new IncorrectEvent("Can't accept effects");
     }
 
     public void updateOnWeapon(Weapon weapon) {
-        throw new IncorrectEvent("Non accetto armi");
+        throw new IncorrectEvent("Can't accept weapon");
     }
 
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        throw new IncorrectEvent("Non accetto potenziamenti");
+        throw new IncorrectEvent("Can't accept powerUps");
     }
 
     public void updateOnAction(Action action) {
-        throw new IncorrectEvent("Non accetto azioni");
+        throw new IncorrectEvent("Can't accept action");
     }
 
     public void updateOnStopSelection(ThreeState skip) {
-        throw new IncorrectEvent("Non accetto reset!");
+        throw new IncorrectEvent("Can't accept stop!");
     }
 
     public void updateOnAmmo(Ammo ammo) {
-        throw new IncorrectEvent("Non accetto weapon!");
+        throw new IncorrectEvent("Can't accept ammo");
+    }
+
+    public void concludePayment() {
+        throw new IncorrectEvent("Can't conclude payment!");
     }
 
     public void updateOnConclusion() {

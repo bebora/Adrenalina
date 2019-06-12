@@ -38,6 +38,7 @@ public class ActionController extends Observer {
     private List<Ammo> stillToPay = new ArrayList<>();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
+    private Weapon toDiscard;
 
     public ActionController(Match match,GameController gameController){
         originalMatch = match;
@@ -66,12 +67,16 @@ public class ActionController extends Observer {
             if (curSubAction == GRAB) {
                 if (curPlayer.getWeapons().size() == Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                     subActionIndex--;
-                    curPlayer.getWeapons().remove(weapon);
-                    curPlayer.getTile().addWeapon(weapon);
+                    toDiscard = weapon;
                     sandboxMatch.updateViews();
                     nextStep();
                 }
                 else {
+                    if (toDiscard != null) {
+                        curPlayer.getWeapons().remove(toDiscard);
+                        curPlayer.getTile().addWeapon(toDiscard);
+                    }
+                    toDiscard = null;
                     selectedWeapon = weapon;
                     stillToPay.add(weapon.getCost().get(0));
                     startPayingProcess();
@@ -169,7 +174,6 @@ public class ActionController extends Observer {
                 case MOVE:
                     nextMove();
                     break;
-
                 case SHOOT:
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                     acceptableTypes = new AcceptableTypes(receivingTypes);

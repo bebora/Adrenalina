@@ -432,23 +432,11 @@ public class EffectController extends Observer {
 
     private void checkPowerUps(List<Player> players){
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-        for (Player p : players) {
+        damagingLoop: for (Player p : players) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
                 AcceptableTypes ammosAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.AMMO));
                 List<Ammo> ammos = new ArrayList<>(new HashSet<>(player.getAmmos()));
-                ammosAccepted.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
-                Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), ammosAccepted);
-                Ammo toPay;
-                switch (ammoRequest.getReceivingType()) {
-                    case STOP:
-                        updateOnStopSelection(TRUE);
-                        return;
-                    case AMMO:
-                        toPay = ammoRequest.getAmmo();
-                        player.getAmmos().remove(toPay);
-                        break;
-                }
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
@@ -538,7 +526,36 @@ public class EffectController extends Observer {
         int damagesAmount;
         int marksAmount;
         powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());
-        for(PowerUp p: powerUps){
+        damagingLoop: for(PowerUp p: powerUps){
+            acceptableTypes = new AcceptableTypes(Arrays.asList(ReceivingType.POWERUP, ReceivingType.AMMO, ReceivingType.STOP));
+            List<PowerUp> discardablePowerUps = player.getPowerUps().stream().filter(powerUp -> !p.equals(powerUp)).collect(Collectors.toList());
+            List<Ammo> ammos = player.getAmmos().stream().distinct().collect(Collectors.toList());
+            if (player.canDiscardPowerUp(Collections.singletonList(Ammo.ANY)));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(discardablePowerUps, 1, 1, "Select a powerUp to discard!"));
+            acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
+            acceptableTypes.setStop(true, "Don't pay for no more powerUps!");
+            Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            Ammo toPay;
+            switch (ammoRequest.getReceivingType()) {
+                case STOP:
+                    if (ammoRequest.getStop().equals(TRUE)) {
+                        updateOnStopSelection(TRUE);
+                        return;
+                    }
+                    else
+                        continue damagingLoop;
+                case POWERUP:
+                    PowerUp powerUp = ammoRequest.getPowerUps().get(0);
+                    player.discardPowerUp(powerUp, true);
+                    player.getAmmos().remove(powerUp.getDiscardAward());
+                    break;
+                case AMMO:
+                    toPay = ammoRequest.getAmmo();
+                    player.getAmmos().remove(toPay);
+                    break;
+                default:
+                    updateOnStopSelection(TRUE);
+            }
             player.discardPowerUp(p, false);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
