@@ -101,7 +101,7 @@
                   <ImageView fitHeight="90.0" fitWidth="136.0" onMouseEntered="#rotateRightAndZoomImage" onMouseExited="#deZoom" pickOnBounds="true" />
                </children>
             </VBox>
-            <HBox fillHeight="false" layoutX="503.0" prefHeight="141.0" prefWidth="306.0" spacing="15.0" AnchorPane.bottomAnchor="579.0" AnchorPane.leftAnchor="503.0" AnchorPane.rightAnchor="148.0" AnchorPane.topAnchor="0.0">
+            <HBox fx:id="blueWeaponsBox" fillHeight="false" layoutX="503.0" prefHeight="141.0" prefWidth="306.0" spacing="15.0" AnchorPane.bottomAnchor="579.0" AnchorPane.leftAnchor="503.0" AnchorPane.rightAnchor="148.0" AnchorPane.topAnchor="0.0">
                <children>
                   <ImageView fitHeight="136.0" fitWidth="90.0" onMouseEntered="#zoomImage" onMouseExited="#deZoom" pickOnBounds="true">
                      <HBox.margin>
@@ -156,7 +156,7 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="163.0" layoutX="166.0" layoutY="340.0" onMouseClicked="#testSelectable" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="177.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="169.0" layoutX="329.0" layoutY="169.0" onMouseClicked="#testSelectable" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="155.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="165.0" onMouseClicked="#testSelectable" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="158.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="173.0" layoutX="10.0" layoutY="8.0" onMouseClicked="#testSelectable" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="158.0" GridPane.rowIndex="1" />
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="173.0" layoutX="10.0" layoutY="8.0" onMouseClicked="#testSelectable" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="158.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                </children>
             </GridPane>
          </children>

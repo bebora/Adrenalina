@@ -1,4 +1,5 @@
 package it.polimi.se2019.view.gui;
+import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.view.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.layout.HBox;
@@ -12,14 +13,18 @@ import java.util.stream.Collectors;
 
 
 public class BoardScreen extends HBox {
-
     BoardFX boardFX;
-
     PlayerBoardFX clientPlayer;
+    ActionButtons actionButtons;
+    SelectableOptionsWrapper selectableOptionsWrapper;
 
     public BoardScreen(View GUIView){
         boardFX = new BoardFX();
         VBox playerBoardZone = new VBox();
+        VBox boardZone = new VBox();
+        boardZone.setSpacing(20);
+        actionButtons = new ActionButtons(GUIView.getEventUpdater());
+        boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
         clientPlayer.updateImage(GUIView.getSelf().getColor());
         playerBoardZone.getChildren().addAll(clientPlayer);
@@ -30,9 +35,8 @@ public class BoardScreen extends HBox {
                 playerBoardZone.getChildren().addAll(temp);
             }
         }
-        updateBoard(GUIView.getBoard());
-        this.getChildren().add(boardFX);
-        this.getChildren().add(playerBoardZone);
+        updateBoard(GUIView.getBoard(),GUIView.getPlayers());
+        this.getChildren().addAll(boardZone,playerBoardZone);
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         Scale scale = new Scale();
         scale.setPivotX(0);
@@ -42,14 +46,36 @@ public class BoardScreen extends HBox {
         this.getTransforms().addAll(scale);
     }
 
-    public void updateBoard(ViewBoard viewBoard){
+    public void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
         boardFX.setYellowWeapons(getWeaponsFromColor("YELLOW",viewBoard));
-        boardFX.setBlueWeapons(getWeaponsFromColor("BLUE",viewBoard));
+        boardFX.setBlueWeapons(getWeaponsFromColor("RED",viewBoard));
         boardFX.setRedWeapons(getWeaponsFromColor("RED",viewBoard));
+        boardFX.clearPlayers();
+        for(ViewPlayer p: players){
+            if(p.getTile()!=null)
+                boardFX.drawPlayer(p);
+        }
 
     }
 
-    public List<String> getWeaponsFromColor(String color,ViewBoard viewBoard){
+    public void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+        this.selectableOptionsWrapper = selectableOptionsWrapper;
+        actionButtons.clearPossibleActions();
+        for(ReceivingType ac: selectableOptionsWrapper.getAcceptedTypes()){
+            switch (ac.name()){
+                case "ACTION":
+                    actionButtons.setPossibleActions(selectableOptionsWrapper.getSelectableActions().getOptions());
+                    break;
+                case "TILES":
+                    boardFX.showPossibleTiles(selectableOptionsWrapper.getSelectableTileCoords().getOptions());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public List<String> getWeaponsFromColor(String color, ViewBoard viewBoard){
         return viewBoard.getTiles().stream()
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)

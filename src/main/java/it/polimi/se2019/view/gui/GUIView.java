@@ -14,8 +14,7 @@ public class GUIView extends View {
             Platform.runLater(()->changeStage());
         }
         else
-            Platform.runLater(()->
-                    boardScreen.updateBoard(getBoard()));
+            Platform.runLater(()-> totalUpdate());
     }
 
     public BoardScreen getBoardScreen() {
@@ -25,5 +24,10 @@ public class GUIView extends View {
     private void changeStage(){
         LoginScreen.getPrimaryStage().setScene(new Scene(boardScreen));
         LoginScreen.getPrimaryStage().setFullScreen(true);
+    }
+
+    private void totalUpdate(){
+        boardScreen.updateBoard(getBoard(),getPlayers());
+        boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
     }
 }
