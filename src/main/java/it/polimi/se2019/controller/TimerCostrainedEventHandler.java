@@ -51,6 +51,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     public synchronized boolean checkFinished() {
         if (System.currentTimeMillis() >= start + time*1000) {
+            active = false;
             return true;
         }
         return false;

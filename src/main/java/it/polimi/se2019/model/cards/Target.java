@@ -380,7 +380,13 @@ public class Target {
 				and(optionalBlack.or(trueBlack).or(falseBlack));
 	}
 
-
+	public Target getMoveDominationTarget() {
+		Builder builder = new Builder();
+		builder.setMaxDistance(0);
+		builder.setMinDistance(0);
+		builder.setPointOfView(getPointOfView());
+		return new Target(builder);
+	}
 
 
 

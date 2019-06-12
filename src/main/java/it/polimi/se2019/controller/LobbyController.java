@@ -10,6 +10,8 @@ import it.polimi.se2019.view.VirtualView;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 
 /**
@@ -20,6 +22,8 @@ public class LobbyController extends Thread{
     private List<GameController> games;
     private Map<Mode, List<Player>> waitingPlayers;
     private Map<Mode, Timer> waitingTimers;
+    private ThreadPoolExecutor executor;
+
 
     /**
      * Create a lobby allowing creation of games for the modes {@code #modes}
@@ -33,6 +37,7 @@ public class LobbyController extends Thread{
         }
         games = new ArrayList<>();
         waitingTimers = new EnumMap<>(Mode.class);
+        executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
 
     }
 
@@ -114,8 +119,9 @@ public class LobbyController extends Thread{
             }
             else if (modeWaiting.size() == 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();
-                Timer timer = new Timer();
-                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 0);
+                startGame(Mode.valueOf(mode));
+                /*Timer timer = new Timer();
+                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 0);*/
             }
         }
     }
@@ -166,10 +172,10 @@ public class LobbyController extends Thread{
         int rnd = new Random().nextInt(directoryListing.length);
         String boardName = directoryListing[rnd].getName();
         GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION), this);
-        playing.stream().forEach(p -> p.getVirtualView().setGameController(gameController));
-        gameController.startTurn();
-        gameController.getMatch().updateViews();
         games.add(gameController);
+        playing.forEach(p -> p.getVirtualView().setGameController(gameController));
+        gameController.getMatch().updateViews();
+        gameController.startTurn();
     }
 
     public List<GameController> getGames() {

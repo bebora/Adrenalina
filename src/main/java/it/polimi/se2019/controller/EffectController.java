@@ -270,7 +270,7 @@ public class EffectController extends Observer {
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
                     selectableTiles = tileTargets(curMove.getTargetDestination());
-                    if (selectableTiles.isEmpty()) {
+                    if (selectableTiles.isEmpty() || playersToMove.size() == 0) {
                         updateOnStopSelection(OPTIONAL);
                         return;
                     }
@@ -480,7 +480,7 @@ public class EffectController extends Observer {
             else break;
         }
         List<TimerCostrainedEventHandler> handlersPowerUp = new ArrayList<>();
-        for(Player p: players){
+        for(Player p : players.stream().filter(p -> p.getOnline()).collect(Collectors.toList())){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);

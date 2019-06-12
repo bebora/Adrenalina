@@ -10,6 +10,7 @@ import java.util.Collections;
 public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
     private View linkedView;
     private ConcreteViewReceiverHelper helper;
+    private final Object lock = new Object();
 
     public ConcreteViewReceiver(View linkedView) throws RemoteException {
         this.linkedView = linkedView;
@@ -17,9 +18,11 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     @Override
-    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
-        linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
-        linkedView.refresh();
+    public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+        synchronized (lock) {
+            linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
+            linkedView.refresh();
+        }
     }
 
     @Override
@@ -143,19 +146,21 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
-        linkedView.setUsername(username);
-        linkedView.setBoard(board);
-        linkedView.setPerspective(helper.getTileFromCoords(perspective));
-        linkedView.setPlayers(players);
-        linkedView.setIdView(idView);
-        linkedView.setPoints(points);
-        linkedView.setPowerUps(powerUps);
-        linkedView.setLoadedWeapons(loadedWeapons);
-        linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
-        if (linkedView.getStatus() != Status.PLAYING) {
-            linkedView.setStatus(Status.PLAYING);
-        }
+        synchronized (lock) {
+            linkedView.setUsername(username);
+            linkedView.setBoard(board);
+            linkedView.setPerspective(helper.getTileFromCoords(perspective));
+            linkedView.setPlayers(players);
+            linkedView.setIdView(idView);
+            linkedView.setPoints(points);
+            linkedView.setPowerUps(powerUps);
+            linkedView.setLoadedWeapons(loadedWeapons);
+            linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
+            if (linkedView.getStatus() != Status.PLAYING) {
+                linkedView.setStatus(Status.PLAYING);
+            }
             linkedView.refresh();
+        }
     }
 
     /**
