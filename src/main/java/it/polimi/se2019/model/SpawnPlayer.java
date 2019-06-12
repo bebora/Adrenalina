@@ -11,7 +11,7 @@ public class SpawnPlayer extends Player{
     }
 
     @Override
-    public void receiveShot(Player shooter, int damage, int marks) {
+    public void receiveShot(Player shooter, int damage, int marks, boolean convert) {
         if (!damaged)
             super.getDamages().add(shooter);
         damaged = Boolean.TRUE;

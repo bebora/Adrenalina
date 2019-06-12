@@ -266,13 +266,14 @@ public class Player {
 	 * @param damage number of damages to add
 	 * @param marks number of marks to add after converting the existing marks
 	 */
-	public synchronized void receiveShot(Player shooter, int damage, int marks) {
+	public synchronized void receiveShot(Player shooter, int damage, int marks, boolean convert) {
 		if(shooter != this) {
 			while (damage > 0 && damages.size() < 13) {
 				damages.add(shooter);
 				damage--;
 			}
-			convertMarks(shooter);
+			if (convert && damage != 0)
+				convertMarks(shooter);
 			while (marks > 0) {
 				receiveMark(shooter);
 				marks--;

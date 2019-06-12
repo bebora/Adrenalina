@@ -182,7 +182,7 @@ public class EffectController extends Observer {
                 List<Player> temp = tiles.stream()
                         .map(t -> curMatch.getPlayersInTile(t))
                         .flatMap(List::stream)
-                        .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()))
+                        .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true))
                         .collect(Collectors.toList());
                 handleTargeting(curDealDamage.getTargeting(),temp);
                 checkPowerUps(temp);
@@ -206,7 +206,7 @@ public class EffectController extends Observer {
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
         if(acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(room))){
-            possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
             handleTargeting(curDealDamage.getTargeting(),possibleTargets);
             checkPowerUps(possibleTargets);
             nextStep();
@@ -463,8 +463,7 @@ public class EffectController extends Observer {
         damagingLoop: for (Player p : players) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
-                AcceptableTypes ammosAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.AMMO));
-                List<Ammo> ammos = new ArrayList<>(new HashSet<>(player.getAmmos()));
+                receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
@@ -528,12 +527,12 @@ public class EffectController extends Observer {
         List<Player> players = getSandboxPlayers(originalTargetPlayers);
         if(curDealDamage.getTarget().getMaxTargets() == 0){
             if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
-                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
             else if(curDealDamage.getTarget().getCheckBlackList() == TRUE)
-                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
         }
         else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
-            players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount()));
+            players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
             handleTargeting(curDealDamage.getTargeting(),players);
             checkPowerUps(players);
             nextStep();
@@ -589,7 +588,7 @@ public class EffectController extends Observer {
             player.discardPowerUp(p, false);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
-            player.receiveShot(currentEnemy,damagesAmount,marksAmount);
+            player.receiveShot(currentEnemy,damagesAmount,marksAmount, false);
         }
         nextStep();
     }

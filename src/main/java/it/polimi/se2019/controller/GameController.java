@@ -80,7 +80,7 @@ public class GameController extends Observer {
     public void updateOnPlayers(List<Player> players) {
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
-            players.get(0).receiveShot(currentPlayer, 1, 0);
+            players.get(0).receiveShot(currentPlayer, 1, 0, true);
         }
         else {
             throw new IncorrectEvent("Wrong players!");
@@ -273,7 +273,7 @@ public class GameController extends Observer {
             else {
                 Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
                 if (spawnPoint != null) {
-                    spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0);
+                    spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
                 }
                 overkillPlayers.forEach(p -> p.getDamages().remove(7));
             }

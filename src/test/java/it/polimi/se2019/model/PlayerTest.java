@@ -1,7 +1,6 @@
 package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +33,7 @@ class PlayerTest {
             testPlayer.receiveMark(enemyPlayer);
             testPlayer.receiveMark(thirdPlayer);
         }
-        testPlayer.receiveShot(enemyPlayer, 9,1);
+        testPlayer.receiveShot(enemyPlayer, 9,1, true);
 
         // Test order and correct marks selection
         assertTrue(testPlayer.getDamages().size() == 11);

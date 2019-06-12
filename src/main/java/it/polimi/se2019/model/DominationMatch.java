@@ -53,7 +53,7 @@ public class DominationMatch extends Match {
         // Add a damage to the current Player if it's in a spawnTile
         // Add a damage to the spawnPoint if the currentPlayer is the only one in the spawnPoint
         if (spawnTiles.contains(currentPlayer.getTile())) {
-            currentPlayer.receiveShot(currentPlayer, 1, 0);
+            currentPlayer.receiveShot(currentPlayer, 1, 0, true);
             long numPlayerInTile = getPlayers().
                     stream().
                     filter(p -> !p.getDominationSpawn()).
@@ -64,7 +64,7 @@ public class DominationMatch extends Match {
                         filter(s -> s.getTile() == currentPlayer.getTile()).findFirst().
                         orElseThrow(UnsupportedOperationException::new);
                 spawnPoint.setDamaged(false);
-                spawnPoint.receiveShot(currentPlayer, 1, 0);
+                spawnPoint.receiveShot(currentPlayer, 1, 0, true);
             }
         }
 
