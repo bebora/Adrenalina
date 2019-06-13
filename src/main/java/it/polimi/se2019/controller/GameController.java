@@ -34,7 +34,8 @@ public class GameController extends Observer {
     private Random random = new Random();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    private boolean end;
+    private boolean matchEnd;
+    private boolean turnEnd;
     private boolean skip;
     private boolean action;
     private PowerUp toDiscard;
@@ -54,8 +55,8 @@ public class GameController extends Observer {
      * Notify the players sending the winners if the game ends.
      */
     public synchronized void checkEnd() {
-        if (!end && match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
-            end = true;
+        if (!matchEnd && match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && p.getOnline()).count() < 3) {
+            matchEnd = true;
             sendWinners();
         }
     }
@@ -154,16 +155,16 @@ public class GameController extends Observer {
             match = new DominationMatch(players,boardName,numSkulls);
         }
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        end = false;
+        matchEnd = false;
+        turnEnd = false;
         skip = false;
     }
 
     public void startTurn(){
-        if (!currentPlayer.getOnline() || skip) {
-            skip = false;
-            endTurn(true);
+        if (matchEnd) {
+            Logger.log(Priority.DEBUG, "Game ended, stopping turn");
         }
-        if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
+        else if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i < 2; i++){
                 currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
             }
@@ -176,26 +177,30 @@ public class GameController extends Observer {
                     acceptableTypes);
             timerCostrainedEventHandler.start();
         }
+        else if (!currentPlayer.getOnline() || skip) {
+            skip = false;
+            endTurn(true);
+        }
         else {
             playTurn();
         }
     }
 
     public void playTurn() {
-        end = false;
+        turnEnd = false;
         List<ReceivingType> receivingTypes = new ArrayList<>();
         acceptableTypes = new AcceptableTypes(receivingTypes);
         if(actionCounter < currentPlayer.getMaxActions()) {
             receivingTypes.add(ReceivingType.ACTION);
             acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Select an Action!"));
         } else if (!match.getFinalFrenzy() && currentPlayer.getWeapons().stream().anyMatch(w -> !w.getLoaded())) {
-            end = true;
+            turnEnd = true;
             receivingTypes.add(ReceivingType.ACTION);
             Action reload = new Reload();
             currentPlayer.getActions().add(reload);
             acceptableTypes.setSelectableActions(new SelectableOptions<>(Arrays.asList(reload), 1, 1, "Select an Action!"));
         }
-        else end = true;
+        else turnEnd = true;
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
@@ -204,7 +209,7 @@ public class GameController extends Observer {
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
         }
-        if (end && !receivingTypes.isEmpty()) {
+        if (turnEnd && !receivingTypes.isEmpty()) {
             receivingTypes.add(STOP);
             acceptableTypes.setStop(false, "End turn");
         }
@@ -219,8 +224,8 @@ public class GameController extends Observer {
         return match;
     }
 
-    public boolean checkEndTurn() {
-        if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && !currentPlayer.canReload())) || actionCounter == currentPlayer.getMaxActions() +1)
+    private boolean checkEndTurn() {
+        if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && (!match.getFinalFrenzy()) && !currentPlayer.canReload())) || actionCounter == currentPlayer.getMaxActions() +1)
             return true;
         else return false;
     }
@@ -280,23 +285,22 @@ public class GameController extends Observer {
             }
         }
         else if (match.newTurn()) {
-            end = true;
+            matchEnd = true;
             sendWinners();
             lobbyController.getGames().remove(this);
             return;
-        } else end = false;
+        } else matchEnd = false;
         actionCounter = 0;
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
         spawnablePlayers =match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)
                 .collect(Collectors.toList());
 
-        if (!end) {
-            if(spawnablePlayers.isEmpty())
-                startTurn();
-            else
-                startSpawning();
-        }
+        if(spawnablePlayers.isEmpty())
+            startTurn();
+        else
+            startSpawning();
+
     }
 
     public void sendWinners() {
