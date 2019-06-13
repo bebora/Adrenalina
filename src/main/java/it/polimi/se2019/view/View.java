@@ -4,6 +4,7 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.GameController;
+import it.polimi.se2019.controller.NetworkTimeoutControllerClient;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
@@ -51,6 +52,9 @@ public class View {
 
 	private GameController gameController;
 
+	private long lastRequest;
+
+	private NetworkTimeoutControllerClient networkTimeoutController;
 
 	private SelectableOptionsWrapper selectableOptionsWrapper;
 
@@ -82,6 +86,7 @@ public class View {
 		List<ReceivingType> temp = new ArrayList<>();
 		AcceptableTypes acceptableTypes = new AcceptableTypes(temp);
 		selectableOptionsWrapper = new SelectableOptionsWrapper(acceptableTypes);
+		networkTimeoutController = new NetworkTimeoutControllerClient(this);
 	}
 
 	public SelectableOptionsWrapper getSelectableOptionsWrapper() {
@@ -224,6 +229,7 @@ public class View {
 		}
 		try {
 			eventUpdater.login(this, username, password, existingGame, gameMode);
+			networkTimeoutController.start();
 		}
 		catch (RemoteException e) {
 			try {
@@ -233,7 +239,6 @@ public class View {
 				Logger.log(Priority.ERROR, "Unable to call local method");
 			}
 		}
-
 	}
 
 	public List<String> getReceivingTypes() {
@@ -249,4 +254,12 @@ public class View {
 	}
 
 	public synchronized void refresh(){};
+
+	public long getLastRequest() {
+		return lastRequest;
+	}
+
+	public void setLastRequest(long lastRequest) {
+		this.lastRequest = lastRequest;
+	}
 }

@@ -13,7 +13,11 @@ import java.util.ArrayList;
  */
 public interface RequestDispatcherInterface extends Remote, Serializable {
 
+    void receiveAck() throws RemoteException;
+
     void receiveAction(String subAction) throws RemoteException;
+
+    void receiveAmmo(String ammo) throws RemoteException;
 
     void receiveDirection(String direction) throws RemoteException;
 
@@ -30,7 +34,5 @@ public interface RequestDispatcherInterface extends Remote, Serializable {
     void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException;
 
     void receiveWeapon(String weapon) throws RemoteException;
-
-    void receiveAmmo(String ammo) throws RemoteException;
 
 }

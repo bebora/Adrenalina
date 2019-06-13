@@ -35,7 +35,7 @@ public class VirtualView extends View  {
     public void setViewUpdater(ViewUpdater viewUpdater) {
         this.viewUpdater = viewUpdater;
         try {
-            this.requestDispatcher = new RequestDispatcher(viewUpdater);
+            this.requestDispatcher = new RequestDispatcher(viewUpdater, this);
         }
         catch (RemoteException e) {
             Logger.log(Priority.ERROR, "Unexpected RemoteException while creating RequestDispatcher");

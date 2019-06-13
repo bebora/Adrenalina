@@ -13,6 +13,7 @@ import java.util.List;
  * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
+    void sendAck();
     void sendAction(String action);
 
     /**

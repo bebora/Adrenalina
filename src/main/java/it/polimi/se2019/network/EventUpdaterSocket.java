@@ -19,6 +19,13 @@ public class EventUpdaterSocket implements EventUpdater{
         this.url = url;
         this.port = port;
     }
+
+    @Override
+    public void sendAck() {
+        EventVisitable ackEvent = new AckEvent();
+        socket.addEventToQueue(ackEvent);
+    }
+
     @Override
     public void sendAction(String action) {
         EventVisitable actionEvent = new SelectAction(action);

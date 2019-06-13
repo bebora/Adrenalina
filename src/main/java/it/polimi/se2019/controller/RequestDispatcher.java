@@ -10,6 +10,7 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
+import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
@@ -23,10 +24,13 @@ import java.util.stream.Collectors;
  * Locking on an object for fixing lack of RMI documentation on synchronization.
  */
 public class RequestDispatcher extends UnicastRemoteObject implements RequestDispatcherInterface{
-    private EventHelper eventHelper;
-    private ViewUpdater viewUpdater;
-    private Map<ReceivingType, EventHandler> observerTypes;
-    final Object lock = new Object();
+    private transient EventHelper eventHelper;
+    private transient ViewUpdater viewUpdater;
+    private transient Map<ReceivingType, EventHandler> observerTypes;
+    private transient View linkedVirtualView;
+    private transient NetworkTimeoutControllerServer networkTimeoutController;
+    private transient Long lastRequest = null;
+    final transient Object lock = new Object();
 
     public void clear() {
         synchronized (lock) {
@@ -43,9 +47,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         eventHelper = new EventHelper(match);
     }
 
-    public RequestDispatcher(ViewUpdater viewUpdater) throws RemoteException {
+    public RequestDispatcher(ViewUpdater viewUpdater, View linkedVirtualView) throws RemoteException {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;
+        this.linkedVirtualView = linkedVirtualView;
+        this.networkTimeoutController = new NetworkTimeoutControllerServer(this);
+        this.networkTimeoutController.start();
     }
 
     public Map<ReceivingType, EventHandler> getObserverTypes() {
@@ -53,9 +60,17 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     }
 
     @Override
+    public void receiveAck() throws RemoteException {
+        synchronized (lock) {
+            lastRequest = System.nanoTime();
+        }
+    }
+
+    @Override
     public void receiveAmmo(String ammo) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 Ammo relatedAmmo;
                 if (observerTypes.keySet().contains(ReceivingType.AMMO)) {
                     try {
@@ -79,6 +94,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveAction(String subAction) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.ACTION)) {
                     Action action = eventHelper.getActionFromString(subAction);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.ACTION);
@@ -96,6 +112,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveDirection(String direction) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.DIRECTION)) {
                     EventHandler eventHandler = observerTypes.get(ReceivingType.DIRECTION);
                     eventHandler.receiveDirection(eventHelper.getDirectionFromString(direction));
@@ -111,6 +128,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveEffect(String effect) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.EFFECT)) {
                     EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
                     eventHandler.receiveEffect(effect);
@@ -126,6 +144,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receivePlayers(ArrayList<String> players) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
                     List<Player> relatedPlayers = eventHelper.getPlayersFromId(players);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.PLAYERS);
@@ -143,6 +162,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receivePowerUps(ArrayList<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.POWERUP)) {
                     List<PowerUp> relatedPowerUps = powerUps.
                             stream().
@@ -163,6 +183,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         synchronized (lock) {
             Color relatedRoom;
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.ROOM)) {
                     relatedRoom = eventHelper.getRoomFromString(room);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.ROOM);
@@ -180,6 +201,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveStopAction() throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.STOP)) {
                     EventHandler eventHandler = observerTypes.get(ReceivingType.STOP);
                     eventHandler.receiveStop();
@@ -195,6 +217,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.TILES)) {
                     List<Tile> tiles = eventHelper.getTilesFromViewTiles(viewTiles);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.TILES);
@@ -211,6 +234,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void receiveWeapon(String weapon) throws RemoteException {
         synchronized (lock) {
             try {
+                lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.WEAPON)) {
                     Weapon relatedWeapon = eventHelper.getWeaponFromString(weapon);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.WEAPON);
@@ -243,6 +267,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
 
     public ViewUpdater getViewUpdater() {
         return viewUpdater;
+    }
+
+    public View getLinkedVirtualView() {
+        return linkedVirtualView;
+    }
+
+    public Long getLastRequest() {
+        return lastRequest;
     }
 }
 

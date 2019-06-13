@@ -23,6 +23,14 @@ public class EventVisitor {
         this.lobbyController = lobbyController;
     }
 
+    public void visit(AckEvent event) {
+        try {
+            requestHandler.receiveAck();
+        }
+        catch (RemoteException e) {
+            Logger.log(Priority.WARNING, error + e.getMessage());
+        }
+    }
     public void visit(SelectAmmo event) {
         String ammo = event.getAmmo();
         try {

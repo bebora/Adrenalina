@@ -149,6 +149,7 @@ public class WorkerServerSocket extends Thread {
                     event.accept(eventVisitor);
                 }
                 catch (IOException e) {
+                    Logger.log(Priority.WARNING, "Can't read event: "+e.getMessage());
                 }
             }
         }

@@ -22,7 +22,7 @@ public class RMIPinger extends Thread{
         do {
             viewUpdaterRMI.sendPing();
             try {
-                Thread.sleep(100);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
             }

@@ -76,6 +76,18 @@ public class EventUpdaterRMI implements EventUpdater{
     }
 
     @Override
+    public void sendAck() {
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveAck();
+            } catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send ack");
+            }
+        };
+        new Thread(task).start();
+    }
+
+    @Override
     public void sendAction(String action) {
         Runnable task = () -> {
             try {
