@@ -244,7 +244,7 @@ public class GameController extends Observer {
         }
     }
 
-    public synchronized void endTurn(boolean skip){
+    public synchronized void endTurn(boolean skip) {
         currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
         List<Player> overkillPlayers = match.
                 getPlayers().
@@ -256,7 +256,7 @@ public class GameController extends Observer {
                 stream().
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
-        if (!spawnPoints.isEmpty() &&  !overkillPlayers.isEmpty()) {
+        if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty()) {
             if (skip) {
                 acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
@@ -275,35 +275,38 @@ public class GameController extends Observer {
                         break;
                     }
                 }
-            }
-            else {
+            } else {
                 Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
                 if (spawnPoint != null) {
                     spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
                 }
                 overkillPlayers.forEach(p -> p.getDamages().remove(7));
             }
-        }
-        else if (match.newTurn()) {
+        } else if (match.newTurn()) {
             matchEnd = true;
             sendWinners();
             lobbyController.getGames().remove(this);
             return;
-        } else matchEnd = false;
+        }
         actionCounter = 0;
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
-        spawnablePlayers =match.getPlayers().stream()
+        spawnablePlayers = match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)
                 .collect(Collectors.toList());
 
-        if(spawnablePlayers.isEmpty())
-            startTurn();
-        else
-            startSpawning();
+        if (!matchEnd) {
+            if (spawnablePlayers.isEmpty())
+                startTurn();
+            else
+                startSpawning();
+        } else {
+            Logger.log(Priority.DEBUG, "Game ending");
+    }
 
     }
 
     public void sendWinners() {
+        matchEnd = true;
         Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();
         StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
