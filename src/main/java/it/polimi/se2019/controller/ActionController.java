@@ -135,7 +135,7 @@ public class ActionController extends Observer {
             for (Tile t : sandboxMatch.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.isSpawn()).collect(Collectors.toList())) {
                 boolean toRemove = true;
                 for (Weapon weapon : t.getWeapons()) {
-                    if (curPlayer.checkForAmmos(weapon.getCost(), curPlayer.totalAmmoPool()))
+                    if (curPlayer.checkForAmmos(weapon.getCost()))
                         toRemove = false;
                 }
                 if (toRemove)
@@ -202,7 +202,7 @@ public class ActionController extends Observer {
                                     getTile().
                                     getWeapons().
                                     stream().
-                                    filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)), curPlayer.totalAmmoPool())).
+                                    filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)))).
                                     collect(Collectors.toList());
                             prompt = "Select a weapon to grab!";
                         } else {
@@ -240,7 +240,7 @@ public class ActionController extends Observer {
                     selectableWeapon = curPlayer.
                             getWeapons().
                             stream().
-                            filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost(), curPlayer.totalAmmoPool())).
+                            filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost())).
                             collect(Collectors.toList());
                     if (selectableWeapon.isEmpty()) {
                         if (curAction.toString().equals("RELOAD"))
@@ -268,7 +268,7 @@ public class ActionController extends Observer {
         PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
         paymentController.startPaying();
     }
-
+    @Override
     public void concludePayment(){
         sandboxMatch.updateViews();
         if(curSubAction == GRAB){
@@ -286,7 +286,7 @@ public class ActionController extends Observer {
             nextStep();
         }
     }
-
+    @Override
     public void updateOnConclusion(){
         weaponController = null;
         nextStep();

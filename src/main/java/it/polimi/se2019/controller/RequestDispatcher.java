@@ -47,10 +47,6 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         this.viewUpdater = viewUpdater;
     }
 
-    public void setMatch(Match match) {
-        eventHelper = new EventHelper(match);
-    }
-
     public Map<ReceivingType, EventHandler> getObserverTypes() {
         return observerTypes;
     }

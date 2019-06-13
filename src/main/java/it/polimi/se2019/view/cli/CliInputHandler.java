@@ -17,8 +17,6 @@ public class CliInputHandler implements Runnable{
     private CLI view;
     private EventUpdater eventUpdater;
     private static final String wrongInputMessage = "Wrong input!";
-    private String URL;
-    private int port;
     private String[] args;
 
     public CliInputHandler(String[] args){
@@ -75,6 +73,7 @@ public class CliInputHandler implements Runnable{
     }
 
     private void parseSelection(String[] inSplit){
+        String error = "This is not something you can select!";
         String[] selectedElements = new String[inSplit.length-2];
         System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-2);
         if (view.getReceivingTypes().contains(inSplit[1])) {
@@ -108,16 +107,16 @@ public class CliInputHandler implements Runnable{
                         eventUpdater.sendStop();
                     }
                     else {
-                        CLI.printMessage("This is not something you can select!", "R");
+                        CLI.printMessage(error, "R");
                     }
                     break;
                 default:
-                    CLI.printMessage("This is not something you can select!", "R");
+                    CLI.printMessage(error, "R");
                     break;
             }
         }
         else
-            CLI.printMessage("This is not something you can select!", "R");
+            CLI.printMessage(error, "R");
     }
 
     private void parsePlayers(String[] players) {

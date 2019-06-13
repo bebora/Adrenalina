@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Manage new Players connection and reconnections.
  * Handles the creation and the linking to the VirtualViews, checking if the username is already used in an active game.
  */
-public class LobbyController extends Thread{
+public class LobbyController{
     private List<GameController> games;
     private Map<Mode, List<Player>> waitingPlayers;
     private Map<Mode, Timer> waitingTimers;
@@ -113,7 +113,7 @@ public class LobbyController extends Thread{
                 timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
                 Logger.log(Priority.DEBUG, "TIMER STARTED");
             }
-            else if (modeWaiting.size() == 5) {
+            else if (modeWaiting.size() >= 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();
                 startGame(Mode.valueOf(mode));
                 /*Timer timer = new Timer();

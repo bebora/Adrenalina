@@ -2,6 +2,8 @@ package it.polimi.se2019.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventSerializer;
@@ -81,7 +83,7 @@ public class ClientSocket extends Thread{
                         jsonSender.flush();
                     }
                     catch (InterruptedException e) {
-                        //TODO exception for queue taking
+                        Logger.log(Priority.WARNING, "Queue interrupted");
                     }
                     catch (IOException e) {
                         //TODO log somehow

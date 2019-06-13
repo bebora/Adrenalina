@@ -28,10 +28,6 @@ public class AcceptableTypes {
     private List<ReceivingType> acceptedTypes;
 
 
-    public SelectableOptions<String> getSelectabeEffects() {
-        return selectabeEffects;
-    }
-
     public SelectableOptions<Ammo> getSelectableAmmos() {
         return selectableAmmos;
     }

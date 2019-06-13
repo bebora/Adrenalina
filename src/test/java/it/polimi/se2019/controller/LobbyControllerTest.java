@@ -37,7 +37,7 @@ class LobbyControllerTest {
             System.out.println(e);
         }
         try {
-            Thread.sleep(100);
+            wait(100);
         }
         catch (InterruptedException e){
             assertEquals(false, true);
@@ -59,14 +59,14 @@ class LobbyControllerTest {
                 System.out.println("Error!");
             }
             try {
-                Thread.sleep(100);
+                wait(100);
             }
             catch (InterruptedException e){
                 assertEquals(false, true);
             }
         }
         try {
-            Thread.sleep(100);
+            wait(100);
         }
         catch (InterruptedException e){
             assertEquals(false, true);

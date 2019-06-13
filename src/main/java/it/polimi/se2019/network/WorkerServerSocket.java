@@ -2,6 +2,7 @@ package it.polimi.se2019.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
@@ -23,7 +24,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
 
-//TODO implement heartbeat for disconnection
 public class WorkerServerSocket extends Thread {
     private Socket socket;
     private VirtualView virtualView;
@@ -51,7 +51,12 @@ public class WorkerServerSocket extends Thread {
             throw new UnsupportedOperationException();
         }
         System.out.println(json);
-        EventVisitable event = gson.fromJson(json, EventVisitable.class);
+        EventVisitable event;
+        try {
+            event = gson.fromJson(json, EventVisitable.class);
+        }catch (JsonParseException e) {
+            throw new AuthenticationErrorException();
+        }
         try {
             ConnectionRequest connection = (ConnectionRequest) event;
             virtualView = new VirtualView(lobbyController);

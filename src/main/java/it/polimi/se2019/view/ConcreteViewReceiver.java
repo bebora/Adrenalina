@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
-    private View linkedView;
-    private ConcreteViewReceiverHelper helper;
-    private final Object lock = new Object();
+    private transient View linkedView;
+    private transient ConcreteViewReceiverHelper helper;
+    private transient final Object lock = new Object();
 
     public ConcreteViewReceiver(View linkedView) throws RemoteException {
         this.linkedView = linkedView;
@@ -124,6 +124,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receiveTile(ViewTile tile) throws RemoteException {
+        //todo @bebora fix / delete
         ViewTile viewTile = helper.getTileFromCoords(tile.getCoords());
         tile.setAmmos(tile.getAmmos());
         tile.setWeapons(tile.getWeapons());
@@ -175,6 +176,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receiveWeaponTaken(ViewWeapon takenWeapon, ViewWeapon discardedWeapon, String playerId) throws RemoteException {
         //TODO tell clients that a player has taken the weapon
+        //todo @bebora fix contains can't work
         ViewPlayer player = helper.getPlayerFromId(playerId);
         ViewTile tile = player.getTile();
         if (!tile.getWeapons().contains(takenWeapon))

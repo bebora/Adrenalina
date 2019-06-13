@@ -29,7 +29,7 @@ public abstract class Match {
         	i = (i + 1) % colors.size();
         	VirtualView v= p.getVirtualView();
         	if (v != null && v.getRequestDispatcher() != null) {
-        		v.getRequestDispatcher().setMatch(this);
+        		v.getRequestDispatcher().setEventHelper(this);
 			}
 		}
         finalFrenzy = false;
@@ -109,7 +109,6 @@ public abstract class Match {
  	 */
 	public void startFrenzy() {
 		finalFrenzy = TRUE;
-		firstPlayer = currentPlayer;
 		Boolean afterFirst;
 		// Update actions
 		if (firstPlayer < currentPlayer) {
@@ -137,6 +136,7 @@ public abstract class Match {
 			p.getRewardPoints().addAll(new ArrayList<>(Arrays.asList(2,1,1,1)));
 		}
 		updateViews();
+		firstPlayer = currentPlayer;
 	}
 
 	/**
