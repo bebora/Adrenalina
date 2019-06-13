@@ -83,7 +83,6 @@ public class EffectController extends Observer {
      * for a new input.
      */
      void nextStep(){
-        orderIndex+=1;
         playersToMove = new ArrayList<>();
         if(orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
@@ -141,6 +140,7 @@ public class EffectController extends Observer {
         Target target;
         List<Player> players = getSandboxPlayers(originalPlayers);
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
+            player.getVirtualView().getRequestDispatcher().clear();
             if (curActionType == MOVE) {
                 target = curMove.getTargetSource();
             } else {
@@ -207,6 +207,7 @@ public class EffectController extends Observer {
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
         if(acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(room))){
+            player.getVirtualView().getRequestDispatcher().clear();
             possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
             handleTargeting(curDealDamage.getTargeting(),possibleTargets);
             checkPowerUps(possibleTargets);
@@ -307,7 +308,7 @@ public class EffectController extends Observer {
         List<ReceivingType> receivingTypes;
         int min = curDealDamage.getTarget().getMinTargets();
         int max = curDealDamage.getTarget().getMaxTargets();
-        switch(targetType){
+        switch(targetType) {
             case TILE:
                 List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
                 if (selectableTiles.isEmpty()) {
@@ -321,7 +322,7 @@ public class EffectController extends Observer {
                 List<Color> selectableRoom = board.getTiles().
                         stream().
                         flatMap(List::stream).
-                        filter(curDealDamage.getTarget().getFilterRoom(board,pointOfView)).
+                        filter(curDealDamage.getTarget().getFilterRoom(board, pointOfView)).
                         map(Tile::getRoom).
                         distinct().
                         collect(Collectors.toList());
@@ -329,15 +330,17 @@ public class EffectController extends Observer {
                     updateOnStopSelection(OPTIONAL);
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.ROOM));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom,max,min,"Select a room to BOMB!"));
+                acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom, max, min, "Select a room to BOMB!"));
                 break;
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
                 if (players.isEmpty())
                     updateOnStopSelection(OPTIONAL);
-                receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Select players to attack!"));
+                else {
+                    receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
+                    acceptableTypes = new AcceptableTypes(receivingTypes);
+                    acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min, "Select players to attack!"));
+        }
                 break;
             default:
                 break;
@@ -581,6 +584,7 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
+        player.getVirtualView().getRequestDispatcher().clear();
         int damagesAmount;
         int marksAmount;
         powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());
