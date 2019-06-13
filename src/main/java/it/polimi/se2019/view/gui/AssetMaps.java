@@ -36,4 +36,20 @@ public class AssetMaps {
             "WHITE","white_player_board.png",
             "YELLOW","yellow_player_board.png"
     );
+
+    static final Map<String,String> powerUpsAssets = Map.ofEntries(
+            Map.entry("tagback grenadeRED","AD_powerups_IT_023.png"),
+            Map.entry("tagback grenadeBLUE","AD_powerups_IT_022.png"),
+            Map.entry("tagback grenadeYELLOW","AD_powerups_IT_024.png"),
+            Map.entry("targeting scopeBLUE","AD_powerups_IT_025.png"),
+            Map.entry("targeting scopeRED","AD_powerups_IT_026.png"),
+            Map.entry("targeting scopeYELLOW","AD_powerups_IT_027.png"),
+            Map.entry("newtonBLUE","AD_powerups_IT_028.png"),
+            Map.entry("newtonRED","AD_powerups_IT_029.png"),
+            Map.entry("newtonYELLOW","AD_powerups_IT_0210.png"),
+            Map.entry("teleporterBLUE","AD_powerups_IT_0211.png"),
+            Map.entry("teleporterRED","AD_powerups_IT_0212.png"),
+            Map.entry("teleporterYELLOW","AD_powerups_IT_0213.png")
+    );
+
 }

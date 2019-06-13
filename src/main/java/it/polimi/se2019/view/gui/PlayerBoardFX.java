@@ -2,17 +2,17 @@ package it.polimi.se2019.view.gui;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.view.ViewPlayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,8 @@ public class PlayerBoardFX extends AnchorPane {
     @FXML
     ImageView playerBoardView;
     @FXML
-    ImageView zoomView;
+    TilePane ammoPane;
+    @FXML HBox marksBox;
 
     Image boardImage;
 
@@ -89,4 +90,17 @@ public class PlayerBoardFX extends AnchorPane {
         }
     }
 
+    public void displayAmmos(List<String> ammos){
+        ammoPane.getChildren().clear();
+        for(String a: ammos){
+            Rectangle ammo = new Rectangle(10,10, Color.valueOf(a));
+            ammoPane.getChildren().addAll(ammo);
+        }
+    }
+
+    public void updatePlayerInfo(ViewPlayer viewPlayer){
+        updateImage(viewPlayer.getColor());
+        displayDamages(viewPlayer.getDamages());
+        displayAmmos(viewPlayer.getAmmos());
+    }
 }

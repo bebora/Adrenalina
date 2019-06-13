@@ -1,7 +1,9 @@
 package it.polimi.se2019.view.gui;
 import it.polimi.se2019.controller.ReceivingType;
+import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.*;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
@@ -16,25 +18,28 @@ public class BoardScreen extends HBox {
     BoardFX boardFX;
     PlayerBoardFX clientPlayer;
     ActionButtons actionButtons;
+    PowerUpsBox powerUpsBox;
+    VBox playerBoardZone;
     SelectableOptionsWrapper selectableOptionsWrapper;
 
     public BoardScreen(View GUIView){
         boardFX = new BoardFX();
-        VBox playerBoardZone = new VBox();
+        playerBoardZone = new VBox();
         VBox boardZone = new VBox();
         boardZone.setSpacing(20);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
+        Label powerUpsLabel = new Label("PowerUps:");
+        powerUpsBox = new PowerUpsBox();
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
-        clientPlayer.updateImage(GUIView.getSelf().getColor());
         playerBoardZone.getChildren().addAll(clientPlayer);
         for(ViewPlayer p: GUIView.getPlayers()){
-            if(p != GUIView.getSelf()) {
-                PlayerBoardFX temp = new PlayerBoardFX();
-                temp.updateImage(p.getColor());
-                playerBoardZone.getChildren().addAll(temp);
-            }
+            PlayerBoardFX temp = new PlayerBoardFX();
+            temp.updatePlayerInfo(p);
+            playerBoardZone.getChildren().addAll(temp);
         }
+        playerBoardZone.getChildren().addAll(powerUpsLabel,powerUpsBox);
+        playerBoardZone.setSpacing(15);
         updateBoard(GUIView.getBoard(),GUIView.getPlayers());
         this.getChildren().addAll(boardZone,playerBoardZone);
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
@@ -48,12 +53,16 @@ public class BoardScreen extends HBox {
 
     public void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
         boardFX.setYellowWeapons(getWeaponsFromColor("YELLOW",viewBoard));
-        boardFX.setBlueWeapons(getWeaponsFromColor("RED",viewBoard));
+        boardFX.setBlueWeapons(getWeaponsFromColor("BLUE",viewBoard));
         boardFX.setRedWeapons(getWeaponsFromColor("RED",viewBoard));
         boardFX.clearPlayers();
+        int i = 0;
         for(ViewPlayer p: players){
             if(p.getTile()!=null)
                 boardFX.drawPlayer(p);
+            PlayerBoardFX playerBoardFX = (PlayerBoardFX)playerBoardZone.getChildren().get(i);
+            playerBoardFX.updatePlayerInfo(p);
+            i++;
         }
 
     }
@@ -62,12 +71,15 @@ public class BoardScreen extends HBox {
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         actionButtons.clearPossibleActions();
         for(ReceivingType ac: selectableOptionsWrapper.getAcceptedTypes()){
-            switch (ac.name()){
-                case "ACTION":
+            switch (ac){
+                case ACTION:
                     actionButtons.setPossibleActions(selectableOptionsWrapper.getSelectableActions().getOptions());
                     break;
-                case "TILES":
+                case TILES:
                     boardFX.showPossibleTiles(selectableOptionsWrapper.getSelectableTileCoords().getOptions());
+                    break;
+                case POWERUP:
+                    powerUpsBox.setPowerUps(selectableOptionsWrapper.getSelectablePowerUps().getOptions());
                     break;
                 default:
                     break;

@@ -52,6 +52,8 @@ public class BoardFX extends StackPane {
 
     public void setBlueWeapons(List<String> blueWeapons){
         int i = 0;
+        for(Node n: blueWeaponsBox.getChildren())
+            n.setVisible(false);
         try{
             for(String w: blueWeapons) {
                 Image blueWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
@@ -68,6 +70,8 @@ public class BoardFX extends StackPane {
 
     public void setRedWeapons(List<String> redWeapons){
         int i = 0;
+        for(Node n: redWeaponsBox.getChildren())
+            n.setVisible(false);
         try{
             for(String w: redWeapons){
                 Image redWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
@@ -85,6 +89,8 @@ public class BoardFX extends StackPane {
 
     public void setYellowWeapons(List<String> yellowWeapons){
         int i = 0;
+        for(Node n: yellowWeaponsBox.getChildren())
+            n.setVisible(false);
         try{
             for(String w: yellowWeapons){
                 Image yellowWeapon = new Image(getClass().getClassLoader().getResourceAsStream(
