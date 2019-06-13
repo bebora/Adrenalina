@@ -23,6 +23,7 @@ public class BoardScreen extends HBox {
 
     public BoardScreen(View GUIView){
         boardFX = new BoardFX();
+        boardFX.setEventUpdater(GUIView.getEventUpdater());
         playerBoardZone = new VBox();
         VBox boardZone = new VBox();
         boardZone.setSpacing(20);
@@ -31,7 +32,6 @@ public class BoardScreen extends HBox {
         powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater());
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
-        playerBoardZone.getChildren().addAll(clientPlayer);
         for(ViewPlayer p: GUIView.getPlayers()){
             PlayerBoardFX temp = new PlayerBoardFX();
             temp.updatePlayerInfo(p);
@@ -74,10 +74,14 @@ public class BoardScreen extends HBox {
                     actionButtons.setPossibleActions(selectableOptionsWrapper.getSelectableActions().getOptions());
                     break;
                 case TILES:
+                    boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
                     boardFX.showPossibleTiles(selectableOptionsWrapper.getSelectableTileCoords().getOptions());
                     break;
                 case POWERUP:
                     powerUpsBox.highlightSelectablePowerUps(selectableOptionsWrapper.getSelectablePowerUps());
+                    break;
+                case WEAPON:
+                    boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
                     break;
                 default:
                     break;

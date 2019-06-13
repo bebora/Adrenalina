@@ -84,6 +84,7 @@ public class EffectController extends Observer {
      */
      void nextStep(){
         playersToMove = new ArrayList<>();
+        orderIndex+=1;
         if(orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
             if(curActionType == MOVE) {
