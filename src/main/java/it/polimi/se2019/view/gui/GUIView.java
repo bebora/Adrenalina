@@ -28,6 +28,7 @@ public class GUIView extends View {
 
     private void totalUpdate(){
         boardScreen.updateBoard(getBoard(),getPlayers());
+        boardScreen.updatePowerUps(getPowerUps());
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
     }
 }

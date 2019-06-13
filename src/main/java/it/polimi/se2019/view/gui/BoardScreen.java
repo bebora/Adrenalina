@@ -1,6 +1,5 @@
 package it.polimi.se2019.view.gui;
 import it.polimi.se2019.controller.ReceivingType;
-import it.polimi.se2019.model.Player;
 import it.polimi.se2019.view.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
@@ -29,7 +28,7 @@ public class BoardScreen extends HBox {
         boardZone.setSpacing(20);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
         Label powerUpsLabel = new Label("PowerUps:");
-        powerUpsBox = new PowerUpsBox();
+        powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater());
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
         playerBoardZone.getChildren().addAll(clientPlayer);
@@ -64,7 +63,6 @@ public class BoardScreen extends HBox {
             playerBoardFX.updatePlayerInfo(p);
             i++;
         }
-
     }
 
     public void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
@@ -79,7 +77,7 @@ public class BoardScreen extends HBox {
                     boardFX.showPossibleTiles(selectableOptionsWrapper.getSelectableTileCoords().getOptions());
                     break;
                 case POWERUP:
-                    powerUpsBox.setPowerUps(selectableOptionsWrapper.getSelectablePowerUps().getOptions());
+                    powerUpsBox.highlightSelectablePowerUps(selectableOptionsWrapper.getSelectablePowerUps());
                     break;
                 default:
                     break;
@@ -96,6 +94,10 @@ public class BoardScreen extends HBox {
                 .map(ViewTile::getWeapons)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
+    }
+
+    public void updatePowerUps(List<ViewPowerUp> viewPowerUps){
+        powerUpsBox.setPowerUps(viewPowerUps);
     }
 
 }
