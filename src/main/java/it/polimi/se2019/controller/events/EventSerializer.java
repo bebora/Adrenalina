@@ -10,19 +10,15 @@ import java.lang.reflect.Type;
  * Add particular objectType to switch-case if needed custom parsing
  */
 public class EventSerializer implements JsonSerializer<EventVisitable> {
-    Gson gson = new Gson();
+    private Gson gson = new Gson();
     @Override
     public JsonElement serialize(EventVisitable eventVisitable, Type type, JsonSerializationContext jsonSerializationContext) {
         JsonObject wrapper = new JsonObject();
         String objectType = eventVisitable.getClass().getSimpleName();
         wrapper.add("type", new JsonPrimitive(objectType));
         String event = "event";
-        switch (objectType) {
-            default:
-                String json = gson.toJson(eventVisitable);
-                wrapper.add(event, new JsonPrimitive(json));
-                break;
-        }
+        String json = gson.toJson(eventVisitable);
+        wrapper.add(event, new JsonPrimitive(json));
         return gson.fromJson(wrapper.toString(), JsonElement.class);
     }
 }

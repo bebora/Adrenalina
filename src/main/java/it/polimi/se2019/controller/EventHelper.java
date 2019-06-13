@@ -93,7 +93,8 @@ public class EventHelper {
     }
 
     public Color getRoomFromString(String room) {
-        Set<Color> colors = match.getBoard().getTiles().stream().flatMap(List::stream).map(t -> t.getRoom()).collect(Collectors.toSet());
+        Set<Color> colors = match.getBoard().getTiles().stream().
+                flatMap(List::stream).map(Tile::getRoom).collect(Collectors.toSet());
         try {
             Color relatedColor = Color.valueOf(room);
             if (colors.contains(relatedColor))

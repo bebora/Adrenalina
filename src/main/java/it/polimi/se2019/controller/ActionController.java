@@ -115,7 +115,7 @@ public class ActionController extends Observer {
     }
 
     private void cloneMatch(){
-        if(originalMatch.getSpawnPoints() == null){
+        if(originalMatch.getSpawnPoints().size() == 0){
             sandboxMatch = new NormalMatch(originalMatch);
         }else{
             sandboxMatch = new DominationMatch(originalMatch);

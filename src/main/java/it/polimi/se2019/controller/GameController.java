@@ -31,7 +31,6 @@ public class GameController extends Observer {
     private Player currentPlayer;
     private ActionController actionController;
     private List<Player> spawnablePlayers;
-    private Random random = new Random();
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
     private boolean matchEnd;

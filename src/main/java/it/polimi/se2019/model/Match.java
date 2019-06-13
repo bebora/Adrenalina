@@ -275,7 +275,7 @@ public abstract class Match {
 		players.add(player);
 	}
 
-	public List<Player> getSpawnPoints(){return null; }
+	public List<Player> getSpawnPoints(){return new ArrayList<>(); }
 
 	public UpdateSender getUpdateSender() {
 		return updateSender;

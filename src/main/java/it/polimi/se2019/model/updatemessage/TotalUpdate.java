@@ -69,14 +69,14 @@ public class TotalUpdate implements UpdateVisitable {
      * the player must have to start or resume the game
      * Perspective is calculated from username and players:
      * if no player has that username, an exception will be thrown
-     * @param username
-     * @param board
-     * @param players
+     * @param username username of receiving player
+     * @param board current match board
+     * @param players all players in the receiving player's match
      * @param idView
-     * @param points
-     * @param powerUps
-     * @param loadedWeapons
-     * @param currentPlayer
+     * @param points points of the receiving player
+     * @param powerUps powerups of the receiving player
+     * @param loadedWeapons loaded weapons of the receiving player
+     * @param currentPlayer player who is currently playing its turn in the match
      */
     public TotalUpdate(String username, Board board, List<Player> players,
                        String idView, int points, List<PowerUp> powerUps,
@@ -95,7 +95,7 @@ public class TotalUpdate implements UpdateVisitable {
         this.idView = idView;
         this.points = points;
         this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
-        this.loadedWeapons = loadedWeapons.stream().map(w -> new ViewWeapon(w)).collect(Collectors.toList());
+        this.loadedWeapons = loadedWeapons.stream().map(ViewWeapon::new).collect(Collectors.toList());
         this.currentPlayerId = currentPlayer.getId();
     }
 

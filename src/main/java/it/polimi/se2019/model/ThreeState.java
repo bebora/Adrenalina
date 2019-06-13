@@ -7,16 +7,11 @@ public enum ThreeState {
 	OPTIONAL;
 
 	public boolean toBoolean() {
-		if (this == TRUE || this == OPTIONAL) {
-			return true;
-		} else return false;
+		return this == TRUE || this == OPTIONAL;
 	}
 
 	public boolean toSkip() {
-		if (this == TRUE) {
-			return true;
-		}
-		else return false;
+		return this == TRUE;
 	}
 
 	public ThreeState compare(boolean reverse) {
@@ -28,7 +23,6 @@ public enum ThreeState {
 			case FALSE:
 				if (reverse) return OPTIONAL;
 				else return FALSE;
-
 		}
 		return TRUE;
 	}

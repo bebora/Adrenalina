@@ -7,6 +7,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Concrete class that actually receives updates from model
+ */
 public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
     private transient View linkedView;
     private transient ConcreteViewReceiverHelper helper;
@@ -78,6 +81,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) throws RemoteException {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setActions(actions);
+        linkedView.refresh();
     }
 
     @Override
@@ -94,6 +98,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     public void receiveMovePlayer(String playerId, ViewTileCoords coords) throws RemoteException {
         ViewPlayer player = helper.getPlayerFromId(playerId);
         player.setTile(helper.getTileFromCoords(coords));
+        linkedView.refresh();
     }
 
     /**
@@ -125,10 +130,10 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receiveTile(ViewTile tile) throws RemoteException {
-        //todo @bebora fix / delete
         ViewTile viewTile = helper.getTileFromCoords(tile.getCoords());
-        tile.setAmmos(tile.getAmmos());
-        tile.setWeapons(tile.getWeapons());
+        viewTile.setAmmos(tile.getAmmos());
+        viewTile.setWeapons(tile.getWeapons());
+        linkedView.refresh();
     }
 
     /**
@@ -177,12 +182,11 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receiveWeaponTaken(ViewWeapon takenWeapon, ViewWeapon discardedWeapon, String playerId) throws RemoteException {
         //TODO tell clients that a player has taken the weapon
-        //todo @bebora fix contains can't work
         ViewPlayer player = helper.getPlayerFromId(playerId);
         ViewTile tile = player.getTile();
-        if (!tile.getWeapons().contains(takenWeapon))
+        if (!tile.getWeapons().contains(takenWeapon.getName()))
             throw new InvalidUpdateException("Taken weapon does not exist in selected tile");
-        tile.getWeapons().remove(takenWeapon);
+        tile.getWeapons().remove(takenWeapon.getName());
         if (linkedView.getUsername().equals(playerId)) {
             if (discardedWeapon != null)
                 linkedView.getLoadedWeapons().remove(discardedWeapon);
@@ -190,5 +194,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             if (linkedView.getLoadedWeapons().size() + player.getUnloadedWeapons().size() > 3)
                 throw new InvalidUpdateException("Player would have too many weapons");
         }
+        linkedView.refresh();
     }
 }

@@ -294,7 +294,6 @@ public class EffectController extends Observer {
         if (!askingForSource) {
             if (selectableTiles.isEmpty()) {
                 updateOnStopSelection(OPTIONAL);
-                return;
             }else {
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
@@ -525,7 +524,7 @@ public class EffectController extends Observer {
             else break;
         }
         List<TimerCostrainedEventHandler> handlersPowerUp = new ArrayList<>();
-        for(Player p : players.stream().filter(p -> p.getOnline()).collect(Collectors.toList())){
+        for(Player p : players.stream().filter(Player::getOnline).collect(Collectors.toList())){
             if(p.hasPowerUp(Moment.DAMAGED)){
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);

@@ -12,12 +12,8 @@ public class UpdateSerializer implements JsonSerializer<UpdateVisitable>{
         String objectType = updateVisitable.getClass().getSimpleName();
         wrapper.add("type", new JsonPrimitive(objectType));
         String event = "update";
-        switch (objectType) {
-            default:
-                String update = gson.toJson(updateVisitable);
-                wrapper.add(event, new JsonPrimitive(update));
-                break;
-        }
+        String update = gson.toJson(updateVisitable);
+        wrapper.add(event, new JsonPrimitive(update));
         return gson.fromJson(wrapper.toString(), JsonElement.class);
     }
 }

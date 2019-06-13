@@ -24,7 +24,6 @@ import java.util.concurrent.LinkedBlockingDeque;
  */
 public class ClientSocket extends Thread{
     private Socket socket;
-    private boolean keepAlive;
     private BlockingQueue<EventVisitable> queue = new LinkedBlockingDeque<>();
     private UpdateVisitor updateVisitor;
     private BufferedReader jsonReader;
@@ -86,7 +85,7 @@ public class ClientSocket extends Thread{
                         Logger.log(Priority.WARNING, "Queue interrupted");
                     }
                     catch (IOException e) {
-                        //TODO log somehow
+                        Logger.log(Priority.WARNING, "IOException sending event");
                     }
                 } while (!socket.isClosed());
             }
@@ -104,7 +103,7 @@ public class ClientSocket extends Thread{
                     update.accept(updateVisitor);
                 }
                 catch (IOException e) {
-                    //TODO LOGGER
+                    Logger.log(Priority.WARNING, "IOException receiving update");
                     throw new UnsupportedOperationException();
                 }
             }

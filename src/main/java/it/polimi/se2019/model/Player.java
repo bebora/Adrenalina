@@ -583,7 +583,7 @@ public class Player {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Player) {
-			return ((Player) obj).getId() == this.id;
+			return ((Player) obj).getId().equals(this.id);
 		}
 		return false;
 	}

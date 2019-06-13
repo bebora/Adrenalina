@@ -50,7 +50,7 @@ public class EventUpdaterRMI implements EventUpdater{
     public EventUpdaterRMI(String url, int port) {
         //TODO use port
         try {
-            connectInterface = (ConnectInterface) Naming.lookup("//" + url + "/AdrenalineServer");
+            connectInterface = (ConnectInterface) Naming.lookup(String.format("//%s:%d/AdrenalineServer", url, port));
         }
         catch (RemoteException e) {
             Logger.log(Priority.ERROR, "Adrenaline server not found due to RemoteException");

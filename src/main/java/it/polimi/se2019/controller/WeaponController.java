@@ -165,6 +165,7 @@ public class WeaponController extends Observer {
         }
     }*/
 
+    @Override
     public void concludePayment() {
         match.updateViews();
         curEffect++;

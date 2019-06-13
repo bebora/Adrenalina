@@ -39,7 +39,7 @@ public abstract class Action {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof Action) {
-			return obj.toString() == this.toString();
+			return obj.toString().equals(this.toString());
 		}
 		return false;
 	}

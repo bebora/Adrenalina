@@ -68,7 +68,7 @@ public class DominationMatch extends Match {
             }
         }
 
-        boolean to_return = super.newTurn();
+        boolean toReturn = super.newTurn();
 
         if (super.getCurrentPlayer() == super.getFirstPlayer()) {
             currentTurn++;
@@ -82,7 +82,7 @@ public class DominationMatch extends Match {
             insertSpawnPoints();
             currentTurn++;
         }
-        return to_return;
+        return toReturn;
     }
 
     /**
