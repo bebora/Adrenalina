@@ -288,7 +288,7 @@ public abstract class Match {
 		for (Player p: players) {
 			//TODO check in another way, maybe with online attribute?
 			// Some players may not have any virtualView in tests
-			if (p.getMatch() == null || p.getVirtualView() == null ) continue;
+			if (p.getMatch() == null || p.getVirtualView() == null  || !p.getOnline()) continue;
 			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,
 					p.getId(), p.getPoints(), p.getPowerUps(),
 					p.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList()), players.get(currentPlayer));

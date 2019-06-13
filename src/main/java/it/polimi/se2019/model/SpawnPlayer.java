@@ -1,5 +1,8 @@
 package it.polimi.se2019.model;
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
+import it.polimi.se2019.model.board.Tile;
 
 public class SpawnPlayer extends Player{
     private Boolean damaged;
@@ -32,5 +35,10 @@ public class SpawnPlayer extends Player{
         return true;
     }
 
-
+    @Override
+    public void setTile(Tile tile) {
+        if (this.getTile() != null && this.getTile() != tile) {
+            Logger.log(Priority.WARNING, "SPAWN TRIED TO MOVE");
+        }
+    }
 }

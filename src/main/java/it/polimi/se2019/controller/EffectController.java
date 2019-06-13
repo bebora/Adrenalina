@@ -273,9 +273,11 @@ public class EffectController extends Observer {
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
                     selectableTiles = tileTargets(curMove.getTargetDestination());
-                    if (selectableTiles.isEmpty() || playersToMove.size() == 0) {
+                    if (selectableTiles.isEmpty() || playersToMove.isEmpty()) {
                         updateOnStopSelection(OPTIONAL);
                         return;
+                    } else if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
+                        selectableTiles = Collections.singletonList(playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("No tiles!")).getTile());
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -377,6 +379,8 @@ public class EffectController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
             int max = target.getMaxTargets();
+            if (max == -1 )
+                max = players.size();
             if (players.isEmpty()) {
                 player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");
                 updateOnStopSelection(OPTIONAL);
@@ -535,8 +539,12 @@ public class EffectController extends Observer {
         askingForSource = false;
         playersToMove = players;
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
-        acceptableTypes = new AcceptableTypes(receivingTypes);
         List<Tile> tiles = tileTargets(curMove.getTargetDestination());
+        acceptableTypes = new AcceptableTypes(receivingTypes);
+        if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
+            Tile spawnTile = playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("Error in event!")).getTile();
+            tiles.removeIf(tile -> !tile.equals(spawnTile));
+        }
         if (tiles.isEmpty())
             updateOnStopSelection(TRUE);
         acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));

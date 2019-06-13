@@ -2,6 +2,7 @@ package it.polimi.se2019.view;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SelectableOptions<T> implements Serializable {
@@ -79,7 +80,12 @@ public class SelectableOptions<T> implements Serializable {
 
     public SelectableOptions(List<T> options, int maxSelectables, int minSelectables, String prompt) {
         this.options = new ArrayList<>(options);
-        this.maxSelectables = maxSelectables;
+        if (maxSelectables == -1) {
+            this.maxSelectables = options.size();
+        }
+        else {
+            this.maxSelectables = maxSelectables;
+        }
         this.minSelectables = minSelectables;
         this.prompt = prompt;
     }
@@ -90,9 +96,13 @@ public class SelectableOptions<T> implements Serializable {
     }
 
     public boolean checkForCoherency(List<T> options) {
-        if (options.size() < minSelectables || options.size() > maxSelectables || !this.options.containsAll(options))
+        if (options.size() < minSelectables || options.size() > maxSelectables)
             return false;
-        else return true;
+        for (T option : options)
+            if (Collections.frequency(options, option) < Collections.frequency(this.options, option))
+                return false;
+        return true;
+
     }
 
 }

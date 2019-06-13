@@ -201,6 +201,7 @@ public class WeaponController extends Observer {
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
+            weapon.getEffects().forEach(e -> e.setActivated(false));
             actionController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
         } else {
             boolean modalWeaponActivated = weapon.getEffects().get(0).getAbsolutePriority() == 1
