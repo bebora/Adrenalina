@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
@@ -49,6 +50,29 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
 
     public Map<ReceivingType, EventHandler> getObserverTypes() {
         return observerTypes;
+    }
+
+    @Override
+    public void receiveAmmo(String ammo) throws RemoteException {
+        synchronized (lock) {
+            try {
+                Ammo relatedAmmo;
+                if (observerTypes.keySet().contains(ReceivingType.AMMO)) {
+                    try {
+                         relatedAmmo = Ammo.valueOf(ammo);
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new IncorrectEvent("Ammo doesn't exist!");
+                    }
+                    EventHandler eventHandler = observerTypes.get(ReceivingType.AMMO);
+                    eventHandler.receiveAmmo(relatedAmmo);
+                } else {
+                    throw new IncorrectEvent("Non posso accettare Action!");
+                }
+            } catch (IncorrectEvent e) {
+                viewUpdater.sendPopupMessage(e.getMessage());
+            }
+        }
     }
 
     @Override

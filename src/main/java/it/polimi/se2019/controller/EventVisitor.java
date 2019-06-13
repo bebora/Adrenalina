@@ -14,12 +14,22 @@ import java.util.List;
  * Visitor used by socket server implementation that apply events received on a RequestDispatcher
  */
 public class EventVisitor {
-    RequestDispatcher requestHandler;
-    LobbyController lobbyController;
+    private RequestDispatcher requestHandler;
+    private LobbyController lobbyController;
+    String error = "Connection failed for ";
 
     public EventVisitor(RequestDispatcher requestHandler, LobbyController lobbyController) {
         this.requestHandler = requestHandler;
         this.lobbyController = lobbyController;
+    }
+
+    public void visit(SelectAmmo event) {
+        String ammo = event.getAmmo();
+        try {
+            requestHandler.receiveAmmo(ammo);
+        } catch (RemoteException e) {
+            Logger.log(Priority.WARNING, error + e.getMessage());
+        }
     }
 
     public void visit(ConnectionRequest event) {
@@ -32,7 +42,7 @@ public class EventVisitor {
             requestHandler.receiveAction(selectedAction);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -42,7 +52,7 @@ public class EventVisitor {
             requestHandler.receiveDirection(direction);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -52,7 +62,7 @@ public class EventVisitor {
             requestHandler.receiveEffect(effect);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -62,7 +72,7 @@ public class EventVisitor {
             requestHandler.receivePlayers(new ArrayList<>(playerIds));
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -73,7 +83,7 @@ public class EventVisitor {
             requestHandler.receivePowerUps(new ArrayList<>(powerups), discard);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
     public void visit(SelectRoom selectRoom) {
@@ -82,7 +92,7 @@ public class EventVisitor {
             requestHandler.receiveRoom(room);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -91,7 +101,7 @@ public class EventVisitor {
             requestHandler.receiveStopAction();
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -101,7 +111,7 @@ public class EventVisitor {
             requestHandler.receiveTiles(new ArrayList<>(viewTiles));
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 
@@ -112,7 +122,7 @@ public class EventVisitor {
             requestHandler.receiveWeapon(weapon);
         }
         catch (RemoteException e) {
-            Logger.log(Priority.WARNING, "Connection failed for " + e.getMessage());
+            Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }
 }

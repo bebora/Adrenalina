@@ -31,4 +31,6 @@ public interface RequestDispatcherInterface extends Remote, Serializable {
 
     void receiveWeapon(String weapon) throws RemoteException;
 
+    void receiveAmmo(String ammo) throws RemoteException;
+
 }

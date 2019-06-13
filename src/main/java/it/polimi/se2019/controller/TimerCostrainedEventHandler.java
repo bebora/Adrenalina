@@ -7,6 +7,7 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Direction;
@@ -154,6 +155,14 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         if (active && acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             endHandler();
             observer.updateOnWeapon(weapon);
+        }
+    }
+
+    @Override
+    public void receiveAmmo(Ammo ammo) {
+        if (active && acceptableTypes.getSelectableAmmos().checkForCoherency(Collections.singletonList(ammo))) {
+            endHandler();
+            observer.updateOnAmmo(ammo);
         }
     }
 }
