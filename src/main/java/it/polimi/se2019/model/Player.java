@@ -324,9 +324,8 @@ public class Player {
 	 * @param weapon Weapon to be recharged
 	 */
 	public void reload(Weapon weapon) {
-		weapon.getCost().forEach(cost->ammos.remove(cost));
 		weapon.setLoaded(true);
-		weapon.getEffects().forEach(e -> e.setActivated(false));
+		weapon.reset();
 		sendTotalUpdate();
 	}
 

@@ -114,4 +114,13 @@ public class Weapon {
 	public void setLoaded(Boolean loaded) {
 		this.loaded = loaded;
 	}
+
+	public void reset() {
+		effects.forEach(e -> {
+			e.setActivated(false);
+			e.setDirection(null);
+		} );
+		setTargetPlayers(new ArrayList<>());
+		setBlackListPlayers(new ArrayList<>());
+	}
 }
