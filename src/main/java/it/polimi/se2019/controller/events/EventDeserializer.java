@@ -19,6 +19,9 @@ public class EventDeserializer implements JsonDeserializer<EventVisitable> {
         String objectType = wrapper.get("type").getAsString();
         JsonObject event = new JsonParser().parse(wrapper.get("event").getAsString()).getAsJsonObject();
         switch (objectType) {
+            case "AckEvent":
+                eventVisitable = gson.fromJson(event, AckEvent.class);
+                break;
             case "SelectAmmo":
                 eventVisitable = gson.fromJson(event, SelectAmmo.class);
                 break;
