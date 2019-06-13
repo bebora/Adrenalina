@@ -2,6 +2,7 @@ package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
+import it.polimi.se2019.model.cards.Effect;
 import it.polimi.se2019.model.cards.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,8 @@ class PlayerTest {
             testPlayer.reload(testWeapon);
 
         assertTrue(testPlayer.getWeapons().get(0).getLoaded());
-        assertFalse(testPlayer.checkForAmmos(testPlayer.getWeapons().get(0).getCost(),testPlayer.getAmmos()));
+        assertTrue(testPlayer.getWeapons().get(0).getEffects().stream().noneMatch(Effect::getActivated));
+        assertTrue(testPlayer.getWeapons().get(0).getEffects().stream().noneMatch(e -> e.getDirection() != null));
     }
 
     @Test

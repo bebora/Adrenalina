@@ -321,13 +321,18 @@ public class Target {
 	 * @return Predicate to filter a list of Tiles
 	 */
     public Predicate<Tile> getSameDirectionTile(Tile tile, Direction direction) {
-    	switch(direction) {
-			case EAST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() >= tile.getPosx());
-			case WEST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() <= tile.getPosx());
-			case NORTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() >= tile.getPosy());
-			case SOUTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() <= tile.getPosy());
-			default: throw new UnsupportedOperationException();
-		}
+    	if (direction==null)
+    	    return t -> true;
+        else if (cardinal.equals(ThreeState.TRUE)) {
+            switch (direction){
+                case EAST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() >= tile.getPosx());
+                case WEST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() <= tile.getPosx());
+                case NORTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() >= tile.getPosy());
+                case SOUTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() <= tile.getPosy());
+                default: return t -> true;
+            }
+        }
+        else return t -> true;
 	}
 
 	public Predicate<Tile> getDistanceFilter(Board board, Tile tile) {
@@ -342,13 +347,14 @@ public class Target {
 	 * <li>samePlayerRoom</li>
 	 * <li>throughWalls</li>
      * @param board the board that is being used
-     * @param tile the point of it.polimi.se2019.view Tile
+     * @param tile the point of view Tile
      * @return List of predicates to use in stream()
      */
-	public Predicate<Tile> getFilterTiles(Board board, Tile tile) {
+	public Predicate<Tile> getFilterTiles(Board board, Tile tile, Direction direction) {
 		return getVisibilityFilter(board,tile).
 				and(getSamePlayerRoomFilter(tile)).
-				and(getDistanceFilter(board,tile));
+				and(getDistanceFilter(board,tile)).
+                and(getSameDirectionTile(tile, direction));
 	}
 
 	public Predicate<Tile> getFilterRoom(Board board, Tile tile){

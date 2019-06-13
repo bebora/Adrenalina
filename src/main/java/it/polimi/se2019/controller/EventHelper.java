@@ -54,16 +54,21 @@ public class EventHelper {
         List<Player> temp = new ArrayList<>();
         id.forEach(i -> temp.add(getSinglePlayerFromId(i)));
         temp.removeAll(Collections.singleton(null));
-        if(temp.isEmpty())
+        if(temp.size() != id.size() || temp.contains(null))
             throw new IncorrectEvent("Player ID not correct");
         return temp;
     }
 
     public List<Tile> getTilesFromViewTiles(List<ViewTileCoords> viewTiles){
         Board board = match.getBoard();
-        return viewTiles.stream()
+        List<Tile> tiles = viewTiles.stream()
                 .map(v -> board.getTile(v.getPosy(),v.getPosx()))
                 .collect(Collectors.toList());
+        if (tiles.size() != viewTiles.size() || tiles.contains(null))
+            throw new IncorrectEvent("Wrong tiles!");
+        else {
+            return tiles;
+        }
     }
 
     /**

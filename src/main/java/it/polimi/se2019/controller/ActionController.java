@@ -92,6 +92,8 @@ public class ActionController extends Observer {
             }
         }
         else {
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
             throw new IncorrectEvent("Incorrect weapon choice!");
         }
     }

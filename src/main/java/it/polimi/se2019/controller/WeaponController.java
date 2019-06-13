@@ -37,23 +37,8 @@ public class WeaponController extends Observer {
         this.originalPlayers = originalPlayers;
         this.stillToPay = new ArrayList<>();
         this.actionController = actionController;
-        updateOnWeapon(weapon);
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        updateOnWeapon(weapon);
     }
 
     public List<String> getUsableEffects() {
@@ -158,6 +143,8 @@ public class WeaponController extends Observer {
                 }
             }*/
         } else {
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
             throw new IncorrectEvent("Effect not present!");
         }
     }

@@ -115,7 +115,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                 lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.DIRECTION)) {
                     EventHandler eventHandler = observerTypes.get(ReceivingType.DIRECTION);
-                    eventHandler.receiveDirection(eventHelper.getDirectionFromString(direction));
+                        eventHandler.receiveDirection(eventHelper.getDirectionFromString(direction));
                 } else
                     throw new IncorrectEvent("Non posso accettare una direzione!");
             } catch (IncorrectEvent e) {
@@ -168,8 +168,10 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                             stream().
                             map(eventHelper::getPowerUpFromViewPowerUp).
                             filter(Objects::nonNull).collect(Collectors.toList());
-                    EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
-                    eventHandler.receivePowerUps(relatedPowerUps, discard);
+                    if (relatedPowerUps.size() == powerUps.size()) {
+                        EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
+                        eventHandler.receivePowerUps(relatedPowerUps, discard);
+                    } else throw new IncorrectEvent("Wrong powerUps!");
                 } else
                     throw new IncorrectEvent("Non posso accettare powerUp!");
             } catch (IncorrectEvent e) {
@@ -245,10 +247,6 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
-    }
-
-    public void setEventHelper(EventHelper eventHelper) {
-        this.eventHelper = eventHelper;
     }
 
     public void addReceivingType(List<ReceivingType> receivingTypes, EventHandler eventHandler) {

@@ -84,6 +84,7 @@ public class EffectController extends Observer {
      * for a new input.
      */
      void nextStep(){
+
         playersToMove = new ArrayList<>();
         orderIndex+=1;
         if(orderIndex < curEffect.getOrder().size()) {
@@ -415,7 +416,7 @@ public class EffectController extends Observer {
                 collect(Collectors.toList());
         List<Tile> acceptableTiles = curMatch.getBoard().getTiles().
                 stream().flatMap(List::stream).
-                filter(target.getFilterTiles(board,pointOfView)).
+                filter(target.getFilterTiles(board,pointOfView, curEffect.getDirection())).
                 collect(Collectors.toList());
         return acceptablePlayer.stream().
                 filter(p -> acceptableTiles.contains(p.getTile()) && !p.getUsername().equals(player.getUsername())).
@@ -435,7 +436,7 @@ public class EffectController extends Observer {
         checkPointOfView(target);
         result = players.stream()
                          .map(Player::getTile)
-                         .allMatch(target.getFilterTiles(board,pointOfView)) &&
+                         .allMatch(target.getFilterTiles(board,pointOfView, curEffect.getDirection())) &&
                  players.stream()
                          .allMatch((curWeapon!=null)?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()): p -> true);
         return result;
@@ -446,7 +447,7 @@ public class EffectController extends Observer {
         return board.getTiles().stream().
                 flatMap(List::stream).
                 filter(Objects::nonNull).
-                filter(target.getFilterTiles(board,pointOfView)).
+                filter(target.getFilterTiles(board,pointOfView,curEffect.getDirection())).
                 collect(Collectors.toList());
     }
     /**
@@ -460,7 +461,7 @@ public class EffectController extends Observer {
     private boolean checkTileTargets(Target target,List<Tile> tiles){
         checkPointOfView(target);
         return tiles.stream()
-                .allMatch(target.getFilterTiles(board,pointOfView));
+                .allMatch(target.getFilterTiles(board,pointOfView,curEffect.getDirection()));
     }
 
     private void handleTargeting(ThreeState targeting, List<Player> players){
