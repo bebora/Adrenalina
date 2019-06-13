@@ -37,10 +37,10 @@ class LobbyControllerTest {
             System.out.println(e);
         }
         try {
-            wait(100);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
-            assertEquals(false, true);
+            assert false;
         }
         assertEquals(0,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
     }
@@ -59,17 +59,17 @@ class LobbyControllerTest {
                 System.out.println("Error!");
             }
             try {
-                wait(100);
+                Thread.sleep(100);
             }
             catch (InterruptedException e){
-                assertEquals(false, true);
+                assert false;
             }
         }
         try {
-            wait(100);
+            Thread.sleep(100);
         }
         catch (InterruptedException e){
-            assertEquals(false, true);
+            assert false;
         }
         assertEquals(2, lobbyController.getGames().size());
     }

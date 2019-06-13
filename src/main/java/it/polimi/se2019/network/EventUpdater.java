@@ -32,6 +32,7 @@ public interface EventUpdater {
     void sendTiles(List<ViewTileCoords> tiles);
     void sendWeapon(String weapon);
     void sendStop();
+    void sendAmmo(String ammo);
 
     /**
      * Login to controller

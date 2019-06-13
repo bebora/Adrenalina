@@ -65,11 +65,20 @@ public class CliInputHandler implements Runnable{
             ViewPlayer requestedPlayer = view.getPlayers().stream()
                     .filter(p -> p.getColor().equalsIgnoreCase(color))
                     .findAny().orElse(null);
-            AsciiPlayer.drawPlayerInfo(requestedPlayer, new ArrayList<>(), requestedPlayer.getUnloadedWeapons());
-            view.setDisplayedPlayer(requestedPlayer);
-            view.displayTurnInfo();
+            if (requestedPlayer != null){
+                AsciiPlayer.drawPlayerInfo(requestedPlayer, new ArrayList<>(), requestedPlayer.getUnloadedWeapons());
+                view.setDisplayedPlayer(requestedPlayer);
+                view.displayTurnInfo();
+            }
         }else
             CLI.printMessage("No valid player", "R");
+    }
+
+    private void parseAmmo(String ammo)  {
+        if(view.getSelectableOptionsWrapper().getSelectableAmmos().getOptions().contains(ammo))
+            eventUpdater.sendAmmo(ammo);
+        else
+            CLI.printMessage("Wrong input","R");
     }
 
     private void parseSelection(String[] inSplit){
@@ -78,6 +87,9 @@ public class CliInputHandler implements Runnable{
         System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-2);
         if (view.getReceivingTypes().contains(inSplit[1])) {
             switch (inSplit[1]) {
+                case "AMMO":
+                    parseAmmo(inSplit[2]);
+                    break;
                 case "PLAYERS":
                     parsePlayers(selectedElements);
                     break;
@@ -102,6 +114,7 @@ public class CliInputHandler implements Runnable{
                 case "EFFECT":
                     parseEffect(inSplit[2]);
                     break;
+
                 case "STOP":
                     if (view.getSelectableOptionsWrapper().getAcceptedTypes().contains(ReceivingType.STOP)) {
                         eventUpdater.sendStop();

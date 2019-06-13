@@ -29,6 +29,10 @@ public class SelectableOptionsWrapper implements Serializable {
         return stopPrompt;
     }
 
+    public SelectableOptions<String> getSelectableAmmos() {
+        return selectableAmmos;
+    }
+
     public SelectableOptions<String> getSelectableEffects() {
         return selectableEffects;
     }

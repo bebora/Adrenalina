@@ -74,6 +74,7 @@ public class EffectController extends Observer {
         this.playersToMove = new ArrayList<>();
         this.originalPlayers = originalPlayers;
         this.controller = controller;
+        acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
     /**
@@ -309,11 +310,13 @@ public class EffectController extends Observer {
         List<ReceivingType> receivingTypes;
         int min = curDealDamage.getTarget().getMinTargets();
         int max = curDealDamage.getTarget().getMaxTargets();
+        boolean skip = false;
         switch(targetType) {
             case TILE:
                 List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
                 if (selectableTiles.isEmpty()) {
                     updateOnStopSelection(OPTIONAL);
+                    skip = true;
                 }
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -327,16 +330,20 @@ public class EffectController extends Observer {
                         map(Tile::getRoom).
                         distinct().
                         collect(Collectors.toList());
-                if (selectableRoom.isEmpty())
+                if (selectableRoom.isEmpty()) {
                     updateOnStopSelection(OPTIONAL);
+                    skip = true;
+                }
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.ROOM));
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableRooms(new SelectableOptions<>(selectableRoom, max, min, "Select a room to BOMB!"));
                 break;
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
-                if (players.isEmpty())
+                if (players.isEmpty()) {
+                    skip = true;
                     updateOnStopSelection(OPTIONAL);
+                }
                 else {
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
@@ -346,8 +353,10 @@ public class EffectController extends Observer {
             default:
                 break;
         }
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(this,player.getVirtualView().getRequestDispatcher(),acceptableTypes);
-        timerCostrainedEventHandler.start();
+        if (!skip) {
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
     }
 
     private void filterPlayers(List<Player> playersToFilter, Target target) {
@@ -551,10 +560,12 @@ public class EffectController extends Observer {
         }
         if (tiles.isEmpty())
             updateOnStopSelection(TRUE);
-        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-        timerCostrainedEventHandler.start();
+        else {
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
         }
+    }
 
     private void updateDealDamageOnPlayers(List<Player> players){
         if(curDealDamage.getTarget().getMaxTargets() == 0){

@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * View use this to send events to server
  */
-//TODO check if logging is the best way to handle RemoteException
+//TODO convert new Thread to executor submit!
 public class EventUpdaterRMI implements EventUpdater{
     /**
      * ConnectInterface used to establish the connection with the remote server
@@ -133,6 +133,19 @@ public class EventUpdaterRMI implements EventUpdater{
             }
             catch (RemoteException e){
                 Logger.log(Priority.ERROR, "Failed to send player");
+            }
+        };
+        new Thread(task).start();
+    }
+
+    @Override
+    public void sendAmmo(String ammo) {
+        Runnable task = () -> {
+            try {
+                remoteHandler.receiveAmmo(ammo);
+            }
+            catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Failed to send ammo");
             }
         };
         new Thread(task).start();

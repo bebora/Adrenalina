@@ -43,6 +43,7 @@ public class ActionController extends Observer {
         originalMatch = match;
         curPlayer = originalMatch.getPlayers().get(originalMatch.getCurrentPlayer());
         this.gameController = gameController;
+        acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
     @Override
@@ -297,6 +298,7 @@ public class ActionController extends Observer {
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             if (selectedWeapon != null)    selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
+            originalMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(originalMatch));
             originalMatch.updateViews();
             gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);
         }

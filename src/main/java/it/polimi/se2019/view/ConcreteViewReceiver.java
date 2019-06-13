@@ -106,14 +106,11 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             linkedView.setStatus(Status.WAITING);
             System.out.println("WAITING TO PLAY...");
         }
-        else if (message.contains("\\$") && message.split("\\$")[0].equals("WINNERS")) {
-            if(linkedView.getMessages() != null)
-                linkedView.addMessage(message);
-        }
         else{
             if(linkedView.getMessages() != null)
                 linkedView.addMessage(message);
         }
+        linkedView.refresh();
     }
 
 

@@ -38,6 +38,22 @@ public class WeaponController extends Observer {
         this.stillToPay = new ArrayList<>();
         this.actionController = actionController;
         updateOnWeapon(weapon);
+        acceptableTypes = new AcceptableTypes(new ArrayList<>());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
     public List<String> getUsableEffects() {

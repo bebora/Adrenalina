@@ -99,12 +99,12 @@ public class LobbyController{
         String token = String.format("%s$%s", username, password.hashCode());
         Player player = new Player(token);
         player.setVirtualView(view);
-        Logger.log(Priority.DEBUG, "PLAYER CONNECTED");
         List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
         if (modeWaiting == null) {
             view.getViewUpdater().sendPopupMessage("Selected mode does not exist! Can't connect.");
             throw new AuthenticationErrorException();
         } else {
+            Logger.log(Priority.DEBUG, "PLAYER CONNECTED");
             modeWaiting.add(player);
             view.getViewUpdater().sendPopupMessage("SUCCESS");
             if (modeWaiting.size() == 3) {

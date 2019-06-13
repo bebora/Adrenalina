@@ -21,6 +21,13 @@ public class EventUpdaterSocket implements EventUpdater{
     }
 
     @Override
+    public void sendAmmo(String ammo) {
+        EventVisitable ammoEvent = new SelectAmmo(ammo);
+        socket.addEventToQueue(ammoEvent);
+    }
+
+
+    @Override
     public void sendAck() {
         EventVisitable ackEvent = new AckEvent();
         socket.addEventToQueue(ackEvent);

@@ -46,8 +46,10 @@ public class GameController extends Observer {
      * @param username
      */
     public synchronized void checkEnd(String username) {
-        match.getUpdateSender().sendPopupMessage(String.format("Player %s is offline!", username));
-        checkEnd();
+        if (!matchEnd) {
+            match.getUpdateSender().sendPopupMessage(String.format("Player %s is offline!", username));
+            checkEnd();
+        }
     }
 
     /**
@@ -158,6 +160,7 @@ public class GameController extends Observer {
         matchEnd = false;
         turnEnd = false;
         skip = false;
+        acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
     public void startTurn(){
@@ -315,8 +318,7 @@ public class GameController extends Observer {
         }
         players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
         try {
-            wait(500);
-
+            Thread.sleep(500);
         }
         catch (InterruptedException e) {
             assert false;
