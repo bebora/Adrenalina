@@ -284,7 +284,7 @@ public class GameController extends Observer {
             sendWinners();
             lobbyController.getGames().remove(this);
             return;
-        }
+        } else end = false;
         actionCounter = 0;
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
         spawnablePlayers =match.getPlayers().stream()

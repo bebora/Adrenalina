@@ -113,7 +113,7 @@ public class LobbyController{
                 timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
                 Logger.log(Priority.DEBUG, "TIMER STARTED");
             }
-            else if (modeWaiting.size() == 5) {
+            else if (modeWaiting.size() >= 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();
                 startGame(Mode.valueOf(mode));
                 /*Timer timer = new Timer();

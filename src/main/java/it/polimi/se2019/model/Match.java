@@ -109,7 +109,6 @@ public abstract class Match {
  	 */
 	public void startFrenzy() {
 		finalFrenzy = TRUE;
-		firstPlayer = currentPlayer;
 		Boolean afterFirst;
 		// Update actions
 		if (firstPlayer < currentPlayer) {
@@ -137,6 +136,7 @@ public abstract class Match {
 			p.getRewardPoints().addAll(new ArrayList<>(Arrays.asList(2,1,1,1)));
 		}
 		updateViews();
+		firstPlayer = currentPlayer;
 	}
 
 	/**
