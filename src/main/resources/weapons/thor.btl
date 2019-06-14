@@ -13,6 +13,7 @@ effects:
       damagesAmount:2
       targeting:TRUE
       target:
+        maxTargets:1
         visibility:TRUE
   name:with chain reaction
   desc:Deal 1 damage to a second target that your first target can see.

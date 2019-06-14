@@ -41,7 +41,7 @@ public class SpawnPlayer extends Player{
             Logger.log(Priority.WARNING, "SPAWN TRIED TO MOVE");
         }
         else {
-            setTile(tile);
+            super.setTile(tile);
         }
     }
 }
