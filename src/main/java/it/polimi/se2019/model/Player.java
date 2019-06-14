@@ -77,9 +77,11 @@ public class Player {
 	public Player() {
 		this.actions = new ArrayList<>();
 		this.firstPlayer = false;
+		this.id = UUID.randomUUID().toString();
 		this.damages = new ArrayList<>();
 		this.marks = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+		this.dominationSpawn = false;
 	}
 
 	void restorePlayer(Player oldPlayer){

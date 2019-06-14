@@ -10,7 +10,7 @@ public class SpawnPlayer extends Player{
         super(color.toString()+ "$");
         setDominationSpawn(true);
         setColor(color);
-        damaged  = Boolean.FALSE;
+        damaged = Boolean.FALSE;
     }
 
     @Override
@@ -24,9 +24,12 @@ public class SpawnPlayer extends Player{
         this.damaged = damaged;
     }
 
+    /**
+     * Reset player so that it can be attacked on a new turn
+     */
     @Override
     public void resetPlayer() {
-        damaged = Boolean.TRUE;
+        damaged = Boolean.FALSE;
     }
 
 

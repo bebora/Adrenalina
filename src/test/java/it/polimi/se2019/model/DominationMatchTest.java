@@ -42,11 +42,36 @@ class DominationMatchTest {
             match.newTurn();
         }
         spawnerPlayers = match.getSpawnPoints();
-        Tile destTile = spawnerPlayers.get(0).getTile();
+        Tile destTile = spawnerPlayers.get(match.getCurrentPlayer()).getTile();
         Player current = match.getPlayers().get(match.getCurrentPlayer());
         current.setTile(destTile);
         match.newTurn();
         assertEquals(1, current.getDamagesCount());
+    }
+
+    @Test
+    void checkSpawnDamaged() {
+        for (int i = 0; i < 3; i++) {
+            System.out.println(match.getCurrentPlayer());
+            match.newTurn();
+        }
+        //SpawnPoints have been generated after first round
+        spawnerPlayers = match.getSpawnPoints();
+        Tile destTile = spawnerPlayers.get(0).getTile();
+        Tile otherTile = spawnerPlayers.get(1).getTile();
+        Player current = match.getPlayers().get(match.getCurrentPlayer());
+        //Move current player to spawn alone
+        current.setTile(destTile);
+        //Set other players to other spawn tile
+        match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && !p.equals(current)).forEach(p -> p.setTile(otherTile));
+        match.newTurn();
+        //A player alone in a spawn tile should give it one damage
+        assertEquals(1, spawnerPlayers.get(0).getDamagesCount());
+        //Other spawn should not have any damage
+        assertEquals(0, spawnerPlayers.get(1).getDamagesCount());
+        //Current player will be one of the other two, so now we can go to the next turn and see if the other spawn has been damaged
+        match.newTurn();
+        assertEquals(0, spawnerPlayers.get(1).getDamagesCount());
     }
 
     @Test

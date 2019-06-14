@@ -65,6 +65,7 @@ public class DominationMatch extends Match {
                         orElseThrow(UnsupportedOperationException::new);
                 spawnPoint.setDamaged(false);
                 spawnPoint.receiveShot(currentPlayer, 1, 0, true);
+                spawnPoint.setDamaged(false);
             }
         }
 

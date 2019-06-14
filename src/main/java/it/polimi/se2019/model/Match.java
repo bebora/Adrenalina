@@ -36,6 +36,7 @@ public abstract class Match {
         turnEnd = false;
         firstPlayer = rand.nextInt(players.size());
         currentPlayer = firstPlayer;
+        players.get(firstPlayer).setFirstPlayer(true);
         board = BoardCreator.parseBoard(boardFilename, numSkulls);
         this.updateSender = new UpdateSender(this);
         for(Player p: this.players){
