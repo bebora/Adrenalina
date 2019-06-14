@@ -26,6 +26,7 @@ effects:
       damagesAmount:3
       targeting:TRUE
       target:
+        maxTargets:1
         maxDistance:0
   moves:
     move:

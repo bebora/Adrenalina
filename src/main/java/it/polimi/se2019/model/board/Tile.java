@@ -116,4 +116,18 @@ public class Tile {
 			throw new UnsupportedOperationException();
 		}
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Tile tile = (Tile) o;
+		return posx == tile.posx &&
+				posy == tile.posy;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(posx, posy);
+	}
 }

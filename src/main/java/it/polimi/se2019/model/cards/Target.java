@@ -381,9 +381,11 @@ public class Target {
 		Predicate<Player> falseBlack =
 				p -> checkBlackList == ThreeState.FALSE &&
 						!blackList.contains(p);
+		Predicate<Player> notSelf = p -> !p.getUsername().equals(player.getUsername());
 
 		return (optionalTarget.or(trueTarget).or(falseTarget)).
-				and(optionalBlack.or(trueBlack).or(falseBlack));
+				and(optionalBlack.or(trueBlack).or(falseBlack)).
+				and(notSelf);
 	}
 
 	public Target getMoveDominationTarget() {

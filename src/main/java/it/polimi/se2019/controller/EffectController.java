@@ -91,7 +91,7 @@ public class EffectController extends Observer {
             if(curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
-                if(curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null)
+                if(curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null && curMove.getObjectToMove().equals(ObjectToMove.TARGETSOURCE))
                     processDirection(curMove.getTargetSource());
                 else
                     processDirection(curMove.getTargetDestination());
@@ -280,7 +280,13 @@ public class EffectController extends Observer {
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
                     selectableTiles = tileTargets(curMove.getTargetDestination());
-                    if (selectableTiles.isEmpty() || playersToMove.isEmpty()) {
+                    if (playersToMove.isEmpty()) {
+                        if (curMove.getTargetSource().getMinTargets() == 0)
+                            nextStep();
+                        else
+                            updateOnStopSelection(OPTIONAL);
+                    }
+                    else if (selectableTiles.isEmpty()) {
                         updateOnStopSelection(OPTIONAL);
                         return;
                     } else if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
@@ -344,8 +350,13 @@ public class EffectController extends Observer {
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
                 if (players.isEmpty()) {
-                    skip = true;
-                    updateOnStopSelection(OPTIONAL);
+                    if (curDealDamage.getTarget().getMinTargets() == 0) {
+                        nextStep();
+                    }
+                    else {
+                        skip = true;
+                        updateOnStopSelection(OPTIONAL);
+                    }
                 }
                 else {
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
@@ -361,6 +372,7 @@ public class EffectController extends Observer {
             timerCostrainedEventHandler.start();
         }
     }
+
 
     private void filterPlayers(List<Player> playersToFilter, Target target) {
         List<Player> players = playerTargets(target).stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList());
@@ -398,8 +410,12 @@ public class EffectController extends Observer {
             if (max == -1 )
                 max = players.size();
             if (players.isEmpty()) {
-                player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");
-                updateOnStopSelection(OPTIONAL);
+                if (target.getMinTargets() == 0)
+                    nextStep();
+                else {
+                    player.getVirtualView().getViewUpdater().sendPopupMessage("You can't move anyone! Wrong choice mate!");
+                    updateOnStopSelection(OPTIONAL);
+                }
             }
             else {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min,curMove.getPrompt()));

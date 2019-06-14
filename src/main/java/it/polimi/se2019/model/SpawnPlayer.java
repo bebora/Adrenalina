@@ -40,5 +40,8 @@ public class SpawnPlayer extends Player{
         if (this.getTile() != null && this.getTile() != tile) {
             Logger.log(Priority.WARNING, "SPAWN TRIED TO MOVE");
         }
+        else {
+            setTile(tile);
+        }
     }
 }
