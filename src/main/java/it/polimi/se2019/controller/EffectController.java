@@ -84,7 +84,6 @@ public class EffectController extends Observer {
      * for a new input.
      */
      void nextStep(){
-
         playersToMove = new ArrayList<>();
         orderIndex+=1;
         if(orderIndex < curEffect.getOrder().size()) {
@@ -155,6 +154,10 @@ public class EffectController extends Observer {
                 } else {
                     updateDealDamageOnPlayers(players);
                 }
+            }
+            else {
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
+                timerCostrainedEventHandler.start();
             }
         }
         else {

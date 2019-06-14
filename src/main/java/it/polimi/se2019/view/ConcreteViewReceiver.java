@@ -107,15 +107,18 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
-        if (linkedView.getStatus() == Status.LOGIN && message.contains("SUCCESS")){
-            linkedView.setStatus(Status.WAITING);
-            System.out.println("WAITING TO PLAY...");
+        if (linkedView.getStatus() == Status.LOGIN){
+            if (message.contains("SUCCESS")) {
+                linkedView.setStatus(Status.WAITING);
+                System.out.println("WAITING TO PLAY...");
+            }
         }
         else{
-            if(linkedView.getMessages() != null)
+            if(linkedView.getMessages() != null) {
                 linkedView.addMessage(message);
+                linkedView.refresh();
+            }
         }
-        linkedView.refresh();
     }
 
 

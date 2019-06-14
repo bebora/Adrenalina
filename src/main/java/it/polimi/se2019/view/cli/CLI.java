@@ -156,15 +156,17 @@ public class CLI extends View {
 
     @Override
     public synchronized void  refresh(){
-        displayedPlayer = getSelf();
-        if(AsciiBoard.board == null)
-            AsciiBoard.board = this.getBoard();
-        AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));
-        AsciiPlayer.drawPlayerInfo(getSelf(),getLoadedWeapons(), getSelf().getUnloadedWeapons());
-        AsciiPlayer.printPowerUps(this);
-        displayMessages();
-        displaySelectableOptions();
-        displayTurnInfo();
-        moveCursor(1, AsciiBoard.boardBottomBorder + 6);
+        if (getPlayers() != null && !getPlayers().isEmpty()) {
+            displayedPlayer = getSelf();
+            if (AsciiBoard.board == null)
+                AsciiBoard.board = this.getBoard();
+            AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));
+            AsciiPlayer.drawPlayerInfo(getSelf(), getLoadedWeapons(), getSelf().getUnloadedWeapons());
+            AsciiPlayer.printPowerUps(this);
+            displayMessages();
+            displaySelectableOptions();
+            displayTurnInfo();
+            moveCursor(1, AsciiBoard.boardBottomBorder + 6);
+        }
     }
 }

@@ -76,6 +76,8 @@ public class PaymentController extends Observer{
                 observer.concludePayment();
             }
         } else {
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
+            timerCostrainedEventHandler.start();
             throw new IncorrectEvent("Error! Not enough powerUps to pay remaining cost! Give me more!");
         }
     }

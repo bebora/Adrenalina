@@ -278,7 +278,7 @@ public class Target {
 	public boolean checkDifferentSquare(List<Player> players) {
 		switch (differentSquare) {
 			case TRUE:
-				return players.stream().map(Player::getTile).distinct().count() == 0;
+				return players.stream().map(Player::getTile).distinct().count() == 1;
 			case FALSE:
 				return players.stream().map(Player::getTile).distinct().count() == players.size();
 			default:
