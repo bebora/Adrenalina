@@ -7,8 +7,8 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventSerializer;
-import it.polimi.se2019.model.updatemessage.UpdateDeserializer;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
+import it.polimi.se2019.controller.updatemessage.UpdateDeserializer;
+import it.polimi.se2019.controller.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.UpdateVisitor;
 
 import java.io.BufferedReader;

@@ -13,12 +13,12 @@ public class DominationMatch extends Match {
     /**
      * Tracks the current turn, used to add the Domination Spawn in the correct moment
      */
-    int currentTurn = -1;
+    private int currentTurn = -1;
 
     /**
      * Helper attribute that keeps track of the Domination Spawn players
      */
-    List<Player> spawnPoints;
+    private List<Player> spawnPoints;
 
     /**
      * Create a Domination Match, using {@link #Match} constructor

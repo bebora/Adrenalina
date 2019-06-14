@@ -66,11 +66,7 @@ public class NormalMatch extends Match {
 					filter(p -> p.getPoints() == maxTrack).
 					collect(Collectors.toList());
 		}
-
 	}
-
-
-
 }
 
 

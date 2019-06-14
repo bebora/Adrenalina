@@ -1,4 +1,4 @@
-package it.polimi.se2019.model.updatemessage;
+package it.polimi.se2019.controller.updatemessage;
 
 import com.google.gson.*;
 

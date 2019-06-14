@@ -1,4 +1,4 @@
-package it.polimi.se2019.model.updatemessage;
+package it.polimi.se2019.controller.updatemessage;
 
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Tile;

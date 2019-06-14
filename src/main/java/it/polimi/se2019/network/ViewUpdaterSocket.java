@@ -6,7 +6,7 @@ import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.model.updatemessage.*;
+import it.polimi.se2019.controller.updatemessage.*;
 
 import java.util.List;
 

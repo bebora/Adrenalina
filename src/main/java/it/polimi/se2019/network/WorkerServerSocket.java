@@ -10,9 +10,9 @@ import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
-import it.polimi.se2019.model.updatemessage.PingUpdate;
-import it.polimi.se2019.model.updatemessage.UpdateSerializer;
-import it.polimi.se2019.model.updatemessage.UpdateVisitable;
+import it.polimi.se2019.controller.updatemessage.PingUpdate;
+import it.polimi.se2019.controller.updatemessage.UpdateSerializer;
+import it.polimi.se2019.controller.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.VirtualView;
 
 import java.io.BufferedReader;

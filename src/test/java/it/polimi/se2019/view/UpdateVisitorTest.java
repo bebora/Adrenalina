@@ -4,7 +4,7 @@ import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.model.updatemessage.TotalUpdate;
+import it.polimi.se2019.controller.updatemessage.TotalUpdate;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

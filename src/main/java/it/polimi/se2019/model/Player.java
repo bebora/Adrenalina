@@ -1,5 +1,7 @@
 package it.polimi.se2019.model;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.Attack;
 import it.polimi.se2019.model.actions.Grab;
@@ -73,8 +75,10 @@ public class Player {
 
 
 	public Player() {
+		this.actions = new ArrayList<>();
 		this.firstPlayer = false;
 		this.damages = new ArrayList<>();
+		this.marks = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
 	}
 
@@ -268,19 +272,18 @@ public class Player {
 	 */
 	public synchronized void receiveShot(Player shooter, int damage, int marks, boolean convert) {
 		int temp = damage;
-		if(shooter != this) {
-			while (damage > 0 && damages.size() < 13) {
-				damages.add(shooter);
-				damage--;
-			}
-			if (convert && temp != 0)
-				convertMarks(shooter);
-			while (marks > 0) {
-				receiveMark(shooter);
-				marks--;
-			}
-			notifyHealthChange();
+		if(shooter == this) Logger.log(Priority.DEBUG, "Receiving damage from spawnpoint");
+		while (damage > 0 && damages.size() < 13) {
+			damages.add(shooter);
+			damage--;
 		}
+		if (convert && temp != 0)
+			convertMarks(shooter);
+		while (marks > 0) {
+			receiveMark(shooter);
+			marks--;
+		}
+		notifyHealthChange();
 	}
 
 	public boolean canReload() {

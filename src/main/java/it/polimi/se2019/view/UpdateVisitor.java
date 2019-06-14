@@ -2,7 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.model.updatemessage.*;
+import it.polimi.se2019.controller.updatemessage.*;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
