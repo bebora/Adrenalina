@@ -251,40 +251,45 @@ public class GameController extends Observer {
         List<Player> overkillPlayers = match.
                 getPlayers().
                 stream().
-                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 8).
+                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 12 && !p.getDamages().get(12).getDominationSpawn()).
                 collect(Collectors.toList());
         List<Player> spawnPoints = match.
                 getPlayers().
                 stream().
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
-        if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty()) {
-            if (skip) {
-                acceptableTypes = new AcceptableTypes(Arrays.asList(PLAYERS));
-                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", overkillPlayers.get(0).getUsername())));
-                for (Player current : overkillPlayers) {
-                    current.getDamages().remove(7);
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                    timerCostrainedEventHandler.setNotifyOnEnd(false);
-                    timerCostrainedEventHandler.start();
-                    try {
-                        timerCostrainedEventHandler.join();
-                    } catch (InterruptedException e) {
-                        Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
-                    }
-                    if (!timerCostrainedEventHandler.isBlocked()) {
-                        overkillPlayers.forEach(p -> p.getDamages().remove(7));
-                        break;
-                    }
+        if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty() && !skip && currentPlayer.getOnline()) {
+            acceptableTypes = new AcceptableTypes(Collections.singletonList(PLAYERS));
+            for (Player current : overkillPlayers) {
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
+                current.getDamages().remove(7);
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler.setNotifyOnEnd(false);
+                timerCostrainedEventHandler.start();
+                try {
+                    timerCostrainedEventHandler.join();
+                } catch (InterruptedException e) {
+                    Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
                 }
-            } else {
-                Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
-                if (spawnPoint != null) {
-                    spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
+                if (!timerCostrainedEventHandler.isBlocked()) {
+                    overkillPlayers.forEach(p -> p.getDamages().remove(7));
+                    Player spawnPoint = spawnPoints.stream().findAny().get();
+                    if (spawnPoint != null) {
+                        spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
+                    }
+                    break;
+                } else {
+                    overkillPlayers.removeIf(p -> p.getUsername().equals(current.getUsername()));
                 }
-                overkillPlayers.forEach(p -> p.getDamages().remove(7));
             }
-        } else if (match.newTurn()) {
+        } else {
+            Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
+            if (spawnPoint != null) {
+                spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
+            }
+            overkillPlayers.forEach(p -> p.getDamages().remove(7));
+        }
+        if (match.newTurn()) {
             matchEnd = true;
             sendWinners();
             lobbyController.getGames().remove(this);
