@@ -191,6 +191,7 @@ public class EffectController extends Observer {
                         .flatMap(List::stream)
                         .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true))
                         .collect(Collectors.toList());
+                temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
                 handleTargeting(curDealDamage.getTargeting(),temp);
                 checkPowerUps(temp);
                 nextStep();

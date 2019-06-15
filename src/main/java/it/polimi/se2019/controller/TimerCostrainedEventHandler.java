@@ -19,7 +19,7 @@ import java.util.List;
 
 public class TimerCostrainedEventHandler extends Thread implements EventHandler {
     private long start;
-    private long time;
+    private float time;
     private boolean active;
     private boolean blocked;
     private Observer observer;
@@ -32,7 +32,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     public TimerCostrainedEventHandler(TimerCostrainedEventHandler timerCostrainedEventHandler) {
-        time = Integer.parseInt(MyProperties.getInstance().getProperty("time")) - (System.currentTimeMillis() - start);
+        time = Float.parseFloat(MyProperties.getInstance().getProperty("time")) - (System.currentTimeMillis() - start);
         active = true;
         this.observer = timerCostrainedEventHandler.observer;
         this.requestDispatcher = timerCostrainedEventHandler.requestDispatcher;
@@ -42,7 +42,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     public TimerCostrainedEventHandler(Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
-        time = Integer.parseInt(MyProperties.getInstance().getProperty("time"));
+        time = Float.parseFloat(MyProperties.getInstance().getProperty("time"));
         active = true;
         this.observer = observer;
         this.requestDispatcher = requestDispatcher;

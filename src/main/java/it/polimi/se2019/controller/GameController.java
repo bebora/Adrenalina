@@ -320,9 +320,9 @@ public class GameController extends Observer {
         for (Player p : players) {
             stringBuffer.append(p.getUsername() + ", ");
         }
-        players.stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
+        match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
         try {
-            Thread.sleep(500);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e) {
             assert false;

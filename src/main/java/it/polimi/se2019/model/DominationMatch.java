@@ -61,7 +61,7 @@ public class DominationMatch extends Match {
             if (numPlayerInTile == 1) {
                 SpawnPlayer spawnPoint = (SpawnPlayer) spawnPoints.
                         stream().
-                        filter(s -> s.getTile() == currentPlayer.getTile()).findFirst().
+                        filter(s -> s.getTile().equals(currentPlayer.getTile())).findFirst().
                         orElseThrow(UnsupportedOperationException::new);
                 spawnPoint.setDamaged(false);
                 spawnPoint.receiveShot(currentPlayer, 1, 0, true);

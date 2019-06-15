@@ -151,15 +151,17 @@ public abstract class Match {
 		// Dead players
 		List<Player> deadPlayers = players.stream().
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
+		// Point for double shot
+		if (deadPlayers.stream().filter(p -> !p.getDamages().get(10).getDominationSpawn()).count() > 1)
+			players.get(currentPlayer).addPoints(1);
+
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);
 			p.resetPlayer();
 			p.addPowerUp(board.drawPowerUp(), false);
 		}
 
-		// Point for double shot
-        if (deadPlayers.stream().filter(p -> !p.getDamages().get(11).getDominationSpawn()).count() > 1)
-            players.get(currentPlayer).addPoints(1);
+
 
 		board.refreshWeapons();
 		board.refreshAmmos();
