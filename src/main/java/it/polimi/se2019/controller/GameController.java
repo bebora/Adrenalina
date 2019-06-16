@@ -104,7 +104,7 @@ public class GameController extends Observer {
                 currentPlayer.getVirtualView().getRequestDispatcher().clear();
                 currentPlayer.setAlive(TRUE);
                 Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                        filter(t -> t != null && t.isSpawn() && t.getRoom() == Color.valueOf(powerUps.get(0).getDiscardAward().toString())).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
+                        filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
                 currentPlayer.setTile(tile);
                 currentPlayer.discardPowerUp(powerUps.get(0), false);
                 if (!skip)
@@ -317,10 +317,9 @@ public class GameController extends Observer {
                 .collect(Collectors.toList());
 
         if (!matchEnd) {
-            if (spawnablePlayers.isEmpty())
-                startTurn();
-            else
+            if (!spawnablePlayers.isEmpty())
                 startSpawning();
+            startTurn();
         } else {
             Logger.log(Priority.DEBUG, "Game ending");
     }
@@ -354,13 +353,15 @@ public class GameController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Select a PowerUp to discard!"));
             timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
+            timerCostrainedEventHandlers.forEach(t -> t.start());
         }
         for (TimerCostrainedEventHandler t : timerCostrainedEventHandlers) {
             try {
                 t.join();
+                Logger.log(Priority.DEBUG, "One spawning done!");
             }
             catch (Exception e) {
-                Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
+                Logger.log(Priority.DEBUG, "Ended handler spawner!");
             }
         }
     }

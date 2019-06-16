@@ -1,6 +1,8 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
@@ -15,6 +17,7 @@ public class Spawner extends Observer {
     private Board board;
 
     public Spawner(Player playerToSpawn,Board board){
+        Logger.log(Priority.DEBUG, "Trying to spawn a player!");
         this.playerToSpawn = playerToSpawn;
         this.board = board;
         playerToSpawn.addPowerUp(board.drawPowerUp(),false);

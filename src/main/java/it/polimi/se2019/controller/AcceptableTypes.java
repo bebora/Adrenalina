@@ -12,6 +12,9 @@ import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.List;
 
+/**
+ * Container class used in Controller to store accepted information from the client.
+ */
 public class AcceptableTypes {
     private SelectableOptions<Action> selectableActions;
     private SelectableOptions<String> selectabeEffects;

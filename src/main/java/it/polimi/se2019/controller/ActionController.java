@@ -24,6 +24,11 @@ import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
 import static it.polimi.se2019.model.actions.SubAction.RELOAD;
 
+/**
+ * Handles the flow for an action.
+ * Supports MOVE, SHOT, GRAB, and RELOAD.
+ * At the start, clones the match into {@link #sandboxMatch} to assure the player completes the full action before modifying the {@link #originalMatch}
+ */
 public class ActionController extends Observer {
     private GameController gameController;
     private Match originalMatch;
@@ -46,6 +51,10 @@ public class ActionController extends Observer {
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
+    /**
+     * Handles receiving the chosen action from the player, start to compute it.
+     * @param action chosen by the {@link #curPlayer}
+     */
     @Override
     public void updateOnAction(Action action){
         cloneMatch();
@@ -60,6 +69,13 @@ public class ActionController extends Observer {
         }
     }
 
+    /**
+     * Handles receiving the chosen weapon from the player.
+     * Supported in SHOT, GRAB, RELOAD subAction.
+     * <li>In the SHOT action, uses the {@link #weaponController} to process the selected weapon.</li>
+     * <li>In the GRAB or RELOAD action, uses the PaymentController to start the payment.</li>
+     * @param weapon
+     */
     @Override
     public void updateOnWeapon(Weapon weapon){
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
@@ -98,24 +114,31 @@ public class ActionController extends Observer {
         }
     }
 
+    /**
+     * Handles the selection of tiles from the Client.
+     * Supported in MOVE action.
+     * @param tiles
+     */
     @Override
     public void updateOnTiles(List<Tile> tiles){
         if (acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
             if (curSubAction == SubAction.MOVE && !tiles.isEmpty()) {
                 Tile tile = tiles.get(0);
-                if (originalMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false).contains(tile)) {
-                    curPlayer.getVirtualView().getRequestDispatcher().clear();
-                    curPlayer.setTile(tile);
-                    nextStep();
-                } else {
-                    curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't reach the selected tile!");
-                }
+                curPlayer.getVirtualView().getRequestDispatcher().clear();
+                curPlayer.setTile(tile);
+                nextStep();
+            } else {
+                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't reach the selected tile!");
             }
         }
     }
 
+    /**
+     * Handles the cloning of the match, when the action starts.
+     * The original get restored, incorporating changes in the sandBox match, when the action is concluded or arrived at a conclusion checkpoint.
+     */
     private void cloneMatch(){
-        if(originalMatch.getSpawnPoints().size() == 0){
+        if(originalMatch.getSpawnPoints().isEmpty()){
             sandboxMatch = new NormalMatch(originalMatch);
         }else{
             sandboxMatch = new DominationMatch(originalMatch);
@@ -124,6 +147,11 @@ public class ActionController extends Observer {
         sandboxMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(sandboxMatch));
     }
 
+    /**
+     * Process a move, prompting the {@link #curPlayer} with the possible Tiles to move on.
+     * If the selectable Tiles size are unique, the choice is made automatically.
+     * If the selectable Tiles are empty, the next step is made.
+     */
     private void nextMove() {
         List <ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
         List<Tile> selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
@@ -163,6 +191,10 @@ public class ActionController extends Observer {
         }
     }
 
+    /**
+     * Handles a generic step, parsing the current subAction from {@link #curAction}.
+     *
+     */
     private void nextStep(){
         if(subActionIndex == curAction.getSubActions().size()){
             sandboxMatch.restoreMatch(originalMatch);
@@ -200,6 +232,7 @@ public class ActionController extends Observer {
                     if (curPlayer.getTile().isSpawn()) {
                         receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                         acceptableTypes = new AcceptableTypes(receivingTypes);
+                        //Grab weapon
                         if (curPlayer.getWeapons().size() < Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
                             selectableWeapon = curPlayer.
                                     getTile().
@@ -208,7 +241,8 @@ public class ActionController extends Observer {
                                     filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)))).
                                     collect(Collectors.toList());
                             prompt = "Select a weapon to grab!";
-                        } else {
+                        } //Discard weapon first, then grab
+                        else {
                             selectableWeapon = curPlayer.
                                     getWeapons();
                             prompt = "Select a weapon to discard!";
@@ -267,10 +301,18 @@ public class ActionController extends Observer {
 
     }
 
+    /**
+     * Handles the start of the payment process, using the PaymentController.
+     * Doesn't support "ANY" keyword.
+     */
     private void startPayingProcess(){
         PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
         paymentController.startPaying();
     }
+
+    /**
+     * After the payment is being made, parse the current subAction to process it, and calls nextStep.
+     */
     @Override
     public void concludePayment(){
         sandboxMatch.updateViews();
@@ -295,6 +337,11 @@ public class ActionController extends Observer {
         nextStep();
     }
 
+    /**
+     * Handles the lack of a choice from the player.
+     * No non-reverse stop are supported  in ActionController.
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
