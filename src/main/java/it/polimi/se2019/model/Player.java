@@ -39,8 +39,8 @@ public class Player {
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(2);
 		firstShotReward = Boolean.FALSE;
-		damagesAllocable = 0;
 	}
+
 	public Player(Player originalPlayer){
 		this.match = originalPlayer.getMatch();
 		this.id = originalPlayer.getId();
@@ -69,10 +69,8 @@ public class Player {
 		this.powerUps = new ArrayList<>();
 		this.powerUps.addAll(originalPlayer.powerUps);
 		this.firstShotReward = originalPlayer.firstShotReward;
-		this.damagesAllocable = originalPlayer.damagesAllocable;
 		this.perspective = originalPlayer.getPerspective();
 	}
-
 
 	public Player() {
 		this.actions = new ArrayList<>();
@@ -104,12 +102,6 @@ public class Player {
 	private Object editing;
 
 	private Color color;
-
-	/**
-	 * Tracks how many damages can be allocated in spawnpoints
-	 * Used in Domination Mode
-	 */
-	private int damagesAllocable;
 
 	private boolean firstPlayer;
 
@@ -546,10 +538,6 @@ public class Player {
 
 	public void setVirtualView(VirtualView virtualView) {
 		this.virtualView = virtualView;
-	}
-
-	public void addDamagesAllocable() {
-		this.damagesAllocable+=1;
 	}
 
     public Match getMatch() {

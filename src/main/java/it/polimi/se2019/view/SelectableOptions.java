@@ -99,7 +99,7 @@ public class SelectableOptions<T> implements Serializable {
         if (options.size() < minSelectables || options.size() > maxSelectables)
             return false;
         for (T option : options)
-            if (Collections.frequency(options, option) < Collections.frequency(this.options, option))
+            if (Collections.frequency(options, option) > Collections.frequency(this.options, option))
                 return false;
         return true;
 

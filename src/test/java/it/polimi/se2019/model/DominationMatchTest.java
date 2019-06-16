@@ -47,12 +47,12 @@ class DominationMatchTest {
         current.setTile(destTile);
         match.newTurn();
         assertEquals(1, current.getDamagesCount());
+        assertEquals(current, current.getDamages().get(0));
     }
 
     @Test
     void checkSpawnDamaged() {
         for (int i = 0; i < 3; i++) {
-            System.out.println(match.getCurrentPlayer());
             match.newTurn();
         }
         //SpawnPoints have been generated after first round
@@ -72,11 +72,15 @@ class DominationMatchTest {
         //Current player will be one of the other two, so now we can go to the next turn and see if the other spawn has been damaged
         match.newTurn();
         assertEquals(0, spawnerPlayers.get(1).getDamagesCount());
-    }
-
-    @Test
-    void scoreDeadShot() {
-
+        Player newCurrent = match.getPlayers().get(match.getCurrentPlayer());
+        //Move all player except the current one to another tile and check damage received by spawn
+        match.getPlayers().stream().filter(p -> !p.getDominationSpawn() && !p.equals(newCurrent)).forEach(p -> p.setTile(destTile));
+        spawnerPlayers.get(1).receiveShot(newCurrent, 4, 4, true);
+        assertEquals(1, spawnerPlayers.get(1).getDamagesCount());
+        spawnerPlayers.get(1).receiveShot(newCurrent, 4, 4, true);
+        assertEquals(1, spawnerPlayers.get(1).getDamagesCount());
+        match.newTurn();
+        assertEquals(2, spawnerPlayers.get(1).getDamagesCount());
     }
 
     @Test

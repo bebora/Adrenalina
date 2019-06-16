@@ -113,8 +113,9 @@ public class DominationMatch extends Match {
      */
     @Override
     public void scoreDeadShot(Player player) {
-        if (player.getDamages().size() == 12 && !player.getDamages().get(12).getDominationSpawn())
-            player.getDamages().get(12).addDamagesAllocable();
+        //TODO remove, seems to have been deprecated
+        //if (player.getDamages().size() == 12 && !player.getDamages().get(12).getDominationSpawn());
+            //player.getDamages().get(12).addDamagesAllocable();
     }
 
     /**
