@@ -18,6 +18,7 @@ public class BoardScreen extends HBox {
     PlayerBoardFX clientPlayer;
     ActionButtons actionButtons;
     PowerUpsBox powerUpsBox;
+    WeaponsBox weaponsBox;
     VBox playerBoardZone;
     SelectableOptionsWrapper selectableOptionsWrapper;
 
@@ -28,8 +29,8 @@ public class BoardScreen extends HBox {
         VBox boardZone = new VBox();
         boardZone.setSpacing(20);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
-        Label powerUpsLabel = new Label("PowerUps:");
         powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater());
+        weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
         for(ViewPlayer p: GUIView.getPlayers()){
@@ -37,7 +38,7 @@ public class BoardScreen extends HBox {
             temp.updatePlayerInfo(p);
             playerBoardZone.getChildren().addAll(temp);
         }
-        playerBoardZone.getChildren().addAll(powerUpsLabel,powerUpsBox);
+        playerBoardZone.getChildren().addAll(powerUpsBox,weaponsBox);
         playerBoardZone.setSpacing(15);
         updateBoard(GUIView.getBoard(),GUIView.getPlayers());
         this.getChildren().addAll(boardZone,playerBoardZone);
@@ -48,6 +49,7 @@ public class BoardScreen extends HBox {
         scale.setX(primaryScreenBounds.getMaxX()/(boardFX.getPrefWidth() + clientPlayer.getPrefWidth()));
         scale.setY(primaryScreenBounds.getMaxY()/(boardFX.getPrefHeight() + clientPlayer.getPrefHeight()));
         this.getTransforms().addAll(scale);
+        this.setStyle("-fx-background-color: black");
     }
 
     public void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
@@ -82,6 +84,7 @@ public class BoardScreen extends HBox {
                     break;
                 case WEAPON:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
+                    weaponsBox.highlightSelectableWeapons(selectableOptionsWrapper.getSelectableWeapons());
                     break;
                 default:
                     break;
@@ -89,7 +92,7 @@ public class BoardScreen extends HBox {
         }
     }
 
-    public List<String> getWeaponsFromColor(String color, ViewBoard viewBoard){
+    private List<String> getWeaponsFromColor(String color, ViewBoard viewBoard){
         return viewBoard.getTiles().stream()
                 .flatMap(Collection::stream)
                 .filter(Objects::nonNull)
@@ -100,8 +103,15 @@ public class BoardScreen extends HBox {
                 .collect(Collectors.toList());
     }
 
-    public void updatePowerUps(List<ViewPowerUp> viewPowerUps){
+    void updatePowerUps(List<ViewPowerUp> viewPowerUps){
         powerUpsBox.setPowerUps(viewPowerUps);
     }
+
+    void updateWeapons(List<ViewWeapon> weapons){
+        List<String> weaponsNames = weapons.stream().map(ViewWeapon::getName).collect(Collectors.toList());
+        weaponsBox.setWeapons(weaponsNames);
+    }
+
+
 
 }

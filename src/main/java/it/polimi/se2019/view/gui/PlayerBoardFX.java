@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class PlayerBoardFX extends AnchorPane {
 
     Image boardImage;
 
-    public PlayerBoardFX() {
+    PlayerBoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "fxml/PlayerBoardFX.fxml"));
         fxmlLoader.setController(this);
@@ -40,13 +41,13 @@ public class PlayerBoardFX extends AnchorPane {
         }
     }
 
-    public void updateImage(String color){
+    private void updateImage(String color){
         boardImage = new Image(getClass().getClassLoader().getResourceAsStream(
                 "assets/player_board/" + AssetMaps.colorToPlayerBoard.get(color)));
         playerBoardView.setImage(boardImage);
     }
 
-    public void displayDamages(List<String> damages) {
+    private void displayDamages(List<String> damages) {
         int i = 0;
         for (String color : damages) {
             ImageView imageView = (ImageView)damagesList.getChildren().get(i);
@@ -90,7 +91,7 @@ public class PlayerBoardFX extends AnchorPane {
         }
     }
 
-    public void displayAmmos(List<String> ammos){
+    private void displayAmmos(List<String> ammos){
         ammoPane.getChildren().clear();
         for(String a: ammos){
             Rectangle ammo = new Rectangle(10,10, Color.valueOf(a));
@@ -98,9 +99,18 @@ public class PlayerBoardFX extends AnchorPane {
         }
     }
 
-    public void updatePlayerInfo(ViewPlayer viewPlayer){
+    private void displayMarks(List<String> marks){
+        marksBox.getChildren().clear();
+        for(String m:marks){
+            Circle circle = new Circle(5,Color.valueOf(m));
+            marksBox.getChildren().addAll(circle);
+        }
+    }
+
+    void updatePlayerInfo(ViewPlayer viewPlayer){
         updateImage(viewPlayer.getColor());
         displayDamages(viewPlayer.getDamages());
         displayAmmos(viewPlayer.getAmmos());
+        displayMarks(viewPlayer.getMarks());
     }
 }
