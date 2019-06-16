@@ -148,6 +148,15 @@ public class GameController extends Observer {
     }
 
 
+    /**
+     * Creates a GameController istance, managing the flow of the game.
+     * Contains the information required to create a new Match, the mode of the new Match, and the related {@link #lobbyController}.
+     * @param players clients playing the game
+     * @param boardName refers to the name of the board (chosen randomly) used
+     * @param numSkulls number of max skulls in the board.
+     * @param domination whether the mode is domination or not
+     * @param lobbyController
+     */
     public GameController(List<Player> players, String boardName, int numSkulls, boolean domination, LobbyController lobbyController) {
         this.lobbyController = lobbyController;
         if(!domination){
@@ -188,10 +197,16 @@ public class GameController extends Observer {
         }
     }
 
+    /**
+     * Handles the start of the turn
+     * Prompt the client with an action and/or powerups and/or the chance to stop the current turn.
+     * Check if the turn is ended (if the player used a Reload action)
+     */
     public void playTurn() {
         turnEnd = false;
         List<ReceivingType> receivingTypes = new ArrayList<>();
         acceptableTypes = new AcceptableTypes(receivingTypes);
+        //Check for the presence
         if(actionCounter < currentPlayer.getMaxActions()) {
             receivingTypes.add(ReceivingType.ACTION);
             acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Select an Action!"));
@@ -251,7 +266,7 @@ public class GameController extends Observer {
         List<Player> overkillPlayers = match.
                 getPlayers().
                 stream().
-                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 12 && !p.getDamages().get(12).getDominationSpawn()).
+                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 12 && !p.getDamages().get(11).getDominationSpawn()).
                 collect(Collectors.toList());
         List<Player> spawnPoints = match.
                 getPlayers().
@@ -282,12 +297,12 @@ public class GameController extends Observer {
                     overkillPlayers.removeIf(p -> p.getUsername().equals(current.getUsername()));
                 }
             }
-        } else {
+        } else if (!overkillPlayers.isEmpty()) {
             Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
             if (spawnPoint != null) {
                 spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
             }
-            overkillPlayers.forEach(p -> p.getDamages().remove(7));
+            overkillPlayers.forEach(p -> p.getDamages().remove(11));
         }
         if (match.newTurn()) {
             matchEnd = true;
@@ -337,7 +352,7 @@ public class GameController extends Observer {
             List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
             Observer spawner = new Spawner(p,match.getBoard());
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Seleziona il powerup da scartare!"));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Select a PowerUp to discard!"));
             timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
         }
         for (TimerCostrainedEventHandler t : timerCostrainedEventHandlers) {
