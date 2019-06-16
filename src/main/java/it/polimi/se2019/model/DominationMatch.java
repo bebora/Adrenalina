@@ -143,36 +143,28 @@ public class DominationMatch extends Match {
      * Score a spawn point ad the end of the game
      * Map the frequency of damages, compare and give points in order to the more frequent shooter
      * Give same points to the n shooter with same frequency, but skip n {@link Player#rewardPoints} for the next shooter
-     * @param p spawnPoint to score
+     * @param spawnPlayer spawnPoint to score
      */
-    private void scoreSpawnPoint(Player p) {
-        int currentReward = 0;
-
+    public void scoreSpawnPoint(Player spawnPlayer) {
+        //How many damages gave each player
+        int currentRewardIndex = 0;
         //Map the frequency of damages
         Map<Player, Long> frequencyShots =
-                p.getDamages().
+                spawnPlayer.getDamages().
                         stream().
                         filter(Objects::nonNull).
                         collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-        //Create comparator to compare the different players
-        Comparator<Player> givenDamages = Comparator.comparing(frequencyShots::get);
-        Comparator<Player> indices = Comparator.comparing(p.getDamages()::indexOf); //necessary?
-
-        HashSet<Player> shotGiver = new HashSet<>(p.getDamages());
-        List<Player> shotOrder = shotGiver.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
-
-        //Add same points to same player with same value in frequencyShots
-        int currentSameShots = 1;
-        for (int i = 0; i < shotOrder.size(); i++) {
-            if (i != 0 && frequencyShots.get(shotOrder.get(i)) ==
-                    frequencyShots.get(shotOrder.get(i)) - 1)
-                currentSameShots ++;
-            else {
-                currentReward += currentSameShots;
-                currentSameShots = 1;
+        //Set with all unique damage value received by spawnPlayer, in descending order
+        SortedSet<Long> damagesSet = new TreeSet<>(Collections.reverseOrder());
+        damagesSet.addAll(frequencyShots.values());
+        for (Long damage: damagesSet) {
+            List<Player> playerWithSameDamageGiven = frequencyShots.entrySet().stream().
+                    filter(d -> d.getValue().equals(damage)).map(Map.Entry::getKey).collect(Collectors.toList());
+            //Add same points to players with same value in frequencyShots
+            for (Player t: playerWithSameDamageGiven) {
+                t.addPoints(spawnPlayer.getRewardPoints().get(currentRewardIndex));
             }
-            shotOrder.get(i).addPoints(p.getRewardPoints().get(currentReward));
+            currentRewardIndex += playerWithSameDamageGiven.size();
         }
     }
 
@@ -183,7 +175,7 @@ public class DominationMatch extends Match {
      */
     @Override
     public boolean checkFrenzy() {
-        Long countDeadSpawnPoint = getPlayers().
+        long countDeadSpawnPoint = getPlayers().
                 stream().
                 filter(Player::getDominationSpawn).
                 filter(p -> p.getDamages().size() >= 8).

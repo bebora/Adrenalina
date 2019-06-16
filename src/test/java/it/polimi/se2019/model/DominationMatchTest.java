@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,6 +17,12 @@ class DominationMatchTest {
     private Player foo, poo, boo;
     private List<Player> spawnerPlayers;
 
+    private void insertSpawnPoints() {
+        int limit = match.getPlayers().size();
+        for (int i = 0; i < limit; i++) {
+            match.newTurn();
+        }
+    }
     @BeforeEach
     void prepareMatch() {
         foo = new Player();
@@ -26,11 +33,9 @@ class DominationMatchTest {
     }
 
     @Test
-    void insertSpawnPoints() {
+    void insertSpawnPointsTest() {
         assertEquals(0, spawnerPlayers.size());
-        for (int i = 0; i < 3; i++) {
-            match.newTurn();
-        }
+        insertSpawnPoints();
         spawnerPlayers = match.getSpawnPoints();
         assertEquals(3, spawnerPlayers.size());
         assertTrue(spawnerPlayers.stream().allMatch(p -> p.getDominationSpawn() && p.getUsername().equals(p.getColor().toString())));
@@ -38,9 +43,7 @@ class DominationMatchTest {
 
     @Test
     void checkPlayerDamaged() {
-        for (int i = 0; i < 3; i++) {
-            match.newTurn();
-        }
+        insertSpawnPoints();
         spawnerPlayers = match.getSpawnPoints();
         Tile destTile = spawnerPlayers.get(match.getCurrentPlayer()).getTile();
         Player current = match.getPlayers().get(match.getCurrentPlayer());
@@ -52,9 +55,7 @@ class DominationMatchTest {
 
     @Test
     void checkSpawnDamaged() {
-        for (int i = 0; i < 3; i++) {
-            match.newTurn();
-        }
+        insertSpawnPoints();
         //SpawnPoints have been generated after first round
         spawnerPlayers = match.getSpawnPoints();
         Tile destTile = spawnerPlayers.get(0).getTile();
@@ -84,6 +85,26 @@ class DominationMatchTest {
     }
 
     @Test
-    void checkFrenzy() {
+    void checkPointsGivenFromTracks() {
+        //Setup 5 player match
+        foo = new Player();
+        poo = new Player();
+        boo = new Player();
+        Player doo = new Player();
+        Player moo = new Player();
+        match = new DominationMatch(new ArrayList<>(Arrays.asList(foo, poo, boo, doo, moo)), "board1.btlb", 8);
+        insertSpawnPoints();
+        Player spawn =  match.getSpawnPoints().get(0);
+        spawn.getDamages().addAll(Collections.nCopies(3, foo));
+        spawn.getDamages().addAll(Collections.nCopies(2, poo));
+        spawn.getDamages().addAll(Collections.nCopies(2, boo));
+        spawn.getDamages().addAll(Collections.nCopies(1, doo));
+        spawn.getDamages().addAll(Collections.nCopies(1, moo));
+        match.scoreSpawnPoint(spawn);
+        assertEquals(8, foo.getPoints());
+        assertEquals(6, poo.getPoints());
+        assertEquals(6, boo.getPoints());
+        assertEquals(2, doo.getPoints());
+        assertEquals(2, moo.getPoints());
     }
 }
