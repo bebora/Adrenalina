@@ -151,8 +151,8 @@ public abstract class Match {
 		// Dead players
 		List<Player> deadPlayers = players.stream().
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
-		// Point for double shot
-		if (deadPlayers.stream().filter(p -> !p.getDamages().get(10).getDominationSpawn()).count() > 1)
+		// Point for double kill, filtering players killed by ending turn on domination spawn
+		if (deadPlayers.stream().filter(p -> !p.getDamages().get(10).equals(p)).count() > 1)
 			players.get(currentPlayer).addPoints(1);
 
 		for (Player p : deadPlayers) {
@@ -160,8 +160,6 @@ public abstract class Match {
 			p.resetPlayer();
 			p.addPowerUp(board.drawPowerUp(), false);
 		}
-
-
 
 		board.refreshWeapons();
 		board.refreshAmmos();
@@ -191,16 +189,20 @@ public abstract class Match {
 	 */
 	public void scorePlayerBoard(Player player) {
 		// first blood
-		if (player.getFirstShotReward() == TRUE)
-			player.getDamages().get(0).addPoints(1);
-		Player maxPlayer = null;
-		int currentReward = 0;
+		if (player.getFirstShotReward() == TRUE) {
+		    // Don't add reward if damage is given from spawnpoint
+            if (!player.getDamages().get(0).equals(player)) {
+                player.getDamages().get(0).addPoints(1);
+            }
+        }
+
+		int currentRewardIndex = 0;
 
 		// damages scoring
 		Map<Player, Long> frequencyDamages =
 				player.getDamages().stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-		Comparator<Player> givenDamages = Comparator.comparing(frequencyDamages::get);
+		Comparator<Player> givenDamages = Comparator.comparing(frequencyDamages::get, Comparator.reverseOrder());
 		Comparator<Player> indices = Comparator.comparing(player.getDamages()::indexOf);
 
 
@@ -208,14 +210,17 @@ public abstract class Match {
 
 		List<Player> damageOrder = damagingPlayers.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
 		while (!damageOrder.isEmpty()) {
-			if (currentReward < player.getRewardPoints().size()) {
-				damageOrder.get(0).addPoints(player.getRewardPoints().get(currentReward));
-			} else {
-				damageOrder.get(0).addPoints(1);
+			Player current = damageOrder.get(0);
+			// Don't add points to current if it's the dead player
+			if (!current.equals(player)) {
+				if (currentRewardIndex < player.getRewardPoints().size()) {
+					damageOrder.get(0).addPoints(player.getRewardPoints().get(currentRewardIndex));
+				} else {
+					damageOrder.get(0).addPoints(1);
+				}
 			}
-
 			damageOrder.remove(0);
-			currentReward++;
+			currentRewardIndex++;
 		}
 
 		// Score for overkill

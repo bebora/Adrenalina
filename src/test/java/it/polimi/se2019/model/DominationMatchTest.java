@@ -17,6 +17,13 @@ class DominationMatchTest {
     private Player foo, poo, boo;
     private List<Player> spawnerPlayers;
 
+    private int nextPlayerIndex() {
+        long numPlayers = match.getPlayers().stream().filter(p -> !p.getDominationSpawn()).count();
+        int cur = match.getCurrentPlayer();
+        if (cur == numPlayers-1) return 0;
+        else return cur+1;
+    }
+
     private void insertSpawnPoints() {
         int limit = match.getPlayers().size();
         for (int i = 0; i < limit; i++) {
@@ -106,5 +113,45 @@ class DominationMatchTest {
         assertEquals(6, boo.getPoints());
         assertEquals(2, doo.getPoints());
         assertEquals(2, moo.getPoints());
+    }
+
+    @Test
+    void scorePlayerBoard() {
+        insertSpawnPoints();
+        Player current = match.getPlayers().get(match.getCurrentPlayer());
+        // Enable first shot reward
+        current.setFirstShotReward(true);
+        Tile destTile = match.getSpawnPoints().get(0).getTile();
+        current.setTile(destTile);
+        //Receive 1 damage from spawn, 6 from one player and 4 from the other
+        match.newTurn();
+        Player newCurrent = match.getPlayers().get(match.getCurrentPlayer());
+        Player last = match.getPlayers().get(nextPlayerIndex());
+        current.receiveShot(newCurrent, 5, 0, true);
+        current.receiveShot(last, 5, 0, true);
+        match.newTurn();
+        // Current should not receive any points from its death
+        assertEquals(0, current.getPoints());
+        assertEquals(8, newCurrent.getPoints());
+        assertEquals(6, last.getPoints());
+    }
+
+    @Test
+    void noDoubleKillFromSpawnKillShot() {
+        insertSpawnPoints();
+        Player current = match.getPlayers().get(match.getCurrentPlayer());
+        Player other = match.getPlayers().get(nextPlayerIndex());
+        //Disable first shot reward for test
+        current.setFirstShotReward(false);
+        other.setFirstShotReward(false);
+        //Give 10 damages to current player and attack another one with 11 damages
+        other.receiveShot(current, 11, 0, true);
+        current.getDamages().addAll(Collections.nCopies(10, other));
+        Tile destTile = match.getSpawnPoints().get(0).getTile();
+        //Move current player to spawn so that it can receive damage
+        current.setTile(destTile);
+        match.newTurn();
+        //8 = points given only from first death of other player, assuming points for regular death are right
+        assertEquals(8, current.getPoints());
     }
 }
