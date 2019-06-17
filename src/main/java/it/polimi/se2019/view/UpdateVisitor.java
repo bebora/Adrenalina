@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateVisitor {
-    ViewReceiverInterface concreteViewReceiver;
+    private ViewReceiverInterface concreteViewReceiver;
 
     public UpdateVisitor(ViewReceiverInterface concreteViewReceiver) {
         this.concreteViewReceiver = concreteViewReceiver;

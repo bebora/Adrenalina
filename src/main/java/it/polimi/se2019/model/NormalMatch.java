@@ -39,7 +39,8 @@ public class NormalMatch extends Match {
 		Comparator<Player> givenDamages = Comparator.comparing(frequencyShots::get);
 		Comparator<Player> indices = Comparator.comparing(board.getKillShotTrack()::indexOf);
 
-		HashSet<Player> shotGiver = new HashSet<>(board.getKillShotTrack());
+		HashSet<Player> shotGiver = board.getKillShotTrack().stream().
+				filter(Objects::nonNull).collect(Collectors.toCollection(HashSet::new));
 		List<Player> shotOrder = shotGiver.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
 
 

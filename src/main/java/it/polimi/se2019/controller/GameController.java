@@ -263,21 +263,22 @@ public class GameController extends Observer {
 
     public synchronized void endTurn(boolean skip) {
         currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
+        // Players which have been killed in this turn with overkill
         List<Player> overkillPlayers = match.
                 getPlayers().
                 stream().
-                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 12 && !p.getDamages().get(11).getDominationSpawn()).
+                filter(p -> !p.getDominationSpawn() && p.getDamages().size() == 12 && !p.getDamages().get(11).equals(p)).
                 collect(Collectors.toList());
         List<Player> spawnPoints = match.
                 getPlayers().
                 stream().
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
+        // This if can be true only in domination mode
         if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty() && !skip && currentPlayer.getOnline()) {
             acceptableTypes = new AcceptableTypes(Collections.singletonList(PLAYERS));
             for (Player current : overkillPlayers) {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
-                current.getDamages().remove(7);
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.setNotifyOnEnd(false);
                 timerCostrainedEventHandler.start();
@@ -287,22 +288,22 @@ public class GameController extends Observer {
                     Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
                 }
                 if (!timerCostrainedEventHandler.isBlocked()) {
-                    overkillPlayers.forEach(p -> p.getDamages().remove(7));
                     Player spawnPoint = spawnPoints.stream().findAny().get();
                     if (spawnPoint != null) {
                         spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
                     }
                     break;
                 } else {
-                    overkillPlayers.removeIf(p -> p.getUsername().equals(current.getUsername()));
+                    overkillPlayers.remove(current);
                 }
             }
-        } else if (!overkillPlayers.isEmpty()) {
+        }
+        // Same conditions as before but player offline
+        else if (!overkillPlayers.isEmpty()) {
             Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
             if (spawnPoint != null) {
                 spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
             }
-            overkillPlayers.forEach(p -> p.getDamages().remove(11));
         }
         if (match.newTurn()) {
             matchEnd = true;

@@ -36,7 +36,7 @@ public class ViewBoard implements Serializable {
 						collect(Collectors.toCollection(ArrayList::new))).
 				collect(Collectors.toCollection(ArrayList::new));
 		this.killShotTrack = board.getKillShotTrack().stream().
-				map(Player::getId).
+				map(p -> p == null ? null : p.getId()).
 				collect(Collectors.toCollection(ArrayList::new));
 		this.doors = board.getDoors().stream().
 				map(ViewDoor::new).

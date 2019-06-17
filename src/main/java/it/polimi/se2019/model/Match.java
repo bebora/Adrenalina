@@ -146,6 +146,7 @@ public abstract class Match {
 	 * Add the points for double kill (domination spawn kill doesn't count)
 	 * Refresh {@link Board#weaponsDeck} and {@link Board#ammoCards} on the board
 	 * Start Frenzy if conditions are met
+	 * @return true if match is finished
 	 */
 	public boolean newTurn() {
 		// Dead players
@@ -223,7 +224,7 @@ public abstract class Match {
 			currentRewardIndex++;
 		}
 
-		// Score for overkill
+		// Score for deadshot and overkill
 		if (player.getDamages().size() >= 11) {
 			scoreDeadShot(player);
 		}

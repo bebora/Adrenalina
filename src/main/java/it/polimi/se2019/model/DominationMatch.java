@@ -108,14 +108,11 @@ public class DominationMatch extends Match {
     }
 
     /**
-     * Score the dead shot, adding damages that can be allocated to a spawn point of choice
+     * Deadshots in domination are not handled, they are just ignored as by rules
      * @param player player where dead shot is scored
      */
     @Override
     public void scoreDeadShot(Player player) {
-        //TODO remove, seems to have been deprecated
-        //if (player.getDamages().size() == 12 && !player.getDamages().get(12).getDominationSpawn());
-            //player.getDamages().get(12).addDamagesAllocable();
     }
 
     /**

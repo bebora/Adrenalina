@@ -6,6 +6,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,11 +17,11 @@ public class TotalUpdate implements UpdateVisitable {
     private String username;
     private ViewBoard board;
     private ViewTileCoords perspective;
-    private List<ViewPlayer> players;
+    private ArrayList<ViewPlayer> players;
     private String idView;
     private int points;
-    private List<ViewPowerUp> powerUps;
-    private List<ViewWeapon> loadedWeapons;
+    private ArrayList<ViewPowerUp> powerUps;
+    private ArrayList<ViewWeapon> loadedWeapons;
     private String currentPlayerId;
 
     public String getUsername() {
@@ -35,7 +36,7 @@ public class TotalUpdate implements UpdateVisitable {
         return perspective;
     }
 
-    public List<ViewPlayer> getPlayers() {
+    public ArrayList<ViewPlayer> getPlayers() {
         return players;
     }
 
@@ -47,11 +48,11 @@ public class TotalUpdate implements UpdateVisitable {
         return points;
     }
 
-    public List<ViewPowerUp> getPowerUps() {
+    public ArrayList<ViewPowerUp> getPowerUps() {
         return powerUps;
     }
 
-    public List<ViewWeapon> getLoadedWeapons() {
+    public ArrayList<ViewWeapon> getLoadedWeapons() {
         return loadedWeapons;
     }
 
@@ -83,7 +84,7 @@ public class TotalUpdate implements UpdateVisitable {
                        List<Weapon> loadedWeapons, Player currentPlayer) {
         this.username = username;
         this.board = new ViewBoard(board);
-        this.players = players.stream().map(ViewPlayer::new).collect(Collectors.toList());
+        this.players = players.stream().map(ViewPlayer::new).collect(Collectors.toCollection(ArrayList::new));
         Player receivingPlayer = players.stream().
                 filter(p-> p.getUsername().equals(username)).
                 findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
@@ -94,8 +95,8 @@ public class TotalUpdate implements UpdateVisitable {
             this.perspective = null;
         this.idView = idView;
         this.points = points;
-        this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toList());
-        this.loadedWeapons = loadedWeapons.stream().map(ViewWeapon::new).collect(Collectors.toList());
+        this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toCollection(ArrayList::new));
+        this.loadedWeapons = loadedWeapons.stream().map(ViewWeapon::new).collect(Collectors.toCollection(ArrayList::new));
         this.currentPlayerId = currentPlayer.getId();
     }
 

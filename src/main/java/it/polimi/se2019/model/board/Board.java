@@ -224,8 +224,13 @@ public class Board {
 	}
 
 	public Tile getTile(int posy, int posx) {
-		if (posy < tiles.size() && posx < tiles.get(posy).size())
-	    	return tiles.get(posy).get(posx);
+		if (posy < tiles.size() && posy >= 0 && posx < tiles.get(posy).size() && posx >= 0)
+			try {
+				return tiles.get(posy).get(posx);
+			}
+	    	catch (NullPointerException e) {
+				return null;
+			}
 		else return null;
     }
 
