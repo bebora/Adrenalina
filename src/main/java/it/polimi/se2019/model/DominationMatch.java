@@ -35,9 +35,10 @@ public class DominationMatch extends Match {
 
     public DominationMatch(Match match){
         super(match);
-        this.spawnPoints = new ArrayList<>();
+        this.spawnPoints = match.players.stream().filter(Player::getDominationSpawn).map(p -> (SpawnPlayer) p).map(SpawnPlayer::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
+        this.players.addAll(spawnPoints);
         this.spawnPoints.addAll(match.getSpawnPoints());
-}
+    }
 
     /**
      * Initializes a new turn in Domination Mode

@@ -13,11 +13,29 @@ public class SpawnPlayer extends Player{
         damaged = Boolean.FALSE;
     }
 
+    public SpawnPlayer(SpawnPlayer player) {
+        super(player);
+        setDominationSpawn(true);
+        damaged = player.getDamaged();
+    }
+
+    @Override
+    void restorePlayer(Player oldPlayer) {
+        super.restorePlayer(oldPlayer);
+        SpawnPlayer temp = (SpawnPlayer) oldPlayer;
+        temp.setDamaged(damaged);
+
+    }
+
     @Override
     public void receiveShot(Player shooter, int damage, int marks, boolean convert) {
         if (!damaged)
             super.getDamages().add(shooter);
         damaged = Boolean.TRUE;
+    }
+
+    public Boolean getDamaged() {
+        return damaged;
     }
 
     public void setDamaged(Boolean damaged) {

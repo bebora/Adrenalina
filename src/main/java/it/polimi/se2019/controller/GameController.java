@@ -288,7 +288,7 @@ public class GameController extends Observer {
                     Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
                 }
                 if (!timerCostrainedEventHandler.isBlocked()) {
-                    Player spawnPoint = spawnPoints.stream().findAny().get();
+                    Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
                     if (spawnPoint != null) {
                         spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
                     }

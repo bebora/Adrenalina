@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.cards.PowerUp;
 
 import java.util.List;
@@ -26,5 +27,10 @@ public class DamagedController extends Observer {
                 damagingPlayer.receiveShot(damagedPlayer,p.getEffect().getDamages().get(0).getDamagesAmount(),p.getEffect().getDamages().get(0).getMarksAmount(), false);
             }
         }
+    }
+
+    @Override
+    public void updateOnStopSelection(ThreeState skip) {
+        damagedPlayer.getVirtualView().getRequestDispatcher().clear();
     }
 }

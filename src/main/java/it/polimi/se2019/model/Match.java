@@ -46,11 +46,11 @@ public abstract class Match {
 
     public Match(Match originalMatch){
     	this.currentPlayer = originalMatch.getCurrentPlayer();
-    	this.finalFrenzy = originalMatch.getFinalFrenzy();
+     	this.finalFrenzy = originalMatch.getFinalFrenzy();
     	this.firstPlayer = originalMatch.getFirstPlayer();
     	this.currentPlayer = originalMatch.getCurrentPlayer();
     	this.board = originalMatch.getBoard();
-    	this.players = originalMatch.getPlayers().stream()
+    	this.players = originalMatch.getPlayers().stream().filter(p -> !p.getDominationSpawn())
 				.map(Player::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
     	this.updateSender = originalMatch.getUpdateSender();
     	//Initialize match and notify player with the first totalUpdate
@@ -101,7 +101,13 @@ public abstract class Match {
 	 */
 	boolean finalFrenzy;
 
+	public void setCurrentPlayer(Player player) {
+		this.currentPlayer = players.indexOf(player);
+	}
 
+	public void setCurrentPlayer(int player) {
+		this.currentPlayer = player;
+	}
 
 	/**
 	 * Manage the change to frenzy mode

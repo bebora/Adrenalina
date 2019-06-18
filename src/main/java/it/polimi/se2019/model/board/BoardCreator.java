@@ -122,17 +122,18 @@ public class BoardCreator {
         // Create ammosCards according to the game mechanics
         for (int i = 0; i < 3; i++) {
             int finalI = i;
-            List <Ammo> otherAmmos = ammosColor.stream().
-                    filter( a -> !(a.equals(ammosColor.get(finalI)))).
+            List<Ammo> otherAmmos = ammosColor.stream().
+                    filter(a -> !(a.equals(ammosColor.get(finalI)))).
                     collect(Collectors.toList());
             for (int j = 0; j < 3; j++) {
-                ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(0)));
-                ammoCards.add(new AmmoCard(ammosColor.get(i), ammosColor.get(i), otherAmmos.get(1)));
-                if (j >= 1)
-                    ammoCards.add(new AmmoCard(Ammo.POWERUP,  ammosColor.get(i), ammosColor.get(i)));
+                ammoCards.add(new AmmoCard(otherAmmos.get(0), ammosColor.get(i), ammosColor.get(i)));
+                ammoCards.add(new AmmoCard(otherAmmos.get(1), ammosColor.get(i), ammosColor.get(i)));
+                if (j >= 1) {
+                    ammoCards.add(new AmmoCard(Ammo.POWERUP, ammosColor.get(i), ammosColor.get(i)));
+                }
             }
         }
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.YELLOW));
             ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.RED, Ammo.BLUE));
             ammoCards.add(new AmmoCard(Ammo.POWERUP, Ammo.BLUE, Ammo.YELLOW));

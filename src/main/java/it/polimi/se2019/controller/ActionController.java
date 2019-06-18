@@ -1,6 +1,6 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.MyProperties;
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.controller.ReceivingType.WEAPON;
-import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
 import static it.polimi.se2019.model.actions.SubAction.RELOAD;
 
@@ -81,7 +80,7 @@ public class ActionController extends Observer {
         if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             if (curSubAction == GRAB) {
-                if (curPlayer.getWeapons().size() == Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
+                if (curPlayer.getWeapons().size() == Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
                     subActionIndex--;
                     toDiscard = weapon;
                     curPlayer.getWeapons().remove(toDiscard);
@@ -155,24 +154,12 @@ public class ActionController extends Observer {
     private void nextMove() {
         List <ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
         List<Tile> selectableTiles = new ArrayList<>(sandboxMatch.getBoard().reachable(curPlayer.getTile(), 0, curAction.getMovements(), false));
+        // Compute tiles that can be used to grab ammos or weapons.
         if (curAction.getSubActions().size() > subActionIndex && curAction.getSubActions().get(subActionIndex) == GRAB) {
-            selectableTiles.removeAll(sandboxMatch.
-                    getBoard().
-                    getTiles().
-                    stream().
-                    flatMap(List::stream).
-                    filter(t -> t != null && (!t.isSpawn() && t.getAmmoCard() == null)).
-                    collect(Collectors.toList()));
-            for (Tile t : sandboxMatch.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.isSpawn()).collect(Collectors.toList())) {
-                boolean toRemove = true;
-                for (Weapon weapon : t.getWeapons()) {
-                    if (curPlayer.checkForAmmos(weapon.getCost()))
-                        toRemove = false;
-                }
-                if (toRemove)
-                    selectableTiles.remove(t);
-            }
+            selectableTiles.removeIf(t -> !t.isSpawn() && t.getAmmoCard() == null);
+            selectableTiles.removeIf(t -> t.isSpawn() && t.getWeapons().stream().noneMatch(weapon -> curPlayer.checkForAmmos(weapon.getCost())));
         }
+
         if (selectableTiles.size() == 1) {
             updateOnTiles(selectableTiles);
         }
@@ -188,6 +175,61 @@ public class ActionController extends Observer {
         else {
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't move nowhere!");
             nextStep();
+        }
+    }
+
+    /**
+     * Compute a GRAB action
+     * Supports:
+     * <li>Grabbing a weapon, discarding a weapon if weapons are already maxed out according to the defined limit, if the Tile is a spawnTile</li>
+     * <li>Grabbing an AmmoCard from the tile</li>
+     *
+     */
+    private void nextGrab() {
+        String prompt;
+        List<ReceivingType> receivingTypes;
+        List<Weapon> selectableWeapon;
+        if (curPlayer.getTile().isSpawn()) {
+            receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            //Grab weapon
+            if (curPlayer.getWeapons().size() < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
+                selectableWeapon = curPlayer.
+                        getTile().
+                        getWeapons().
+                        stream().
+                        filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)))).
+                        collect(Collectors.toList());
+                prompt = "Select a weapon to grab!";
+            } //Discard weapon first, then grab
+            else {
+                selectableWeapon = curPlayer.
+                        getWeapons();
+                prompt = "Select a weapon to discard!";
+            }
+            if (selectableWeapon.isEmpty()) {
+                nextStep();
+            } else {
+                acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, prompt));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                        this,
+                        curPlayer.getVirtualView().getRequestDispatcher(),
+                        acceptableTypes);
+                timerCostrainedEventHandler.start();
+            }
+        }
+        else {
+            AmmoCard ammoCard = curPlayer.getTile().grabAmmoCard();
+            List<Ammo> ammos = ammoCard.getAmmos().stream().
+                    filter(a -> !a.equals(Ammo.POWERUP)).
+                    collect(Collectors.toList());
+            List<Ammo> powerUps = ammoCard.getAmmos().stream().
+                    filter(a -> a.equals(Ammo.POWERUP)).
+                    collect(Collectors.toList());
+            ammos.forEach(a -> curPlayer.addAmmo(a));
+            powerUps.forEach(p -> curPlayer.addPowerUp(sandboxMatch.getBoard().drawPowerUp(), true));
+            sandboxMatch.getBoard().discardAmmoCard(ammoCard);
+            updateOnConclusion();
         }
     }
 
@@ -209,6 +251,7 @@ public class ActionController extends Observer {
                     nextMove();
                     break;
                 case SHOOT:
+                    // Ask what weapon to choose, or reset if no weapon can be chose
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
                     selectableWeapon = curPlayer.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList());
@@ -228,49 +271,7 @@ public class ActionController extends Observer {
                     }
                     break;
                 case GRAB:
-                    String prompt;
-                    if (curPlayer.getTile().isSpawn()) {
-                        receivingTypes = new ArrayList<>(Arrays.asList(WEAPON));
-                        acceptableTypes = new AcceptableTypes(receivingTypes);
-                        //Grab weapon
-                        if (curPlayer.getWeapons().size() < Integer.parseInt(MyProperties.getInstance().getProperty("max_weapons"))) {
-                            selectableWeapon = curPlayer.
-                                    getTile().
-                                    getWeapons().
-                                    stream().
-                                    filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)))).
-                                    collect(Collectors.toList());
-                            prompt = "Select a weapon to grab!";
-                        } //Discard weapon first, then grab
-                        else {
-                            selectableWeapon = curPlayer.
-                                    getWeapons();
-                            prompt = "Select a weapon to discard!";
-                        }
-                        if (selectableWeapon.isEmpty()) {
-                            nextStep();
-                        } else {
-                            acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, prompt));
-                            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                                    this,
-                                    curPlayer.getVirtualView().getRequestDispatcher(),
-                                    acceptableTypes);
-                            timerCostrainedEventHandler.start();
-                        }
-                    }
-                    else {
-                        AmmoCard ammoCard = curPlayer.getTile().grabAmmoCard();
-                        List<Ammo> ammos = ammoCard.getAmmos().stream().
-                                filter(a -> !a.equals(Ammo.POWERUP)).
-                                collect(Collectors.toList());
-                        List<Ammo> powerUps = ammoCard.getAmmos().stream().
-                                filter(a -> a.equals(Ammo.POWERUP)).
-                                collect(Collectors.toList());
-                        ammos.forEach(a -> curPlayer.addAmmo(a));
-                        powerUps.forEach(p -> curPlayer.addPowerUp(sandboxMatch.getBoard().drawPowerUp(), true));
-                        sandboxMatch.getBoard().discardAmmoCard(ammoCard);
-                        updateOnConclusion();
-                    }
+                    nextGrab();
                     break;
                 case RELOAD:
                     receivingTypes = new ArrayList<>(Arrays.asList(WEAPON, STOP));
@@ -280,10 +281,7 @@ public class ActionController extends Observer {
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost())).
                             collect(Collectors.toList());
                     if (selectableWeapon.isEmpty()) {
-                        if (curAction.toString().equals("RELOAD"))
-                            updateOnStopSelection(OPTIONAL);
-                        else
-                            nextStep();
+                        nextStep();
                     }else {
                         acceptableTypes = new AcceptableTypes(receivingTypes);
                         acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, "Ricarica un'arma se vuoi"));
@@ -346,7 +344,8 @@ public class ActionController extends Observer {
     public void updateOnStopSelection(ThreeState skip){
         curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            if (selectedWeapon != null)    selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
+            if (selectedWeapon != null)
+                selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
             originalMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(originalMatch));
             originalMatch.updateViews();
             gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);

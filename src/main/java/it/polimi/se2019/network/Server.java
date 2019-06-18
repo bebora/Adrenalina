@@ -6,6 +6,7 @@ import it.polimi.se2019.controller.LobbyController;
 import it.polimi.se2019.model.Mode;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Properties;
 
@@ -14,10 +15,18 @@ public class Server {
         Properties connectionProperties = new Properties();
         FileInputStream fin;
         try{
-            fin = new FileInputStream(Server.class.getClassLoader().getResource("connection.properties").getPath());
+            fin = new FileInputStream("./connection.properties");
             connectionProperties.load(fin);
-        }catch (Exception e){
+        }catch (IOException e){
             Logger.log(Priority.ERROR,e.getMessage());
+            try {
+                fin = new FileInputStream(Server.class.getClassLoader().getResource("connection.properties").getPath());
+                connectionProperties.load(fin);
+            }
+            catch (IOException ex) {
+                Logger.log(Priority.ERROR, e.getMessage());
+                return;
+            }
         }
         int socketPort = Integer.parseInt(connectionProperties.getProperty("SocketPort"));
         int rmiPort = Integer.parseInt(connectionProperties.getProperty("RMIPort"));

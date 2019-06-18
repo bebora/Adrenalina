@@ -524,7 +524,7 @@ public class EffectController extends Observer {
 
     private void checkPowerUps(List<Player> players){
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-        for (Player p : players) {
+        for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
                 receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
@@ -543,24 +543,24 @@ public class EffectController extends Observer {
             }
             else break;
         }
-        List<TimerCostrainedEventHandler> handlersPowerUp = new ArrayList<>();
         for(Player p : players.stream().filter(Player::getOnline).collect(Collectors.toList())){
             if(p.hasPowerUp(Moment.DAMAGED)){
+                int oldPlayer = curMatch.getCurrentPlayer();
+                curMatch.setCurrentPlayer(p);
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
                 Observer damagedController = new DamagedController(p, player, applicable);
                 TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                timerCostrainedEventHandler.setNotifyOnEnd(false);
-                handlersPowerUp.add(temp);
-            }
-        }
-        for (TimerCostrainedEventHandler t : handlersPowerUp) {
-            try {
-                t.join();
-            }
-            catch (Exception e) {
-                Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
+                temp.setNotifyOnEnd(false);
+                temp.start();
+                try {
+                    temp.join();
+                }
+                catch (Exception e) {
+                    Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
+                }
+                curMatch.setCurrentPlayer(oldPlayer);
             }
         }
     }
@@ -604,6 +604,7 @@ public class EffectController extends Observer {
             //communicate the error to the player
         }
     }
+
 
     /**
      * Receive a powerUp that can be used after a inflicting damage

@@ -1,7 +1,7 @@
 package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
-import it.polimi.se2019.MyProperties;
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
@@ -17,6 +17,11 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Handler class for events received by the client.
+ * Extends EventHandler, adding a timing functionality to limit the time the player has for a single action.
+ * In the default behaviour, it notifies the observer after it ended without being blocked by the related requestDispatcher.
+ */
 public class TimerCostrainedEventHandler extends Thread implements EventHandler {
     private long start;
     private long time;
@@ -31,8 +36,12 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         return blocked;
     }
 
+    /**
+     * Constructor used to resume a Timer after it has been blocked.
+     * @param timerCostrainedEventHandler blocked timer, that contains the elapsed after after its start.
+     */
     public TimerCostrainedEventHandler(TimerCostrainedEventHandler timerCostrainedEventHandler) {
-        time = Integer.parseInt(MyProperties.getInstance().getProperty("time")) - (System.currentTimeMillis() - start);
+        time = Integer.parseInt(GameProperties.getInstance().getProperty("time")) - (System.currentTimeMillis() - start);
         active = true;
         this.observer = timerCostrainedEventHandler.observer;
         this.requestDispatcher = timerCostrainedEventHandler.requestDispatcher;
@@ -42,7 +51,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     public TimerCostrainedEventHandler(Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
-        time = Integer.parseInt(MyProperties.getInstance().getProperty("time"));
+        time = Integer.parseInt(GameProperties.getInstance().getProperty("time"));
         active = true;
         this.observer = observer;
         this.requestDispatcher = requestDispatcher;
@@ -55,11 +64,19 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         this.notifyOnEnd = notifyOnEnd;
     }
 
+    /**
+     * End handler, blocking it and stopping it to notify the observer.
+     */
     public void endHandler() {
         blocked = true;
         active = false;
     }
 
+    /**
+     * Check if the timer is already finished.
+     * If finished, {@link #active} is set to false, to stop the running Thread.
+     * @return
+     */
     public synchronized boolean checkFinished() {
         if (System.currentTimeMillis() >= start + time) {
             active = false;
@@ -84,7 +101,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
             if (checkFinished())
                 break;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             }
             catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "Sleep interrupted");
