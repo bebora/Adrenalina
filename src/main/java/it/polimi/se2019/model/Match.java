@@ -117,30 +117,27 @@ public abstract class Match {
 	public void startFrenzy() {
 		finalFrenzy = TRUE;
 		Boolean afterFirst;
+		List<Player> toUpdate = players.stream().filter(p->!p.getDominationSpawn()).collect(Collectors.toList());
 		// Update actions
-		if (firstPlayer < currentPlayer) {
-			for (Player p : players) {
+		for (Player p: toUpdate) {
+			if (firstPlayer < currentPlayer) {
 				afterFirst = !(players.indexOf(p) >= currentPlayer || players.indexOf(p) < firstPlayer);
 				p.notifyFrenzy(afterFirst);
 			}
-		} else if (firstPlayer > currentPlayer) {
-			for (Player p : players) {
+			else if (firstPlayer > currentPlayer) {
 				afterFirst = !(players.indexOf(p) >= currentPlayer && players.indexOf(p) < firstPlayer);
 				p.notifyFrenzy(afterFirst);
 			}
-		}
-		else {
-			for (Player p : players)
+			else {
 				p.notifyFrenzy(true);
+			}
 		}
-
-		// Update reward points
-		List<Player> toUpdate = players.stream().filter(p->!p.getDominationSpawn()).collect(Collectors.toList());
+		// Update reward points for players with no damage
 		for (Player p : toUpdate) {
-			p.setFirstShotReward(false);
-			if (!p.getRewardPoints().isEmpty())
-				p.getRewardPoints().subList(1,p.getRewardPoints().size()).clear();
-			p.getRewardPoints().addAll(new ArrayList<>(Arrays.asList(2,1,1,1)));
+			if (p.getDamages().isEmpty()) {
+				p.setFirstShotReward(false);
+				p.setRewardPoints(new ArrayList<>(Arrays.asList(2, 1, 1, 1)));
+			}
 		}
 		updateViews();
 		firstPlayer = currentPlayer;
@@ -166,6 +163,11 @@ public abstract class Match {
 			scorePlayerBoard(p);
 			p.resetPlayer();
 			p.addPowerUp(board.drawPowerUp(), false);
+			// Set reward points and rewards to players who haven't changed it yet
+			if (finalFrenzy  && !p.getRewardPoints().equals(new ArrayList<>(Arrays.asList(2,1,1,1)))) {
+				p.setRewardPoints(new ArrayList<>(Arrays.asList(2,1,1,1)));
+				p.setFirstShotReward(false);
+			}
 		}
 
 		board.refreshWeapons();
@@ -196,7 +198,7 @@ public abstract class Match {
 	 */
 	public void scorePlayerBoard(Player player) {
 		// first blood
-		if (player.getFirstShotReward() == TRUE) {
+		if (player.getFirstShotReward() == TRUE && !player.getDamages().isEmpty()) {
 		    // Don't add reward if damage is given from spawnpoint
             if (!player.getDamages().get(0).equals(player)) {
                 player.getDamages().get(0).addPoints(1);

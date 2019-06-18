@@ -38,7 +38,7 @@ public class Player {
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(2);
-		firstShotReward = Boolean.FALSE;
+		firstShotReward = Boolean.TRUE;
 	}
 
 	public Player(Player originalPlayer){
@@ -317,6 +317,10 @@ public class Player {
 		return rewardPoints;
 	}
 
+	public void setRewardPoints(List<Integer> rewardPoints) {
+		this.rewardPoints = rewardPoints;
+	}
+
 	/**
 	 * Recharge the parameter weapon
 	 * and set the weapon as loaded.
@@ -565,7 +569,6 @@ public class Player {
 
 	private void sendTotalUpdate(){
 		if (match != null) {
-			//TODO don't send total update if player not online. Could be useless if called only in match and nowhere in player
 			this.match.updateViews();
 		}
 	}

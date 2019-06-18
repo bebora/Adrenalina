@@ -110,10 +110,13 @@ public class DominationMatch extends Match {
 
     /**
      * Deadshots in domination are not handled, they are just ignored as by rules
+     * Reward points are modified, though
      * @param player player where dead shot is scored
      */
     @Override
     public void scoreDeadShot(Player player) {
+        if (!player.getRewardPoints().isEmpty())
+            player.getRewardPoints().remove(0);
     }
 
     /**

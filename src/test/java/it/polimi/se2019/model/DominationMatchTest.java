@@ -18,13 +18,6 @@ class DominationMatchTest {
     private Player foo, poo, boo;
     private List<Player> spawnerPlayers;
 
-    private int nextPlayerIndex() {
-        long numPlayers = match.getPlayers().stream().filter(p -> !p.getDominationSpawn()).count();
-        int cur = match.getCurrentPlayer();
-        if (cur == numPlayers-1) return 0;
-        else return cur+1;
-    }
-
     private void insertSpawnPoints() {
         int limit = match.getPlayers().size();
         for (int i = 0; i < limit; i++) {
@@ -33,10 +26,8 @@ class DominationMatchTest {
     }
     @BeforeEach
     void prepareMatch() {
-        foo = new Player();
-        poo = new Player();
-        boo = new Player();
-        match = new DominationMatch(new ArrayList<>(Arrays.asList(foo,poo,boo)), "board1.btlb", 8);
+        List<Player> players = new ArrayList<>(Arrays.asList(new Player("yijie"), new Player("roland"), new Player("antonio")));
+        match = new DominationMatch(players, "board1.btlb", 8);
         spawnerPlayers = match.getSpawnPoints();
     }
 
@@ -127,7 +118,7 @@ class DominationMatchTest {
         //Receive 1 damage from spawn, 6 from one player and 4 from the other
         match.newTurn();
         Player newCurrent = match.getPlayers().get(match.getCurrentPlayer());
-        Player last = match.getPlayers().get(nextPlayerIndex());
+        Player last = match.getPlayers().get(MatchTest.nextPlayerIndex(match));
         current.receiveShot(newCurrent, 5, 0, true);
         current.receiveShot(last, 5, 0, true);
         match.newTurn();
@@ -141,7 +132,7 @@ class DominationMatchTest {
     void noDoubleKillFromSpawnKillShot() {
         insertSpawnPoints();
         Player current = match.getPlayers().get(match.getCurrentPlayer());
-        Player other = match.getPlayers().get(nextPlayerIndex());
+        Player other = match.getPlayers().get(MatchTest.nextPlayerIndex(match));
         //Disable first shot reward for test
         current.setFirstShotReward(false);
         other.setFirstShotReward(false);
@@ -163,7 +154,7 @@ class DominationMatchTest {
         match.getPlayers().forEach(p -> p.setOnline(true));
         insertSpawnPoints();
         Player current = match.getPlayers().get(match.getCurrentPlayer());
-        Player other = match.getPlayers().get(nextPlayerIndex());
+        Player other = match.getPlayers().get(MatchTest.nextPlayerIndex(match));
         //Enable first shot reward for test
         current.setFirstShotReward(true);
         other.setFirstShotReward(true);
