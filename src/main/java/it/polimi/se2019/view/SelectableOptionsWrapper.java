@@ -45,9 +45,6 @@ public class SelectableOptionsWrapper implements Serializable {
         return selectableActions;
     }
 
-    public SelectableOptions<String> getSelectabeEffects() {
-        return selectableEffects;
-    }
 
     public SelectableOptions<String> getSelectablePlayers() {
         return selectablePlayers;
@@ -72,6 +69,7 @@ public class SelectableOptionsWrapper implements Serializable {
     public SelectableOptionsWrapper(AcceptableTypes acceptableTypes) {
         acceptedTypes = acceptableTypes.getAcceptedTypes();
         for (ReceivingType receivingType : acceptableTypes.getAcceptedTypes()) {
+            //TODO ADD REMAINING TYPE
             switch (receivingType) {
                 case ACTION:
                     selectableActions = new SelectableOptions<>(acceptableTypes.getSelectableActions());
@@ -84,11 +82,9 @@ public class SelectableOptionsWrapper implements Serializable {
                     break;
                 case EFFECT:
                     selectableEffects = new SelectableOptions<>(acceptableTypes.getSelectableEffects());
-                    selectableEffects.setOptions(acceptableTypes.
+                    selectableEffects.setOptions(new ArrayList<>(acceptableTypes.
                             getSelectableEffects().
-                            getOptions().
-                            stream().
-                            collect(Collectors.toCollection(ArrayList::new)));
+                            getOptions()));
                     break;
                 case PLAYERS:
                     selectablePlayers = new SelectableOptions<>(acceptableTypes.getSelectablePlayers());
@@ -138,7 +134,7 @@ public class SelectableOptionsWrapper implements Serializable {
                     break;
                 case AMMO:
                     selectableAmmos = new SelectableOptions<>(acceptableTypes.getSelectableAmmos());
-                    selectableAmmos.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(a -> a.toString()).collect(Collectors.toCollection(ArrayList::new)));
+                    selectableAmmos.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case STOP:
                     stopPrompt = acceptableTypes.getStopPrompt();
@@ -162,7 +158,7 @@ public class SelectableOptionsWrapper implements Serializable {
             case ACTION:
                 return getSelectableActions();
             case EFFECT:
-                return getSelectabeEffects();
+                return getSelectableEffects();
             default:
                 return null;
         }

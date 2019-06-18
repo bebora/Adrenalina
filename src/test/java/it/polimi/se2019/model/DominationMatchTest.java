@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class DominationMatchTest {
     private DominationMatch match;
     private Player foo, poo, boo;
-    private List<Player> spawnerPlayers;
+    private List<SpawnPlayer> spawnerPlayers;
 
     private void insertSpawnPoints() {
         int limit = match.getPlayers().size();

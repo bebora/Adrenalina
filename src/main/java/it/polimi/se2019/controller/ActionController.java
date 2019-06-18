@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.STOP;
 import static it.polimi.se2019.controller.ReceivingType.WEAPON;
+import static it.polimi.se2019.model.ThreeState.OPTIONAL;
 import static it.polimi.se2019.model.actions.SubAction.GRAB;
 import static it.polimi.se2019.model.actions.SubAction.RELOAD;
 
@@ -235,6 +236,11 @@ public class ActionController extends Observer {
 
     /**
      * Handles a generic step, parsing the current subAction from {@link #curAction}.
+     * Supports the subActions:
+     * <li>Move, using the related method {@link #nextMove()}</li>
+     * <li>Shoot, prompting the weapon to use to the client, using the WeaponController</li>
+     * <li>Grab, using the related method {@link #nextGrab}</li>
+     * <li>Reload, </li>
      *
      */
     private void nextStep(){
@@ -281,10 +287,14 @@ public class ActionController extends Observer {
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost())).
                             collect(Collectors.toList());
                     if (selectableWeapon.isEmpty()) {
-                        nextStep();
+                        if (curAction.toString().equals("RELOAD"))
+                            updateOnStopSelection(OPTIONAL);
+                        else
+                            nextStep();
                     }else {
                         acceptableTypes = new AcceptableTypes(receivingTypes);
-                        acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, "Ricarica un'arma se vuoi"));
+                        acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 1, "Choose what weapon to reload if you want!"));
+                        acceptableTypes.setStop(true, "Stop reloading");
                         timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                                 this,
                                 curPlayer.getVirtualView().getRequestDispatcher(),

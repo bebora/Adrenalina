@@ -29,8 +29,8 @@ public class VirtualView extends View  {
     }
 
     /**
-     * Set the viewUpdater, and create the related RequestDispatcher that will use the {@link #viewUpdater} to answer
-     * //TODO @simone is really necessary to propagate the IncorrectEvent in {@link #requestDispatcher} like it's currently being done or viewUpdates could be done at a lower level? think and fix
+     * Set the viewUpdater.
+     * Create the related RequestDispatcher that will use the {@link #viewUpdater} to answer
      */
     public void setViewUpdater(ViewUpdater viewUpdater) {
         this.viewUpdater = viewUpdater;
@@ -45,9 +45,8 @@ public class VirtualView extends View  {
     @Override
     public void setOnline(boolean online) {
         super.setOnline(online);
-        if (!online) {
-            if (getGameController() != null)
-                getGameController().checkEnd(getUsername());
+        if (!online && getGameController() != null) {
+            getGameController().checkEnd(getUsername());
         }
     }
 

@@ -3,7 +3,6 @@ package it.polimi.se2019.model;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 
-
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -18,7 +17,7 @@ public class DominationMatch extends Match {
     /**
      * Helper attribute that keeps track of the Domination Spawn players
      */
-    private List<Player> spawnPoints;
+    private List<SpawnPlayer> spawnPoints;
 
     /**
      * Create a Domination Match, using {@link #Match} constructor
@@ -37,7 +36,6 @@ public class DominationMatch extends Match {
         super(match);
         this.spawnPoints = match.players.stream().filter(Player::getDominationSpawn).map(p -> (SpawnPlayer) p).map(SpawnPlayer::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
         this.players.addAll(spawnPoints);
-        this.spawnPoints.addAll(match.getSpawnPoints());
     }
 
     /**
@@ -94,18 +92,19 @@ public class DominationMatch extends Match {
      * <li>BLUE</li>
      */
     public void insertSpawnPoints() {
+        spawnPoints = new ArrayList<>();
         List<Color> colors = new ArrayList<>(Arrays.asList(Color.RED, Color.YELLOW, Color.BLUE));
         for (Color color : colors) {
-            Player temp = new SpawnPlayer(color);
+            SpawnPlayer temp = new SpawnPlayer(color);
             Tile relatedTile = getBoard().
                     getTiles().stream().
                     flatMap(List::stream).
                     filter(t -> t!= null && t.isSpawn() && t.getRoom().equals(color)).
                     findFirst().orElseThrow(UnsupportedOperationException::new);
             temp.setTile(relatedTile);
+            spawnPoints.add(temp);
             super.getPlayers().add(temp);
         }
-        spawnPoints = getPlayers().stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
     }
 
     /**
@@ -186,6 +185,6 @@ public class DominationMatch extends Match {
     }
 
     @Override
-    public List<Player> getSpawnPoints(){ return spawnPoints; }
+    public List<SpawnPlayer> getSpawnPoints(){ return spawnPoints; }
 
 }

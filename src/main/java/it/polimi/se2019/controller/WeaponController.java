@@ -46,7 +46,7 @@ public class WeaponController extends Observer {
 
         List<Effect> possiblyUsableEffects = allEffects.stream()
                 .filter(effect -> !effect.getActivated())
-                .filter(effect -> curPlayer.checkForAmmos(effect.getCost(), curPlayer.totalAmmoPool()))
+                .filter(effect -> curPlayer.checkForAmmos(effect.getCost()))
                 .collect(Collectors.toList());
 
         List<Integer> notUsedIndexes = possiblyUsableEffects.stream()
@@ -118,52 +118,12 @@ public class WeaponController extends Observer {
             stillToPay.addAll(selectedEffect.getCost());
             PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
             paymentController.startPaying();
-            /*if (selectedEffect.getCost().isEmpty()) {
-                concludePayment();
-            } else
-            {
-                List<Ammo> toPay = new ArrayList<>(stillToPay);
-                stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
-                if (curPlayer.canDiscardPowerUp(toPay)) {
-                    List<PowerUp> selectablePowerUps = curPlayer.
-                            getPowerUps().
-                            stream().
-                            filter(p -> toPay.contains(p.getDiscardAward())).collect(Collectors.toList());
-                    List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP, ReceivingType.STOP));
-                    acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, "Seleziona PowerUp per pagare!"));
-                    timerCostrainedEventHandler = new TimerCostrainedEventHandler(
-                            this,
-                            curPlayer.getVirtualView().getRequestDispatcher(),
-                            acceptableTypes);
-                    timerCostrainedEventHandler.start();
-                }
-                else {
-                    concludePayment();
-                }
-            }*/
         } else {
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
             throw new IncorrectEvent("Effect not present!");
         }
     }
-
-    /*@Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
-            powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
-            for (Ammo a : curPlayer.getAmmos()) {
-                if (stillToPay.remove(a))
-                    curPlayer.getAmmos().remove(a);
-            }
-            if (stillToPay.isEmpty()) {
-                concludePayment();
-            }
-        } else {
-            throw new IncorrectEvent("Error! Not enough ammos to pay!");
-        }
-    }*/
 
     @Override
     public void concludePayment() {
@@ -183,6 +143,7 @@ public class WeaponController extends Observer {
                 && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
         boolean finished = weapon.getEffects().get(0).getActivated() || modalWeaponActivated;
         if (getUsableEffects().isEmpty())
+
             if (finished) {
                 weapon.setLoaded(false);
                 actionController.updateOnConclusion();

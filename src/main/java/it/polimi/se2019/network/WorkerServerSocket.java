@@ -23,6 +23,9 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import static it.polimi.se2019.Priority.DEBUG;
+import static it.polimi.se2019.Priority.WARNING;
+
 
 public class WorkerServerSocket extends Thread {
     private Socket socket;
@@ -47,10 +50,9 @@ public class WorkerServerSocket extends Thread {
             json = jsonReader.readLine();
         }
         catch (IOException e) {
-            //TODO LOGGER
-            throw new UnsupportedOperationException();
+            Logger.log(WARNING, "Can't get the message");
+            throw new AuthenticationErrorException();
         }
-        System.out.println(json);
         EventVisitable event;
         try {
             event = gson.fromJson(json, EventVisitable.class);
@@ -75,18 +77,15 @@ public class WorkerServerSocket extends Thread {
             eventVisitor = new EventVisitor(virtualView.getRequestDispatcher(), lobbyController);
         }
         catch (ClassCastException e){
-            event = null;
-            //TODO LOG INCORRECT EVENT
-        }
-        if (event == null) {
-            //TODO send update popup, wrong message
+            Logger.log(WARNING, "Wrong message");
             try {
                 socket.close();
             }
-            catch (IOException e) {
-                //TODO LOGGER
+            catch (IOException socketClosing) {
+                Logger.log(WARNING, "Socket closing");
                 throw new AuthenticationErrorException();
             }
+            throw new AuthenticationErrorException();
         }
     }
 
@@ -108,7 +107,7 @@ public class WorkerServerSocket extends Thread {
             queue.put(json);
         }
         catch (InterruptedException e) {
-            //TODO insert logger class to log exceptions
+            Logger.log(DEBUG, "Can't update Queue");
         }
     }
 
@@ -116,24 +115,26 @@ public class WorkerServerSocket extends Thread {
             @Override
             public void run() {
                 try {
-                    String json;
                     do {
-                        try {
-                            json = queue.take() + "\n";
-                            jsonSender.write(json, 0, json.length());
-                            jsonSender.flush();
-                        }
-                        catch (InterruptedException e) {
-                            Logger.log(Priority.ERROR, e.toString());
-                        }
+                        update();
                     }
-                    //TODO edit conditions to run
                     while (virtualView.isOnline());
                 }
                 catch (IOException e) {
                     Logger.log(Priority.ERROR, e.toString());
                     Logger.log(Priority.ERROR, "PLAYER DISCONNECTED (socket)" + virtualView.getUsername());
                     virtualView.setOnline(false);
+                }
+            }
+
+            public void update() throws IOException {
+                try {
+                    String json = queue.take() + "\n";
+                    jsonSender.write(json, 0, json.length());
+                    jsonSender.flush();
+                }
+                catch (InterruptedException e) {
+                    Logger.log(Priority.ERROR, e.toString());
                 }
             }
     }
@@ -149,7 +150,7 @@ public class WorkerServerSocket extends Thread {
                     event.accept(eventVisitor);
                 }
                 catch (IOException e) {
-                    Logger.log(Priority.WARNING, "Can't read event: "+e.getMessage());
+                    Logger.log(WARNING, "Can't read event: "+e.getMessage());
                 }
             }
         }
@@ -165,7 +166,7 @@ public class WorkerServerSocket extends Thread {
                     Thread.sleep(50);
                 }
                 catch (InterruptedException e) {
-                    System.out.print("Interrupted");
+                    Logger.log(WARNING,"Interrupted");
                     virtualView.setOnline(false);
                 }
             }

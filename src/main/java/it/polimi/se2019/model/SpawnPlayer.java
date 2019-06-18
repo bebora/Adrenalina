@@ -65,4 +65,6 @@ public class SpawnPlayer extends Player{
             super.setTile(tile);
         }
     }
+
+
 }

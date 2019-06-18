@@ -168,7 +168,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                     map(ViewPowerUp::new).
                     collect(Collectors.toCollection(ArrayList::new));
             ArrayList<ViewWeapon> viewLoadedWeapons = loadedWeapons.stream().
-                    map(w -> new ViewWeapon(w)).
+                    map(ViewWeapon::new).
                     collect(Collectors.toCollection(ArrayList::new));
             try {
                 remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,

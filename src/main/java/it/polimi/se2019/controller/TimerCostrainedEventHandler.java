@@ -32,7 +32,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private AcceptableTypes acceptableTypes;
     private boolean notifyOnEnd;
 
-    public boolean isBlocked() {
+    public synchronized boolean  isBlocked() {
         return blocked;
     }
 

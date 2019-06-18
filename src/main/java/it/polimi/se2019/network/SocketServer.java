@@ -1,4 +1,4 @@
-package it.polimi.se2019.network;
+    package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
@@ -23,13 +23,16 @@ public class SocketServer extends Thread{
 
     @Override
     public void run() {
-        initializeSocket();
+        if (!initializeSocket()) {
+            return;
+        }
         Socket clientSocket;
         while (true) {
             try {
                 clientSocket = this.serverSocket.accept();
             } catch (IOException e) {
-                throw new RuntimeException("Can't accept connection", e);
+                Logger.log(Priority.DEBUG, "Can't open socket");
+                return;
             }
             WorkerServerSocket workerServerSocket;
             try {
@@ -40,12 +43,14 @@ public class SocketServer extends Thread{
             }
         }
     }
-    public void initializeSocket() {
+    public boolean initializeSocket() {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);
+            return true;
         }
         catch (IOException e) {
-            throw new RuntimeException(String.format("Port %d cannot be open", this.serverPort));
+            Logger.log(Priority.WARNING, String.format("Port %d cannot be open\"", this.serverPort));
+            return false;
         }
     }
 }

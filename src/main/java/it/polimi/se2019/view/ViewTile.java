@@ -7,6 +7,7 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ViewTile implements Serializable {
@@ -65,6 +66,10 @@ public class ViewTile implements Serializable {
         return returnValue;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(coords.getPosx()*coords.getPosy());
+    }
 
     /**
      * Constructor used in visitor, missing color because it won't be used: will get the correspondent tile using helper, from coords.
