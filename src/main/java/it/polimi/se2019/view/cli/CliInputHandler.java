@@ -57,13 +57,14 @@ public class CliInputHandler implements Runnable{
         }
     }
 
-    private void infoPlayer(String color){
+    private void infoPlayer(String color,boolean spawn){
         List<String> possibleColors = view.getPlayers().stream()
                 .map(ViewPlayer::getColor)
                 .collect(Collectors.toList());
         if(possibleColors.contains(color)) {
             ViewPlayer requestedPlayer = view.getPlayers().stream()
                     .filter(p -> p.getColor().equalsIgnoreCase(color))
+                    .filter(p -> p.getDominationSpawn() == spawn)
                     .findAny().orElse(null);
             if (requestedPlayer != null){
                 AsciiPlayer.drawPlayerInfo(requestedPlayer, new ArrayList<>(), requestedPlayer.getUnloadedWeapons());
@@ -374,7 +375,10 @@ public class CliInputHandler implements Runnable{
                         tileInfoMode(input);
                         break;
                     case "PLAYER":
-                        infoPlayer(inSplit[1]);
+                        infoPlayer(inSplit[1],false);
+                        break;
+                    case "SPAWN":
+                        infoPlayer(inSplit[1],true);
                         break;
                     case "WEAPON":
                         if(inSplit.length > 2 && inSplit[2].matches("\\d"))

@@ -119,8 +119,8 @@ public class AsciiBoard {
 
     static void requestTileInfo(int requestedX, int requestedY){
         ViewTile requestedTile = null;
-        if (requestedY <= AsciiBoard.board.getTiles().size() && requestedY > 0 && requestedX <= AsciiBoard.board.getTiles().get(requestedY-1).size() && requestedX > 0) {
-            requestedTile = AsciiBoard.board.getTiles().get(requestedY - 1).get(requestedX - 1);
+        if (requestedY < AsciiBoard.board.getTiles().size() && requestedY >= 0 && requestedX < AsciiBoard.board.getTiles().get(requestedY).size() && requestedX >= 0) {
+            requestedTile = AsciiBoard.board.getTiles().get(requestedY).get(requestedX);
             if(requestedTile != null )
                 AsciiTile.drawTileInfo(requestedTile, 1, 1);
         }

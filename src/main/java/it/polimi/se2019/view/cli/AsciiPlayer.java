@@ -12,7 +12,7 @@ public class AsciiPlayer {
     static final int playerInfoHeight = 8;
     static void printMarks(ViewPlayer player){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+2);
-        CLI.printInColor("w","Marchi:\n");
+        CLI.printInColor("w","Marks:\n");
         for(String m: player.getMarks()){
             CLI.printInColor(m,"\uD83E\uDE78 ");
         }
@@ -20,7 +20,7 @@ public class AsciiPlayer {
     }
 
     static void printDamages(ViewPlayer player){
-        CLI.printInColor("w","Danni:\n");
+        CLI.printInColor("w","Damages:\n");
         for(String d: player.getDamages())
             CLI.printInColor(d,"\uD83E\uDE78 ");
         CLI.printInColor("red","\n");
@@ -28,7 +28,7 @@ public class AsciiPlayer {
 
     static void printAmmos(ViewPlayer player){
         CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 2);
-        CLI.printInColor("w","Munizioni:");
+        CLI.printInColor("w","Ammos:");
         CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 3);
         CLI.saveCursorPosition();
         for(String a: player.getAmmos())
@@ -37,11 +37,11 @@ public class AsciiPlayer {
 
     static void printWeapons(List<ViewWeapon> unloadedWeapons, List<ViewWeapon> loadedWeapons){
         int i = 1;
+        CLI.moveCursor(48,AsciiBoard.boardBottomBorder + 4);
+        CLI.saveCursorPosition();
+        CLI.printInColor("w","Weapons:");
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(1);
-        CLI.printInColor("w","Armi:");
-        CLI.restoreCursorPosition();
-        CLI.shiftCursorDown(2);
         for(ViewWeapon w: unloadedWeapons){
             CLI.printInColor("g",i +")"+ w.getName() + " ");
             i++;
@@ -66,12 +66,24 @@ public class AsciiPlayer {
         }
     }
 
+    static void printRewardPoint(ViewPlayer viewPlayer){
+        CLI.restoreCursorPosition();
+        CLI.shiftCursorDown(1);
+        CLI.printInColor("w","Reward points:");
+        CLI.restoreCursorPosition();
+        CLI.shiftCursorDown(2);
+        for(Integer i: viewPlayer.getRewardPoints()){
+            CLI.printInColor("w", i + " ");
+        }
+    }
+
     static void drawPlayerInfo(ViewPlayer player,List<ViewWeapon> loadedWeapons, List<ViewWeapon> unloadedWeapons){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder + 1,AsciiBoard.boardBottomBorder + 6, AsciiBoard.offsetX);
         printMarks(player);
         printDamages(player);
         printAmmos(player);
+        printRewardPoint(player);
         printWeapons(unloadedWeapons, loadedWeapons);
     }
 

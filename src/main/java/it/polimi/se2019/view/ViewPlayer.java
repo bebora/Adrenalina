@@ -113,6 +113,8 @@ public class ViewPlayer implements Serializable {
 		return unloadedWeapons;
 	}
 
+	public ArrayList<Integer> getRewardPoints() { return rewardPoints; }
+
 	public void setDamages(List<String> damages) {
 		this.damages = new ArrayList<>(damages);
 	}
