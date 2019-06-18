@@ -1,6 +1,7 @@
 package it.polimi.se2019.model;
 
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -153,5 +154,30 @@ class DominationMatchTest {
         match.newTurn();
         //8 = points given only from first death of other player, assuming points for regular death are right
         assertEquals(8, current.getPoints());
+    }
+
+    @Test
+    void getWinners() {
+        //Player must be set to online with a virtualView to be counted in winners
+        match.getPlayers().forEach(p -> p.setVirtualView(new VirtualView()));
+        match.getPlayers().forEach(p -> p.setOnline(true));
+        insertSpawnPoints();
+        Player current = match.getPlayers().get(match.getCurrentPlayer());
+        Player other = match.getPlayers().get(nextPlayerIndex());
+        //Enable first shot reward for test
+        current.setFirstShotReward(true);
+        other.setFirstShotReward(true);
+        current.getDamages().addAll(Collections.nCopies(10, other));
+        other.getDamages().addAll(Collections.nCopies(10, current));
+        match.getSpawnPoints().get(0).getDamages().addAll(Collections.nCopies(4, current));
+        match.getSpawnPoints().get(0).getDamages().addAll(Collections.nCopies(4, other));
+        match.getSpawnPoints().get(1).getDamages().addAll(Collections.nCopies(4, current));
+        match.getSpawnPoints().get(1).getDamages().addAll(Collections.nCopies(4, other));
+        List<Player> winners = match.getWinners();
+        assertEquals(2, winners.size());
+        assertTrue(winners.containsAll(Arrays.asList(current, other)));
+        //Points received should be: 1 (first shot) + 8 best player in Player "other" damages + 2*8 best player in spawns
+        assertEquals(1+8+2*8, winners.get(0).getPoints());
+        assertEquals(1+8+2*8, winners.get(1).getPoints());
     }
 }

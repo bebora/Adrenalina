@@ -117,6 +117,7 @@ public class DominationMatch extends Match {
 
     /**
      * Get winners by scoring the players and the spawnPoints, and returning the list of winners
+     * Offline players can't be winners
      * @return list of player declared winner of the game
      */
     @Override
@@ -128,10 +129,10 @@ public class DominationMatch extends Match {
                 scoreSpawnPoint(p);
             }
         }
-
+        int maxPoints = getPlayers().stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints();
         return getPlayers().
                 stream().
-                filter(s -> s.getPoints() == getPlayers().stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints()).
+                filter(p -> p.getPoints() == maxPoints && p.getOnline() && !p.getDominationSpawn()).
                 collect(Collectors.toList());
     }
 

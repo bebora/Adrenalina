@@ -81,6 +81,7 @@ public class Player {
 		this.marks = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
 		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+		this.weapons = new ArrayList<>();
 	}
 
 	void restorePlayer(Player oldPlayer){

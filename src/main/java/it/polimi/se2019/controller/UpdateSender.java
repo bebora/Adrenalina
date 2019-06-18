@@ -92,7 +92,14 @@ public class UpdateSender implements ViewUpdater {
     }
 
     public void sendPopupMessage(Player receivingPlayer, String message) {
-        receivingPlayer.getVirtualView().getViewUpdater().sendPopupMessage(message);
+        if (receivingPlayer.getVirtualView().getViewUpdater() == null) return;
+        if (!receivingPlayer.getOnline()) {
+            Logger.log(Priority.DEBUG, "Can't send popup update to offline player " + receivingPlayer.getUsername());
+        }
+        else {
+            receivingPlayer.getVirtualView().getViewUpdater().sendPopupMessage(message);
+        }
+
     }
 
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {
@@ -129,6 +136,7 @@ public class UpdateSender implements ViewUpdater {
     public void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
+        if (receivingPlayer.getVirtualView().getViewUpdater() == null) return;
         if (!receivingPlayer.getOnline()) {
             Logger.log(Priority.DEBUG, "Can't send total update to offline player " + receivingPlayer.getUsername());
         }
