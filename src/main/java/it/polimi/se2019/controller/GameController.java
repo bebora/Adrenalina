@@ -13,7 +13,11 @@ import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.view.SelectableOptions;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.PLAYERS;
@@ -38,6 +42,7 @@ public class GameController extends Observer {
     private boolean skip;
     private boolean action;
     private PowerUp toDiscard;
+    private CountDownLatch countDownLatch;
 
     /**
      * Handles the disconnection of a player, communicating to other players that the player got disconnected.
@@ -83,10 +88,12 @@ public class GameController extends Observer {
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
             players.get(0).receiveShot(currentPlayer, 1, 0, true);
+
         }
         else {
             throw new IncorrectEvent("Wrong players!");
         }
+        countDownLatch.countDown();
     }
 
     /**
@@ -280,10 +287,11 @@ public class GameController extends Observer {
             for (Player current : overkillPlayers) {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                countDownLatch = new CountDownLatch(1);
                 timerCostrainedEventHandler.setNotifyOnEnd(false);
                 timerCostrainedEventHandler.start();
                 try {
-                    timerCostrainedEventHandler.join();
+                    countDownLatch.await();
                 } catch (InterruptedException e) {
                     Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
                 }
@@ -350,15 +358,14 @@ public class GameController extends Observer {
         List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
         for(Player p: spawnablePlayers){
             List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
-            Observer spawner = new Spawner(p,match.getBoard());
+            CountDownLatch countDownLatch = new CountDownLatch(1);
+            Observer spawner = new Spawner(countDownLatch, p ,match.getBoard());
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Select a PowerUp to discard!"));
             timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
             timerCostrainedEventHandlers.forEach(t -> t.start());
-        }
-        for (TimerCostrainedEventHandler t : timerCostrainedEventHandlers) {
             try {
-                t.join();
+                countDownLatch.await();
                 Logger.log(Priority.DEBUG, "One spawning done!");
             }
             catch (Exception e) {

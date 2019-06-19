@@ -11,18 +11,21 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 
 public class Spawner extends Observer {
     private Player playerToSpawn;
     private Board board;
     private Random random;
+    private CountDownLatch countDownLatch;
 
-    public Spawner(Player playerToSpawn,Board board){
+    public Spawner(CountDownLatch countDownLatch, Player playerToSpawn, Board board){
         Logger.log(Priority.DEBUG, "Trying to spawn a player!");
         this.playerToSpawn = playerToSpawn;
         this.board = board;
         playerToSpawn.addPowerUp(board.drawPowerUp(),false);
         random = new Random();
+        this.countDownLatch = countDownLatch;
     }
 
     @Override
@@ -37,7 +40,9 @@ public class Spawner extends Observer {
                     .filter(t -> t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
                     .findFirst().orElse(null));
             playerToSpawn.setAlive(ThreeState.TRUE);
+            countDownLatch.countDown();
         }
+
     }
 
     @Override

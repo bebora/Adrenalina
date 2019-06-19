@@ -369,7 +369,11 @@ public class CliInputHandler implements Runnable{
                 String[] inSplit = in.split("\\s");
                 switch (inSplit[0]){
                     case "SELECT":
-                        parseSelection(inSplit);
+                        try {
+                            parseSelection(inSplit);
+                        } catch(Exception e) {
+                            CLI.printMessage("Wrong choice!", "R");
+                        }
                         break;
                     case "TILE":
                         tileInfoMode(input);

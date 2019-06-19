@@ -327,8 +327,8 @@ public class Target {
             switch (direction){
                 case EAST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() >= tile.getPosx());
                 case WEST: return t -> (t.getPosy() == tile.getPosy() && t.getPosx() <= tile.getPosx());
-                case NORTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() >= tile.getPosy());
-                case SOUTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() <= tile.getPosy());
+                case NORTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() <= tile.getPosy());
+                case SOUTH: return t -> (t.getPosx() == tile.getPosx() && t.getPosy() >= tile.getPosy());
                 default: return t -> true;
             }
         }

@@ -16,6 +16,7 @@ import it.polimi.se2019.model.cards.*;
 import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.model.ThreeState.*;
@@ -62,6 +63,7 @@ public class EffectController extends Observer {
     private Player currentEnemy;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
+    private CountDownLatch countDownLatch;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, Observer controller){
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -523,18 +525,18 @@ public class EffectController extends Observer {
     }
 
     private void checkPowerUps(List<Player> players){
-        List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
+        List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
         for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
-                receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                countDownLatch = new CountDownLatch(1);
                 timerCostrainedEventHandler.start();
                 try {
-                    timerCostrainedEventHandler.join();
+                    countDownLatch.await();
                 }
                 catch (Exception e) {
                     Logger.log(Priority.DEBUG, "Ended handler powerup damaging");
@@ -550,12 +552,13 @@ public class EffectController extends Observer {
                 List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
-                Observer damagedController = new DamagedController(p, player, applicable);
+                countDownLatch = new CountDownLatch(1);
+                Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
                 TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 temp.setNotifyOnEnd(false);
                 temp.start();
                 try {
-                    temp.join();
+                    countDownLatch.await();
                 }
                 catch (Exception e) {
                     Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
@@ -563,6 +566,10 @@ public class EffectController extends Observer {
                 curMatch.setCurrentPlayer(oldPlayer);
             }
         }
+    }
+
+    public CountDownLatch getCountDownLatch() {
+        return countDownLatch;
     }
 
     private void updateMoveOnPlayers(List<Player> players){
@@ -605,6 +612,15 @@ public class EffectController extends Observer {
         }
     }
 
+    @Override
+    public void updateOnAmmo(Ammo ammo) {
+        if (acceptableTypes.getSelectableAmmos().checkForCoherency(Arrays.asList(ammo))) {
+            List<Ammo> toPay = Arrays.asList(ammo);
+            PaymentController paymentController = new PaymentController(this, toPay, player);
+            paymentController.startPaying();
+        }
+    }
+
 
     /**
      * Receive a powerUp that can be used after a inflicting damage
@@ -621,12 +637,15 @@ public class EffectController extends Observer {
         int damagesAmount;
         int marksAmount;
         powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());
-        damagingLoop: for(PowerUp p: powerUps){
-            acceptableTypes = new AcceptableTypes(Arrays.asList(ReceivingType.POWERUP, ReceivingType.AMMO, ReceivingType.STOP));
+        damagingLoop: for (PowerUp p: powerUps){
+            List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.AMMO, ReceivingType.STOP));
+            acceptableTypes = new AcceptableTypes(receivingTypes);
             List<PowerUp> discardablePowerUps = player.getPowerUps().stream().filter(powerUp -> !p.equals(powerUp)).collect(Collectors.toList());
             List<Ammo> ammos = player.getAmmos().stream().distinct().collect(Collectors.toList());
-            if (player.canDiscardPowerUp(Collections.singletonList(Ammo.ANY)));
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(discardablePowerUps, 1, 1, "Select a powerUp to discard!"));
+            if (player.canDiscardPowerUp(Collections.singletonList(Ammo.ANY))) {
+                receivingTypes.add(ReceivingType.POWERUP);
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(discardablePowerUps, 1, 1, "Select a powerUp to discard!"));
+            }
             acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
             acceptableTypes.setStop(true, "Don't pay for no more powerUps!");
             Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes);
@@ -650,11 +669,15 @@ public class EffectController extends Observer {
                     break;
                 default:
                     updateOnStopSelection(TRUE);
+                    return;
             }
             player.discardPowerUp(p, false);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
             player.receiveShot(currentEnemy,damagesAmount,marksAmount, false);
+            if (player.getAmmos().isEmpty() && player.getPowerUps().stream().allMatch(powerUp -> p.equals(powerUp))) {
+                break;
+            }
         }
         nextStep();
     }

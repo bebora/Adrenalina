@@ -118,7 +118,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveAction(Action action) {
         if (active && acceptableTypes.getSelectableActions().checkForCoherency(Collections.singletonList(action))) {
             endHandler();
-            observer.updateOnAction(action);
+            Runnable task = () -> observer.updateOnAction(action);
+            new Thread(task).start();
         }
     }
 
@@ -126,7 +127,9 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public void receiveDirection(Direction direction) {
         if (active && acceptableTypes.getSelectableDirections().checkForCoherency(Collections.singletonList(direction))) {
             endHandler();
-            observer.updateOnDirection(direction);
+            Runnable task = () -> observer.updateOnDirection(direction);
+            new Thread(task).start();
+
         }
     }
 
@@ -134,7 +137,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveEffect(String effect) {
         if (active && acceptableTypes.getSelectableEffects().checkForCoherency(Collections.singletonList(effect))) {
             endHandler();
-            observer.updateOnEffect(effect);
+            Runnable task = () -> observer.updateOnEffect(effect);
+            new Thread(task).start();
         }
     }
 
@@ -142,7 +146,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receivePlayer(List<Player> players) {
         if (active && acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
             endHandler();
-            observer.updateOnPlayers(players);
+            Runnable task = () -> observer.updateOnPlayers(players);
+            new Thread(task).start();
         }
     }
 
@@ -150,7 +155,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
         if (active && acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
             endHandler();
-            observer.updateOnPowerUps(powerUps, discard);
+            Runnable task = () -> observer.updateOnPowerUps(powerUps, discard);
+            new Thread(task).start();
         }
     }
 
@@ -158,14 +164,17 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveRoom(Color color) {
         if (active && acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(color))) {
             endHandler();
-            observer.updateOnRoom(color);
+            Runnable task = () -> observer.updateOnRoom(color);
+            new Thread(task).start();
+
         }
     }
 
     public synchronized void receiveStop() {
         if (active){
             endHandler();
-            observer.updateOnStopSelection(ThreeState.FALSE);
+            Runnable task = () -> observer.updateOnStopSelection(ThreeState.FALSE);
+            new Thread(task).start();
         }
     }
 
@@ -173,7 +182,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveTiles(List<Tile> tiles) {
         if (active && acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
             endHandler();
-            observer.updateOnTiles(tiles);
+            Runnable task = () -> observer.updateOnTiles(tiles);
+            new Thread(task).start();
         }
     }
 
@@ -181,7 +191,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized void receiveWeapon(Weapon weapon) {
         if (active && acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
             endHandler();
-            observer.updateOnWeapon(weapon);
+            Runnable task = () -> observer.updateOnWeapon(weapon);
+            new Thread(task).start();
         }
     }
 
@@ -189,7 +200,8 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public void receiveAmmo(Ammo ammo) {
         if (active && acceptableTypes.getSelectableAmmos().checkForCoherency(Collections.singletonList(ammo))) {
             endHandler();
-            observer.updateOnAmmo(ammo);
+            Runnable task = () -> observer.updateOnAmmo(ammo);
+            new Thread(task).start();
         }
     }
 }

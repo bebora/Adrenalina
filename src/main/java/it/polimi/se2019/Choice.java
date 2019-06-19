@@ -15,6 +15,7 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Blocking class to wait for client interaction
@@ -33,13 +34,15 @@ public class Choice extends Observer{
     private ThreeState stop;
     private ReceivingType receivingType;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private CountDownLatch countDownLatch;
 
     public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
         receivingType = ReceivingType.NULL;
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerCostrainedEventHandler.start();
+        countDownLatch = new CountDownLatch(1);
         try {
-            timerCostrainedEventHandler.join();
+            countDownLatch.await();
         }
         catch (InterruptedException e) {
             Logger.log(Priority.ERROR, "Join on Choice killed");
@@ -52,60 +55,70 @@ public class Choice extends Observer{
     public void updateOnTiles(List<Tile> tiles) {
         this.tiles = tiles;
         receivingType = ReceivingType.TILES;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnPlayers(List<Player> players) {
         this.players = players;
         receivingType = ReceivingType.PLAYERS;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnDirection(Direction direction) {
         this.direction = direction;
         receivingType = ReceivingType.DIRECTION;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnRoom(Color room) {
         this.room = room;
         receivingType = ReceivingType.ROOM;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnEffect(String effect) {
         this.effect = effect;
         receivingType = ReceivingType.EFFECT;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnWeapon(Weapon weapon) {
         this.weapon = weapon;
         receivingType = ReceivingType.WEAPON;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
         this.powerUps = powerUps;
         receivingType = ReceivingType.POWERUP;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnAction(Action action) {
         this.action = action;
         receivingType = ReceivingType.ACTION;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         this.stop = skip;
         receivingType = ReceivingType.STOP;
+        countDownLatch.countDown();
     }
 
     @Override
     public void updateOnAmmo(Ammo ammo) {
         this.ammo = ammo;
         receivingType = ReceivingType.AMMO;
+        countDownLatch.countDown();
     }
 
     public void setReceivingType(ReceivingType receivingType) {
