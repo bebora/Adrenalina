@@ -10,7 +10,7 @@ effect:
     DEALDAMAGE
   damages:
     damage:
-      damagesAmount:1
+      marksAmount:1
       target:
         maxtargets:1
         checktargetList:TRUE

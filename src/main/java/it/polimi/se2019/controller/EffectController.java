@@ -674,7 +674,7 @@ public class EffectController extends Observer {
             player.discardPowerUp(p, false);
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
-            player.receiveShot(currentEnemy,damagesAmount,marksAmount, false);
+            currentEnemy.receiveShot(player,damagesAmount,marksAmount, false);
             if (player.getAmmos().isEmpty() && player.getPowerUps().stream().allMatch(powerUp -> p.equals(powerUp))) {
                 break;
             }

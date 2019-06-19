@@ -47,6 +47,7 @@ public class Choice extends Observer{
         catch (InterruptedException e) {
             Logger.log(Priority.ERROR, "Join on Choice killed");
         }
+        requestDispatcher.clear();
     }
 
 

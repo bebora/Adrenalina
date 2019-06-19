@@ -43,10 +43,7 @@ public class PaymentController extends Observer{
      */
     public void startPaying() {
         String prompt;
-        if (true) {
-            observer.concludePayment();
-        }
-        else if (stillToPay.isEmpty()) {
+        if (stillToPay.isEmpty()) {
             observer.concludePayment();
         }
         else {

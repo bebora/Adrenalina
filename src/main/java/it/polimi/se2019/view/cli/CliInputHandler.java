@@ -115,7 +115,6 @@ public class CliInputHandler implements Runnable{
                 case "EFFECT":
                     parseEffect(inSplit[2]);
                     break;
-
                 case "STOP":
                     if (view.getSelectableOptionsWrapper().getAcceptedTypes().contains(ReceivingType.STOP)) {
                         eventUpdater.sendStop();
