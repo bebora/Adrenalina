@@ -156,8 +156,13 @@ public abstract class Match {
 		List<Player> deadPlayers = players.stream().
 				filter(p -> p.getAlive() == ThreeState.FALSE).collect(Collectors.toList());
 		// Point for double kill, filtering players killed by ending turn on domination spawn
-		if (deadPlayers.stream().filter(p -> !p.getDamages().get(10).equals(p)).count() > 1)
-			players.get(currentPlayer).addPoints(1);
+		// Handle case of multiple deadshots also from players that aren't the current player (thanks to powerups)
+		List<Player> playersNotSelfDead = deadPlayers.stream().filter(p -> !p.getDamages().get(10).equals(p)).collect(Collectors.toList());
+		if (playersNotSelfDead.size() > 1)
+			players.stream().
+					filter(p -> playersNotSelfDead.stream().filter(x -> x.getDamages().get(10).equals(p)).count() > 1). //Get players who have done at least 2 deadshots in the dead players
+					collect(Collectors.toList()).
+					forEach(p -> p.addPoints(1));
 
 		for (Player p : deadPlayers) {
 			scorePlayerBoard(p);

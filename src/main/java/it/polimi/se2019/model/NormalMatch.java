@@ -24,47 +24,50 @@ public class NormalMatch extends Match {
 	}
 
 	public List<Player> getWinners() {
-		Map<Player, Long> deadTrackPoints = new HashMap<>();
 		for (Player p : players)
 			scorePlayerBoard(p);
 
 		int currentReward = 0;
-
+		//How much drops each player has in the killShotTrack
 		Map<Player, Long> frequencyShots =
 				board.getKillShotTrack().
 						stream().
 						filter(Objects::nonNull).
 						collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-		Comparator<Player> givenDamages = Comparator.comparing(frequencyShots::get);
+		Comparator<Player> givenDamages = Comparator.comparing(frequencyShots::get, Comparator.reverseOrder());
 		Comparator<Player> indices = Comparator.comparing(board.getKillShotTrack()::indexOf);
 
 		HashSet<Player> shotGiver = board.getKillShotTrack().stream().
 				filter(Objects::nonNull).collect(Collectors.toCollection(HashSet::new));
 		List<Player> shotOrder = shotGiver.stream().sorted(givenDamages.thenComparing(indices)).collect(Collectors.toList());
-
-
+		//Store how many points each player got from the killshot track
+		Map<Player, Integer> deadTrackPoints = new HashMap<>();
 		for (Player p : shotOrder) {
-            deadTrackPoints.put(p, frequencyShots.get(p));
+            deadTrackPoints.put(p, board.getKillShotReward().get(currentReward));
             p.addPoints(board.getKillShotReward().get(currentReward));
             currentReward++;
 		}
-
+		//Populate deadTrackPoints with players who haven't got any points from it
 		for (Player p : players) {
 			if (!deadTrackPoints.keySet().contains(p)) {
-				deadTrackPoints.put(p, Long.valueOf(0));
+				deadTrackPoints.put(p, 0);
 			}
 		}
+		//If nobody is online, nobody won
 		if (players.stream().noneMatch(Player::getOnline)) {
 			return new ArrayList<>();
 		}
-		List<Player> maxPlayers = players.stream().filter(p -> p.getOnline() && p.getPoints() == players.stream().max(Comparator.comparing(Player::getPoints)).get().getPoints()).collect(Collectors.toList());
-		if (maxPlayers.size() == 1) {
+		//Get max points across all players who can win (they can't be offline)
+		int bestPoints = players.stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints();
+		//Get players who have those points
+		List<Player> maxPlayers = players.stream().filter(p -> p.getOnline() && p.getPoints() == bestPoints).collect(Collectors.toList());
+		if (maxPlayers.size() <= 1) {
 			return maxPlayers;
 		} else {
-			int maxTrack = Collections.max(maxPlayers, Comparator.comparing(deadTrackPoints::get)).getPoints();
+			//Get player(s) who got max points from killshot track. If parity with 0 points, both win
+			int maxTrackPoints = deadTrackPoints.get(Collections.max(maxPlayers, Comparator.comparing(deadTrackPoints::get)));
 			return maxPlayers.stream().
-					filter(p -> p.getPoints() == maxTrack).
+					filter(p -> deadTrackPoints.get(p) == maxTrackPoints).
 					collect(Collectors.toList());
 		}
 	}

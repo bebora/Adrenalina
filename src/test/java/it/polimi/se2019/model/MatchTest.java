@@ -48,7 +48,7 @@ public class MatchTest {
 
     @Test
     void startFrenzy() {
-        List<Player> players = Arrays.asList(new Player("lorenzo"), new Player("pietro"), new Player("carmelo"));
+        List<Player> players = Arrays.asList(new Player("guido"), new Player("michele"), new Player("giorgio"));
         match = new NormalMatch(players, "board4.btlb", 8);
         players.get(0).getDamages().addAll(Collections.nCopies(10, players.get(1)));
         match.startFrenzy();
@@ -83,5 +83,17 @@ public class MatchTest {
         //"skulls are set aside", so rewardPoints does not change anymore
         assertEquals(Arrays.asList(2, 1, 1, 1), current.getRewardPoints());
         assertEquals(Arrays.asList(2, 1, 1, 1), other.getRewardPoints());
+    }
+
+    @Test
+    void doubleKillTest() {
+        List<Player> players = Arrays.asList(new Player("angelica"), new Player("daniele"), new Player("samuele"));
+        match = new NormalMatch(players, "board4.btlb", 8);
+        Player babora = players.get(0);
+        players.get(1).receiveShot(babora, 11, 0, true);
+        players.get(2).receiveShot(babora, 11, 0, true);
+        match.newTurn();
+        //2*(8+1) for killing two people (8=best player, 1=first shot) + 1 for double kill
+        assertEquals(2*(8+1)+1, babora.getPoints());
     }
 }
