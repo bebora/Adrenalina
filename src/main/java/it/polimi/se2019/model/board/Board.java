@@ -122,6 +122,7 @@ public class Board {
 		this.powerUps = builder.powerUps;
 		this.ammoCards = builder.ammoCards;
 		this.name = builder.name;
+		this.killShotReward = new ArrayList<>(Arrays.asList(8, 6, 4, 2, 1));
 		refreshWeapons();
 		refreshAmmos();
 	}

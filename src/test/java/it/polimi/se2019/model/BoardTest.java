@@ -25,7 +25,7 @@ class BoardTest {
 
     @Test
     void isLinked() {
-        // Test bidirectionaly, given the override of equals for Door Class
+        // Test bidirectionally, given the override of equals for Door Class
         assertEquals(test.isLinked(test.getTile(0,0), test.getTile(0,1),false), true);
         assertEquals(test.isLinked(test.getTile(0,1), test.getTile(0,0), false), true);
         assertEquals(test.isLinked(test.getTile(1,1), test.getTile(2,1), false), true);
