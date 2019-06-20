@@ -90,7 +90,6 @@ public class Move {
 		else {
 			this.prompt = builder.prompt;
 		}
-		this.prompt = builder.prompt;
 		this.targetDestination = builder.targetDestination;
 		this.targeting = builder.targeting;
 		this.targetSource = builder.targetSource;

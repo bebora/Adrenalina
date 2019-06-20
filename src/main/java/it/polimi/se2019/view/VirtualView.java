@@ -24,23 +24,31 @@ public class VirtualView extends View  {
         this.lobbyController = lobbyController;
     }
 
+
+
     public VirtualView() {
         super();
+    }
+
+    public VirtualView(VirtualView virtualView) {
+        this.requestDispatcher = virtualView.getRequestDispatcher();
     }
 
     /**
      * Set the viewUpdater.
      * Create the related RequestDispatcher that will use the {@link #viewUpdater} to answer
      */
-    public void setViewUpdater(ViewUpdater viewUpdater) {
+    public void setViewUpdater(ViewUpdater viewUpdater, boolean reconnection) {
         this.viewUpdater = viewUpdater;
-        try {
-            this.requestDispatcher = new RequestDispatcher(viewUpdater, this);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Unexpected RemoteException while creating RequestDispatcher");
+        if (!reconnection) {
+            try {
+                this.requestDispatcher = new RequestDispatcher(viewUpdater, this);
+            } catch (RemoteException e) {
+                Logger.log(Priority.ERROR, "Unexpected RemoteException while creating RequestDispatcher");
+            }
         }
     }
+
 
     @Override
     public void setOnline(boolean online) {
@@ -56,5 +64,10 @@ public class VirtualView extends View  {
 
     public RequestDispatcher getRequestDispatcher() {
         return requestDispatcher;
+    }
+
+    public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
+        this.requestDispatcher = requestDispatcher;
+        requestDispatcher.setView(viewUpdater, this);
     }
 }

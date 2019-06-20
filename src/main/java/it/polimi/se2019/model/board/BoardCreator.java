@@ -91,7 +91,7 @@ public class BoardCreator {
         File[] directoryListing = dir.listFiles();
         if (directoryListing != null) {
             for (File weapon : directoryListing) {
-                weapons.add(CardCreator.parseWeapon(weapon.getName()));
+                weapons.add(CardCreator.parseWeapon("tractorBeam.btl"));
             }
         }
         Collections.shuffle(weapons);

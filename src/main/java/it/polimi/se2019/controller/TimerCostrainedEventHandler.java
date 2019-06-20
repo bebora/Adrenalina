@@ -95,7 +95,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     @Override
     public void run() {
         requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
-        requestDispatcher.getViewUpdater().sendAcceptableType(acceptableTypes);
+        requestDispatcher.updateView(acceptableTypes);
         this.start = System.currentTimeMillis();
         while (!blocked) {
             if (checkFinished())

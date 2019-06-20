@@ -544,6 +544,7 @@ public class Player {
 
 	public void setVirtualView(VirtualView virtualView) {
 		this.virtualView = virtualView;
+
 	}
 
     public Match getMatch() {

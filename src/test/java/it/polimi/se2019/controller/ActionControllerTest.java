@@ -39,7 +39,7 @@ public class ActionControllerTest {
         catch (RemoteException e) {
             System.out.println("Unable to create ViewReceiver");
         }
-        currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
+        currentPlayer.getVirtualView().setViewUpdater(viewUpdater, false);
     }
     @Test
     void testMove(){

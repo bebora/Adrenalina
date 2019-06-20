@@ -56,7 +56,10 @@ public class LobbyController{
                     collect(Collectors.toList()));
             if (allTokens.contains(token)) {
                 player = game.getMatch().getPlayers().
-                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
+                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElseThrow(() -> new AuthenticationErrorException());
+                player.setOnline(true);
+                RequestDispatcher requestDispatcher = player.getVirtualView().getRequestDispatcher();
+                view.setRequestDispatcher(requestDispatcher);
                 ownGame = game.getMatch();
                 player.setVirtualView(view);
                 player.setOnline(true);
@@ -64,6 +67,7 @@ public class LobbyController{
                 player.getVirtualView().getViewUpdater().sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(),
                         view.getIdView(), player.getPoints(), player.getPowerUps(),
                         player.getWeapons(), ownGame.getPlayers().get(ownGame.getCurrentPlayer()));
+                player.getVirtualView().getRequestDispatcher().updateView();
                 break;
             }
         }
@@ -90,7 +94,6 @@ public class LobbyController{
                     filter(p -> !p.getOnline()).
                     map(Player::getUsername).
                     collect(Collectors.toList()));
-                //TODO throw exception to close the connection
         }
         if (allUsername.contains(username)) {
             view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
@@ -132,6 +135,12 @@ public class LobbyController{
         List<Player> allPlayers = new ArrayList<>();
         allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
         allPlayers = allPlayers.stream().filter(Player::getOnline).collect(Collectors.toList());
+        for (GameController game : games) {
+            allPlayers.addAll(game.getMatch().getPlayers().stream().
+                    filter(Player::getOnline).
+                    collect(Collectors.toList()));
+        }
+        allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
         Player requestingPlayer = allPlayers.stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
         if (requestingPlayer == null) return null;
         return requestingPlayer.getVirtualView().getRequestDispatcher();

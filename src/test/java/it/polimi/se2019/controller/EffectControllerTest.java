@@ -51,7 +51,7 @@ public class EffectControllerTest {
         catch (RemoteException e) {
             System.out.println("Unable to create ViewReceiver");
         }
-        originalCurrentPlayer.getVirtualView().setViewUpdater(viewUpdater);
+        originalCurrentPlayer.getVirtualView().setViewUpdater(viewUpdater, false);
         actionController = new ActionController(testMatch,gameController);
         sandboxMatch = new NormalMatch(testMatch);
         currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());

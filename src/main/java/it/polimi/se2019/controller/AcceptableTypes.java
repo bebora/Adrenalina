@@ -14,6 +14,8 @@ import java.util.List;
 
 /**
  * Container class used in Controller to store accepted information from the client.
+ * Every options contains the prompt to show to the client, the possible choices, the minimum and maximum number of options.
+ * {@link #acceptedTypes} contains the list of ReceivingType of which the related SelectableOptions is not null.
  */
 public class AcceptableTypes {
     private SelectableOptions<Action> selectableActions;

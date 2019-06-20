@@ -404,7 +404,7 @@ public class EffectController extends Observer {
             filterPlayers(playersToMove, target);
         }
         else {
-            List<Player> players = curMatch.getPlayers();
+            List<Player> players = new ArrayList<>(curMatch.getPlayers());
             filterPlayers(players, target);
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
             acceptableTypes = new AcceptableTypes(receivingTypes);

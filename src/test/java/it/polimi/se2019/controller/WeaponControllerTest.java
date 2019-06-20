@@ -41,7 +41,7 @@ class WeaponControllerTest {
         }
         LobbyController lobbyController = new LobbyController(new ArrayList<>(Collections.singleton(Mode.NORMAL)));
         currentPlayer.setVirtualView(new VirtualView(lobbyController));
-        currentPlayer.getVirtualView().setViewUpdater(viewUpdater);
+        currentPlayer.getVirtualView().setViewUpdater(viewUpdater, false);
         currentPlayer.addWeapon(testWeapon);
         WeaponController weaponControllerTest = new WeaponController(testMatch,null,testMatch.getPlayers(), null);
         weaponControllerTest.updateOnWeapon(testWeapon);
@@ -55,7 +55,7 @@ class WeaponControllerTest {
          currentPlayer.addWeapon(testWeapon);
          currentPlayer.setVirtualView(new VirtualView(new LobbyController(Arrays.asList(Mode.NORMAL))));
          try {
-             currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView()), currentPlayer.getVirtualView()));
+             currentPlayer.getVirtualView().setViewUpdater(new ViewUpdaterRMI(new ConcreteViewReceiver(currentPlayer.getVirtualView()), currentPlayer.getVirtualView()), false);
          }
          catch (RemoteException e) {
              System.out.println("Unable to create ViewReceiver");

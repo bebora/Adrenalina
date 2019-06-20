@@ -15,7 +15,7 @@ class CardCreatorTest {
         PowerUp test = CardCreator.parsePowerUp("targetingScope.btl", Ammo.RED);
 
         // Test various elements of the parser
-        assertEquals(test.getEffect().getDamages().get(0).getDamagesAmount(), 1);
+        assertEquals(test.getEffect().getDamages().get(0).getMarksAmount(), 1);
         assertEquals(test.getEffect().getCost().get(0), Ammo.ANY);
         assertEquals(test.getApplicability(), Moment.DAMAGING);
         assertEquals(test.getName(),"targeting scope");

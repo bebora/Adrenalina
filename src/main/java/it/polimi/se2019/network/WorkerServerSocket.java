@@ -63,14 +63,15 @@ public class WorkerServerSocket extends Thread {
             ConnectionRequest connection = (ConnectionRequest) event;
             virtualView = new VirtualView(lobbyController);
             ViewUpdater viewUpdater = new ViewUpdaterSocket(this);
-            virtualView.setViewUpdater(viewUpdater);
             String username = connection.getUsername();
             virtualView.setUsername(username);
             String password = connection.getPassword();
             String mode = connection.getMode();
             boolean existingGame = connection.getExistingGame();
-            if (!existingGame)
-                lobbyController.connectPlayer(username,password,mode, virtualView);
+            virtualView.setViewUpdater(viewUpdater, existingGame);
+            if (!existingGame) {
+                lobbyController.connectPlayer(username, password, mode, virtualView);
+            }
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
             virtualView.setOnline(true);

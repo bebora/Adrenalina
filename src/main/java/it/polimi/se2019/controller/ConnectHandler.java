@@ -23,7 +23,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
         VirtualView virtualView = new VirtualView(lobbyController);
         virtualView.setUsername(username);
         ViewUpdater updater = new ViewUpdaterRMI(receiver, virtualView);
-        virtualView.setViewUpdater(updater);
+        virtualView.setViewUpdater(updater, existingGame);
         if (!existingGame)
             lobbyController.connectPlayer(username, password, mode, virtualView);
         else

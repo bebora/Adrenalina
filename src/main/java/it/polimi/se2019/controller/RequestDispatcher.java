@@ -30,6 +30,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     private transient View linkedVirtualView;
     private transient NetworkTimeoutControllerServer networkTimeoutController;
     private transient Long lastRequest = null;
+    private transient AcceptableTypes acceptableTypes;
     final transient Object lock = new Object();
 
     public void clear() {
@@ -43,8 +44,24 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    public void updateView(AcceptableTypes acceptableTypes) {
+        this.acceptableTypes = acceptableTypes;
+        viewUpdater.sendAcceptableType(acceptableTypes);
+    }
+
+    public void updateView() {
+        viewUpdater.sendAcceptableType(acceptableTypes);
+    }
+
     public void setEventHelper(Match match) {
         eventHelper = new EventHelper(match);
+    }
+
+    public void setView(ViewUpdater viewUpdater, View linkedVirtualView) {
+        this.viewUpdater = viewUpdater;
+        this.linkedVirtualView = linkedVirtualView;
+        this.networkTimeoutController = new NetworkTimeoutControllerServer(this);
+        this.networkTimeoutController.start();
     }
 
     public RequestDispatcher(ViewUpdater viewUpdater, View linkedVirtualView) throws RemoteException {
