@@ -30,6 +30,9 @@ public class EventVisitor {
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, error + e.getMessage());
         }
+        catch (NullPointerException e) {
+            Logger.log(Priority.WARNING, error + e.getMessage());
+        }
     }
     public void visit(SelectAmmo event) {
         String ammo = event.getAmmo();

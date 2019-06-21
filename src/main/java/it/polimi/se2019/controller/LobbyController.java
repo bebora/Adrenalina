@@ -72,7 +72,7 @@ public class LobbyController{
             }
         }
         if (player == null) {
-            view.getViewUpdater().sendPopupMessage("Errore nel login!");
+            view.getViewUpdater().sendPopupMessage("END$No match is currently going with you inside :(");
         }
 
     }
@@ -96,16 +96,16 @@ public class LobbyController{
                     collect(Collectors.toList()));
         }
         if (allUsername.contains(username)) {
-            view.getViewUpdater().sendPopupMessage("Username is already in use! Can't connect.");
-            throw new AuthenticationErrorException();
+            view.getViewUpdater().sendPopupMessage("END - Username is already in use! Can't connect.");
+            return;
         }
         String token = String.format("%s$%s", username, password.hashCode());
         Player player = new Player(token);
         player.setVirtualView(view);
         List<Player> modeWaiting = waitingPlayers.get(Mode.valueOf(mode));
         if (modeWaiting == null) {
-            view.getViewUpdater().sendPopupMessage("Selected mode does not exist! Can't connect.");
-            throw new AuthenticationErrorException();
+            view.getViewUpdater().sendPopupMessage("END - Selected mode does not exist! Make a PR!");
+            return;
         } else {
             Logger.log(Priority.DEBUG, "PLAYER CONNECTED");
             modeWaiting.add(player);

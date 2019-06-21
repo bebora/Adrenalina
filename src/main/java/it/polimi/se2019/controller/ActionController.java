@@ -2,7 +2,6 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Observer;
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.SubAction;
@@ -14,7 +13,6 @@ import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,39 +76,32 @@ public class ActionController extends Observer {
      */
     @Override
     public void updateOnWeapon(Weapon weapon){
-        if (acceptableTypes.getSelectableWeapons().checkForCoherency(Collections.singletonList(weapon))) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
-            if (curSubAction == GRAB) {
-                if (curPlayer.getWeapons().size() == Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
-                    subActionIndex--;
-                    toDiscard = weapon;
-                    curPlayer.getWeapons().remove(toDiscard);
-                    sandboxMatch.updateViews();
-                    nextStep();
+        curPlayer.getVirtualView().getRequestDispatcher().clear();
+        if (curSubAction == GRAB) {
+            if (curPlayer.getWeapons().size() == Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
+                subActionIndex--;
+                toDiscard = weapon;
+                curPlayer.getWeapons().remove(toDiscard);
+                sandboxMatch.updateViews();
+                nextStep();
+            }
+            else {
+                if (toDiscard != null) {
+                    curPlayer.getTile().addWeapon(toDiscard);
                 }
-                else {
-                    if (toDiscard != null) {
-                        curPlayer.getTile().addWeapon(toDiscard);
-                    }
-                    toDiscard = null;
-                    selectedWeapon = weapon;
-                    stillToPay.add(weapon.getCost().get(0));
-                    startPayingProcess();
-                }
-            } else if (curSubAction == SubAction.SHOOT) {
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
-                weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
-            } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
+                toDiscard = null;
                 selectedWeapon = weapon;
-                stillToPay.addAll(weapon.getCost());
+                stillToPay.add(weapon.getCost().get(0));
                 startPayingProcess();
             }
-        }
-        else {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
-            throw new IncorrectEvent("Incorrect weapon choice!");
+        } else if (curSubAction == SubAction.SHOOT) {
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
+            weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
+        } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
+            selectedWeapon = weapon;
+            stillToPay.addAll(weapon.getCost());
+            startPayingProcess();
         }
     }
 
@@ -121,15 +112,11 @@ public class ActionController extends Observer {
      */
     @Override
     public void updateOnTiles(List<Tile> tiles){
-        if (acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
-            if (curSubAction == SubAction.MOVE && !tiles.isEmpty()) {
-                Tile tile = tiles.get(0);
-                curPlayer.getVirtualView().getRequestDispatcher().clear();
-                curPlayer.setTile(tile);
-                nextStep();
-            } else {
-                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't reach the selected tile!");
-            }
+        if (curSubAction == SubAction.MOVE && !tiles.isEmpty()) {
+            Tile tile = tiles.get(0);
+            curPlayer.getVirtualView().getRequestDispatcher().clear();
+            curPlayer.setTile(tile);
+            nextStep();
         }
     }
 

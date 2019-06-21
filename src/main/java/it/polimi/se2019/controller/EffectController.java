@@ -143,27 +143,24 @@ public class EffectController extends Observer {
     public void updateOnPlayers(List<Player> originalPlayers){
         Target target;
         List<Player> players = getSandboxPlayers(originalPlayers);
-        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
-            player.getVirtualView().getRequestDispatcher().clear();
-            if (curActionType == MOVE) {
-                target = curMove.getTargetSource();
+        player.getVirtualView().getRequestDispatcher().clear();
+        if (curActionType == MOVE) {
+            target = curMove.getTargetSource();
+        } else {
+            target = curDealDamage.getTarget();
+        }
+        //Additional check for different square players
+        if (target.checkDifferentSquare(players)) {
+            if (curActionType == MOVE && askingForSource) {
+                updateMoveOnPlayers(players);
             } else {
-                target = curDealDamage.getTarget();
-            }
-            if (target.checkDifferentSquare(players)) {
-                if (curActionType == MOVE && askingForSource) {
-                    updateMoveOnPlayers(players);
-                } else {
-                    updateDealDamageOnPlayers(players);
-                }
-            }
-            else {
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
-                timerCostrainedEventHandler.start();
+                updateDealDamageOnPlayers(players);
             }
         }
+        //Restart the timer at the time it stopped if the check fails
         else {
-            throw new IncorrectEvent("Players aren't coherent with effect description!");
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
+            timerCostrainedEventHandler.start();
         }
     }
 
@@ -177,30 +174,25 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnTiles(List<Tile> tiles){
-        if (acceptableTypes.getSelectableTileCoords().checkForCoherency(tiles)) {
-            player.getVirtualView().getRequestDispatcher().clear();
-            if(curActionType == MOVE) {
-                if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
-                    playersToMove.forEach(p -> p.setTile(tiles.get(0)));
-                else
-                    player.setPerspective(tiles.get(0));
-                handleTargeting(curMove.getTargeting(), playersToMove);
-                nextStep();
-            }
-            else if (curActionType == DEALDAMAGE) {
-                List<Player> temp = tiles.stream()
-                        .map(t -> curMatch.getPlayersInTile(t))
-                        .flatMap(List::stream)
-                        .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true))
-                        .collect(Collectors.toList());
-                temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
-                handleTargeting(curDealDamage.getTargeting(),temp);
-                checkPowerUps(temp);
-                nextStep();
-            }
+        player.getVirtualView().getRequestDispatcher().clear();
+        if(curActionType == MOVE) {
+            if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
+                playersToMove.forEach(p -> p.setTile(tiles.get(0)));
+            else
+                player.setPerspective(tiles.get(0));
+            handleTargeting(curMove.getTargeting(), playersToMove);
+            nextStep();
         }
-        else {
-            throw new IncorrectEvent("Wrong tiles!");
+        else if (curActionType == DEALDAMAGE) {
+            List<Player> temp = tiles.stream()
+                    .map(t -> curMatch.getPlayersInTile(t))
+                    .flatMap(List::stream)
+                    .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true))
+                    .collect(Collectors.toList());
+            temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
+            handleTargeting(curDealDamage.getTargeting(),temp);
+            checkPowerUps(temp);
+            nextStep();
         }
     }
 
@@ -215,16 +207,11 @@ public class EffectController extends Observer {
     public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
-        if(acceptableTypes.getSelectableRooms().checkForCoherency(Collections.singletonList(room))){
-            player.getVirtualView().getRequestDispatcher().clear();
-            possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
-            handleTargeting(curDealDamage.getTargeting(),possibleTargets);
-            checkPowerUps(possibleTargets);
-            nextStep();
-        }
-        else {
-            //tells the player that the target is wrong
-        }
+        player.getVirtualView().getRequestDispatcher().clear();
+        possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
+        handleTargeting(curDealDamage.getTargeting(),possibleTargets);
+        checkPowerUps(possibleTargets);
+        nextStep();
     }
     @Override
     public void updateOnStopSelection(ThreeState skip){
@@ -258,6 +245,10 @@ public class EffectController extends Observer {
 
     /**
      * Ask the player for the proper target after checking the current Move
+     * Supports:
+     * <li>Moving the player perspective, an helping position for defining complex effects</li>
+     * <li>Moving the player itself</li>
+     * <li>Moving other players, asking the player who to move.</li>
      */
     private void processMove(){
         List<Tile> selectableTiles = new ArrayList<>();
@@ -283,16 +274,16 @@ public class EffectController extends Observer {
                 processTargetSource(curMove.getTargetSource());
                 if (!askingForSource) {
                     selectableTiles = tileTargets(curMove.getTargetDestination());
-                    if (playersToMove.isEmpty()) {
+                    //Check if no players can't be moved or no tiles can be selected
+                    if (playersToMove.isEmpty() || selectableTiles.isEmpty()) {
                         if (curMove.getTargetSource().getMinTargets() == 0)
                             nextStep();
                         else
                             updateOnStopSelection(OPTIONAL);
-                    }
-                    else if (selectableTiles.isEmpty()) {
-                        updateOnStopSelection(OPTIONAL);
                         return;
-                    } else if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
+                    }
+                    //Check if there is a spawnPlayer
+                    else if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
                         selectableTiles = Collections.singletonList(playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("No tiles!")).getTile());
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
@@ -300,9 +291,8 @@ public class EffectController extends Observer {
                     acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 }
                 break;
-            default:
-                break;
         }
+        //Check if asking for source and need to handle the request to the client
         if (!askingForSource) {
             if (selectableTiles.isEmpty()) {
                 updateOnStopSelection(OPTIONAL);
@@ -313,7 +303,6 @@ public class EffectController extends Observer {
         }
 
     }
-
     /**
      * Ask the player for the proper target after checking the current DealDamage
      */
@@ -410,8 +399,6 @@ public class EffectController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
             int max = target.getMaxTargets();
-            if (max == -1 )
-                max = players.size();
             if (players.isEmpty()) {
                 if (target.getMinTargets() == 0)
                     nextStep();
@@ -568,10 +555,6 @@ public class EffectController extends Observer {
         }
     }
 
-    public CountDownLatch getCountDownLatch() {
-        return countDownLatch;
-    }
-
     private void updateMoveOnPlayers(List<Player> players){
         player.getVirtualView().getRequestDispatcher().clear();
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
@@ -587,40 +570,41 @@ public class EffectController extends Observer {
         }
         if (tiles.isEmpty())
             updateOnStopSelection(TRUE);
-        else {
-            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+        else if (tiles.size() == 1) {
+            updateOnTiles(tiles);
         }
+        else {
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
+                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerCostrainedEventHandler.start();
+            }
     }
 
+    /**
+     * Handles shooting players chosen by client.
+     * Supports:
+     * <li>Shooting all players in the targetLists if {@link Target#maxTargets} is 0, without checking the user choice.</li>
+     * <li>Shooting players from the user choice if conditions are checked</li>
+     * Checks powerUps for different applicability.
+     * @param players
+     */
     private void updateDealDamageOnPlayers(List<Player> players){
+        List<Player> toShoot = new ArrayList<>();
         if(curDealDamage.getTarget().getMaxTargets() == 0){
             if(curDealDamage.getTarget().getCheckTargetList() == TRUE)
-                curWeapon.getTargetPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
+                toShoot = curWeapon.getTargetPlayers();
             else if(curDealDamage.getTarget().getCheckBlackList() == TRUE)
-                curWeapon.getBlackListPlayers().forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
+                toShoot = curWeapon.getBlackListPlayers();
         }
-        else if(checkPlayerTargets(curDealDamage.getTarget(),players)){
-            players.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
-            handleTargeting(curDealDamage.getTargeting(),players);
-            checkPowerUps(players);
-            nextStep();
+        else {
+            toShoot = players;
         }
-        else{
-            //communicate the error to the player
-        }
-    }
+        toShoot.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
+        handleTargeting(curDealDamage.getTargeting(),toShoot);
+        checkPowerUps(players);
+        nextStep();
 
-    @Override
-    public void updateOnAmmo(Ammo ammo) {
-        if (acceptableTypes.getSelectableAmmos().checkForCoherency(Arrays.asList(ammo))) {
-            List<Ammo> toPay = Arrays.asList(ammo);
-            PaymentController paymentController = new PaymentController(this, toPay, player);
-            paymentController.startPaying();
-        }
     }
-
 
     /**
      * Receive a powerUp that can be used after a inflicting damage
@@ -675,7 +659,7 @@ public class EffectController extends Observer {
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
             currentEnemy.receiveShot(player,damagesAmount,marksAmount, false);
-            if (player.getAmmos().isEmpty() && player.getPowerUps().stream().allMatch(powerUp -> p.equals(powerUp))) {
+            if (player.getAmmos().isEmpty() && player.getPowerUps().stream().allMatch(p::equals)) {
                 break;
             }
         }
@@ -698,10 +682,6 @@ public class EffectController extends Observer {
                 .collect(Collectors.toList());
     }
 
-    void setCurWeapon(Weapon weapon){this.curWeapon = weapon;}
-    void setCurEffect(Effect effect){this.curEffect = effect;}
-    void setCurMatch(Match match){this.curMatch = match;}
-    void setOriginalPlayers(List<Player> originalPlayers){this.originalPlayers = originalPlayers;}
     public void setPlayer(Player player){this.player = player;}
 
 }

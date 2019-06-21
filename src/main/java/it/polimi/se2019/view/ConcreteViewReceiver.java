@@ -107,10 +107,14 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
-        if (linkedView.getStatus() == Status.LOGIN){
+        if (linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null) {
             if (message.contains("SUCCESS")) {
                 linkedView.setStatus(Status.WAITING);
                 System.out.println("WAITING TO PLAY...");
+            }
+            else if (message.contains("END")){
+                System.out.println(message);
+                linkedView.setStatus(Status.END);
             }
         }
         else{
@@ -167,7 +171,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             linkedView.setPowerUps(powerUps);
             linkedView.setLoadedWeapons(loadedWeapons);
             linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
-            if (linkedView.getStatus() != Status.PLAYING) {
+            if (linkedView.getStatus() != Status.PLAYING && linkedView.getStatus() != Status.END) {
                 linkedView.setStatus(Status.PLAYING);
             }
             linkedView.addMessage("RECEIVED TOTAL UPDATE");

@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ public class CLI extends View {
     static final char escCode = 0x1B;
     static List<ViewWeapon> displayedWeapons;
     private ViewPlayer displayedPlayer;
+
 
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
@@ -168,5 +170,23 @@ public class CLI extends View {
             displayTurnInfo();
             moveCursor(1, AsciiBoard.boardBottomBorder + 6);
         }
+    }
+
+    public void printInBlocks(String color, String text, int blocks) {
+        int firstBlocks = (blocks - text.length()) / 2;
+        printInColor("w", String.join("", Collections.nCopies(firstBlocks, "☹")));
+        printInColor(color, text);
+        printInColor("w", String.join("", Collections.nCopies(blocks- firstBlocks - text.length(), "☹")) + "\n");
+
+    }
+
+    @Override
+    public void disconnect() {
+        printInBlocks("w", "", 35);
+        printInBlocks("r", "WARNING!", 35);
+        printInBlocks("w", "YOU ARE DISCONNECTED!", 35);
+        printInBlocks("g", "CLICK ENTER TO RECONNECT!", 35);
+        printInBlocks("w", "", 35);
+        setStatus(Status.END);
     }
 }

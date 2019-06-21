@@ -106,51 +106,27 @@ public class GameController extends Observer {
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
-            if (currentPlayer.getAlive() == OPTIONAL) {
-                currentPlayer.getVirtualView().getRequestDispatcher().clear();
-                currentPlayer.setAlive(TRUE);
-                Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                        filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
-                currentPlayer.setTile(tile);
-                currentPlayer.discardPowerUp(powerUps.get(0), false);
-                if (!skip)
-                    playTurn();
-                else {
-                    skip = false;
-                    endTurn(true);
-                }
-            }
+        if (currentPlayer.getAlive() == OPTIONAL) {
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
+            currentPlayer.setAlive(TRUE);
+            Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
+                    filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
+            currentPlayer.setTile(tile);
+            currentPlayer.discardPowerUp(powerUps.get(0), false);
+            if (!skip)
+                playTurn();
             else {
-                this.action = false;
-                /*AcceptableTypes tilesAccepted = new AcceptableTypes(Collections.singletonList(ReceivingType.TILES));
-                List<Tile> tiles = new ArrayList<>(match.getBoard().getTiles().stream().flatMap(List::stream).filter(t -> t!= null).collect(Collectors.toList()));
-                tilesAccepted.setSelectableTileCoords(new SelectableOptions<>(tiles, 1 , 1, "Select a tile to move!"));
-                Choice tileRequest = new Choice(currentPlayer.getVirtualView().getRequestDispatcher(), tilesAccepted);
-                switch (tileRequest.getReceivingType()) {
-                    case STOP:
-                        updateOnStopSelection(TRUE);
-                        break;
-                    case TILES:
-                        currentPlayer.discardPowerUp(powerUps.get(0), false);
-                        currentPlayer.setTile(tiles.get(0));
-                        break;
-                }
-                if(currentPlayer.hasPowerUp(Moment.OWNROUND) || actionCounter < currentPlayer.getMaxActions()){
-                    playTurn();
-                }
-                else {
-                    endTurn(false);
-                }*/
-                currentPlayer.getVirtualView().getRequestDispatcher().clear();
-                toDiscard = (powerUps.get(0));
-                currentPlayer.discardPowerUp(toDiscard, false);
-                EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
-                effectController.nextStep();
+                skip = false;
+                endTurn(true);
             }
         }
         else {
-            throw new IncorrectEvent("PowerUps not acceptable!");
+            this.action = false;
+            currentPlayer.getVirtualView().getRequestDispatcher().clear();
+            toDiscard = (powerUps.get(0));
+            currentPlayer.discardPowerUp(toDiscard, false);
+            EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
+            effectController.nextStep();
         }
     }
 
@@ -350,7 +326,8 @@ public class GameController extends Observer {
         catch (InterruptedException e) {
             assert false;
         }
-        //TODO stop all the socket connections
+        //TODO close RMI / Socket connection
+        //Set the players offline
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));
     }
 

@@ -249,11 +249,17 @@ public class View {
 		return status;
 	}
 
-	public void setStatus(Status status) {
+	public void disconnect() {
+		throw new UnsupportedOperationException();
+	}
+
+	public synchronized void setStatus(Status status) {
 		this.status = status;
 	}
 
-	public synchronized void refresh(){};
+	public synchronized void refresh(){
+		throw new UnsupportedOperationException();
+	};
 
 	public long getLastRequest() {
 		return lastRequest;

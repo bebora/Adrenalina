@@ -30,19 +30,16 @@ public class Spawner extends Observer {
 
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
-        if (powerUps.size() == 1 && playerToSpawn.getPowerUps().contains(powerUps.get(0))) {
-            PowerUp discarded = playerToSpawn.getPowerUps().get(random.nextInt(playerToSpawn.getPowerUps().size()));
-            playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
-            playerToSpawn.getPowerUps().remove(discarded);
-            playerToSpawn.setTile(board.getTiles().stream()
-                    .flatMap(Collection::stream)
-                    .filter(Tile::isSpawn)
-                    .filter(t -> t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
-                    .findFirst().orElse(null));
-            playerToSpawn.setAlive(ThreeState.TRUE);
-            countDownLatch.countDown();
-        }
-
+        PowerUp discarded = playerToSpawn.getPowerUps().get(random.nextInt(playerToSpawn.getPowerUps().size()));
+        playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
+        playerToSpawn.getPowerUps().remove(discarded);
+        playerToSpawn.setTile(board.getTiles().stream()
+                .flatMap(Collection::stream)
+                .filter(Tile::isSpawn)
+                .filter(t -> t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
+                .findFirst().orElse(null));
+        playerToSpawn.setAlive(ThreeState.TRUE);
+        countDownLatch.countDown();
     }
 
     @Override

@@ -5,4 +5,9 @@ public class IncorrectEvent extends RuntimeException {
     public IncorrectEvent(String message) {
         this.message = message;
     }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

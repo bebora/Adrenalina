@@ -13,7 +13,6 @@ import it.polimi.se2019.view.SelectableOptions;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,7 +28,6 @@ public class WeaponController extends Observer {
     private ActionController actionController;
     TimerCostrainedEventHandler timerCostrainedEventHandler;
     List<Ammo> stillToPay;
-    AtomicBoolean inputReceived;
     AcceptableTypes acceptableTypes;
 
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers, ActionController actionController) {

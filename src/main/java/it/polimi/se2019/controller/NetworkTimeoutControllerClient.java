@@ -20,7 +20,7 @@ public class NetworkTimeoutControllerClient extends Thread{
                 Thread.sleep(timeout);
                 long viewLastRequest = view.getLastRequest();
                 if (viewLastRequest == lastRequest) {
-                    Logger.log(Priority.DEBUG, String.format("Did not receive any ping in %dms, assuming disconnected from server", timeout));
+                    view.disconnect();
                     checkingTimeout = false;
                 }
                 else {

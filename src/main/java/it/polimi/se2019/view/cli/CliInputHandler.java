@@ -282,7 +282,6 @@ public class CliInputHandler implements Runnable{
         final String DEFAULTPW = String.format("%05d", new Random().nextInt(99999));
         final String DEFAULTGAMEMODE = "DOMINATION";
         final String DEFAULTEXISTINGGAME = "n";
-
         CLI.printInColor("W","RMI or Socket?\n");
         try{
             String connectionType = parseOption(Arrays.asList("rmi", "socket"), null, DEFAULTNETWORK, input.readLine().toLowerCase(), "network mode");
@@ -353,9 +352,13 @@ public class CliInputHandler implements Runnable{
         }
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
+        } else {
+            Thread start = new Thread(new CliInputHandler(args));
+            start.start();
+            Thread.currentThread().interrupt();
         }
         AsciiBoard.setBoard(view.getBoard());
-        while(!in.equals("quit")){
+        while(!in.equals("quit") && !view.getStatus().equals(Status.END)){
             CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+6);
             CLI.cleanRow();
             try{
@@ -394,7 +397,11 @@ public class CliInputHandler implements Runnable{
                         break;
                 }
             }
-
+        }
+        if (view.getStatus().equals(Status.END)) {
+            Thread start = new Thread(new CliInputHandler(args));
+            start.start();
+            Thread.currentThread().interrupt();
         }
     }
 }
