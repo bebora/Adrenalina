@@ -315,9 +315,9 @@ public class GameController extends Observer {
         matchEnd = true;
         Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();
-        StringBuilder stringBuffer = new StringBuilder("WINNERS$Winners are ");
+        StringBuilder stringBuffer = new StringBuilder("WINNERS,");
         for (Player p : players) {
-            stringBuffer.append(p.getUsername() + ", ");
+            stringBuffer.append(p.getUsername() + ",");
         }
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
         try {

@@ -174,18 +174,33 @@ public class CLI extends View {
 
     public void printInBlocks(String color, String text, int blocks) {
         int firstBlocks = (blocks - text.length()) / 2;
-        printInColor("w", String.join("", Collections.nCopies(firstBlocks, "☹")));
+        printInColor("w", String.join("", Collections.nCopies(firstBlocks, "\u2B8A")));
         printInColor(color, text);
-        printInColor("w", String.join("", Collections.nCopies(blocks- firstBlocks - text.length(), "☹")) + "\n");
+        printInColor("w", String.join("", Collections.nCopies(blocks- firstBlocks - text.length(), "\u2B88")) + "\n");
 
     }
 
     @Override
     public void disconnect() {
+        if (!getStatus().equals(Status.END)) {
+            printInBlocks("w", "", 35);
+            printInBlocks("r", "WARNING!", 35);
+            printInBlocks("w", "YOU ARE DISCONNECTED!", 35);
+            printInBlocks("g", "CLICK ENTER TO RECONNECT!", 35);
+            printInBlocks("w", "", 35);
+            setStatus(Status.END);
+        }
+    }
+
+    @Override
+    public void printWinners(List<String> winners) {
         printInBlocks("w", "", 35);
-        printInBlocks("r", "WARNING!", 35);
-        printInBlocks("w", "YOU ARE DISCONNECTED!", 35);
-        printInBlocks("g", "CLICK ENTER TO RECONNECT!", 35);
+        printInBlocks("r", "THE GAME IS ENDED!", 35);
+        printInBlocks("w", "! WINNERS ! ARE !", 35);
+        for (String winner : winners) {
+            printInBlocks("r", winner, 35);
+        }
+        printInBlocks("g", "CLICK ENTER TO PLAY AGAIN!", 35);
         printInBlocks("w", "", 35);
         setStatus(Status.END);
     }

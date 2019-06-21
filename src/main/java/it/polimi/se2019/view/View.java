@@ -268,4 +268,8 @@ public class View {
 	public void setLastRequest(long lastRequest) {
 		this.lastRequest = lastRequest;
 	}
+
+	public void printWinners(List<String> winners) {
+		throw new UnsupportedOperationException();
+	}
 }

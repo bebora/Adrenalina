@@ -5,7 +5,9 @@ import it.polimi.se2019.network.ViewReceiverInterface;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Concrete class that actually receives updates from model
@@ -118,7 +120,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             }
         }
         else{
-            if(linkedView.getMessages() != null) {
+            if (message.contains("WINNERS")) {
+                List<String> winners =  new ArrayList<>(Arrays.asList(message.split(",")));
+                winners.remove(0);
+                linkedView.printWinners(winners);
+            }
+            else if(linkedView.getMessages() != null) {
                 linkedView.addMessage(message);
                 linkedView.refresh();
             }
