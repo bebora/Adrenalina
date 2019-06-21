@@ -158,7 +158,7 @@ public class CLI extends View {
 
     @Override
     public synchronized void  refresh(){
-        if (getPlayers() != null && !getPlayers().isEmpty()) {
+        if (getPlayers() != null && !getPlayers().isEmpty() && !getStatus().equals(Status.END)) {
             displayedPlayer = getSelf();
             if (AsciiBoard.board == null)
                 AsciiBoard.board = this.getBoard();
@@ -174,9 +174,9 @@ public class CLI extends View {
 
     public void printInBlocks(String color, String text, int blocks) {
         int firstBlocks = (blocks - text.length()) / 2;
-        printInColor("w", String.join("", Collections.nCopies(firstBlocks, "\u2B8A")));
+        printInColor("w", String.join("", Collections.nCopies(firstBlocks, "\uD83E\uDC1A")));
         printInColor(color, text);
-        printInColor("w", String.join("", Collections.nCopies(blocks- firstBlocks - text.length(), "\u2B88")) + "\n");
+        printInColor("w", String.join("", Collections.nCopies(blocks- firstBlocks - text.length(), "\uD83E\uDC18")) + "\n");
 
     }
 
@@ -196,9 +196,13 @@ public class CLI extends View {
     public void printWinners(List<String> winners) {
         printInBlocks("w", "", 35);
         printInBlocks("r", "THE GAME IS ENDED!", 35);
+        printInBlocks("r", String.format("FAREWELL %s", getUsername()), 35);
         printInBlocks("w", "! WINNERS ! ARE !", 35);
         for (String winner : winners) {
-            printInBlocks("r", winner, 35);
+            if (winner.equals(getUsername()))
+                printInBlocks("r", "※※※YOU!※※※", 35);
+            else
+                printInBlocks("r", winner, 35);
         }
         printInBlocks("g", "CLICK ENTER TO PLAY AGAIN!", 35);
         printInBlocks("w", "", 35);

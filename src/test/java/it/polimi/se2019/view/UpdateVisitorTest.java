@@ -1,13 +1,15 @@
 package it.polimi.se2019.view;
+
 import it.polimi.se2019.controller.updatemessage.PopupMessageUpdate;
+import it.polimi.se2019.controller.updatemessage.TotalUpdate;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.controller.updatemessage.TotalUpdate;
-import org.junit.jupiter.api.BeforeAll;
+import it.polimi.se2019.view.cli.CLI;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,22 +20,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpdateVisitorTest {
-    private static View firstView;
-    private static String username;
-    private static Board board;
-    private static Tile perspective;
-    private static List<Player> players;
-    private static String idView;
-    private static int points;
-    private static PowerUp powerUp;
-    private static Weapon weapon;
-    private static ArrayList<PowerUp> powerUps;
-    private static ArrayList<Weapon> loadedWeapons;
-    private static Player currentPlayer;
-    private static UpdateVisitor viewVisitor;
-    @BeforeAll
-    static void setup() {
-        firstView = new View();
+    private View firstView;
+    private String username;
+    private Board board;
+    private Tile perspective;
+    private List<Player> players;
+    private String idView;
+    private int points;
+    private PowerUp powerUp;
+    private Weapon weapon;
+    private ArrayList<PowerUp> powerUps;
+    private ArrayList<Weapon> loadedWeapons;
+    private Player currentPlayer;
+    private UpdateVisitor viewVisitor;
+    @BeforeEach
+    void setup() {
+        firstView = new CLI();
+        firstView.setStatus(Status.END);
         username = "Noobmaster69";
         board = BoardCreator.parseBoard("board3.btlb",8);
         perspective = board.getTile(2, 1);

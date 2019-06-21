@@ -5,6 +5,7 @@ import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.VirtualView;
+import it.polimi.se2019.view.cli.CLI;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
@@ -51,7 +52,7 @@ class LobbyControllerTest {
         List<View> views = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
-            View view = new View();
+            View view = new CLI();
             views.add(view);
             try {
                 eventUpdater.login(view, "ciao" + i, "ciao", false, "normal");

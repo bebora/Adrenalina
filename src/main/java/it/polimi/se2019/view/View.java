@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * <li>Receive updates from the {@link #View#receiver}</li>
  * <li>Sending events from the {@link #View#eventUpdater}</li>
  */
-public class View {
+public abstract class View {
 	private Status status;
 
 	private List<String> messages;
@@ -249,17 +249,13 @@ public class View {
 		return status;
 	}
 
-	public void disconnect() {
-		throw new UnsupportedOperationException();
-	}
+	public abstract void disconnect();
 
 	public synchronized void setStatus(Status status) {
 		this.status = status;
 	}
 
-	public synchronized void refresh(){
-		throw new UnsupportedOperationException();
-	};
+	public abstract void refresh();
 
 	public long getLastRequest() {
 		return lastRequest;
@@ -269,7 +265,5 @@ public class View {
 		this.lastRequest = lastRequest;
 	}
 
-	public void printWinners(List<String> winners) {
-		throw new UnsupportedOperationException();
-	}
+	public abstract void printWinners(List<String> winners);
 }

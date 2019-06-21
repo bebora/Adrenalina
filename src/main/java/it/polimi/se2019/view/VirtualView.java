@@ -7,6 +7,7 @@ import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.network.ViewUpdater;
 
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * Virtual view used by the model and server to:
@@ -69,5 +70,20 @@ public class VirtualView extends View  {
     public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
         this.requestDispatcher = requestDispatcher;
         requestDispatcher.setView(viewUpdater, this);
+    }
+
+    @Override
+    public void disconnect() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void refresh() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void printWinners(List<String> winners) {
+        throw new UnsupportedOperationException();
     }
 }

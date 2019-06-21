@@ -39,4 +39,14 @@ public class GUIView extends View {
         boardScreen.updateWeapons(allWeapons);
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
     }
+
+    @Override
+    public void disconnect() {
+        //TODO FABIO
+    }
+
+    @Override
+    public void printWinners(List<String> winners) {
+        //TODO FABIO
+    }
 }
