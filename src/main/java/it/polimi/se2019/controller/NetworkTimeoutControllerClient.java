@@ -14,7 +14,7 @@ public class NetworkTimeoutControllerClient extends Thread{
 
     @Override
     public void run() {
-        int timeout = 2000;
+        int timeout = 5000;
         do {
             try {
                 Thread.sleep(timeout);

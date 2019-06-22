@@ -53,8 +53,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         viewUpdater.sendAcceptableType(acceptableTypes);
     }
 
-    public void setEventHelper(Match match) {
-        eventHelper = new EventHelper(match);
+    public void setEventHelper(Match match, Player player) {
+        eventHelper = new EventHelper(match, player);
     }
 
     public void setView(ViewUpdater viewUpdater, View linkedVirtualView) {

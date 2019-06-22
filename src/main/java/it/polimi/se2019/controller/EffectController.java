@@ -532,26 +532,22 @@ public class EffectController extends Observer {
             }
             else break;
         }
-        for(Player p : players.stream().filter(Player::getOnline).collect(Collectors.toList())){
-            if(p.hasPowerUp(Moment.DAMAGED)){
-                int oldPlayer = curMatch.getCurrentPlayer();
-                curMatch.setCurrentPlayer(p);
-                List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
-                countDownLatch = new CountDownLatch(1);
-                Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
-                TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                temp.setNotifyOnEnd(false);
-                temp.start();
-                try {
-                    countDownLatch.await();
-                }
-                catch (Exception e) {
-                    Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
-                }
-                curMatch.setCurrentPlayer(oldPlayer);
-            }
+        List<Player> damagedPlayers = players.stream().filter(p -> p.getOnline() && p.hasPowerUp(Moment.DAMAGED)).collect(Collectors.toList());
+        countDownLatch = new CountDownLatch(damagedPlayers.size());
+        for(Player p : damagedPlayers){
+            List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
+            acceptableTypes = new AcceptableTypes(receivingTypes);
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
+            countDownLatch = new CountDownLatch(1);
+            Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
+            TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            temp.start();
+        }
+        try {
+            countDownLatch.await();
+        }
+        catch (Exception e) {
+            Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
         }
     }
 

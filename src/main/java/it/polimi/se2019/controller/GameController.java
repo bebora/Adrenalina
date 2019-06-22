@@ -235,7 +235,7 @@ public class GameController extends Observer {
         if (action)
             actionCounter++;
         actionController = null;
-        match.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(match));
+        match.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(match, p));
         if(currentPlayer.hasPowerUp(Moment.OWNROUND) || !checkEndTurn()){
             playTurn();
         }
@@ -264,7 +264,6 @@ public class GameController extends Observer {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 countDownLatch = new CountDownLatch(1);
-                timerCostrainedEventHandler.setNotifyOnEnd(false);
                 timerCostrainedEventHandler.start();
                 try {
                     countDownLatch.await();
@@ -333,23 +332,24 @@ public class GameController extends Observer {
 
     public void startSpawning(){
         List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
-        for(Player p: spawnablePlayers){
+        countDownLatch = new CountDownLatch(spawnablePlayers.size());
+        for(Player p: spawnablePlayers) {
             List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            Observer spawner = new Spawner(countDownLatch, p ,match.getBoard());
+            Observer spawner = new Spawner(countDownLatch, p, match.getBoard());
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1,1,"Select a PowerUp to discard!"));
-            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner,p.getVirtualView().getRequestDispatcher(), acceptableTypes));
-            timerCostrainedEventHandlers.forEach(t -> t.start());
-            try {
-                countDownLatch.await();
-                Logger.log(Priority.DEBUG, "One spawning done!");
-            }
-            catch (Exception e) {
-                Logger.log(Priority.DEBUG, "Ended handler spawner!");
-            }
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1, 1, "Select a PowerUp to discard!"));
+            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner, p.getVirtualView().getRequestDispatcher(), acceptableTypes));
+        }
+        timerCostrainedEventHandlers.forEach(Thread::start);
+        try {
+            countDownLatch.await();
+            Logger.log(Priority.DEBUG, "Spawning done!");
+        }
+        catch (Exception e) {
+            Logger.log(Priority.DEBUG, "Ended handler spawner!");
         }
     }
+
 
     @Override
     public void updateOnStopSelection(ThreeState skip){

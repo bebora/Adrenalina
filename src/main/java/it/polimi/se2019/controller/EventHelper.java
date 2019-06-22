@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
  */
 public class EventHelper {
     private Match match;
+    private Player player;
 
 
-    public EventHelper(Match match) {
+    public EventHelper(Match match, Player player) {
         this.match = match;
+        this.player = player;
     }
     /**
      * Return a Player with the given id.
@@ -127,8 +129,7 @@ public class EventHelper {
      * @return
      */
     public PowerUp getPowerUpFromViewPowerUp(ViewPowerUp powerup) {
-       return match.getPlayers().
-               get(match.getCurrentPlayer()).
+       return player.
                getPowerUps().
                stream().
                 filter(p -> p.getName().equals(powerup.getName()) && p.getDiscardAward().toString().equals(powerup.getDiscardAward())).

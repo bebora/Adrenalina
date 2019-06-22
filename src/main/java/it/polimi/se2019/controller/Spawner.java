@@ -7,7 +7,6 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
-import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 
 import java.util.*;
@@ -23,7 +22,6 @@ public class Spawner extends Observer {
         Logger.log(Priority.DEBUG, "Trying to spawn a player!");
         this.playerToSpawn = playerToSpawn;
         this.board = board;
-        playerToSpawn.addPowerUp(board.drawPowerUp(),false);
         random = new Random();
         this.countDownLatch = countDownLatch;
     }
@@ -35,7 +33,7 @@ public class Spawner extends Observer {
         playerToSpawn.getPowerUps().remove(discarded);
         playerToSpawn.setTile(board.getTiles().stream()
                 .flatMap(Collection::stream)
-                .filter(Tile::isSpawn)
+                .filter(t -> t != null && t.isSpawn())
                 .filter(t -> t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
                 .findFirst().orElse(null));
         playerToSpawn.setAlive(ThreeState.TRUE);

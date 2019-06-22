@@ -29,7 +29,7 @@ public abstract class Match {
         	i = (i + 1) % colors.size();
         	VirtualView v= p.getVirtualView();
         	if (v != null && v.getRequestDispatcher() != null) {
-        		v.getRequestDispatcher().setEventHelper(this);
+        		v.getRequestDispatcher().setEventHelper(this, p);
 			}
 		}
         finalFrenzy = false;
@@ -60,7 +60,7 @@ public abstract class Match {
     	for(int i = 0; i < players.size(); i++)
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
     	// Set event helper to original player
-		this.players.stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(oldMatch));
+		this.players.stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(oldMatch, p));
 		oldMatch.updateViews();
 	}
 

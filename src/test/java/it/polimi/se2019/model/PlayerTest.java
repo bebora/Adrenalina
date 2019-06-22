@@ -16,9 +16,9 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
-        testPlayer = new Player("test");
-        enemyPlayer = new Player("test");
-        thirdPlayer = new Player("test");
+        testPlayer = new Player("test1");
+        enemyPlayer = new Player("test2");
+        thirdPlayer = new Player("test3");
 
         // Check UUID reliability
         assertNotEquals(testPlayer.getId(), enemyPlayer.getId());
@@ -65,9 +65,9 @@ class PlayerTest {
         for (int i = 0; i < 2; i++)
             testPlayer.addAmmo(Ammo.RED);
         testPlayer.addAmmo(Ammo.YELLOW);
-        assertTrue(testPlayer.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
+        assertTrue(Player.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
 
-        assertFalse(enemyPlayer.checkForAmmos(testWeapon.getCost(),enemyPlayer.getAmmos()));
+        assertFalse(Player.checkForAmmos(testWeapon.getCost(),enemyPlayer.getAmmos()));
 
     }
 

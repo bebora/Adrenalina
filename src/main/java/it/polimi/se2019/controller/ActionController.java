@@ -131,7 +131,7 @@ public class ActionController extends Observer {
             sandboxMatch = new DominationMatch(originalMatch);
         }
         // Set event helper for sandbox players
-        sandboxMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(sandboxMatch));
+        sandboxMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(sandboxMatch, p));
     }
 
     /**
@@ -343,7 +343,7 @@ public class ActionController extends Observer {
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             if (selectedWeapon != null)
                 selectedWeapon.getEffects().forEach(e -> e.setActivated(false));
-            originalMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).map(p -> p.getVirtualView().getRequestDispatcher()).forEach(rq -> rq.setEventHelper(originalMatch));
+            originalMatch.getPlayers().stream().filter(p -> p.getVirtualView() != null && p.getVirtualView().getRequestDispatcher() != null).forEach(p -> p.getVirtualView().getRequestDispatcher().setEventHelper(originalMatch, p));
             originalMatch.updateViews();
             gameController.updateOnStopSelection((acceptableTypes != null)?skip.compare(acceptableTypes.isReverse()):skip);
         }
