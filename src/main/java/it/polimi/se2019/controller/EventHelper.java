@@ -94,6 +94,12 @@ public class EventHelper {
         return realWeapon;
     }
 
+    /**
+     * Return the corresponding room if the room is in the map,
+     * otherwise signals the problem to the client.
+     * @param room
+     * @return
+     */
     public Color getRoomFromString(String room) {
         Set<Color> colors = match.getBoard().getTiles().stream().
                 flatMap(List::stream).map(Tile::getRoom).collect(Collectors.toSet());

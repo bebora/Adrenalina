@@ -62,9 +62,6 @@ public class AcceptableTypes {
         this.stopPrompt = stopPrompt;
     }
 
-
-
-
     public AcceptableTypes(List<ReceivingType> receivingTypes) {
         this.acceptedTypes = receivingTypes;
     }

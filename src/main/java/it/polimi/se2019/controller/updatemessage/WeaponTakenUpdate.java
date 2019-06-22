@@ -6,7 +6,7 @@ import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.ViewWeapon;
 
 /**
- * Represent Weapon Card taken from a spawn tile but not already replaced
+ * Represent {@link Weapon} Card taken from a spawn tile but not already replaced
  */
 public class WeaponTakenUpdate implements UpdateVisitable {
     private ViewWeapon takenWeapon;

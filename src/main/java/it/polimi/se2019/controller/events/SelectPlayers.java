@@ -6,7 +6,7 @@ import it.polimi.se2019.controller.EventVisitor;
 import java.util.*;
 
 /**
- * Event used by view to select players it wants to attack
+ * Event used by view to select players it wants to select
  */
 public class SelectPlayers implements EventVisitable {
     List<String> playersIds;

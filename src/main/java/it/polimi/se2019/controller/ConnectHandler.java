@@ -18,6 +18,16 @@ import java.rmi.server.UnicastRemoteObject;
 public class ConnectHandler extends UnicastRemoteObject implements ConnectInterface{
     private transient LobbyController lobbyController;
 
+    /**
+     * Handles connection from client to servers
+     * Creates a virtualView, set the parameters and uses the {@link #lobbyController} methods to connect
+     * @param username
+     * @param password
+     * @param existingGame
+     * @param mode
+     * @param receiver client to interface used for callbacks
+     * @throws RemoteException
+     */
     @Override
     public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException{
         VirtualView virtualView = new VirtualView(lobbyController);
@@ -31,6 +41,14 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
         ((ViewUpdaterRMI) updater).getPinger().start();
     }
 
+    /**
+     * Handles serving the related object that every client uses to communicate with the server
+     * Parse the {@link #lobbyController} searching for the related user.
+     * @param username
+     * @param password
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public RequestDispatcher getRequestHandler(String username, String password) throws RemoteException {
         String token = String.format("%s$%s", username, password.hashCode());

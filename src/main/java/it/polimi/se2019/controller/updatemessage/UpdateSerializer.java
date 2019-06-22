@@ -4,6 +4,10 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Serialize {@link UpdateVisitable} in a json having as the type, the name of the class serialized.
+ * Add particular objectType to switch-case if needed custom parsing
+ */
 public class UpdateSerializer implements JsonSerializer<UpdateVisitable>{
     Gson gson = new Gson();
     @Override

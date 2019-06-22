@@ -224,12 +224,24 @@ public class GameController extends Observer {
         return match;
     }
 
+    /**
+     * Checks whether the player has to end its turn. It checks:
+     * <li>If the player has done all of its action</li>
+     * <li>If there are no more usable powerUps during his turn</li>
+     * <li>If there is the option to reload, or if the player already reloaded</li>
+     * @return
+     */
     private boolean checkEndTurn() {
         if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && (!match.getFinalFrenzy()) && !currentPlayer.canReload())) || actionCounter == currentPlayer.getMaxActions() +1)
             return true;
         else return false;
     }
 
+    /**
+     * Handles the conclusion of the action.
+     * It sets back the eventHelper to the original match.
+     * It continues the flow of the turn, ending it or asking for the next action to the player.
+     */
     @Override
     public void updateOnConclusion(){
         if (action)
@@ -244,8 +256,11 @@ public class GameController extends Observer {
         }
     }
 
-    public synchronized void endTurn(boolean skip) {
-        currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
+    /**
+     * Checks if there are spawnPoints AND any overkilled Player, to assign the overkill damage to one of the spawns.
+     * If the currentPlayer is offline, the assignable damages will go to a random spawn.
+     */
+    public void checkDominationOverKill() {
         // Players which have been killed in this turn with overkill
         List<Player> overkillPlayers = match.
                 getPlayers().
@@ -282,12 +297,18 @@ public class GameController extends Observer {
             }
         }
         // Same conditions as before but player offline
-        else if (!overkillPlayers.isEmpty()) {
-            Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
-            if (spawnPoint != null) {
-                spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
-            }
+        else if (!overkillPlayers.isEmpty() && !spawnPoints.isEmpty()) {
+            Player spawnPoint = spawnPoints.stream().findAny().get();
+            spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
         }
+    }
+
+    /**
+     *
+     * @param skip
+     */
+    public synchronized void endTurn(boolean skip) {
+        currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
         if (match.newTurn()) {
             matchEnd = true;
             sendWinners();

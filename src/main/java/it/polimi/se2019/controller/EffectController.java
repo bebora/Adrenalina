@@ -37,7 +37,6 @@ public class EffectController extends Observer {
 
     private Effect curEffect;
 
-
     private Move curMove;
 
     private DealDamage curDealDamage;
@@ -53,10 +52,6 @@ public class EffectController extends Observer {
     private int moveIndex;
 
     private int orderIndex;
-
-    private boolean noInput;
-
-    private int enemyWithPowerUps;
 
     private boolean askingForSource;
 
@@ -213,17 +208,16 @@ public class EffectController extends Observer {
         checkPowerUps(possibleTargets);
         nextStep();
     }
+
+    /**
+     * Handles receiving a stop from the client.
+     * No non-reverting stops are accepted into the {@link EffectController}, so it always reverts the action
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip){
         player.getVirtualView().getRequestDispatcher().clear();
-        if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            controller.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
-        }
-        else {
-            //TODO WHAT IF NOT REVERSING HERE, CHECK
-        }
-
-
+        controller.updateOnStopSelection(skip);
     }
 
     /**
@@ -254,6 +248,7 @@ public class EffectController extends Observer {
         List<Tile> selectableTiles = new ArrayList<>();
         List<ReceivingType> receivingTypes;
         switch(curMove.getObjectToMove()){
+            //Handles the move of the perspective
             case PERSPECTIVE:
                 selectableTiles = tileTargets(curMove.getTargetDestination());
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
@@ -261,6 +256,7 @@ public class EffectController extends Observer {
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 break;
+            //Handles the move of the player itself
             case SELF:
                 selectableTiles = tileTargets(curMove.getTargetDestination());
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
@@ -269,6 +265,8 @@ public class EffectController extends Observer {
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
                 break;
+            //Handles moving other targets; if they are chosen without the user input, they are automatically selected.
+            //If user input is needed, it parses the movable targets using TargetSource
             case TARGETSOURCE:
                 askingForSource = true;
                 processTargetSource(curMove.getTargetSource());
@@ -305,6 +303,11 @@ public class EffectController extends Observer {
     }
     /**
      * Ask the player for the proper target after checking the current DealDamage
+     * Supports:
+     * <li>Attacking every player in a {@link Tile}</li>
+     * <li>Attacking every player in a Room</li>
+     * <li>Attack single players</li>
+     * The target gets parsed from {@link Target}, using the related Predicates.
      */
     private void processDealDamage(){
         Area targetType = curDealDamage.getTarget().getAreaDamage();
@@ -366,6 +369,12 @@ public class EffectController extends Observer {
     }
 
 
+    /**
+     * It filters {@code playersToFilter} with additional rules for players object of a move action.
+     * It supports the move of spawnPoints, authorized only if the move into the same Tile they are.
+     * @param playersToFilter filtered list
+     * @param target used to filter the players
+     */
     private void filterPlayers(List<Player> playersToFilter, Target target) {
         List<Player> players = playerTargets(target).stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList());
         List<Player> spawnPoints = playerTargets(target.getMoveDominationTarget()).stream().filter(Player::getDominationSpawn).collect(Collectors.toList());
@@ -415,6 +424,13 @@ public class EffectController extends Observer {
         }
     }
 
+    /**
+     * Checks what players can be selected using the current {@code target}.
+     * Checks for acceptable Players, using {@link Weapon#blackListPlayers} and {@link Weapon#targetPlayers}.
+     * Checks for acceptable tiles, using {@link Target#getFilterTiles(Board, Tile, Direction)}
+     * @param target
+     * @return
+     */
     private List<Player> playerTargets(Target target) {
         if (!checkPointOfView(target))
             return new ArrayList<>();
@@ -450,6 +466,11 @@ public class EffectController extends Observer {
         return result;
     }
 
+    /**
+     * Checks what tiles can be selected, following {@code #target}.
+     * @param target
+     * @return list of selectable tiles
+     */
     private List<Tile> tileTargets(Target target) {
         checkPointOfView(target);
         return board.getTiles().stream().
@@ -511,6 +532,12 @@ public class EffectController extends Observer {
         return true;
     }
 
+    /**
+     * Checks the powerUps after a damage is dealt.
+     * <li>Checks if the damaging player has {@link Moment#DAMAGING} powerUps, and if so ask whether to use them or not.</li>
+     * <li>Checks if the damaged players have {@link Moment#DAMAGED} powerUps, and if so ask all of them, asynchronously, to select them.</li>
+     * @param players
+     */
     private void checkPowerUps(List<Player> players){
         List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
         for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
@@ -537,7 +564,7 @@ public class EffectController extends Observer {
         for(Player p : damagedPlayers){
             List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", applicable.size())));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Select from 0 and %d powerUps!", applicable.size())));
             countDownLatch = new CountDownLatch(1);
             Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
             TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
@@ -551,6 +578,13 @@ public class EffectController extends Observer {
         }
     }
 
+    /**
+     * Handles the move of selected players, from client input or directly from the card.
+     * <li>If the possible tile is one, it automatically moves the players.</li>
+     * <li>If the possible tiles are more than one, it prompt the user with the choice.</li>
+     * <li>It resets the action if there are no possible tiles.</li>
+     * @param players
+     */
     private void updateMoveOnPlayers(List<Player> players){
         player.getVirtualView().getRequestDispatcher().clear();
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
@@ -662,11 +696,21 @@ public class EffectController extends Observer {
         nextStep();
     }
 
+    /**
+     * Helper method to get original Players from sandboxPlayers, created to keeping the state of the original match.
+     * @param sandboxPlayer
+     * @return
+     */
     private Player getOriginalPlayer(Player sandboxPlayer){
         return originalPlayers.stream()
                 .filter(p -> p.getId().equals(sandboxPlayer.getId()))
                 .findAny().orElse(null);
     }
+    /**
+     * Helper method to get sandboxPlayer from originalPlayer, created to keeping the state of the original match.
+     * @param originalTargetPlayer
+     * @return
+     */
     private Player getSandboxPlayer(Player originalTargetPlayer){
         return curMatch.getPlayers().stream()
                 .filter(p -> p.getId().equals(originalTargetPlayer.getId()))

@@ -4,6 +4,11 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Deserializer class used to deserialize {@link UpdateVisitable}
+ * Need a new case in the switch for every new UpdateVisitable added to the logic
+ * For nested custom Objects, it may be necessary to implement custom parsing
+ */
 public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
     @Override
     public UpdateVisitable deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) {

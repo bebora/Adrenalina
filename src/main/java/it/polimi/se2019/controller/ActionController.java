@@ -13,6 +13,7 @@ import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -186,7 +187,7 @@ public class ActionController extends Observer {
                         getTile().
                         getWeapons().
                         stream().
-                        filter(p -> curPlayer.checkForAmmos(Arrays.asList(p.getCost().get(0)))).
+                        filter(p -> curPlayer.checkForAmmos(Collections.singletonList(p.getCost().get(0)))). // Filter costly weapons
                         collect(Collectors.toList());
                 prompt = "Select a weapon to grab!";
             } //Discard weapon first, then grab
@@ -326,6 +327,7 @@ public class ActionController extends Observer {
             nextStep();
         }
     }
+
     @Override
     public void updateOnConclusion(){
         weaponController = null;

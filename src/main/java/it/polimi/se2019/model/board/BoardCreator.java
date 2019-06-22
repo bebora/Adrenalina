@@ -106,9 +106,9 @@ public class BoardCreator {
         if (directoryListing != null) {
             for (File powerUp : directoryListing) {
                 for (int i = 0; i < 2; i++) {
-                    powerUps.add(CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE));
-                    powerUps.add(CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.RED));
-                    powerUps.add(CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.YELLOW));
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.RED));
+                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
                 }
             }
         }

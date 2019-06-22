@@ -4,6 +4,9 @@ import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.view.SelectableOptionsWrapper;
 import it.polimi.se2019.view.UpdateVisitor;
 
+/**
+ * Represent the wrapper containing the options that the client can select
+ */
 public class SelectableOptionsUpdate implements UpdateVisitable {
     private SelectableOptionsWrapper selectableOptionsWrapper;
     @Override

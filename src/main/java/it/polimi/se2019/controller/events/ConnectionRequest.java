@@ -4,7 +4,7 @@ import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.EventVisitor;
 
 /**
- * Socket message used for communicating a request of login
+ * Socket message used for communicating a request of login.
  */
 public class ConnectionRequest implements EventVisitable {
 
@@ -13,6 +13,13 @@ public class ConnectionRequest implements EventVisitable {
     private boolean existingGame;
     private String mode;
 
+    /**
+     * Create a ConnectionRequest
+     * @param username name chosen by the client
+     * @param password password chosen by the client, saved hashed in the server
+     * @param existingGame whether the client is reconnecting
+     * @param mode name of the chosen mode
+     */
     public ConnectionRequest(String username, String password, boolean existingGame, String mode)
 
     {
@@ -31,6 +38,10 @@ public class ConnectionRequest implements EventVisitable {
         return existingGame;
     }
 
+    /**
+     * Get the token saved in the server, hashing the password
+     * @return
+     */
     public String getToken() {
         if (!(username.contains("$") || password.contains("$")))
             return username + "$" + (password).hashCode();
