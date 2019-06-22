@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NormalMatchTest {
     @Test
@@ -75,5 +75,18 @@ public class NormalMatchTest {
         //So now it can't win, only the second wins, who is the best of the remaining
         assertEquals(1, winners.size());
         assertEquals(players.get(1), winners.get(0));
+    }
+
+    @Test
+    void boardKillShotTrackTest() {
+        List<Player> players = Arrays.asList(new Player("dwm"), new Player("i3"), new Player("gnome"));
+        Match match = new NormalMatch(players, "board4.btlb", 8);
+        players.get(0).receiveShot(players.get(1), 11, 0, true);
+        match.newTurn();
+        players.get(0).receiveShot(players.get(2), 12, 0, true);
+        match.newTurn();
+        assertEquals(4, match.getBoard().getKillShotTrack().size());
+        assertNull(match.getBoard().getKillShotTrack().get(1));
+        assertNotNull(match.getBoard().getKillShotTrack().get(3));
     }
 }

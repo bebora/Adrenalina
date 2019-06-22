@@ -283,7 +283,7 @@ public class Player {
 	}
 
 	public boolean canReload() {
-		return weapons.stream().anyMatch(p -> (!p.getLoaded() && checkForAmmos(p.getCost(), totalAmmoPool())));
+		return weapons.stream().anyMatch(w -> (!w.getLoaded() && checkForAmmos(w.getCost())));
 	}
 
 	public List<Action> getActions() {
@@ -488,6 +488,7 @@ public class Player {
 	/**
 	 * Discard the powerUp and add the corresponding ammo
 	 * @param powerUp powerUp to discard from {@link #powerUps}
+	 * @param award <code>true</code> if discard award should be added to player ammos
 	 */
 	public void discardPowerUp(PowerUp powerUp, boolean award) {
 		powerUps.remove(powerUp);
