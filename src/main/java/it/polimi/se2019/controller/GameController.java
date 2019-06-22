@@ -309,6 +309,7 @@ public class GameController extends Observer {
      */
     public synchronized void endTurn(boolean skip) {
         currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
+        checkDominationOverKill();
         if (match.newTurn()) {
             matchEnd = true;
             sendWinners();
