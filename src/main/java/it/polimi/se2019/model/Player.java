@@ -23,7 +23,6 @@ import static java.lang.Boolean.FALSE;
 public class Player {
 
 	public Player(String token) {
-		online = true;
 		editing = new Object();
 		this.firstPlayer = false;
 		this.token = token;
@@ -120,8 +119,6 @@ public class Player {
 	 * Virtual View of the player
 	 */
 	private VirtualView virtualView;
-
-	private Boolean online;
 
 	/**
 	 * Max number of actions that the player can use in its turn

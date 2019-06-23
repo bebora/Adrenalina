@@ -34,7 +34,6 @@ public class LobbyController{
         }
         games = new ArrayList<>();
         waitingTimers = new EnumMap<>(Mode.class);
-
     }
 
 
@@ -74,7 +73,6 @@ public class LobbyController{
         if (player == null) {
             view.getViewUpdater().sendPopupMessage("END$No match is currently going with you inside :(");
         }
-
     }
 
     /**

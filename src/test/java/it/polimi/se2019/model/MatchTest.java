@@ -96,4 +96,18 @@ public class MatchTest {
         //2*(8+1) for killing two people (8=best player, 1=first shot) + 1 for double kill
         assertEquals(2*(8+1)+1, babora.getPoints());
     }
+
+    @Test
+    void endMatchTest() {
+        List<Player> players = Arrays.asList(new Player("Guedon"), new Player("Gael"), new Player("Raymond"));
+        match = new NormalMatch(players, "board4.btlb", 1);
+        players.get(1).receiveShot(players.get(0), 11, 0, true);
+        match.newTurn();
+        //Someone died, the match has only one skull and there should be the last three turns of frenzy
+        assertTrue(match.getFinalFrenzy());
+        players.get(1).setAlive(ThreeState.TRUE);
+        assertFalse(match.newTurn());
+        assertFalse(match.newTurn());
+        assertTrue(match.newTurn());
+    }
 }
