@@ -24,7 +24,6 @@ public class SpawnPlayer extends Player{
         super.restorePlayer(oldPlayer);
         SpawnPlayer temp = (SpawnPlayer) oldPlayer;
         temp.setDamaged(damaged);
-
     }
 
     @Override
@@ -32,6 +31,7 @@ public class SpawnPlayer extends Player{
         if (!damaged)
             super.getDamages().add(shooter);
         damaged = Boolean.TRUE;
+        getMatch().updateViews();
     }
 
     public Boolean getDamaged() {

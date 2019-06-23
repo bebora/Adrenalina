@@ -83,7 +83,7 @@ public class Move {
 					this.prompt = "Move your perspective (central point of the current effect) to the desired tile";
 					break;
 				case TARGETSOURCE:
-					this.prompt = "Move the chosen player(s) to the tile you want";
+					this.prompt = "Select the players you want to move$Select the tiles where you want to move the players";
 					break;
 			}
 		}

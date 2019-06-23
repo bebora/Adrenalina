@@ -186,10 +186,9 @@ public class EffectController extends Observer {
         else if (curActionType == DEALDAMAGE) {
             List<Player> temp = tiles.stream()
                     .map(t -> curMatch.getPlayersInTile(t))
-                    .flatMap(List::stream)
-                    .peek(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true))
-                    .collect(Collectors.toList());
+                    .flatMap(List::stream).collect(Collectors.toList());
             temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
+            temp.forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
             handleTargeting(curDealDamage.getTargeting(),temp);
             checkPowerUps(temp);
             nextStep();
@@ -291,7 +290,7 @@ public class EffectController extends Observer {
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
+                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt().split("\\$")[1]));
                 }
                 break;
         }
@@ -409,6 +408,7 @@ public class EffectController extends Observer {
         else {
             List<Player> players = new ArrayList<>(curMatch.getPlayers());
             filterPlayers(players, target);
+
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
@@ -422,7 +422,7 @@ public class EffectController extends Observer {
                 }
             }
             else {
-                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min,curMove.getPrompt()));
+                acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min,curMove.getPrompt().split("\\$")[0]));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
             }
@@ -443,6 +443,7 @@ public class EffectController extends Observer {
                 stream().
                 filter(curWeapon!=null?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers()): s->true).
                 collect(Collectors.toList());
+        acceptablePlayer.removeIf(p -> p.getUsername().equals(player.getUsername()));
         List<Tile> acceptableTiles = curMatch.getBoard().getTiles().
                 stream().flatMap(List::stream).
                 filter(target.getFilterTiles(board,pointOfView, curEffect.getDirection())).
@@ -609,7 +610,7 @@ public class EffectController extends Observer {
             updateOnTiles(tiles);
         }
         else {
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt()));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
             }

@@ -392,7 +392,17 @@ public class Target {
 		Builder builder = new Builder();
 		builder.setMaxDistance(0);
 		builder.setMinDistance(0);
-		builder.setPointOfView(getPointOfView());
+		builder.setVisibility(visibility);
+		builder.setMinTargets(minTargets);
+		builder.setMaxTargets(maxTargets);
+		builder.setAreaDamage(areaDamage);
+		builder.setCardinal(cardinal);
+		builder.setCheckTargetList(checkTargetList);
+		builder.setDifferentSquare(differentSquare);
+		builder.setSamePlayerRoom(samePlayerRoom);
+		builder.setThroughWalls(throughWalls);
+		builder.setPointOfView(pointOfView);
+		builder.setCheckTargetList(checkBlackList);
 		return new Target(builder);
 	}
 

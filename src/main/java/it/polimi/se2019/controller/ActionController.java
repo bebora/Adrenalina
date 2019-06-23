@@ -204,7 +204,7 @@ public class ActionController extends Observer {
             if (selectableWeapon.isEmpty()) {
                 nextStep();
             } else {
-                acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 0, prompt));
+                acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 1, prompt));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),

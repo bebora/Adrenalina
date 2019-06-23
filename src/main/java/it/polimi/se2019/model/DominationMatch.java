@@ -102,6 +102,7 @@ public class DominationMatch extends Match {
                     filter(t -> t!= null && t.isSpawn() && t.getRoom().equals(color)).
                     findFirst().orElseThrow(UnsupportedOperationException::new);
             temp.setTile(relatedTile);
+            temp.setMatch(this);
             spawnPoints.add(temp);
             super.getPlayers().add(temp);
         }

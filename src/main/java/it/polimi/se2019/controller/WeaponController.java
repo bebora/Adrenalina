@@ -168,6 +168,7 @@ public class WeaponController extends Observer {
 
     @Override
     public void updateOnStopSelection(ThreeState skip) {
+        curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             weapon.reset();
             actionController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));
