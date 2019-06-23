@@ -48,7 +48,6 @@ public class EventUpdaterRMI implements EventUpdater{
         //TODO Manage when login doesn't go as expected!
     }
     public EventUpdaterRMI(String url, int port) {
-        //TODO use port
         try {
             connectInterface = (ConnectInterface) Naming.lookup(String.format("//%s:%d/AdrenalineServer", url, port));
         }
@@ -151,12 +150,11 @@ public class EventUpdaterRMI implements EventUpdater{
         new Thread(task).start();
     }
 
-    //TODO NEED TO SEE IF NEEDS TO BE ALWAYS A LIST OR SINGLE
     @Override
     public void sendPowerUp(List<ViewPowerUp> viewPowerUps, boolean discard) {
         Runnable task = () -> {
             try {
-                remoteHandler.receivePowerUps(new ArrayList<>(viewPowerUps), discard);
+                remoteHandler.receivePowerUps(new ArrayList<>(viewPowerUps));
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Failed to send powerup");

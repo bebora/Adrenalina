@@ -28,7 +28,7 @@ public class Spawner extends Observer {
     }
 
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         PowerUp discarded = playerToSpawn.getPowerUps().stream().filter(p -> p.equals(powerUps.get(0))).findFirst().orElseThrow(() -> new IncorrectEvent("Can't get the powerUp"));
         playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
         playerToSpawn.getPowerUps().remove(discarded);
@@ -44,6 +44,6 @@ public class Spawner extends Observer {
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         int rnd = random.nextInt(playerToSpawn.getPowerUps().size());
-        updateOnPowerUps(new ArrayList<>(Collections.singleton(playerToSpawn.getPowerUps().get(rnd))), false);
+        updateOnPowerUps(new ArrayList<>(Collections.singleton(playerToSpawn.getPowerUps().get(rnd))));
     }
 }

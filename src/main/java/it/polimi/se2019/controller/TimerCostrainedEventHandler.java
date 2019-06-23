@@ -152,10 +152,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public synchronized void receivePowerUps(List<PowerUp> powerUps, boolean discard) {
+    public synchronized void receivePowerUps(List<PowerUp> powerUps) {
         if (active && acceptableTypes.getSelectablePowerUps().checkForCoherency(powerUps)) {
             endHandler();
-            Runnable task = () -> observer.updateOnPowerUps(powerUps, discard);
+            Runnable task = () -> observer.updateOnPowerUps(powerUps);
             new Thread(task).start();
         }
     }

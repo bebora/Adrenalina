@@ -82,10 +82,10 @@ public class PaymentController extends Observer{
      * After checking that the powerUps are compatible, it concludes the payment.
      * Otherwise, the timer restarts prompting the user with the related message.
      * @param powerUps
-     * @param discard
+     *
      */
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
             curPlayer.getVirtualView().getRequestDispatcher().clear();
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));

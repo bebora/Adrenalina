@@ -7,6 +7,7 @@ import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;
 import it.polimi.se2019.view.ViewTileCoords;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 public class EventUpdaterSocket implements EventUpdater{
@@ -87,7 +88,7 @@ public class EventUpdaterSocket implements EventUpdater{
     }
 
     @Override
-    public void login(View view, String nickname, String password, boolean existingGame, String mode) {
+    public void login(View view, String nickname, String password, boolean existingGame, String mode) throws RemoteException {
         ConnectionRequest loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
         updateVisitor = new UpdateVisitor(view.getReceiver());
         socket = new ClientSocket(url,port,loginEvent, updateVisitor);

@@ -35,10 +35,10 @@ public class DamagedController extends Observer {
     /**
      * Handles receiving powerUps from the client, checking if valid and damaging the related player.
      * @param powerUps chosen cards to use
-     * @param discard deprecated
+     *
      */
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         damagedPlayer.getVirtualView().getRequestDispatcher().clear();
         for (PowerUp p : powerUps) {
             if (applicable.contains(p)) {

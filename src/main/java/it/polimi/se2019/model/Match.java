@@ -308,7 +308,6 @@ public abstract class Match {
 	 */
 	public void updateViews() {
 		for (Player p: players) {
-			//TODO check in another way, maybe with online attribute?
 			// Some players may not have any virtualView in tests
 			if (p.getMatch() == null || p.getVirtualView() == null  || !p.getOnline()) continue;
 			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,

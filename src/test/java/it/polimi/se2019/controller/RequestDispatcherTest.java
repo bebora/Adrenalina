@@ -80,8 +80,16 @@ public class RequestDispatcherTest {
         requestDispatcher.addReceivingType(Collections.singletonList(ReceivingType.AMMO), observer);
         requestDispatcher.receiveAmmo("RED");
         verify(observer, times(1)).receiveAmmo(any());
+
+        //Test wrong ammo name
+        requestDispatcher.receiveAmmo("WRONG");
+        try {
+            Thread.sleep(10);
+        }
+        catch (InterruptedException e){
+            assert false;
+        }
+        assertEquals(2, a.getMessages().size());
     }
-
-
 
 }

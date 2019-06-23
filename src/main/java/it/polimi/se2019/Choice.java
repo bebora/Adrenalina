@@ -95,7 +95,7 @@ public class Choice extends Observer{
     }
 
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         this.powerUps = powerUps;
         receivingType = ReceivingType.POWERUP;
         countDownLatch.countDown();

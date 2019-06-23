@@ -643,10 +643,10 @@ public class EffectController extends Observer {
      * <li>Moment.damaging powerup inflict damage</li>
      * <li>Moment.damaging powerup require a {@code Ammo.ANY} ammo.
      * @param powerUps a single powerUp to be used
-     * @param discard whether you are discarding the powerup (mostly deprecated)
+     *
      */
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard){
+    public void updateOnPowerUps(List<PowerUp> powerUps){
         player.getVirtualView().getRequestDispatcher().clear();
         int damagesAmount;
         int marksAmount;

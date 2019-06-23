@@ -61,17 +61,6 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendAvailableActions(player);
     }
 
-    //TODO sending same options to everyone may be useless
-    @Override
-    public void sendCurrentOptions(List<String> options) {
-        match.getPlayers().stream().
-                filter(Player::getOnline).
-                forEach(p -> sendCurrentOptions(p, options));
-    }
-
-    public void sendCurrentOptions(Player receivingPlayer, List<String> options) {
-        receivingPlayer.getVirtualView().getViewUpdater().sendCurrentOptions(options);
-    }
 
     @Override
     public void sendMovePlayer(Player player) {

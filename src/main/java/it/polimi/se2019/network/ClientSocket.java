@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -41,7 +42,7 @@ public class ClientSocket extends Thread{
 
     public ClientSocket(String serverIP,
                         int port,
-                        ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) {
+                        ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) throws RemoteException{
         this.updateVisitor = updateVisitor;
         GsonBuilder gsonBuilder;
         gsonBuilder = new GsonBuilder();
@@ -62,7 +63,7 @@ public class ClientSocket extends Thread{
         }
         catch (IOException e) {
             //TODO change to remote exception
-            throw new UnsupportedOperationException();
+            throw new RemoteException();
 
         }
     }

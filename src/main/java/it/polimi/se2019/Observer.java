@@ -38,7 +38,7 @@ public class Observer {
         throw new IncorrectEvent("Can't accept weapon");
     }
 
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         throw new IncorrectEvent("Can't accept powerUps");
     }
 

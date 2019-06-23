@@ -67,14 +67,7 @@ public class UpdateVisitor {
             Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
         }
     }
-    public void visit(CurrentOptionsUpdate update) {
-        try {
-            concreteViewReceiver.receiveCurrentOptions(new ArrayList<>(update.getOptions()));
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
-        }
-    }
+
     public void visit(MovePlayerUpdate update) {
         String playerId = update.getPlayerId();
         int posx = update.getPosx();
@@ -96,15 +89,7 @@ public class UpdateVisitor {
         }
     }
 
-    public void visit(SuccessConnectionUpdate update) {
-        String token = update.getToken();
-        try {
-            concreteViewReceiver.receiveSuccessConnection(token);
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
-        }
-    }
+
     public void visit(TileUpdate update) {
         List<String> ammos = update.getAmmos();
         List<String> weapons = update.getWeapons();

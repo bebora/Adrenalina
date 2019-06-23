@@ -83,5 +83,4 @@ class UpdateVisitorTest {
         viewVisitor.visit(update);
         assertEquals(message, firstView.getMessages().get(firstView.getMessages().size()-1));
     }
-    //TODO add other tests if other updates will be used
 }

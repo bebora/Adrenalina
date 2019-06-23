@@ -82,19 +82,6 @@ public class ViewUpdaterRMI implements ViewUpdater {
         new Thread(task).start();
     }
 
-    @Override
-    public void sendCurrentOptions(List<String> options) {
-        Runnable task = () -> {
-            try {
-                remoteReceiver.receiveCurrentOptions(new ArrayList<>(options));
-            }
-            catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send current options");
-                view.setOnline(false);
-            }
-        };
-        new Thread(task).start();
-    }
 
     @Override
     public void sendMovePlayer(Player player) {

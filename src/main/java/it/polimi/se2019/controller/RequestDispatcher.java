@@ -99,7 +99,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.AMMO);
                     eventHandler.receiveAmmo(relatedAmmo);
                 } else {
-                    throw new IncorrectEvent("Non posso accettare Action!");
+                    throw new IncorrectEvent("Can't accept ammo!");
                 }
             } catch (IncorrectEvent e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
@@ -176,7 +176,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     }
 
     @Override
-    public void receivePowerUps(ArrayList<ViewPowerUp> powerUps, boolean discard) throws RemoteException {
+    public void receivePowerUps(ArrayList<ViewPowerUp> powerUps) throws RemoteException {
         synchronized (lock) {
             try {
                 lastRequest = System.nanoTime();
@@ -187,7 +187,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                             filter(Objects::nonNull).collect(Collectors.toList());
                     if (relatedPowerUps.size() == powerUps.size()) {
                         EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
-                        eventHandler.receivePowerUps(relatedPowerUps, discard);
+                        eventHandler.receivePowerUps(relatedPowerUps);
                     } else throw new IncorrectEvent("Wrong powerUps!");
                 } else
                     throw new IncorrectEvent("Non posso accettare powerUp!");

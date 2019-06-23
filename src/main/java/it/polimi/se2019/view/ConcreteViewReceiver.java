@@ -86,11 +86,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         linkedView.refresh();
     }
 
-    @Override
-    public void receiveCurrentOptions(ArrayList<String> options) throws RemoteException {
-        //TODO show options to player
-    }
-
     /**
      * Move player by changing its tile
      * @param playerId
@@ -133,12 +128,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                 linkedView.refresh();
             }
         }
-    }
-
-
-    @Override
-    public void receiveSuccessConnection(String token) throws RemoteException {
-        //TODO do something with the token
     }
 
     /**

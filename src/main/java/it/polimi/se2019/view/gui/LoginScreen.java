@@ -1,20 +1,13 @@
 package it.polimi.se2019.view.gui;
 
-import it.polimi.se2019.Logger;
-import it.polimi.se2019.Priority;
-import it.polimi.se2019.view.Status;
-import it.polimi.se2019.view.View;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 public class LoginScreen extends Application {
@@ -62,7 +55,7 @@ public class LoginScreen extends Application {
         connectionProperties.setProperty("url", url.getText());
         connectionProperties.setProperty("port", port.getText());
         view.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-        //TODO:prevent further input and display some kind of loading screen
+        //TODO:prevent further input and display some kind of loading screen when it gets set to WAITING
     }
 
     public static void main(String[] args){

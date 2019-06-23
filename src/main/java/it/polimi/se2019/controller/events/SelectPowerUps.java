@@ -15,17 +15,12 @@ public class SelectPowerUps implements EventVisitable {
      * ViewPowerUp is better than String because chosen color may be useful
      */
     private List<ViewPowerUp> powerUps;
-    //TODO discarded may be useless because updateOnPowerUps implementation already knows the context
-    private boolean discarded;
 
-    public SelectPowerUps(List<ViewPowerUp> powerUps, boolean discarded){
+    public SelectPowerUps(List<ViewPowerUp> powerUps, boolean discarded) {
         this.powerUps = powerUps;
-        this.discarded = discarded;
     }
 
     public List<ViewPowerUp> getPowerUps(){return  powerUps; }
-    public boolean isDiscarded(){return discarded; }
-
     @Override
     public void accept(EventVisitor visitor) {visitor.visit(this);}
 }

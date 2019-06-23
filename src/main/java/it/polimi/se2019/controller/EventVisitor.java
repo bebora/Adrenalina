@@ -89,9 +89,8 @@ public class EventVisitor {
 
     public void visit(SelectPowerUps selectPowerUps) {
         List<ViewPowerUp> powerups = selectPowerUps.getPowerUps();
-        boolean discard = selectPowerUps.isDiscarded();
         try {
-            requestHandler.receivePowerUps(new ArrayList<>(powerups), discard);
+            requestHandler.receivePowerUps(new ArrayList<>(powerups));
         }
         catch (RemoteException e) {
             Logger.log(Priority.WARNING, error + e.getMessage());

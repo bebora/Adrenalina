@@ -33,10 +33,6 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
                 updateVisitable = gson.fromJson(update, AvailableActionsUpdate.class);
                 break;
 
-            case "CurrentOptionsUpdate":
-                updateVisitable = gson.fromJson(update, CurrentOptionsUpdate.class);
-                break;
-
             case "MovePlayerUpdate":
                 updateVisitable = gson.fromJson(update, MovePlayerUpdate.class);
                 break;
@@ -44,11 +40,6 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
             case "PopupMessageUpdate":
                 updateVisitable = gson.fromJson(update, PopupMessageUpdate.class);
                 break;
-
-            case "SuccessConnectionUpdate":
-                updateVisitable = gson.fromJson(update, SuccessConnectionUpdate.class);
-                break;
-
             case "TileUpdate":
                 updateVisitable = gson.fromJson(update, TileUpdate.class);
                 break;

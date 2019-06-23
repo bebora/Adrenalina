@@ -25,7 +25,7 @@ public interface RequestDispatcherInterface extends Remote, Serializable {
 
     void receivePlayers(ArrayList<String> players) throws RemoteException;
 
-    void receivePowerUps(ArrayList<ViewPowerUp> powerUps, boolean discarded) throws RemoteException;
+    void receivePowerUps(ArrayList<ViewPowerUp> powerUps) throws RemoteException;
 
     void receiveRoom(String room) throws RemoteException ;
 

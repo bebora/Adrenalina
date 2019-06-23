@@ -102,10 +102,10 @@ public class GameController extends Observer {
      * <li>Spawning players at the start of the Game</li>
      * <li>Choosing powerUps, and start the related {@code #effectController}.</li>
      * @param powerUps
-     * @param discard
+     *
      */
     @Override
-    public void updateOnPowerUps(List<PowerUp> powerUps, boolean discard) {
+    public void updateOnPowerUps(List<PowerUp> powerUps) {
         if (currentPlayer.getAlive() == OPTIONAL) {
             currentPlayer.getVirtualView().getRequestDispatcher().clear();
             currentPlayer.setAlive(TRUE);
@@ -347,7 +347,6 @@ public class GameController extends Observer {
         catch (InterruptedException e) {
             assert false;
         }
-        //TODO close RMI / Socket connection
         //Set the players offline
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));
     }
@@ -378,7 +377,7 @@ public class GameController extends Observer {
         currentPlayer.getVirtualView().getRequestDispatcher().clear();
         if (currentPlayer.getAlive() == OPTIONAL) {
             this.skip = true;
-            updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)), true);
+            updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)));
         }
         else if (skip.toBoolean() || acceptableTypes.isReverse()) {
             if(action)

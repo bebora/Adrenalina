@@ -21,7 +21,7 @@ public interface EventHandler {
 
     void receivePlayer(List<Player> players);
 
-    void receivePowerUps(List<PowerUp> powerUps, boolean discard);
+    void receivePowerUps(List<PowerUp> powerUps);
 
     void receiveRoom(Color color);
 
