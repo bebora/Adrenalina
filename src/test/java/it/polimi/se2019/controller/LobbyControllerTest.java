@@ -33,7 +33,6 @@ class LobbyControllerTest {
             assertEquals(4,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
             eventUpdater.login(vv, "simona2", "rizzo", false, "NORMAL");
         }
-
         catch (RemoteException e) {
             System.out.println(e);
         }

@@ -86,9 +86,9 @@ class WeaponControllerTest {
          weaponControllerTest.updateOnWeapon(testWeapon);
          assertEquals(3,weaponControllerTest.getUsableEffects().size());
          assertEquals("with shadowstep", weaponControllerTest.getUsableEffects().get(1));
-         /*weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0).getName());
+         weaponControllerTest.updateOnEffect(testWeapon.getEffects().get(0).getName());
          assertEquals(2,weaponControllerTest.getUsableEffects().size());
          assertEquals("with shadowstep", weaponControllerTest.getUsableEffects().get(0));
-         assertEquals("with slice and dice", weaponControllerTest.getUsableEffects().get(1));*/
+         assertEquals("with slice and dice", weaponControllerTest.getUsableEffects().get(1));
      }
 }
