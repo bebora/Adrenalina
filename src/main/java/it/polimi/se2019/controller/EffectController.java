@@ -667,7 +667,7 @@ public class EffectController extends Observer {
             }
             acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
             acceptableTypes.setStop(true, "Don't pay for no more powerUps!");
-            Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes, curMatch);
             Ammo toPay;
             switch (ammoRequest.getReceivingType()) {
                 case STOP:

@@ -243,6 +243,10 @@ public class Board {
 		return skulls;
 	}
 
+	public void setSkulls(int skulls) {
+		this.skulls = skulls;
+	}
+
 	public List<Door> getDoors() {
 		return doors;
 	}

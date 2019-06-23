@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.controller.TimerCostrainedEventHandler;
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.actions.Action;
@@ -35,8 +36,9 @@ public class Choice extends Observer{
     private ReceivingType receivingType;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private CountDownLatch countDownLatch;
+    private Match match;
 
-    public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
+    public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes, Match match) {
         receivingType = ReceivingType.NULL;
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerCostrainedEventHandler.start();
@@ -51,6 +53,10 @@ public class Choice extends Observer{
     }
 
 
+    @Override
+    public Match getMatch() {
+        return match;
+    }
 
     @Override
     public void updateOnTiles(List<Tile> tiles) {

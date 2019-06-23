@@ -53,7 +53,7 @@ public class RequestDispatcherTest {
         acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1, 1, "Select ammo!"));
         a.getViewUpdater().sendAcceptableType(acceptableTypes);
         try {
-            Thread.sleep(10);
+            Thread.sleep(50);
         }
         catch (InterruptedException e){
             assert false;
@@ -84,7 +84,7 @@ public class RequestDispatcherTest {
         //Test wrong ammo name
         requestDispatcher.receiveAmmo("WRONG");
         try {
-            Thread.sleep(10);
+            Thread.sleep(50);
         }
         catch (InterruptedException e){
             assert false;
