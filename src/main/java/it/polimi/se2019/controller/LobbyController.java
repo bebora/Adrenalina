@@ -128,19 +128,17 @@ public class LobbyController{
 
     /**
      * Get the RequestHandler related to the {@code token}
-     * @param token token of the related player
+     * @param token of the related player
      * @return
      */
     public RequestDispatcher getRequestHandler(String token) {
-        List<Player> allPlayers = new ArrayList<>();
-        allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
+        List<Player> allPlayers = getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList());
         allPlayers = allPlayers.stream().filter(Player::getOnline).collect(Collectors.toList());
         for (GameController game : games) {
             allPlayers.addAll(game.getMatch().getPlayers().stream().
                     filter(Player::getOnline).
                     collect(Collectors.toList()));
         }
-        allPlayers.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).collect(Collectors.toList()));
         Player requestingPlayer = allPlayers.stream().filter(p -> p.getToken().equals(token)).findFirst().orElse(null);
         if (requestingPlayer == null) return null;
         return requestingPlayer.getVirtualView().getRequestDispatcher();

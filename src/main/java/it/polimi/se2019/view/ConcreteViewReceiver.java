@@ -118,6 +118,9 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                 System.out.println(message);
                 linkedView.setStatus(Status.END);
             }
+            else {
+                linkedView.addMessage(message);
+            }
         }
         else{
             if (message.contains("WINNERS")) {
