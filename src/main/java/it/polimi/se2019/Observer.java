@@ -1,6 +1,7 @@
 package it.polimi.se2019;
 
 import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.actions.Action;
@@ -60,5 +61,9 @@ public class Observer {
 
     public void updateOnConclusion() {
         throw new IncorrectEvent("Can't process!");
+    }
+
+    public Match getMatch() {
+        throw new UnsupportedOperationException();
     }
 }

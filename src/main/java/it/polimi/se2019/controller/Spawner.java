@@ -4,6 +4,7 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
@@ -28,7 +29,13 @@ public class Spawner extends Observer {
     }
 
     @Override
+    public Match getMatch() {
+        return playerToSpawn.getMatch();
+    }
+
+    @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
+        playerToSpawn.getVirtualView().getRequestDispatcher().clear();
         PowerUp discarded = playerToSpawn.getPowerUps().stream().filter(p -> p.equals(powerUps.get(0))).findFirst().orElseThrow(() -> new IncorrectEvent("Can't get the powerUp"));
         playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
         playerToSpawn.getPowerUps().remove(discarded);

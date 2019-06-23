@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -27,6 +28,11 @@ public class PaymentController extends Observer{
     private Player curPlayer;
     private AcceptableTypes acceptableTypes;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
+
+    @Override
+    public Match getMatch() {
+        return observer.getMatch();
+    }
 
     public PaymentController(Observer observer, List<Ammo> toPay, Player curPlayer) {
         this.observer = observer;
@@ -102,6 +108,7 @@ public class PaymentController extends Observer{
 
     @Override
     public void updateOnStopSelection(ThreeState skip) {
+        curPlayer.getVirtualView().getRequestDispatcher().clear();
         observer.updateOnStopSelection(TRUE);
     }
 }

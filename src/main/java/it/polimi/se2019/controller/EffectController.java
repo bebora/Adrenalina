@@ -74,6 +74,11 @@ public class EffectController extends Observer {
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
+    @Override
+    public Match getMatch() {
+        return curMatch;
+    }
+
     /**
      * Read the next ActionType to be executed and
      * call the method to check if the effect needs a Direction.

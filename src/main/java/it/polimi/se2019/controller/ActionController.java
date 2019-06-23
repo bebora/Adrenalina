@@ -50,6 +50,11 @@ public class ActionController extends Observer {
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
     }
 
+    @Override
+    public Match getMatch() {
+        return sandboxMatch;
+    }
+
     /**
      * Handles receiving the chosen action from the player, start to compute it.
      * @param action chosen by the {@link #curPlayer}

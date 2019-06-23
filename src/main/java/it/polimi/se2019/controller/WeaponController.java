@@ -71,6 +71,11 @@ public class WeaponController extends Observer {
         return Stream.concat(checkAbsolute, checkRelative).collect(Collectors.toList());
     }
 
+    @Override
+    public Match getMatch() {
+        return match;
+    }
+
     public void askForEffect(boolean stopAllowed) {
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
         String prompt;

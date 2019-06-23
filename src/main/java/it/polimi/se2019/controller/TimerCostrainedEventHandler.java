@@ -1,7 +1,7 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.Logger;
 import it.polimi.se2019.GameProperties;
+import it.polimi.se2019.Logger;
 import it.polimi.se2019.Observer;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Player;
@@ -16,6 +16,7 @@ import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handler class for events received by the client.
@@ -80,6 +81,19 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized boolean checkFinished() {
         if (System.currentTimeMillis() >= start + time) {
             active = false;
+            String nick = requestDispatcher.getLinkedVirtualView().getUsername();
+            try {
+                List<Player> players = observer.getMatch().getPlayers().stream().filter(Player::getOnline).collect(Collectors.toList());
+                players.forEach(p -> {
+                    if (!p.getUsername().equals(nick))
+                        p.getVirtualView().getViewUpdater().sendPopupMessage(String.format("Player %s didn't answer in time!", nick));
+                    else
+                        p.getVirtualView().getViewUpdater().sendPopupMessage("WAKEUP!");
+                });
+            }
+            catch (NullPointerException e) {
+                Logger.log(Priority.WARNING, "Null pointer into eventhandler match notify");
+            }
             return true;
         }
         return false;
