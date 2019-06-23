@@ -158,6 +158,7 @@ public abstract class Match {
 		board.setSkulls(board.getSkulls() - deadPlayers.size());
 		// Point for double kill, filtering players killed by ending turn on domination spawn
 		// Handle case of multiple deadshots also from players that aren't the current player (thanks to powerups)
+		board.setSkulls(board.getSkulls() - deadPlayers.size());
 		List<Player> playersNotSelfDead = deadPlayers.stream().filter(p -> !p.getDamages().get(10).equals(p)).collect(Collectors.toList());
 		if (playersNotSelfDead.size() > 1)
 			players.stream().

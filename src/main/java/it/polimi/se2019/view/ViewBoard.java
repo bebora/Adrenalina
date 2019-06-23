@@ -35,7 +35,7 @@ public class ViewBoard implements Serializable {
 						collect(Collectors.toCollection(ArrayList::new))).
 				collect(Collectors.toCollection(ArrayList::new));
 		this.killShotTrack = board.getKillShotTrack().stream().
-				map(p -> p == null ? null : p.getId()).
+				map(p -> p == null ? null : p.getColor().name()).
 				collect(Collectors.toCollection(ArrayList::new));
 		this.doors = board.getDoors().stream().
 				map(ViewDoor::new).
@@ -52,5 +52,13 @@ public class ViewBoard implements Serializable {
 
 	public String getName(){
 		return name;
+	}
+
+	public ArrayList<String> getKillShotTrack() {
+		return killShotTrack;
+	}
+
+	public int getSkulls() {
+		return skulls;
 	}
 }

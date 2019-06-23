@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.view.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,8 +12,10 @@ import java.util.stream.Collectors;
 public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
+    int skullBoardHeight = 5;
     static List<ViewWeapon> displayedWeapons;
     private ViewPlayer displayedPlayer;
+
 
 
     static void printInColor(String color, String text){
@@ -69,7 +72,7 @@ public class CLI extends View {
 
     private void displayMessages() {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
-        int y = AsciiBoard.offsetY;
+        int y = AsciiBoard.offsetY + skullBoardHeight;
         moveCursor(x,y);
         printInColor("w","MESSAGES:");
         moveCursor(x,++y);
@@ -80,6 +83,26 @@ public class CLI extends View {
             shiftCursorDown(1);
         }
     }
+
+    private void displaySkullBoard(){
+        int x = AsciiBoard.boardRightBorder  + AsciiBoard.infoBoxWidth;
+        int y = AsciiBoard.offsetY;
+        ArrayList<String> killshotTrack = getBoard().getKillShotTrack();
+        moveCursor(x,y);
+        clearUntilEndOfLine(y,y+3,x);
+        printInColor("w","Skulls:");
+        moveCursor(x,++y);
+        for(int i = 0; i < getBoard().getSkulls(); i++)
+            printInColor("w","\uD83D\uDC80 ");
+        moveCursor(x,y);
+        for(int i = 0; i < killshotTrack.size(); i+=2)
+            printInColor(killshotTrack.get(i),"\uD83E\uDE78 ");
+        moveCursor(x,++y);
+        for(int i = 1; i < killshotTrack.size(); i+=2)
+            if(killshotTrack.get(i) != null)
+                printInColor(killshotTrack.get(i),"\uD83E\uDE78 ");
+    }
+
 
     private void displaySelectableOptions(){
         int x = AsciiBoard.offsetX;
@@ -165,6 +188,7 @@ public class CLI extends View {
             AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));
             AsciiPlayer.drawPlayerInfo(getSelf(), getLoadedWeapons(), getSelf().getUnloadedWeapons());
             AsciiPlayer.printPowerUps(this);
+            displaySkullBoard();
             displayMessages();
             displaySelectableOptions();
             displayTurnInfo();
