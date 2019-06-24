@@ -1,9 +1,6 @@
 package it.polimi.se2019;
 
-import it.polimi.se2019.controller.AcceptableTypes;
-import it.polimi.se2019.controller.ReceivingType;
-import it.polimi.se2019.controller.RequestDispatcher;
-import it.polimi.se2019.controller.TimerCostrainedEventHandler;
+import it.polimi.se2019.controller.*;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -22,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
  * Blocking class to wait for client interaction
  * It joins on TimerCostrainedEventHandler, that will update this object with the received object from client
  **/
-public class Choice extends Observer{
+public class Choice extends Observer {
     private List<PowerUp> powerUps;
     private Action action;
     private Direction direction;
@@ -50,6 +47,7 @@ public class Choice extends Observer{
             Logger.log(Priority.ERROR, "Join on Choice killed");
         }
         requestDispatcher.clear();
+        this.match = match;
     }
 
 
@@ -126,10 +124,6 @@ public class Choice extends Observer{
         this.ammo = ammo;
         receivingType = ReceivingType.AMMO;
         countDownLatch.countDown();
-    }
-
-    public void setReceivingType(ReceivingType receivingType) {
-        this.receivingType = receivingType;
     }
 
     public List<PowerUp> getPowerUps() {

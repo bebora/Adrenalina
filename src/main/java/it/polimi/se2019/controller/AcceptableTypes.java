@@ -125,8 +125,4 @@ public class AcceptableTypes {
     public List<ReceivingType> getAcceptedTypes() {
         return acceptedTypes;
     }
-
-    public void setAcceptedTypes(List<ReceivingType> acceptedTypes) {
-        this.acceptedTypes = acceptedTypes;
-    }
 }

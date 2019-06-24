@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
@@ -72,6 +73,26 @@ public class ActionControllerTest {
         currentPlayer.getAmmos().remove(Ammo.BLUE);
         assertEquals(grabbableAmmocard.getAmmos().stream().filter(p -> !p.equals(Ammo.POWERUP)).collect(Collectors.toList()), currentPlayer.getAmmos());
         assertNull(currentPlayer.getTile().getAmmoCard());
+    }
+
+    @Test
+    void testDiscardWeapon() {
+        currentPlayer.setTile(board.getTile(0,2));
+        actionController.updateOnAction(currentPlayer.getActions().get(1));
+        actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
+        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        for (int i = 0; i < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")); i++) {
+            currentPlayer.addWeapon(grabbableWeapon);
+        }
+        //Test discarding of a weapon
+        actionController.updateOnAction(currentPlayer.getActions().get(1));
+        actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
+        grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        actionController.updateOnWeapon(grabbableWeapon);
+        assertEquals(2, currentPlayer.getWeapons().size());
+        //Test get weapon
+        actionController.updateOnWeapon(grabbableWeapon);
+        assertEquals(3, currentPlayer.getWeapons().size());
     }
 
     @Test
