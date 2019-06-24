@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.util.Properties;
 
 public class LoginScreen extends Application {
-    @FXML ListView connectionType;
+    @FXML ComboBox<String> connectionType;
     @FXML Button loginButton;
     @FXML TextField username;
     @FXML PasswordField password;
@@ -19,8 +19,6 @@ public class LoginScreen extends Application {
     @FXML TextField url;
     @FXML CheckBox existingGame;
     @FXML ComboBox<String> mode;
-    private String gameMode = "NORMAL";
-    private String selectedConnection;
 
     private static Stage primaryStage;
 
@@ -38,22 +36,17 @@ public class LoginScreen extends Application {
         stage.show();
     }
 
-    public void selectConnection(){
-        selectedConnection = (String)connectionType.getSelectionModel().getSelectedItem();
-    }
-
-    @FXML
-    public void selectMode(){
-        gameMode = mode.getValue();
-    }
 
     public void login(){
         GUIView view = new GUIView();
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("url", url.getText());
         connectionProperties.setProperty("port", port.getText());
+
+        String connection = connectionType.getValue() != null ? connectionType.getValue() : connectionType.getPromptText();
+        String gameMode = mode.getValue() != null ? mode.getValue() : mode.getPromptText();
         view.setGameMode(gameMode);
-        view.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
+        view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
         //TODO:prevent further input and display some kind of loading screen when it gets set to WAITING
     }
 

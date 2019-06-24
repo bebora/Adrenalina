@@ -4,6 +4,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -78,6 +80,14 @@ public class GuiHelper {
             default:
                 break;
         }
+     }
+
+     public static void applyBorder(Node n, int size){
+         InnerShadow borderGlow= new InnerShadow();
+         borderGlow.setColor(Color.ORANGE);
+         borderGlow.setWidth(size);
+         borderGlow.setHeight(size);
+         n.setEffect(borderGlow);
      }
 
 }

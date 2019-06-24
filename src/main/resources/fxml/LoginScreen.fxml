@@ -6,14 +6,12 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
-
 
 <GridPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.se2019.view.gui.LoginScreen">
   <columnConstraints>
@@ -55,24 +53,12 @@
             <Insets right="20.0" />
          </GridPane.margin>
       </PasswordField>
-      <ListView fx:id="connectionType" onMouseClicked="#selectConnection" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="6">
-          <items>
-              <FXCollections fx:factory="observableArrayList">
-                  <String fx:value="RMI" />
-                  <String fx:value="Socket" />
-              </FXCollections>
-          </items>
-         <GridPane.margin>
-            <Insets bottom="20.0" left="20.0" />
-         </GridPane.margin>
-      </ListView>
       <CheckBox fx:id="existingGame" mnemonicParsing="false" text="existingGame" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="20.0" />
          </GridPane.margin>
       </CheckBox>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select connection type:" GridPane.rowIndex="5" />
-       <ComboBox fx:id="mode" onMouseClicked="#selectMode" promptText="MODE" GridPane.rowIndex="4">
+       <ComboBox fx:id="mode" promptText="NORMAL" GridPane.rowIndex="4">
            <items>
                <FXCollections fx:factory="observableArrayList">
                    <String fx:value="NORMAL" />
@@ -88,7 +74,7 @@
             <Insets left="20.0" />
          </GridPane.margin>
       </Text>
-      <TextField fx:id="url" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <TextField fx:id="url" text="localhost" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="20.0" />
          </GridPane.margin>
@@ -98,10 +84,21 @@
             <Insets left="20.0" />
          </GridPane.margin>
       </Text>
-      <TextField fx:id="port" GridPane.columnIndex="1" GridPane.rowIndex="3">
+      <TextField fx:id="port" text="1337" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="20.0" />
          </GridPane.margin>
       </TextField>
+      <ComboBox fx:id="connectionType" layoutX="30.0" layoutY="210.0" promptText="SOCKET" GridPane.rowIndex="5">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value="SOCKET" />
+               <String fx:value="RMI" />
+            </FXCollections>
+         </items>
+         <GridPane.margin>
+            <Insets left="20.0" />
+         </GridPane.margin>
+      </ComboBox>
    </children>
 </GridPane>

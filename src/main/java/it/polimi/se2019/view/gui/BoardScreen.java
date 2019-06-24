@@ -2,7 +2,6 @@ package it.polimi.se2019.view.gui;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.view.*;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,15 +24,18 @@ public class BoardScreen extends HBox {
     DominationBoardFX dominationBoardFX;
     ScrollPane playerBoardScroller;
     SelectableOptionsWrapper selectableOptionsWrapper;
+    View guiView;
 
-    public BoardScreen(View GUIView){
+    BoardScreen(View GUIView){
+        guiView = GUIView;
         boardFX = new BoardFX();
         boardFX.setEventUpdater(GUIView.getEventUpdater());
+        boardFX.setBoard(GUIView.getBoard());
         playerBoardZone = new VBox();
         playerBoardBox = new VBox();
         playerBoardScroller = new ScrollPane();
         playerBoardScroller.setPannable(true);
-        playerBoardScroller.setPrefSize(984,240);
+        playerBoardScroller.setPrefSize(492,240);
         playerBoardScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playerBoardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox boardZone = new VBox();
@@ -43,8 +45,8 @@ public class BoardScreen extends HBox {
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
-        for(ViewPlayer p: GUIView.getPlayers()){
-            if(p.getDominationSpawn() != null) {
+        for(ViewPlayer p: GUIView.getPlayers()) {
+            if (!p.getDominationSpawn() && !p.getUsername().equals(GUIView.getSelf().getUsername())) {
                 PlayerBoardFX temp = new PlayerBoardFX();
                 temp.updatePlayerInfo(p);
                 playerBoardBox.getChildren().addAll(temp);
@@ -55,7 +57,7 @@ public class BoardScreen extends HBox {
             dominationBoardFX = new DominationBoardFX();
             boardFX.setDominationPane(dominationBoardFX);
         }
-        playerBoardZone.getChildren().addAll(playerBoardScroller,powerUpsBox,weaponsBox);
+        playerBoardZone.getChildren().addAll(clientPlayer,playerBoardScroller,powerUpsBox,weaponsBox);
         playerBoardZone.setSpacing(15);
         updateBoard(GUIView.getBoard(),GUIView.getPlayers());
         this.getChildren().addAll(boardZone,playerBoardZone);
@@ -69,29 +71,43 @@ public class BoardScreen extends HBox {
         this.setStyle("-fx-background-color: black");
     }
 
-    public void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
+    void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
+        boardFX.clearPlayers();
+        boardFX.drawPlayers(players);
+        boardFX.drawAmmoCard();
         boardFX.setYellowWeapons(getWeaponsFromColor("YELLOW",viewBoard));
         boardFX.setBlueWeapons(getWeaponsFromColor("BLUE",viewBoard));
         boardFX.setRedWeapons(getWeaponsFromColor("RED",viewBoard));
-        boardFX.clearPlayers();
-        dominationBoardFX.updateSkulls(viewBoard.getSkulls());
         int i = 0;
         for(ViewPlayer p: players){
             if(!p.getDominationSpawn()){
-                if(p.getTile()!=null)
-                    boardFX.drawPlayer(p);
-                PlayerBoardFX playerBoardFX = (PlayerBoardFX)playerBoardBox.getChildren().get(i);
-                playerBoardFX.updatePlayerInfo(p);
-                i++;
+                if(!p.getUsername().equals(guiView.getSelf().getUsername())){
+                    PlayerBoardFX playerBoardFX = (PlayerBoardFX)playerBoardBox.getChildren().get(i);
+                    playerBoardFX.updatePlayerInfo(p);
+                    if(p == guiView.getCurrentPlayer())
+                        GuiHelper.applyBorder(playerBoardFX,50);
+                    else
+                        playerBoardFX.setEffect(null);
+                    i++;
+                }else {
+                    clientPlayer.updatePlayerInfo(p);
+                    if(p == guiView.getCurrentPlayer())
+                        GuiHelper.applyBorder(clientPlayer,50);
+                    else
+                        clientPlayer.setEffect(null);
+                }
             }
         }
         List<ViewPlayer> dominationPlayers = players.stream()
                 .filter(ViewPlayer::getDominationSpawn)
                 .collect(Collectors.toList());
-        dominationBoardFX.updateSpawns(dominationPlayers);
+        if(guiView.getGameMode().equals("DOMINATION")) {
+            dominationBoardFX.updateSkulls(viewBoard.getSkulls());
+            dominationBoardFX.updateSpawns(dominationPlayers);
+        }
     }
 
-    public void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+    void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         actionButtons.clearPossibleActions();
         for(ReceivingType ac: selectableOptionsWrapper.getAcceptedTypes()){
@@ -109,6 +125,9 @@ public class BoardScreen extends HBox {
                 case WEAPON:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
                     weaponsBox.highlightSelectableWeapons(selectableOptionsWrapper.getSelectableWeapons());
+                    break;
+                case PLAYERS:
+                    boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
                     break;
                 default:
                     break;

@@ -3,6 +3,7 @@ package it.polimi.se2019.view.gui;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
+import it.polimi.se2019.model.Player;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import javafx.fxml.FXML;
@@ -21,9 +22,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoardFX extends StackPane {
     @FXML
@@ -47,10 +51,14 @@ public class BoardFX extends StackPane {
 
     SelectableOptionsWrapper selectableOptionsWrapper;
 
+    ViewBoard viewBoard;
+    List<ViewPlayer> players;
     List<ViewTileCoords> selectedCoords;
+    List<String> selectedPlayers;
     List<String> blueWeapons;
     List<String> redWeapons;
     List<String> yellowWeapons;
+    List<Circle> playersCircles;
 
     public BoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
@@ -128,9 +136,10 @@ public class BoardFX extends StackPane {
             Logger.log(Priority.DEBUG,e.getMessage());
         }
     }
-    public void setBoard(String boardName){
+    public void setBoard(ViewBoard viewBoard){
+        this.viewBoard = viewBoard;
         Image boardImage = new Image(getClass().getClassLoader().getResourceAsStream(
-                "assets/boards/" + boardName + ".png"
+                "assets/boards/" + viewBoard.getName() + ".png"
         ));
         boardView.setImage(boardImage);
     }
@@ -142,16 +151,43 @@ public class BoardFX extends StackPane {
         Scale scale = new Scale();
         scale.setPivotX(58);
         scale.setPivotY(5);
-        scale.setX(0.75);
-        scale.setY(0.75);
+        scale.setX(0.80);
+        scale.setY(0.80);
         dominationPane.getTransforms().addAll(scale);
     }
 
-    void drawPlayer(ViewPlayer player){
-        int playerX = player.getTile().getCoords().getPosx();
-        int playerY = player.getTile().getCoords().getPosy();
-        TilePane tile = (TilePane)GuiHelper.getNodeByIndex(tileBoard,playerX,playerY);
-        tile.getChildren().add(new Circle(15.0,Paint.valueOf(GuiHelper.getColorHexValue(player.getColor()))));
+    void drawPlayers(List<ViewPlayer> players){
+        this.players = players.stream().filter(v->!v.getDominationSpawn()).collect(Collectors.toList());
+        playersCircles = new ArrayList<>();
+        for(ViewPlayer player: players) {
+            if(player.getTile() != null) {
+                int playerX = player.getTile().getCoords().getPosx();
+                int playerY = player.getTile().getCoords().getPosy();
+                TilePane tile = (TilePane) GuiHelper.getNodeByIndex(tileBoard, playerX, playerY);
+                Circle playerCircle = new Circle(15.0, Paint.valueOf(GuiHelper.getColorHexValue(player.getColor())));
+                playerCircle.setUserData(player.getUsername());
+                playersCircles.add(playerCircle);
+                tile.getChildren().add(playerCircle);
+            }
+        }
+    }
+
+    void drawAmmoCard(){
+        for(ViewTile w: viewBoard.getTiles().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
+            if (w != null && !w.getAmmos().isEmpty()) {
+                TilePane tile = (TilePane) GuiHelper.getNodeByIndex(tileBoard, w.getCoords().getPosx(), w.getCoords().getPosy());
+                ImageView imageView = new ImageView();
+                String ammoName = w.getAmmos().stream().map(s -> s.charAt(0)).map(String::valueOf).collect(Collectors.joining());
+                if(AssetMaps.ammoCardAssets.containsKey(ammoName))
+                    ammoName = AssetMaps.ammoCardAssets.get(ammoName);
+                Image ammoCard = new Image(getClass().getClassLoader().
+                        getResourceAsStream("assets/ammo/" + ammoName + ".png"));
+                imageView.setFitWidth(30);
+                imageView.setFitHeight(30);
+                imageView.setImage(ammoCard);
+                tile.getChildren().addAll(imageView);
+            }
+        }
     }
 
     void clearPlayers(){
@@ -162,6 +198,28 @@ public class BoardFX extends StackPane {
             n.setEffect(null);
             n.setOpacity(0);
         }
+    }
+
+    void showPossiblePlayers(List<String> players) {
+        for (String p : players) {
+            Circle playerCircle = playersCircles.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
+            GuiHelper.applyBorder(playerCircle,30);
+            playerCircle.setOnMouseClicked(e->selectPlayer(e));
+        }
+    }
+
+    @FXML
+    public void selectPlayer(MouseEvent mouseEvent){
+        Circle circle = (Circle)mouseEvent.getSource();
+        String playerName = (String)circle.getUserData();
+        if(selectedPlayers.contains(playerName))
+            selectedPlayers.remove(playerName);
+        else {
+            selectedPlayers.add(playerName);
+            circle.setOpacity(0.60);
+        }
+        if(selectedPlayers.size() == selectableOptionsWrapper.getSelectablePlayers().getMaxSelectables())
+            eventUpdater.sendPlayers(selectedPlayers);
     }
 
     @FXML
@@ -235,6 +293,8 @@ public class BoardFX extends StackPane {
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         if(selectableOptionsWrapper.getAcceptedTypes().contains(ReceivingType.WEAPON))
             showPossibleWeapons();
+        if(selectableOptionsWrapper.getAcceptedTypes().contains(ReceivingType.PLAYERS))
+            showPossiblePlayers(selectableOptionsWrapper.getSelectablePlayers().getOptions());
     }
 
     public void setEventUpdater(EventUpdater eventUpdater){

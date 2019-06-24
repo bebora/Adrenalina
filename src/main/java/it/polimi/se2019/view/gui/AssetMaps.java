@@ -52,4 +52,10 @@ public class AssetMaps {
             Map.entry("teleporterYELLOW","AD_powerups_IT_0213.png")
     );
 
+    static Map<String,String> ammoCardAssets = Map.of(
+            "PBY","PYB",
+            "PBR","PRB",
+            "PRY","PYR"
+    );
+
 }
