@@ -4,15 +4,13 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.view.VirtualView;
 
+/**
+ * Class used by server controller to send ping periodically to the client, which should reply with an ack
+ */
 public class RMIPinger extends Thread{
     private VirtualView view;
     private ViewUpdaterRMI viewUpdaterRMI;
-    /**
-     * Interface that will receive updates from the WorkerServer and
-     * apply them to its view
-     */
-    private ViewReceiverInterface viewReceiver;
-
+    private int PING_SLEEP_DELAY = 250;
     public RMIPinger(VirtualView view) {
         this.view = view;
     }
@@ -22,7 +20,7 @@ public class RMIPinger extends Thread{
         do {
             viewUpdaterRMI.sendPing();
             try {
-                Thread.sleep(250);
+                Thread.sleep(PING_SLEEP_DELAY);
             } catch (InterruptedException e) {
                 Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
             }

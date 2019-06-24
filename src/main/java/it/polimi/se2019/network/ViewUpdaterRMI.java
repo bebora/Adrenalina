@@ -29,7 +29,6 @@ public class ViewUpdaterRMI implements ViewUpdater {
     private ThreadPoolExecutor executor;
 
 
-
     public void sendPing() {
         try {
             remoteReceiver.receivePing();
@@ -68,7 +67,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
 
     @Override
     public void sendAvailableActions(Player player) {
-        Runnable task = () -> {
+        executor.submit(() -> {
             ArrayList<ViewAction> actions = player.getActions().stream().
                     map(ViewAction::new).
                     collect(Collectors.toCollection(ArrayList::new));
@@ -78,14 +77,13 @@ public class ViewUpdaterRMI implements ViewUpdater {
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send ammos taken");
             }
-        };
-        new Thread(task).start();
+        });
     }
 
 
     @Override
     public void sendMovePlayer(Player player) {
-        Runnable task = () -> {
+        executor.submit(() -> {
             try {
                 remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
             }
@@ -93,8 +91,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                 Logger.log(Priority.ERROR, "Unable to send movement");
                 view.setOnline(false);
             }
-        };
-        new Thread(task).start();
+        });
     }
 
     @Override
@@ -123,15 +120,14 @@ public class ViewUpdaterRMI implements ViewUpdater {
 
     @Override
     public void sendTile(Tile tile) {
-        Runnable task = () -> {
+        executor.submit(() -> {
             try {
                 remoteReceiver.receiveTile(new ViewTile(tile));
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send tile");
             }
-        };
-        new Thread(task).start();
+        });
     }
 
     @Override
@@ -170,7 +166,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
 
     @Override
     public void sendWeaponTaken(Weapon takenWeapon, Weapon discardedWeapon, Player player) {
-        Runnable task = () -> {
+        executor.submit(() -> {
             try {
                 if (discardedWeapon == null)
                     remoteReceiver.receiveWeaponTaken(new ViewWeapon(takenWeapon), null, player.getId());
@@ -181,8 +177,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                 Logger.log(Priority.ERROR, "Unable to send weapon taken");
                 view.setOnline(false);
             }
-        };
-        new Thread(task).start();
+        });
     }
 
     /**

@@ -62,9 +62,7 @@ public class ClientSocket extends Thread{
             update.accept(updateVisitor);
         }
         catch (IOException e) {
-            //TODO change to remote exception
             throw new RemoteException();
-
         }
     }
 
