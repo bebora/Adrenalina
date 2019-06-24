@@ -593,6 +593,10 @@ public class EffectController extends Observer {
      */
     private void updateMoveOnPlayers(List<Player> players){
         player.getVirtualView().getRequestDispatcher().clear();
+        if (players.isEmpty()) {
+            nextStep();
+            return;
+        }
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
             pointOfView = players.get(0).getTile();
         askingForSource = false;

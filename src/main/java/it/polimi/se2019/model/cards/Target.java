@@ -394,21 +394,20 @@ public class Target {
 	 * @return
 	 */
 	public Target getMoveDominationTarget() {
-		Builder builder = new Builder();
-		builder.setMaxDistance(0);
-		builder.setMinDistance(0);
-		builder.setVisibility(visibility);
-		builder.setMinTargets(minTargets);
-		builder.setMaxTargets(maxTargets);
-		builder.setAreaDamage(areaDamage);
-		builder.setCardinal(cardinal);
-		builder.setCheckTargetList(checkTargetList);
-		builder.setDifferentSquare(differentSquare);
-		builder.setSamePlayerRoom(samePlayerRoom);
-		builder.setThroughWalls(throughWalls);
-		builder.setPointOfView(pointOfView);
-		builder.setCheckTargetList(checkBlackList);
-		return new Target(builder);
+		return new Target.Builder().
+                setMaxDistance(0).
+                setMinDistance(0).
+                setVisibility(visibility).
+                setMinTargets(minTargets).
+                setMaxTargets(maxTargets).
+                setAreaDamage(areaDamage).
+                setCardinal(cardinal).
+                setCheckTargetList(checkTargetList).
+                setDifferentSquare(differentSquare).
+                setSamePlayerRoom(samePlayerRoom).
+                setThroughWalls(throughWalls).
+                setPointOfView(pointOfView).
+                setCheckTargetList(checkBlackList).build();
 	}
 
 

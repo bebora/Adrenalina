@@ -24,9 +24,10 @@ effects:
       targetSource:
         checkTargetList:TRUE
         minTargets:0
+        maxTargets:1
       targetDestination:
         maxDistance:1
-        minDistance:1
+        minDistance:0
         throughWalls:FALSE
         pointOfView:TARGET
   name:with extra grenade
