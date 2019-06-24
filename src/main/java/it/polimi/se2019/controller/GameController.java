@@ -26,21 +26,52 @@ import static it.polimi.se2019.model.ThreeState.*;
 /**
  * Controller class related to a single game.
  * Handles the game flow, using {@link #match} properties.
+ * Supports:
+ * <li>PowerUp with {@link Moment#OWNROUND} activation, using {@link EffectController}</li>
+ * <li>Game ending and related winnes sending</li>
+ * <li>Action selection</li>
+ * <li></li>
  */
 public class GameController extends Observer {
     private Match match;
     private LobbyController lobbyController;
-    private int actionCounter=0;
+    private int actionCounter = 0;
     private Player currentPlayer;
     private ActionController actionController;
+    /**
+     * List of players that need to be spawned after their death.
+     */
     private List<Player> spawnablePlayers;
+    /**
+     * Flag to indicate that the current match ended, for two possible reasons:
+     * <li>Game motivations, relative to {@link Match#newTurn()} boolean value</li>
+     * <li>Less than 3 online players are playing.</li>
+     */
+    private boolean matchEnd;
+
+    /**
+     * Flag to indicate that the current turn ended, for different reasons:
+     * <li>The players has no more actions.</li>
+     */
+    private boolean turnEnd;
+
+    /**
+     * Flag to indicate that the current player has to skips action in his current turn.
+     * True when the player didn't answer in time, getting blocked for the current turn.
+     */
+    private boolean skip;
+
+    /**
+     * Whether {@link EffectController} is computing an action or not.
+     */
+    private boolean action;
+
+    /**
+     * Flag to indicate whether the controller is waiting for answers for overkilled players in DominationMode.
+     */
+    private boolean dominationOverkill;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    private boolean matchEnd;
-    private boolean turnEnd;
-    private boolean skip;
-    private boolean action;
-    private PowerUp toDiscard;
     private CountDownLatch countDownLatch;
 
     /**
@@ -80,14 +111,13 @@ public class GameController extends Observer {
     /**
      * Handles receiving a List of players from the client.
      * Used for domination spawn overkill, in Domination mode.
+     * It updates the {@link #countDownLatch}.
      * @param players
      */
     @Override
     public void updateOnPlayers(List<Player> players) {
         if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
             players.get(0).receiveShot(currentPlayer, 1, 0, true);
-
         }
         else {
             throw new IncorrectEvent("Wrong players!");
@@ -101,12 +131,10 @@ public class GameController extends Observer {
      * <li>Spawning players at the start of the Game</li>
      * <li>Choosing powerUps, and start the related {@code #effectController}.</li>
      * @param powerUps
-     *
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
         if (currentPlayer.getAlive() == OPTIONAL) {
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
             currentPlayer.setAlive(TRUE);
             Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
                     filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
@@ -121,9 +149,7 @@ public class GameController extends Observer {
         }
         else {
             this.action = false;
-            currentPlayer.getVirtualView().getRequestDispatcher().clear();
-            toDiscard = (powerUps.get(0));
-            currentPlayer.discardPowerUp(toDiscard, false);
+            currentPlayer.discardPowerUp(powerUps.get(0), false);
             EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
             effectController.nextStep();
         }
@@ -146,6 +172,7 @@ public class GameController extends Observer {
         }else{
             match = new DominationMatch(players,boardName,numSkulls);
         }
+        dominationOverkill = false;
         currentPlayer = match.getPlayers().get(match.getCurrentPlayer());
         matchEnd = false;
         turnEnd = false;
@@ -157,6 +184,7 @@ public class GameController extends Observer {
         if (matchEnd) {
             Logger.log(Priority.DEBUG, "Game ended, stopping turn");
         }
+        //Spawn Player if the match is starting
         else if(currentPlayer.getAlive() == ThreeState.OPTIONAL){
             for(int i = 0; i < 2; i++){
                 currentPlayer.addPowerUp(match.getBoard().drawPowerUp(),false);
@@ -170,6 +198,7 @@ public class GameController extends Observer {
                     acceptableTypes);
             timerCostrainedEventHandler.start();
         }
+        //End turn if current player is not online
         else if (!currentPlayer.getOnline() || skip) {
             skip = false;
             endTurn(true);
@@ -188,11 +217,12 @@ public class GameController extends Observer {
         turnEnd = false;
         List<ReceivingType> receivingTypes = new ArrayList<>();
         acceptableTypes = new AcceptableTypes(receivingTypes);
-        //Check for the presence
+        //Check for the availability of any action
         if(actionCounter < currentPlayer.getMaxActions()) {
             receivingTypes.add(ReceivingType.ACTION);
             acceptableTypes.setSelectableActions(new SelectableOptions<>(currentPlayer.getActions(), 1, 1, "Select an Action!"));
-        } else if (!match.getFinalFrenzy() && currentPlayer.getWeapons().stream().anyMatch(w -> !w.getLoaded())) {
+        } //Check if player can reload, at the end of his turn
+        else if (!match.getFinalFrenzy() && currentPlayer.getWeapons().stream().anyMatch(w -> !w.getLoaded())) {
             turnEnd = true;
             receivingTypes.add(ReceivingType.ACTION);
             Action reload = new Reload();
@@ -200,6 +230,8 @@ public class GameController extends Observer {
             acceptableTypes.setSelectableActions(new SelectableOptions<>(Arrays.asList(reload), 1, 1, "Select an Action!"));
         }
         else turnEnd = true;
+
+        //Check if any powerUps can be played
         if (currentPlayer.getPowerUps().stream().
                 filter(p -> p.getApplicability() == Moment.OWNROUND).
                 count() >= 1) {
@@ -208,6 +240,7 @@ public class GameController extends Observer {
                     filter(p -> p.getApplicability() == Moment.OWNROUND).collect(Collectors.toList());
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(usablePowerups, 1, 1, "Select a PowerUp!"));
         }
+        //Check if player can end his action, after completing the maximum number of actions.
         if (turnEnd && !receivingTypes.isEmpty()) {
             receivingTypes.add(STOP);
             acceptableTypes.setStop(false, "End turn");
@@ -219,6 +252,7 @@ public class GameController extends Observer {
         timerCostrainedEventHandler.start();
     }
 
+    @Override
     public Match getMatch() {
         return match;
     }
@@ -259,7 +293,8 @@ public class GameController extends Observer {
      * Checks if there are spawnPoints AND any overkilled Player, to assign the overkill damage to one of the spawns.
      * If the currentPlayer is offline, the assignable damages will go to a random spawn.
      */
-    public void checkDominationOverKill() {
+    public void checkDominationOverKill(boolean toSkip) {
+        dominationOverkill = true;
         // Players which have been killed in this turn with overkill
         List<Player> overkillPlayers = match.
                 getPlayers().
@@ -271,8 +306,9 @@ public class GameController extends Observer {
                 stream().
                 filter(Player::getDominationSpawn).
                 collect(Collectors.toList());
+        int overkilledSize = overkillPlayers.size();
         // This if can be true only in domination mode
-        if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty() && !skip && currentPlayer.getOnline()) {
+        if (!spawnPoints.isEmpty() && !overkillPlayers.isEmpty() && !toSkip && currentPlayer.getOnline()) {
             acceptableTypes = new AcceptableTypes(Collections.singletonList(PLAYERS));
             for (Player current : overkillPlayers) {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
@@ -287,32 +323,33 @@ public class GameController extends Observer {
                 if (!timerCostrainedEventHandler.isBlocked()) {
                     Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
                     if (spawnPoint != null) {
-                        spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
+                        spawnPoint.receiveShot(currentPlayer, overkilledSize, 0, true);
                     }
                     break;
                 } else {
-                    overkillPlayers.remove(current);
+                    overkilledSize--;
                 }
             }
         }
         // Same conditions as before but player offline
         else if (!overkillPlayers.isEmpty() && !spawnPoints.isEmpty()) {
-            Player spawnPoint = spawnPoints.stream().findAny().get();
+            Player spawnPoint = spawnPoints.stream().findAny().orElse(spawnPoints.get(0));
             spawnPoint.receiveShot(currentPlayer, overkillPlayers.size(), 0, true);
         }
+        dominationOverkill = false;
     }
 
     /**
-     *
-     * @param skip
+     * Handles the ending of the turn.
+     * Handles the deposit of the overkill of players in DominationMode into SpawnPoints of choice.
+     * @param toSkip true when the player
      */
-    public synchronized void endTurn(boolean skip) {
+    public synchronized void endTurn(boolean toSkip) {
         currentPlayer.getActions().removeIf(p -> p.toString().equals("RELOAD"));
-        checkDominationOverKill();
+        checkDominationOverKill(toSkip);
         if (match.newTurn()) {
             matchEnd = true;
             sendWinners();
-            lobbyController.getGames().remove(this);
             return;
         }
         actionCounter = 0;
@@ -320,7 +357,7 @@ public class GameController extends Observer {
         spawnablePlayers = match.getPlayers().stream()
                 .filter(p -> p.getAlive() == ThreeState.FALSE)
                 .collect(Collectors.toList());
-
+        //If the match isn't ending, compute a new turn.
         if (!matchEnd) {
             if (!spawnablePlayers.isEmpty())
                 startSpawning();
@@ -331,8 +368,14 @@ public class GameController extends Observer {
 
     }
 
+    /**
+     * Send winners to the players, parsing them using {@link Match#getWinners()}.
+     * Handles putting players offline once the game ended.
+     * Sends to the player the list of the winners.
+     */
     public void sendWinners() {
         matchEnd = true;
+        lobbyController.getGames().remove(this);
         Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();
         StringBuilder stringBuffer = new StringBuilder("WINNERS,");
@@ -350,6 +393,11 @@ public class GameController extends Observer {
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));
     }
 
+    /**
+     * Handles the spawning of players after their death.
+     * <li>It selects a random point if they are offline.</li>
+     * <li>It handles the online players asynchronously.</li>
+     */
     public void startSpawning(){
         List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
         countDownLatch = new CountDownLatch(spawnablePlayers.size());
@@ -376,10 +424,18 @@ public class GameController extends Observer {
     }
 
 
+    /**
+     * Handles receiving a stop selection.
+     * <li>If {@link #dominationOverkill} is true, the latch's count get decreased</li>
+     * <li>If the current player is spawning at the end of the game, a random SpawnPoing gets selected</li>
+     * <li>If the skip is a non-reverse skip, the turn ends and the player gets eventually prompted.</li>
+     * <li>If the skip is a reverse skip, the turn ends and the player doesn't get prompted.</li>
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip){
-        currentPlayer.getVirtualView().getRequestDispatcher().clear();
-        if (currentPlayer.getAlive() == OPTIONAL) {
+        if (countDownLatch != null && countDownLatch.getCount() != 0 && dominationOverkill)
+            countDownLatch.countDown();
+        else if (currentPlayer.getAlive() == OPTIONAL) {
             this.skip = true;
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)));
         }

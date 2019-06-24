@@ -11,6 +11,9 @@ import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
+/**
+ * Generic interface used to handle the receiving of various events from the client.
+ */
 public interface EventHandler {
 
     void receiveAction(Action action);

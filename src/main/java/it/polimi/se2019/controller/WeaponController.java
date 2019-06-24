@@ -25,9 +25,9 @@ public class WeaponController extends Observer {
     private EffectController effectController;
     private Effect selectedEffect;
     private ActionController actionController;
-    TimerCostrainedEventHandler timerCostrainedEventHandler;
-    List<Ammo> stillToPay;
-    AcceptableTypes acceptableTypes;
+    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private List<Ammo> stillToPay;
+    private AcceptableTypes acceptableTypes;
 
     public WeaponController(Match sandboxMatch, Weapon weapon, List<Player> originalPlayers, ActionController actionController) {
         this.match = sandboxMatch;
@@ -115,7 +115,6 @@ public class WeaponController extends Observer {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
         selectedEffect = weapon.getEffects().stream().filter(e -> e.getName().equals(effect)).findFirst().orElse(null);
         if (selectedEffect != null) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             stillToPay = new ArrayList<>();
             stillToPay.addAll(selectedEffect.getCost());
             PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
@@ -167,7 +166,6 @@ public class WeaponController extends Observer {
 
     @Override
     public void updateOnStopSelection(ThreeState skip) {
-        curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             weapon.reset();
             actionController.updateOnStopSelection(skip.compare(acceptableTypes.isReverse()));

@@ -23,14 +23,18 @@ import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
 
 /**
- * This class contains all the logic related to the execution
- * of an effect after the player has chosen it.
+ * This class contains all the logic related to the execution of an effect.
+ * It gets called after a player has chosen it, or by the use of PowerUp.
  */
 public class EffectController extends Observer {
     private Board board;
     private Player player;
     private Weapon curWeapon;
     private Match curMatch;
+    /**
+     * The controller that called the class.
+     * It gets notified after the effect is computed.
+     */
     private Observer controller;
     private List<Player> originalPlayers;
 
@@ -42,8 +46,15 @@ public class EffectController extends Observer {
 
     private ActionType curActionType;
 
+    /**
+     * It indicates what is the PointOfView of the {@link #curActionType}.
+     */
     private Tile pointOfView;
 
+    /**
+     * Contains the player chosen by the client, or directly from the effect, that will be moved.
+     * It gets used if {@link #curMove} has {@link ObjectToMove#TARGETSOURCE}.
+     */
     private List<Player> playersToMove;
 
     private int dealDamageIndex;
@@ -52,12 +63,14 @@ public class EffectController extends Observer {
 
     private int orderIndex;
 
+    /**
+     * Flag to indicate whether or not a {@link Move} with {@link ObjectToMove#TARGETSOURCE} is computing.
+     */
     private boolean askingForSource;
 
     private Player currentEnemy;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    private CountDownLatch countDownLatch;
     EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, Observer controller){
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -87,22 +100,26 @@ public class EffectController extends Observer {
      void nextStep(){
         playersToMove = new ArrayList<>();
         orderIndex+=1;
+        //Checks if effect completed
         if(orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
             if(curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
+                //Check if the move need to compute the source or destination first
                 if(curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null && curMove.getObjectToMove().equals(ObjectToMove.TARGETSOURCE))
                     processDirection(curMove.getTargetSource());
                 else
                     processDirection(curMove.getTargetDestination());
-            }else{
+            }
+            else {
                 dealDamageIndex += 1;
                 curDealDamage = curEffect.getDamages().get(dealDamageIndex);
                 processDirection(curDealDamage.getTarget());
             }
         }
-        else{
+        //Notifies the upper level controller of conclusion.
+        else {
             //Unit test purposes check
             if (controller != null)
                 controller.updateOnConclusion();
@@ -128,7 +145,6 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnDirection(Direction direction){
-        player.getVirtualView().getRequestDispatcher().clear();
         curEffect.setDirection(direction);
         processStep();
     }
@@ -142,7 +158,6 @@ public class EffectController extends Observer {
     public void updateOnPlayers(List<Player> originalPlayers){
         Target target;
         List<Player> players = getSandboxPlayers(originalPlayers);
-        player.getVirtualView().getRequestDispatcher().clear();
         if (curActionType == MOVE) {
             target = curMove.getTargetSource();
         } else {
@@ -173,7 +188,6 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnTiles(List<Tile> tiles){
-        player.getVirtualView().getRequestDispatcher().clear();
         if(curActionType == MOVE) {
             if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
                 playersToMove.forEach(p -> p.setTile(tiles.get(0)));
@@ -205,7 +219,6 @@ public class EffectController extends Observer {
     public void updateOnRoom(Color room){
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
-        player.getVirtualView().getRequestDispatcher().clear();
         possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
         handleTargeting(curDealDamage.getTargeting(),possibleTargets);
         checkPowerUps(possibleTargets);
@@ -214,20 +227,19 @@ public class EffectController extends Observer {
 
     /**
      * Handles receiving a stop from the client.
-     * No non-reverting stops are accepted into the {@link EffectController}, so it always reverts the action
+     * No non-reverting stops are accepted into the {@link EffectController}, so it always reverts the action.
      * @param skip
      */
     @Override
     public void updateOnStopSelection(ThreeState skip){
-        player.getVirtualView().getRequestDispatcher().clear();
         controller.updateOnStopSelection(skip);
     }
 
     /**
      * Ask the player for a Direction if the current target requires one,
      * otherwise go on with the effect
-     * @param target the target of the current subeffect
-     */
+     * @param target the target of the current SubAction
+     * */
     private void processDirection(Target target){
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
@@ -333,7 +345,8 @@ public class EffectController extends Observer {
                 List<Color> selectableRoom = board.getTiles().
                         stream().
                         flatMap(List::stream).
-                        filter(curDealDamage.getTarget().getFilterRoom(board, pointOfView)).
+                        filter(Objects::nonNull).
+                        filter(curDealDamage.getTarget().getFilterRoom(board, pointOfView)). //Filter the tiles using the current Target
                         map(Tile::getRoom).
                         distinct().
                         collect(Collectors.toList());
@@ -348,11 +361,11 @@ public class EffectController extends Observer {
             case SINGLE:
                 List<Player> players = playerTargets(curDealDamage.getTarget());
                 if (players.isEmpty()) {
+                    skip = true;
                     if (curDealDamage.getTarget().getMinTargets() == 0) {
                         nextStep();
                     }
                     else {
-                        skip = true;
                         updateOnStopSelection(OPTIONAL);
                     }
                 }
@@ -390,10 +403,13 @@ public class EffectController extends Observer {
     }
 
     /**
-     * Checks the current target and select the players to be moved if no input is needed
+     * Checks the current target and select the players to be moved if no input is needed.
+     * Additional checks if the targets imposes to hit players in {@link Weapon#targetPlayers} or {@link Weapon#blackListPlayers}.
+     * Asks the players to move to the Player if needed.
      * @param target the current Move target
      */
     private void processTargetSource(Target target){
+        //Check if target imposes to hit list players.
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
             askingForSource = false;
             playersToMove = new ArrayList<>(curWeapon.getTargetPlayers());
@@ -404,10 +420,10 @@ public class EffectController extends Observer {
             playersToMove = new ArrayList<>(curWeapon.getBlackListPlayers());
             filterPlayers(playersToMove, target);
         }
+        //Handles to ask the players to move to the current player
         else {
             List<Player> players = new ArrayList<>(curMatch.getPlayers());
             filterPlayers(players, target);
-
             List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.PLAYERS));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             int min = target.getMinTargets();
@@ -436,6 +452,7 @@ public class EffectController extends Observer {
      * @return
      */
     private List<Player> playerTargets(Target target) {
+        //Return empty if LASTPLAYER is used with a domination Spawn.
         if (!checkPointOfView(target))
             return new ArrayList<>();
         List<Player> acceptablePlayer = curMatch.getPlayers().
@@ -453,25 +470,6 @@ public class EffectController extends Observer {
     }
 
     /**
-     * Returns true if the list of Player respects the parameters
-     * specified in the Target.
-     * @param target the Target to get the filters from
-     * @param players a List of Player to be checked
-     * @return <code>true</code> if every player satisfies the parameters
-     *         <code>false</code> otherwise.
-     */
-    private boolean checkPlayerTargets(Target target, List<Player> players){
-        boolean result;
-        checkPointOfView(target);
-        result = players.stream()
-                         .map(Player::getTile)
-                         .allMatch(target.getFilterTiles(board,pointOfView, curEffect.getDirection())) &&
-                 players.stream()
-                         .allMatch((curWeapon!=null)?target.getPlayerListFilter(player,curWeapon.getTargetPlayers(),curWeapon.getBlackListPlayers()): p -> true);
-        return result;
-    }
-
-    /**
      * Checks what tiles can be selected, following {@code #target}.
      * @param target
      * @return list of selectable tiles
@@ -484,20 +482,12 @@ public class EffectController extends Observer {
                 filter(target.getFilterTiles(board,pointOfView,curEffect.getDirection())).
                 collect(Collectors.toList());
     }
-    /**
-     * Return true if the tiles respect the parameters specified
-     * in Target
-     * @param target the Target to get the filters from
-     * @param tiles the tiles to be verified
-     * @return <code>true</code> if the tiles respect the filters
-     *         <code>false</code> otherwise.
-     */
-    private boolean checkTileTargets(Target target,List<Tile> tiles){
-        checkPointOfView(target);
-        return tiles.stream()
-                .allMatch(target.getFilterTiles(board,pointOfView,curEffect.getDirection()));
-    }
 
+    /**
+     * Sets the players in the lists after the weapon gets used, if the current SubEffect targets them.
+     * @param targeting specify how to target them, using the Target
+     * @param players list of moved / hit players to target
+     */
     private void handleTargeting(ThreeState targeting, List<Player> players){
         if(targeting == TRUE){
             curWeapon.setTargetPlayers(players);
@@ -506,8 +496,8 @@ public class EffectController extends Observer {
     }
 
     /**
-     * Check the pointOfView required by the target for the
-     * current sub effect and set it accordingly.
+     * Check the pointOfView required by the target for the current sub effect and set it accordingly.
+     * Handles the case when {@link Target#pointOfView} is {@link PointOfView#LASTPLAYER}, and a Domination spawn is hit (t.h.o.r)
      * @param target
      */
     private boolean checkPointOfView(Target target){
@@ -544,7 +534,9 @@ public class EffectController extends Observer {
      * @param players
      */
     private void checkPowerUps(List<Player> players){
+        CountDownLatch countDownLatch;
         List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
+        //Checks DAMAGING PowerUps
         for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
             if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
                 currentEnemy = p;
@@ -560,17 +552,17 @@ public class EffectController extends Observer {
                 catch (Exception e) {
                     Logger.log(Priority.DEBUG, "Ended handler powerup damaging");
                 }
-                player.getVirtualView().getRequestDispatcher().clear();
             }
             else break;
         }
+
+        //Handles damaged players that have a DAMAGED powerup
         List<Player> damagedPlayers = players.stream().filter(p -> p.getOnline() && p.hasPowerUp(Moment.DAMAGED)).collect(Collectors.toList());
         countDownLatch = new CountDownLatch(damagedPlayers.size());
         for(Player p : damagedPlayers){
             List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Select from 0 and %d powerUps!", applicable.size())));
-            countDownLatch = new CountDownLatch(1);
             Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
             TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
             temp.start();
@@ -591,7 +583,6 @@ public class EffectController extends Observer {
      * @param players
      */
     private void updateMoveOnPlayers(List<Player> players){
-        player.getVirtualView().getRequestDispatcher().clear();
         if (players.isEmpty()) {
             nextStep();
             return;
@@ -603,6 +594,7 @@ public class EffectController extends Observer {
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
         List<Tile> tiles = tileTargets(curMove.getTargetDestination());
         acceptableTypes = new AcceptableTypes(receivingTypes);
+        //Handles when player try to move a domination spawn - remove every tile but the one the domination spawn is in.
         if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
             Tile spawnTile = playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("Error in event!")).getTile();
             tiles.removeIf(tile -> !tile.equals(spawnTile));
@@ -656,7 +648,6 @@ public class EffectController extends Observer {
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps){
-        player.getVirtualView().getRequestDispatcher().clear();
         int damagesAmount;
         int marksAmount;
         powerUps = powerUps.stream().filter(powerUp -> player.getPowerUps().contains(powerUp) && powerUp.getApplicability() == Moment.DAMAGING).collect(Collectors.toList());

@@ -61,6 +61,11 @@ public class EventHelper {
         return temp;
     }
 
+    /**
+     * Return a list of {@link Tile} from a list of {@link ViewTileCoords}.
+     * @param viewTiles list to convert
+     * @return converted list
+     */
     public List<Tile> getTilesFromViewTiles(List<ViewTileCoords> viewTiles){
         Board board = match.getBoard();
         List<Tile> tiles = viewTiles.stream()
@@ -89,7 +94,7 @@ public class EventHelper {
                         .filter(w -> w.getName().equals(weapon))
                         .findAny().orElse(null));
         if(realWeapon == null){
-            throw new IncorrectEvent("Arma non presente");
+            throw new IncorrectEvent("Weapon is not present!");
         }
         return realWeapon;
     }
@@ -107,25 +112,35 @@ public class EventHelper {
             Color relatedColor = Color.valueOf(room);
             if (colors.contains(relatedColor))
                 return relatedColor;
-            else throw new IncorrectEvent("Il colore non è presente nella mappa!");
+            else throw new IncorrectEvent("Color is not present in the map!");
         }
         catch (IllegalArgumentException e) {
-            throw new IncorrectEvent("Il colore è sbagliato!");
+            throw new IncorrectEvent("Color is wrong!");
         }
     }
 
+    /**
+     * Get the corresponding action from a string, parsing it from the currentPlayer's action
+     * @param action
+     * @return
+     */
     public Action getActionFromString(String action) {
         List<Action> actions = match.getPlayers().get(match.getCurrentPlayer()).getActions();
         return  actions.stream().
-                filter(a -> a.toString().equals(action)).findFirst().orElseThrow(() -> new IncorrectEvent("Azione non presente!"));
+                filter(a -> a.toString().equals(action)).findFirst().orElseThrow(() -> new IncorrectEvent("Action doesn't exist!"));
     }
 
+    /**
+     * Get the current direction, parsing it from a string.
+     * @param direction
+     * @return
+     */
     public Direction getDirectionFromString(String direction) {
         try {
             return Direction.valueOf(direction.toUpperCase());
         }
         catch (IllegalArgumentException e) {
-            throw new IncorrectEvent("La direzione non esiste!");
+            throw new IncorrectEvent("Direction doesn't exist!");
         }
     }
 

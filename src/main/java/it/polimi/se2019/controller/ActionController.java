@@ -29,11 +29,25 @@ import static it.polimi.se2019.model.actions.SubAction.RELOAD;
  */
 public class ActionController extends Observer {
     private GameController gameController;
+
+    /**
+     * Original match, kept without changes till the conclusion of an action.
+     */
     private Match originalMatch;
+    /**
+     * Sandbox match, created when an action starts.
+     * The original match gets restored with the changes once the action completes.
+     */
     private Match sandboxMatch;
     private WeaponController weaponController;
+    /**
+     * Current computing {@link SubAction}, part of the {@link #curAction}
+     */
     private SubAction curSubAction;
     private Action curAction;
+    /**
+     * Index of the current executing SubAction, used to keep track of the state.
+     */
     private int subActionIndex = 0;
     private Player curPlayer;
     private Weapon selectedWeapon;
@@ -55,14 +69,14 @@ public class ActionController extends Observer {
     }
 
     /**
-     * Handles receiving the chosen action from the player, start to compute it.
+     * Handles receiving the chosen action from the player.
+     * Once called, it computes the action till the completion, using a sandboxed match to keep the model untouched until conclusion.
      * @param action chosen by the {@link #curPlayer}
      */
     @Override
     public void updateOnAction(Action action){
         cloneMatch();
         if(curPlayer.getActions().contains(action)) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             curPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
             curAction = action;
             nextStep();
@@ -81,7 +95,6 @@ public class ActionController extends Observer {
      */
     @Override
     public void updateOnWeapon(Weapon weapon){
-        curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (curSubAction == GRAB) {
             if (curPlayer.getWeapons().size() == Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
                 subActionIndex--;
@@ -91,6 +104,7 @@ public class ActionController extends Observer {
                 nextStep();
             }
             else {
+                //Add the discarded weapon to the Tile
                 if (toDiscard != null) {
                     curPlayer.getTile().addWeapon(toDiscard);
                 }
@@ -100,10 +114,8 @@ public class ActionController extends Observer {
                 startPayingProcess();
             }
         } else if (curSubAction == SubAction.SHOOT) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
         } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             selectedWeapon = weapon;
             stillToPay.addAll(weapon.getCost());
             startPayingProcess();
@@ -119,7 +131,6 @@ public class ActionController extends Observer {
     public void updateOnTiles(List<Tile> tiles){
         if (curSubAction == SubAction.MOVE && !tiles.isEmpty()) {
             Tile tile = tiles.get(0);
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             curPlayer.setTile(tile);
             nextStep();
         }
@@ -332,6 +343,10 @@ public class ActionController extends Observer {
         }
     }
 
+    /**
+     * It handles the conclusion of an action, or a {@link WeaponController} compute.
+     * Passes to the next step.
+     */
     @Override
     public void updateOnConclusion(){
         weaponController = null;
@@ -345,7 +360,6 @@ public class ActionController extends Observer {
      */
     @Override
     public void updateOnStopSelection(ThreeState skip){
-        curPlayer.getVirtualView().getRequestDispatcher().clear();
         if (skip.toBoolean() || acceptableTypes.isReverse()) {
             if (selectedWeapon != null)
                 selectedWeapon.getEffects().forEach(e -> e.setActivated(false));

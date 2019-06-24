@@ -110,10 +110,7 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendTile(tile);
     }
 
-    /**
-     * Sending a TotalUpdate to everyone with the same arguments does not make sense,
-     * players could see other players' hidden attributes
-     */
+    @Deprecated
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,

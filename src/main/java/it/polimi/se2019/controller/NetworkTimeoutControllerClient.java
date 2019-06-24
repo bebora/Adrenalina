@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.view.Status;
 import it.polimi.se2019.view.View;
 
 public class NetworkTimeoutControllerClient extends Thread{
@@ -14,12 +15,12 @@ public class NetworkTimeoutControllerClient extends Thread{
 
     @Override
     public void run() {
-        int timeout = 5000;
+        int timeout = 50000;
         do {
             try {
                 Thread.sleep(timeout);
                 long viewLastRequest = view.getLastRequest();
-                if (viewLastRequest == lastRequest) {
+                if (viewLastRequest == lastRequest || view.getStatus() == Status.END) {
                     view.disconnect();
                     checkingTimeout = false;
                 }

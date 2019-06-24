@@ -34,11 +34,9 @@ public class DamagedController extends Observer {
     /**
      * Handles receiving powerUps from the client, checking if valid and damaging the related player.
      * @param powerUps chosen cards to use
-     *
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
-        damagedPlayer.getVirtualView().getRequestDispatcher().clear();
         for (PowerUp p : powerUps) {
             if (applicable.contains(p)) {
                 damagedPlayer.discardPowerUp(p, false);
@@ -48,9 +46,12 @@ public class DamagedController extends Observer {
         countDownLatch.countDown();
     }
 
+    /**
+     * Handles receiving a stop in case of end of turn.
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip) {
-        damagedPlayer.getVirtualView().getRequestDispatcher().clear();
         countDownLatch.countDown();
     }
 }

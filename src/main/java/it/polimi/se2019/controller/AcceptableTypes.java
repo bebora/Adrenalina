@@ -16,6 +16,7 @@ import java.util.List;
  * Container class used in Controller to store accepted information from the client.
  * Every options contains the prompt to show to the client, the possible choices, the minimum and maximum number of options.
  * {@link #acceptedTypes} contains the list of ReceivingType of which the related SelectableOptions is not null.
+ * Every {@link SelectableOptions} contains the allowed input that can be sent from the client, related to the acceptedType.
  */
 public class AcceptableTypes {
     private SelectableOptions<Action> selectableActions;
@@ -27,7 +28,6 @@ public class AcceptableTypes {
     private SelectableOptions<Weapon> selectableWeapons;
     private SelectableOptions<Ammo> selectableAmmos;
     private SelectableOptions<Direction> selectableDirections;
-
     private boolean reverse;
     private String stopPrompt;
     private List<ReceivingType> acceptedTypes;

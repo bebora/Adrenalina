@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Visitor used by socket server implementation that apply events received on a RequestDispatcher
+ * Visitor used by socket server implementation that apply events received on a RequestDispatcher.
+ * It wraps the methods directly called using RMI.
  */
 public class EventVisitor {
     private RequestDispatcher requestHandler;

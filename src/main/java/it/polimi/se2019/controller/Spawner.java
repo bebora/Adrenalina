@@ -13,6 +13,10 @@ import it.polimi.se2019.model.cards.PowerUp;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Controller class used for handling the spawning of dead players.
+ * {@link #countDownLatch} assures asynchronous behaviour.
+ */
 public class Spawner extends Observer {
     private Player playerToSpawn;
     private Board board;
@@ -32,9 +36,12 @@ public class Spawner extends Observer {
         return playerToSpawn.getMatch();
     }
 
+    /**
+     * Handles receiving the selected discarded PowerUp from the player.
+     * @param powerUps gets discarded from player, and the spawning happens on {@link PowerUp#getDiscardAward()} spawn Tile.
+     */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
-        playerToSpawn.getVirtualView().getRequestDispatcher().clear();
         PowerUp discarded = playerToSpawn.getPowerUps().stream().filter(p -> p.equals(powerUps.get(0))).findFirst().orElseThrow(() -> new IncorrectEvent("Can't get the powerUp"));
         playerToSpawn.getMatch().getBoard().getPowerUps().addToDiscarded(discarded);
         playerToSpawn.getPowerUps().remove(discarded);
@@ -47,6 +54,11 @@ public class Spawner extends Observer {
         countDownLatch.countDown();
     }
 
+    /**
+     * Handles not receiving the powerUp.
+     * It chooses a random PowerUp to discard.
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         int rnd = random.nextInt(playerToSpawn.getPowerUps().size());

@@ -3,7 +3,6 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.network.ViewReceiverInterface;
-import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.VirtualView;
 
@@ -21,10 +20,10 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     /**
      * Handles connection from client to servers
      * Creates a virtualView, set the parameters and uses the {@link #lobbyController} methods to connect
-     * @param username
-     * @param password
-     * @param existingGame
-     * @param mode
+     * @param username chosen from the client
+     * @param password chosen from the client, saved in the server hashed
+     * @param existingGame whether the client is reconnecting
+     * @param mode the mode chosen by the client
      * @param receiver client to interface used for callbacks
      * @throws RemoteException
      */
@@ -32,21 +31,21 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
     public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException{
         VirtualView virtualView = new VirtualView(lobbyController);
         virtualView.setUsername(username);
-        ViewUpdater updater = new ViewUpdaterRMI(receiver, virtualView);
+        ViewUpdaterRMI updater = new ViewUpdaterRMI(receiver, virtualView);
         virtualView.setViewUpdater(updater, existingGame);
         if (!existingGame)
             lobbyController.connectPlayer(username, password, mode, virtualView);
         else
             lobbyController.reconnectPlayer(username, password, virtualView);
-        ((ViewUpdaterRMI) updater).getPinger().start();
+        updater.getPinger().start();
     }
 
     /**
      * Handles serving the related object that every client uses to communicate with the server
      * Parse the {@link #lobbyController} searching for the related user.
-     * @param username
-     * @param password
-     * @return
+     * @param username login username used when signing up for a game
+     * @param password password used for signing up for a game
+     * @return the RequestDispatcher object needed for the client to send events.
      * @throws RemoteException
      */
     @Override

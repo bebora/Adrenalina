@@ -14,6 +14,9 @@ import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.List;
 
+/**
+ * Generic Controller - observer class used for receiving the updates from the {@link RequestDispatcher}
+ */
 public class Observer {
     public void updateOnTiles(List<Tile> tiles) {
         throw new IncorrectEvent("Can't accept tiles!");

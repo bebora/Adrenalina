@@ -22,8 +22,6 @@ import static it.polimi.se2019.model.ThreeState.TRUE;
 public class PaymentController extends Observer{
     private Observer observer;
     private List<Ammo> stillToPay;
-    private Set<Ammo> ammoTypes;
-
     private Player curPlayer;
     private AcceptableTypes acceptableTypes;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
@@ -48,9 +46,11 @@ public class PaymentController extends Observer{
      */
     public void startPaying() {
         String prompt;
+        //Conclude and notify observer of done payment if empty
         if (stillToPay.isEmpty()) {
             observer.concludePayment();
         }
+        //Handles the payment using powerups and/or ammos.
         else {
             Set<Ammo> toPay = new HashSet<>(stillToPay);
             stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
@@ -92,7 +92,6 @@ public class PaymentController extends Observer{
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
         if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
-            curPlayer.getVirtualView().getRequestDispatcher().clear();
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
             curPlayer.getAmmos().removeIf(a -> stillToPay.remove(a));
             if (stillToPay.isEmpty()) {
@@ -105,9 +104,13 @@ public class PaymentController extends Observer{
         }
     }
 
+    /**
+     * Handles the stop for elapsed time.
+     * It notifies the upper observer with a stop.
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip) {
-        curPlayer.getVirtualView().getRequestDispatcher().clear();
         observer.updateOnStopSelection(TRUE);
     }
 }

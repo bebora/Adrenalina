@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
@@ -39,8 +40,9 @@ public class LobbyController{
 
     /**
      * Reconnect a player to a game already started
-     * @param username
-     * @param password
+     * Checks if the player is into the registered games, parsing the related {@link Player#token}.
+     * @param username the requested username
+     * @param password related password
      * @param view Related client's VirtualView
      */
     public synchronized void reconnectPlayer(String username, String password, VirtualView view) {
@@ -53,19 +55,23 @@ public class LobbyController{
                     filter(p -> !p.getOnline()).
                     map(Player::getToken).
                     collect(Collectors.toList()));
+             // If found, the player gets reconnected.
             if (allTokens.contains(token)) {
                 player = game.getMatch().getPlayers().
-                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElseThrow(() -> new AuthenticationErrorException());
-                player.setOnline(true);
+                        stream().filter(p -> p.getToken().equals(token)).findFirst().orElseThrow(AuthenticationErrorException::new);
                 RequestDispatcher requestDispatcher = player.getVirtualView().getRequestDispatcher();
                 view.setRequestDispatcher(requestDispatcher);
                 ownGame = game.getMatch();
                 player.setVirtualView(view);
                 player.setOnline(true);
                 view.getViewUpdater().sendPopupMessage("Reconnected succesfully!");
-                player.getVirtualView().getViewUpdater().sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(),
+                //Send total update to the player
+                player.getVirtualView().
+                        getViewUpdater().
+                        sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(),
                         view.getIdView(), player.getPoints(), player.getPowerUps(),
                         player.getWeapons(), ownGame.getPlayers().get(ownGame.getCurrentPlayer()));
+                //Send current options to the player
                 player.getVirtualView().getRequestDispatcher().updateView();
                 break;
             }
@@ -79,9 +85,9 @@ public class LobbyController{
      * Add a player to the waiting Players list, linking the VirtualView to the Player.
      * Manage the start of the timeout to start the game if enough players are in.
      * Manage the start of the timer in case of {@link #waitingPlayers} greater or equal than 3; start game if they are 5.
-     * @param username
-     * @param password
-     * @param mode
+     * @param username chosen username
+     * @param password chosen password
+     * @param mode chosen mode
      */
     public synchronized void connectPlayer(String username, String password, String mode, VirtualView view) {
         mode = mode.toUpperCase();
@@ -112,14 +118,13 @@ public class LobbyController{
             if (modeWaiting.size() == 3) {
                 Timer timer = new Timer();
                 waitingTimers.put(Mode.valueOf(mode), timer);
-                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 5000);
+                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)),
+                        Integer.parseInt(GameProperties.getInstance().getProperty("lobby_time")));
                 Logger.log(Priority.DEBUG, "TIMER STARTED");
             }
             else if (modeWaiting.size() >= 5) {
                 waitingTimers.get(Mode.valueOf(mode)).cancel();
                 startGame(Mode.valueOf(mode));
-                /*Timer timer = new Timer();
-                timer.schedule(new LobbyTask(this, Mode.valueOf(mode)), 0);*/
             }
         }
     }
@@ -164,8 +169,10 @@ public class LobbyController{
             return;
         }
         else {
-                playing = new ArrayList<>(playing);
+            playing = new ArrayList<>(playing);
         }
+
+        //Setup the game
         waitingPlayers.get(mode).removeAll(playing);
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         String nameDir = classloader.getResource("boards").getPath();

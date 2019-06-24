@@ -33,22 +33,32 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     private transient AcceptableTypes acceptableTypes;
     final transient Object lock = new Object();
 
+    /**
+     * Clear the current accepted types, sending the update to the related view.
+     */
     public void clear() {
         synchronized (lock) {
             for (EventHandler eventHandler : observerTypes.values()) {
                 eventHandler.setBlocked(true);
             }
             observerTypes.clear();
-            AcceptableTypes acceptableTypes = new AcceptableTypes(new ArrayList<>());
+            acceptableTypes = new AcceptableTypes(new ArrayList<>());
             viewUpdater.sendAcceptableType(acceptableTypes);
         }
     }
 
+    /**
+     * Update the view with selectable options, and sets them as acceptableTypes.
+     * @param acceptableTypes accepted types and options
+     */
     public void updateView(AcceptableTypes acceptableTypes) {
         this.acceptableTypes = acceptableTypes;
         viewUpdater.sendAcceptableType(acceptableTypes);
     }
 
+    /**
+     * Update the view with current selectable options.
+     */
     public void updateView() {
         viewUpdater.sendAcceptableType(acceptableTypes);
     }
@@ -57,6 +67,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         eventHelper = new EventHelper(match, player);
     }
 
+    /**
+     * Set a new view as the linked view in this class.
+     * Restart the {@link #networkTimeoutController}
+     * @param viewUpdater
+     * @param linkedVirtualView
+     */
     public void setView(ViewUpdater viewUpdater, View linkedVirtualView) {
         this.viewUpdater = viewUpdater;
         this.linkedVirtualView = linkedVirtualView;
