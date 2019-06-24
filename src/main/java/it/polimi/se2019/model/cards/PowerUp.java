@@ -21,11 +21,6 @@ public class PowerUp {
 	private Moment applicability;
 
 	/**
-	 * Player saved in the PowerUp temporarily in case of DAMAGING or DAMAGED status
-	 */
-	private Player player;
-
-	/**
 	 * Effect obtained by using the PowerUp
 	 */
 	private Effect effect;
@@ -60,7 +55,7 @@ public class PowerUp {
 			this.name = name;
 			return this;
 		}
-		public  PowerUp build(){
+		public PowerUp build(){
 			return new PowerUp(this);
 		}
 	}

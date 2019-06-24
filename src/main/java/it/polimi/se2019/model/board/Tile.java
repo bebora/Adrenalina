@@ -9,28 +9,25 @@ import java.util.*;
 public class Tile {
 
 	public static class Builder {
-		/**
-		 *
-		 */
 		private Color sRoom;
 		private int sPosx;
 		private int sPosy;
 		private Boolean sSpawn;
 		private List<Weapon> weapons = new ArrayList<>();
-		private AmmoCard ammoCard;
+		private AmmoCard ammoCard = null;
 
 		public Builder setRoom(Color room) {
 			sRoom = room;
 			return this;
 		}
 
-		public Builder setpos(int posx, int posy) {
+		public Builder setPos(int posx, int posy) {
 			sPosx = posx;
 			sPosy = posy;
 			return this;
 		}
 
-		public Builder setspawn(Boolean spawn) {
+		public Builder setSpawn(Boolean spawn) {
 			sSpawn = spawn;
 			return this;
 		}
@@ -50,13 +47,37 @@ public class Tile {
 		ammoCard = builder.ammoCard;
 	}
 
+	/**
+	 * Color of the room in which the tile is
+	 */
 	private Color room;
+
+	/**
+	 * x coordinate of the tile
+	 */
 	private int posx;
+
+	/**
+	 * y coordinate of the tile
+	 */
 	private int posy;
+
+	/**
+	 * True: the tile contains a spawnpoint
+	 * False: the tile does not contain any spawnpoint
+	 */
 	private Boolean spawn;
 
+	/**
+	 * Weapons contained in tile spawnpoint if {@code spawn} is True
+	 */
 	private List<Weapon> weapons;
+
+	/**
+	 * Ammo card contained in tile if {@code spawn} is False
+	 */
 	private AmmoCard ammoCard;
+
 	public Boolean isSpawn() {
 		return spawn;
 	}
@@ -73,6 +94,12 @@ public class Tile {
 		return posx;
 	}
 
+	/**
+	 * Manhattan distance between two tiles
+	 * @param tile1 first tile
+	 * @param tile2 second tile
+	 * @return Manhattan distance between the two tiles
+	 */
 	public static int cabDistance(Tile tile1, Tile tile2) {
 		return Math.abs(tile1.getPosx() - tile2.getPosx()) + Math.abs(tile1.getPosy() - tile2.getPosy());
 	}
@@ -89,14 +116,15 @@ public class Tile {
 		return ammoCard;
 	}
 
-	public int getWeaponsNumber() {
-		return weapons.size();
-	}
-
 	public List<Weapon> getWeapons() {
 		return weapons;
 	}
 
+	/**
+	 * Get the {@code weapon} and remove it from the tile if {@code} spawn is True
+	 * @param weapon Weapon which will be grabbed
+	 * @return {@code weapon}
+	 */
 	public Weapon grabWeapon(Weapon weapon) {
 		if (isSpawn())
 			weapons.remove(weapon);
@@ -105,6 +133,10 @@ public class Tile {
 		return weapon;
 	}
 
+	/**
+	 * Get the ammo card and remove it from the tile if {@code} spawn is False
+	 * @return ammo card in tile
+	 */
 	public AmmoCard grabAmmoCard() {
 		AmmoCard grabbed;
 		if (!isSpawn()) {

@@ -107,7 +107,7 @@ public class Target {
 		this.differentSquare = builder.differentSquare;
 		this.samePlayerRoom = builder.samePlayerRoom;
 		this.throughWalls = builder.throughWalls;
-		this. pointOfView = builder.pointOfView;
+		this.pointOfView = builder.pointOfView;
 	}
 
 	/**
@@ -409,7 +409,4 @@ public class Target {
                 setPointOfView(pointOfView).
                 setCheckTargetList(checkBlackList).build();
 	}
-
-
-
 }

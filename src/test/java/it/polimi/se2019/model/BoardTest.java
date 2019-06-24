@@ -94,14 +94,14 @@ class BoardTest {
         //Tests that weapons refreshes only when needed
         test.refreshWeapons();
         for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList())) {
-            assertEquals(t.getWeaponsNumber(),3);
+            assertEquals(t.getWeapons().size(),3);
         }
 
         //Tests that weapons get refreshed correctly
         test.getTile(0,2).getWeapons().remove(0);
         test.refreshWeapons();
         for (Tile t : test.getTiles().stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList())) {
-            assertEquals(t.getWeaponsNumber(),3);
+            assertEquals(t.getWeapons().size(),3);
         }
     }
 

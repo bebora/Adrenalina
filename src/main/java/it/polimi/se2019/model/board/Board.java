@@ -266,7 +266,7 @@ public class Board {
 	public void refreshWeapons() {
 		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList());
 		for (Tile t : spawnTiles) {
-			int numberWeapons = t.getWeaponsNumber();
+			int numberWeapons = t.getWeapons().size();
 			for (int i = 0; i < 3 - numberWeapons; i++)
 			    t.addWeapon(drawWeapon());
 		}

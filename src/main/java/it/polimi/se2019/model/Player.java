@@ -23,7 +23,6 @@ import static java.lang.Boolean.FALSE;
 public class Player {
 
 	public Player(String token) {
-		editing = new Object();
 		this.firstPlayer = false;
 		this.token = token;
 		id = UUID.randomUUID().toString();
@@ -98,10 +97,6 @@ public class Player {
 		//sendTotalUpdate is not needed due to being already sent in match.restoreMatch()
 	}
 
-	private boolean skipping;
-
-	private Object editing;
-
 	private Color color;
 
 	private boolean firstPlayer;
@@ -113,7 +108,7 @@ public class Player {
 	/**
 	 * Authentication token saved in this format: {username}$salt${HMAC(password+salt)}
 	 */
-	String token;
+	private String token;
 
 	/**
 	 * Virtual View of the player
@@ -170,10 +165,6 @@ public class Player {
 	 */
 	private List<Weapon> weapons;
 
-	/**
-	 * How many kills the player did in the current turn
-	 */
-	private int kills;
 
 	/**
 	 * Stores how many actions have been made by the player in current turn
@@ -202,10 +193,6 @@ public class Player {
 	 */
 	private Boolean dominationSpawn;
 
-	/**
-	 * Number of time that the player has been killed before FinalFrenzy
-	 */
-	private int trackSkulls;
 
 	public void setDominationSpawn(Boolean dominationSpawn) {
 		this.dominationSpawn = dominationSpawn;

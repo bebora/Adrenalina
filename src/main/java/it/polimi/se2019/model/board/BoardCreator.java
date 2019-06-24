@@ -42,9 +42,9 @@ public class BoardCreator {
                             temp.add(null);
                         else {
                             temp.add(new Tile.Builder().
-                                    setpos(i, line).
+                                    setPos(i, line).
                                     setRoom(Color.initialToColor(curLine.charAt(i))).
-                                    setspawn(Character.isUpperCase(curLine.charAt(i))).
+                                    setSpawn(Character.isUpperCase(curLine.charAt(i))).
                                     build());
                         }
                     }

@@ -98,35 +98,15 @@ public class Move {
 		return targetDestination;
 	}
 
-	public void setTargetDestination(Target targetDestination) {
-		this.targetDestination = targetDestination;
-	}
-
 	public ThreeState getTargeting() {
 		return targeting;
-	}
-
-	public void setTargeting(ThreeState targeting) {
-		this.targeting = targeting;
 	}
 
 	public Target getTargetSource() {
 		return targetSource;
 	}
 
-	public void setTargetSource(Target targetSource) {
-		this.targetSource = targetSource;
-	}
-
-	public void setObjectToMove(ObjectToMove objectToMove) {
-		this.objectToMove = objectToMove;
-	}
-
 	public ObjectToMove getObjectToMove(){ return this.objectToMove; }
-
-	public void setPrompt(String prompt) {
-		this.prompt = prompt;
-	}
 
 	public String getPrompt() {
 		return prompt;

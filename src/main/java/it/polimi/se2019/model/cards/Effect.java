@@ -9,10 +9,6 @@ import java.util.*;
  */
 public class Effect {
 
-
-	public Effect() {
-	}
-
 	/**
 	 * List of moves that make up the Effect
 	 */

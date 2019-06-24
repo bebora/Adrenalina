@@ -7,11 +7,6 @@ import java.util.*;
 
 public class Weapon {
 
-
-	public Weapon() {
-
-	}
-
 	public static class Builder {
 
 		private List<Effect> effects;
@@ -20,7 +15,6 @@ public class Weapon {
 		private List<Player> blackListPlayers = new ArrayList<>();
 		private Boolean loaded = true;
 		private String name;
-
 
 
 		public Builder(List<Effect> effects) {
@@ -43,7 +37,6 @@ public class Weapon {
 			this.name = name;
 			return this;
 		}
-
 
 		public Weapon build() {
 			return new Weapon(this);
@@ -115,6 +108,9 @@ public class Weapon {
 		this.loaded = loaded;
 	}
 
+	/**
+	 * Make all effects usable again for next turn and clear targetList and blackList
+	 */
 	public void reset() {
 		effects.forEach(e -> {
 			e.setActivated(false);
