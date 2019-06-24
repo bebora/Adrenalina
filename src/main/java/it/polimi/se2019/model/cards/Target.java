@@ -388,6 +388,11 @@ public class Target {
 				and(notSelf);
 	}
 
+	/**
+	 * Clone the current target, changing the distance option.
+	 * It handles the case of a {@link Move} with {@link ObjectToMove#TARGETSOURCE}, when the Target is a Spawn Point: the only possible tile for the SpawnPoint is the same tile he is in, so {@link #minDistance} and {@link #maxTargets} must be equal to 0.
+	 * @return
+	 */
 	public Target getMoveDominationTarget() {
 		Builder builder = new Builder();
 		builder.setMaxDistance(0);

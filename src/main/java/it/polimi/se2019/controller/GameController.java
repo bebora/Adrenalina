@@ -355,8 +355,13 @@ public class GameController extends Observer {
         List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
         countDownLatch = new CountDownLatch(spawnablePlayers.size());
         for(Player p: spawnablePlayers) {
-            List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
             Observer spawner = new Spawner(countDownLatch, p, match.getBoard());
+            //If player is offline, spawn in a random point
+            if (!p.getOnline()) {
+                spawner.updateOnStopSelection(TRUE);
+                break;
+            }
+            List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1, 1, "Select a PowerUp to discard!"));
             timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner, p.getVirtualView().getRequestDispatcher(), acceptableTypes));
