@@ -312,6 +312,7 @@ public class CliInputHandler implements Runnable{
             Properties connectionProperties = new Properties();
             connectionProperties.setProperty("url", url);
             connectionProperties.setProperty("port", port);
+            view.setGameMode(gameMode);
             view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode);
             eventUpdater = view.getEventUpdater();
         }catch (IOException e) {

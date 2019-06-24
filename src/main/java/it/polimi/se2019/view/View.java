@@ -58,6 +58,8 @@ public abstract class View {
 
 	private SelectableOptionsWrapper selectableOptionsWrapper;
 
+	private String gameMode;
+
 	public void setOnline(boolean online) {
 		this.online = online;
 	}
@@ -125,6 +127,8 @@ public abstract class View {
 		return username;
 	}
 
+	public String getGameMode(){ return gameMode;}
+
 	public ViewReceiverInterface getReceiver() {
 		return receiver;
 	}
@@ -174,6 +178,8 @@ public abstract class View {
 	public void setCurrentPlayer(ViewPlayer currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
+
+	public void setGameMode(String gameMode){ this.gameMode = gameMode; }
 
 	public ViewPlayer getCurrentPlayer() {
 		return currentPlayer;

@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
 
 
 import java.io.IOException;
@@ -40,6 +41,7 @@ public class BoardFX extends StackPane {
     @FXML
     ImageView boardView;
     @FXML GridPane selectionBoard;
+    @FXML AnchorPane anchorPane;
 
     EventUpdater eventUpdater;
 
@@ -133,14 +135,26 @@ public class BoardFX extends StackPane {
         boardView.setImage(boardImage);
     }
 
-    public void drawPlayer(ViewPlayer player){
+    public void setDominationPane(DominationBoardFX dominationPane){
+        anchorPane.getChildren().addAll(dominationPane);
+        dominationPane.setLayoutX(58);
+        dominationPane.setLayoutY(5);
+        Scale scale = new Scale();
+        scale.setPivotX(58);
+        scale.setPivotY(5);
+        scale.setX(0.75);
+        scale.setY(0.75);
+        dominationPane.getTransforms().addAll(scale);
+    }
+
+    void drawPlayer(ViewPlayer player){
         int playerX = player.getTile().getCoords().getPosx();
         int playerY = player.getTile().getCoords().getPosy();
         TilePane tile = (TilePane)GuiHelper.getNodeByIndex(tileBoard,playerX,playerY);
         tile.getChildren().add(new Circle(15.0,Paint.valueOf(GuiHelper.getColorHexValue(player.getColor()))));
     }
 
-    public void clearPlayers(){
+    void clearPlayers(){
         for(Node n:tileBoard.getChildren()){
             ((TilePane) n).getChildren().clear();
         }

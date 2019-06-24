@@ -3,6 +3,7 @@ package it.polimi.se2019.view.gui;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -53,5 +54,30 @@ public class GuiHelper {
             return null;
         }
     }
+
+    public static void hueShifter(String color, ColorAdjust colorAdjust){
+    switch(color.toUpperCase()){
+            case "RED":
+                colorAdjust.setHue(0);
+                break;
+            case "BLUE":
+                colorAdjust.setHue(-0.70);
+                break;
+            case "PURPLE":
+                colorAdjust.setHue(-0.30);
+                break;
+            case "GREEN":
+                colorAdjust.setHue(0.6);
+                break;
+            case "WHITE":
+                colorAdjust.setBrightness(1.0);
+                break;
+            case "YELLOW":
+                colorAdjust.setHue(0.30);
+                break;
+            default:
+                break;
+        }
+     }
 
 }

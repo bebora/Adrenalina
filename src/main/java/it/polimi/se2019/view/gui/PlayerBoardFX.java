@@ -55,35 +55,12 @@ public class PlayerBoardFX extends AnchorPane {
             ColorAdjust colorAdjust = new ColorAdjust();
             colorAdjust.setHue(0);
             imageView.effectProperty().setValue(colorAdjust);
-
-            switch(color.toUpperCase()){
-                case "RED":
-                    colorAdjust.setHue(0);
-                    break;
-                case "BLUE":
-                    colorAdjust.setHue(-0.70);
-                    break;
-                case "PURPLE":
-                    colorAdjust.setHue(-0.30);
-                    break;
-                case "GREEN":
-                    colorAdjust.setHue(0.6);
-                    break;
-                case "WHITE":
-                    colorAdjust.setBrightness(1.0);
-                    break;
-                case "YELLOW":
-                    colorAdjust.setHue(0.30);
-                    break;
-                default:
-                    break;
-            }
+            GuiHelper.hueShifter(color,colorAdjust);
             for(int j = i; j<damagesList.getChildren().size(); j++){
                 damagesList.getChildren().get(j).setOpacity(0.0);
             }
 
             imageView.setOpacity(1.0);
-
             imageView.effectProperty().setValue(colorAdjust);
 
             i++;

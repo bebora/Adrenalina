@@ -44,9 +44,7 @@ public class LoginScreen extends Application {
 
     @FXML
     public void selectMode(){
-        if(mode.getSelectionModel().getSelectedItem() != null){
-            gameMode = mode.getSelectionModel().getSelectedItem();
-        }
+        gameMode = mode.getValue();
     }
 
     public void login(){
@@ -54,6 +52,7 @@ public class LoginScreen extends Application {
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("url", url.getText());
         connectionProperties.setProperty("port", port.getText());
+        view.setGameMode(gameMode);
         view.setupConnection(selectedConnection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
         //TODO:prevent further input and display some kind of loading screen when it gets set to WAITING
     }
