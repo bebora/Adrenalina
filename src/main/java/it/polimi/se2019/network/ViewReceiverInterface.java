@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public interface ViewReceiverInterface extends Remote, Serializable {
     void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos) throws RemoteException;
     void receiveAttackPlayer(String attackerId, String receiverId, int damageAmount, int marksAmount) throws RemoteException;
-    void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) throws RemoteException;
     void receiveMovePlayer(String playerId, ViewTileCoords coords) throws RemoteException;
     void receivePopupMessage(String message) throws RemoteException;
     void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException;

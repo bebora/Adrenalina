@@ -3,6 +3,7 @@ package it.polimi.se2019.network;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.ModelToViewConverter;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
@@ -65,27 +66,12 @@ public class ViewUpdaterRMI implements ViewUpdater {
         });
     }
 
-    @Override
-    public void sendAvailableActions(Player player) {
-        executor.submit(() -> {
-            ArrayList<ViewAction> actions = player.getActions().stream().
-                    map(ViewAction::new).
-                    collect(Collectors.toCollection(ArrayList::new));
-            try {
-                remoteReceiver.receiveAvailableActions(player.getId(), actions);
-            }
-            catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Unable to send ammos taken");
-            }
-        });
-    }
-
 
     @Override
     public void sendMovePlayer(Player player) {
         executor.submit(() -> {
             try {
-                remoteReceiver.receiveMovePlayer(player.getId(), new ViewTileCoords(player.getTile()));
+                remoteReceiver.receiveMovePlayer(player.getId(), ModelToViewConverter.fromTileToViewTileCoords(player.getTile()));
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send movement");
@@ -122,7 +108,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
     public void sendTile(Tile tile) {
         executor.submit(() -> {
             try {
-                remoteReceiver.receiveTile(new ViewTile(tile));
+                remoteReceiver.receiveTile(ModelToViewConverter.fromTileToViewTile(tile));
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send tile");
@@ -135,23 +121,23 @@ public class ViewUpdaterRMI implements ViewUpdater {
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
         executor.submit(() -> {
-            ViewBoard viewBoard = new ViewBoard(board);
+            ViewBoard viewBoard = ModelToViewConverter.fromBoard(board);
             Player receivingPlayer = players.stream().
                     filter(p-> p.getUsername().equals(username)).
                     findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
             ViewTileCoords perspective;
             if (receivingPlayer.getTile() != null) {
-                perspective = new ViewTileCoords(receivingPlayer.getTile());
+                perspective = ModelToViewConverter.fromTileToViewTileCoords(receivingPlayer.getTile());
             }
             else perspective = null;
             ArrayList<ViewPlayer> viewPlayers = players.stream().
-                    map(ViewPlayer::new).
+                    map(ModelToViewConverter::fromPlayer).
                     collect(Collectors.toCollection(ArrayList::new));
             ArrayList<ViewPowerUp> viewPowerUps = powerUps.stream().
-                    map(ViewPowerUp::new).
+                    map(ModelToViewConverter::fromPowerUp).
                     collect(Collectors.toCollection(ArrayList::new));
             ArrayList<ViewWeapon> viewLoadedWeapons = loadedWeapons.stream().
-                    map(ViewWeapon::new).
+                    map(ModelToViewConverter::fromWeapon).
                     collect(Collectors.toCollection(ArrayList::new));
             try {
                 remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
@@ -169,9 +155,9 @@ public class ViewUpdaterRMI implements ViewUpdater {
         executor.submit(() -> {
             try {
                 if (discardedWeapon == null)
-                    remoteReceiver.receiveWeaponTaken(new ViewWeapon(takenWeapon), null, player.getId());
+                    remoteReceiver.receiveWeaponTaken(ModelToViewConverter.fromWeapon(takenWeapon), null, player.getId());
                 else
-                    remoteReceiver.receiveWeaponTaken(new ViewWeapon(takenWeapon), new ViewWeapon(discardedWeapon), player.getId());
+                    remoteReceiver.receiveWeaponTaken(ModelToViewConverter.fromWeapon(takenWeapon), ModelToViewConverter.fromWeapon(discardedWeapon), player.getId());
             }
             catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send weapon taken");

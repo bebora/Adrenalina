@@ -1,11 +1,10 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.cards.PowerUp;
-
 import java.io.Serializable;
 
 public class ViewPowerUp implements Serializable {
     private String discardAward;
+
     private String name;
 
     public String getDiscardAward() {
@@ -16,8 +15,11 @@ public class ViewPowerUp implements Serializable {
         return name;
     }
 
-    public ViewPowerUp(PowerUp powerUp) {
-        this.discardAward = powerUp.getDiscardAward().name();
-        this.name = powerUp.getName();
+    public void setDiscardAward(String discardAward) {
+        this.discardAward = discardAward;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

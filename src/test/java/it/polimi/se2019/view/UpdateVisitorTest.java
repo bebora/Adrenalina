@@ -1,5 +1,6 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.controller.ModelToViewConverter;
 import it.polimi.se2019.controller.updatemessage.PopupMessageUpdate;
 import it.polimi.se2019.controller.updatemessage.TotalUpdate;
 import it.polimi.se2019.model.Player;
@@ -63,7 +64,7 @@ class UpdateVisitorTest {
         TotalUpdate update = new TotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
         viewVisitor.visit(update);
         assertEquals(username, firstView.getUsername());
-        assertEquals(new ViewTile(perspective), firstView.getPerspective());
+        assertEquals(ModelToViewConverter.fromTileToViewTile(perspective), firstView.getPerspective());
         assertEquals(players.size(), firstView.getPlayers().size());
         assertEquals(players.get(2).getUsername(), firstView.getPlayers().get(2).getUsername());
         assertEquals(1, firstView.getPlayers().get(0).getTile().getCoords().getPosx());

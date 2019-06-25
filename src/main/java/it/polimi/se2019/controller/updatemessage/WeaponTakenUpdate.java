@@ -1,5 +1,7 @@
 package it.polimi.se2019.controller.updatemessage;
 
+import it.polimi.se2019.controller.ModelToViewConverter;
+import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;
@@ -42,7 +44,7 @@ public class WeaponTakenUpdate implements UpdateVisitable {
      * @param player
      */
     public WeaponTakenUpdate(Weapon weapon, Player player) {
-        this.takenWeapon = new ViewWeapon(weapon);
+        this.takenWeapon = ModelToViewConverter.fromWeapon(weapon);
         this.playerId = player.getId();
         this.discardedWeapon = null;
     }
@@ -55,6 +57,6 @@ public class WeaponTakenUpdate implements UpdateVisitable {
      */
     public WeaponTakenUpdate(Weapon weapon, Weapon discardedWeapon, Player player) {
         this(weapon, player);
-        this.discardedWeapon = new ViewWeapon(discardedWeapon);
+        this.discardedWeapon = ModelToViewConverter.fromWeapon(discardedWeapon);
     }
 }

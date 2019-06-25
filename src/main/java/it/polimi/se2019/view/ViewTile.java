@@ -1,21 +1,40 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.board.Tile;
-import it.polimi.se2019.model.cards.Weapon;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class ViewTile implements Serializable {
     private String room;
+
     private ViewTileCoords coords;
+
     private ArrayList<String> weapons;
+
     private ArrayList<String> ammos;
+
     private boolean spawn;
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public void setCoords(ViewTileCoords coords) {
+        this.coords = coords;
+    }
+
+    public void setWeapons(ArrayList<String> weapons) {
+        this.weapons = weapons;
+    }
+
+    public void setAmmos(ArrayList<String> ammos) {
+        this.ammos = ammos;
+    }
+
+    public void setSpawn(boolean spawn) {
+        this.spawn = spawn;
+    }
     public ViewTileCoords getCoords() {
         return coords;
     }
@@ -40,18 +59,7 @@ public class ViewTile implements Serializable {
 
     public boolean isSpawn(){return spawn;}
 
-    public ViewTile(Tile tile) {
-        this.room = tile.getRoom().name();
-        this.coords = new ViewTileCoords(tile.getPosy(), tile.getPosx());
-        this.weapons = tile.getWeapons().stream().
-                map(Weapon::getName).
-                collect(Collectors.toCollection(ArrayList::new));
-        this.spawn = tile.isSpawn();
-        //Spawn tiles have a null ammoCard, so getting their ammoCard name would throw a NullPointerException
-        this.ammos = (tile.isSpawn() || tile.getAmmoCard() == null) ? new ArrayList<>() : tile.getAmmoCard().getAmmos().stream().
-                map(Ammo::name).
-                collect(Collectors.toCollection(ArrayList::new));
-    }
+    public ViewTile() {}
     public static int cabDistance(ViewTile tile1, ViewTile tile2) {
         return Math.abs(tile1.getCoords().getPosx() - tile2.getCoords().getPosx()) + Math.abs(tile1.getCoords().getPosy() - tile2.getCoords().getPosy());
     }

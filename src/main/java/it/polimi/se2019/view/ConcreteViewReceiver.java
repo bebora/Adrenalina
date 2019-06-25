@@ -75,18 +75,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     /**
-     * Replace player actions with given actions
-     * @param playerId
-     * @param actions
-     */
-    @Override
-    public void receiveAvailableActions(String playerId, ArrayList<ViewAction> actions) throws RemoteException {
-        ViewPlayer player = helper.getPlayerFromId(playerId);
-        player.setActions(actions);
-        linkedView.refresh();
-    }
-
-    /**
      * Move player by changing its tile
      * @param playerId
      * @param coords

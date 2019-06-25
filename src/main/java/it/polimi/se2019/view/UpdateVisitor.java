@@ -57,16 +57,6 @@ public class UpdateVisitor {
             Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
         }
     }
-    public void visit(AvailableActionsUpdate update) {
-        List<ViewAction> actions = update.getActions();
-        String playerId = update.getPlayerId();
-        try {
-            concreteViewReceiver.receiveAvailableActions(playerId, new ArrayList<>(actions));
-        }
-        catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Unexpected RemoteException while calling local method");
-        }
-    }
 
     public void visit(MovePlayerUpdate update) {
         String playerId = update.getPlayerId();

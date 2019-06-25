@@ -51,18 +51,6 @@ public class UpdateSender implements ViewUpdater {
     }
 
     @Override
-    public void sendAvailableActions(Player player) {
-        match.getPlayers().stream().
-                filter(Player::getOnline).
-                forEach(p -> sendAvailableActions(p, player));
-    }
-
-    public void sendAvailableActions(Player receivingPlayer, Player player) {
-        receivingPlayer.getVirtualView().getViewUpdater().sendAvailableActions(player);
-    }
-
-
-    @Override
     public void sendMovePlayer(Player player) {
         match.getPlayers().stream().
                 filter(Player::getOnline).

@@ -1,7 +1,9 @@
 package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.ModelToViewConverter;
 import it.polimi.se2019.controller.ReceivingType;
+import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.board.Color;
@@ -101,7 +103,7 @@ public class SelectableOptionsWrapper implements Serializable {
                     selectablePowerUps.setOptions(acceptableTypes.getSelectablePowerUps().
                             getOptions().
                             stream().
-                            map(ViewPowerUp::new).
+                            map(ModelToViewConverter::fromPowerUp).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case ROOM:
@@ -117,7 +119,7 @@ public class SelectableOptionsWrapper implements Serializable {
                     selectableTileCoords.setOptions(acceptableTypes.getSelectableTileCoords().
                             getOptions().
                             stream().
-                            map(ViewTileCoords::new).
+                            map(ModelToViewConverter::fromTileToViewTileCoords).
                             collect(Collectors.toCollection(ArrayList::new)));
                     break;
                 case WEAPON:

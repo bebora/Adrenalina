@@ -29,10 +29,6 @@ public class UpdateDeserializer implements JsonDeserializer<UpdateVisitable>{
                 updateVisitable = gson.fromJson(update, AttackPlayerUpdate.class);
                 break;
 
-            case "AvailableActionsUpdate":
-                updateVisitable = gson.fromJson(update, AvailableActionsUpdate.class);
-                break;
-
             case "MovePlayerUpdate":
                 updateVisitable = gson.fromJson(update, MovePlayerUpdate.class);
                 break;

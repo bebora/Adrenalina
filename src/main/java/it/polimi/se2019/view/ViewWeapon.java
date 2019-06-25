@@ -1,27 +1,25 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.ammos.Ammo;
-import it.polimi.se2019.model.cards.Weapon;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ViewWeapon implements Serializable {
+
     private String name;
     private ArrayList<String> cost;
     private ArrayList<ViewEffect> effects;
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public ViewWeapon(Weapon weapon){
-        this.name = weapon.getName();
-        this.effects = weapon.getEffects().stream()
-                .map(ViewEffect::new)
-                .collect(Collectors.toCollection(ArrayList::new));
-        this.cost = weapon.getCost().stream()
-                .map(Ammo::name)
-                .collect(Collectors.toCollection(ArrayList::new));
+    public void setCost(ArrayList<String> cost) {
+        this.cost = cost;
+    }
+
+    public void setEffects(ArrayList<ViewEffect> effects) {
+        this.effects = effects;
     }
 
     public String getName() { return name; }

@@ -1,7 +1,5 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.model.board.Tile;
-
 import java.io.Serializable;
 
 /**
@@ -20,15 +18,20 @@ public class ViewTileCoords implements Serializable {
         return posy;
     }
 
+    public void setPosx(int posx) {
+        this.posx = posx;
+    }
+
+    public void setPosy(int posy) {
+        this.posy = posy;
+    }
+
     public ViewTileCoords(int posy, int posx) {
         this.posx = posx;
         this.posy = posy;
     }
 
-    public ViewTileCoords(Tile tile) {
-        this.posx = tile.getPosx();
-        this.posy = tile.getPosy();
-    }
+    public ViewTileCoords() {}
 
     @Override
     public String toString() {

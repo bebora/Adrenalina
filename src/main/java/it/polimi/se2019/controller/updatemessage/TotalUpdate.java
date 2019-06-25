@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller.updatemessage;
 
+import it.polimi.se2019.controller.ModelToViewConverter;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.cards.PowerUp;
@@ -83,21 +84,20 @@ public class TotalUpdate implements UpdateVisitable {
                        String idView, int points, List<PowerUp> powerUps,
                        List<Weapon> loadedWeapons, Player currentPlayer) {
         this.username = username;
-        this.board = new ViewBoard(board);
-        this.players = players.stream().map(ViewPlayer::new).collect(Collectors.toCollection(ArrayList::new));
+        this.board = ModelToViewConverter.fromBoard(board);
+        this.players = players.stream().map(ModelToViewConverter::fromPlayer).collect(Collectors.toCollection(ArrayList::new));
         Player receivingPlayer = players.stream().
                 filter(p-> p.getUsername().equals(username)).
                 findFirst().orElseThrow(()-> new InvalidUpdateException("No player has the given username"));
 
         if(receivingPlayer.getTile() != null)
-            this.perspective = new ViewTileCoords(receivingPlayer.getTile());
+            this.perspective = ModelToViewConverter.fromTileToViewTileCoords(receivingPlayer.getTile());
         else
             this.perspective = null;
         this.idView = idView;
         this.points = points;
-        this.powerUps = powerUps.stream().map(ViewPowerUp::new).collect(Collectors.toCollection(ArrayList::new));
-        this.loadedWeapons = loadedWeapons.stream().map(ViewWeapon::new).collect(Collectors.toCollection(ArrayList::new));
+        this.powerUps = powerUps.stream().map(ModelToViewConverter::fromPowerUp).collect(Collectors.toCollection(ArrayList::new));
+        this.loadedWeapons = loadedWeapons.stream().map(ModelToViewConverter::fromWeapon).collect(Collectors.toCollection(ArrayList::new));
         this.currentPlayerId = currentPlayer.getId();
     }
-
 }

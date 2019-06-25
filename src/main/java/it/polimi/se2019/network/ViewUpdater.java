@@ -21,7 +21,6 @@ public interface ViewUpdater {
      */
     void sendAmmosTaken(Player player);
     void sendAttackPlayer(Player attacker, Player receiver, int damageAmount, int marksAmount);
-    void sendAvailableActions(Player player);
     void sendMovePlayer(Player player);
     void sendPopupMessage(String message);
     void sendAcceptableType(AcceptableTypes acceptableTypes);
