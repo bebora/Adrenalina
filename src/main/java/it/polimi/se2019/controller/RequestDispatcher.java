@@ -80,6 +80,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         this.networkTimeoutController.start();
     }
 
+    /**
+     * Sets the current view and start the {@link #networkTimeoutController}.
+     * @param viewUpdater used to update the related view
+     * @param linkedVirtualView linked to the current RequestDispatcher
+     * @throws RemoteException
+     */
     public RequestDispatcher(ViewUpdater viewUpdater, View linkedVirtualView) throws RemoteException {
         observerTypes = new EnumMap<>(ReceivingType.class);
         this.viewUpdater = viewUpdater;
@@ -92,6 +98,11 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         return observerTypes;
     }
 
+    /**
+     * Handles receiving an ack from the client.
+     * Edits the lastRequest's time.
+     * @throws RemoteException
+     */
     @Override
     public void receiveAck() throws RemoteException {
         synchronized (lock) {
@@ -99,6 +110,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving an ammo from the client.
+     * Checks if the ammo is currently in {@link #observerTypes}.
+     * Converts the {@code ammo} to a {@link Ammo}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param ammo
+     * @throws RemoteException
+     */
     @Override
     public void receiveAmmo(String ammo) throws RemoteException {
         synchronized (lock) {
@@ -123,6 +142,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving an action from the client.
+     * Checks if the action is currently in {@link #observerTypes}.
+     * Converts the {@code subAction} to a {@link Action} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param subAction
+     * @throws RemoteException
+     */
     @Override
     public void receiveAction(String subAction) throws RemoteException {
         synchronized (lock) {
@@ -141,6 +168,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a direction from the client.
+     * Checks if the direction is currently in {@link #observerTypes}.
+     * Converts the {@code direction} to a {@link it.polimi.se2019.model.cards.Direction}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param direction
+     * @throws RemoteException
+     */
     @Override
     public void receiveDirection(String direction) throws RemoteException {
         synchronized (lock) {
@@ -157,6 +192,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving an effect from the client.
+     * Checks if the effect is currently in {@link #observerTypes}.
+     * Converts the {@code effect} to a {@link it.polimi.se2019.model.cards.Effect} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param effect
+     * @throws RemoteException
+     */
     @Override
     public void receiveEffect(String effect) throws RemoteException {
         synchronized (lock) {
@@ -173,6 +216,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a list of players from the client.
+     * Checks if the players are currently in {@link #observerTypes}.
+     * Converts the {@code players} to a list of {@link Player} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param players
+     * @throws RemoteException
+     */
     @Override
     public void receivePlayers(ArrayList<String> players) throws RemoteException {
         synchronized (lock) {
@@ -191,6 +242,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a list of powerups from the client.
+     * Checks if the powerups are currently in {@link #observerTypes}.
+     * Converts the {@link ViewPowerUp} to a {@link PowerUp} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param powerUps
+     * @throws RemoteException
+     */
     @Override
     public void receivePowerUps(ArrayList<ViewPowerUp> powerUps) throws RemoteException {
         synchronized (lock) {
@@ -213,6 +272,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a room from the client.
+     * Checks if the room is currently in {@link #observerTypes}.
+     * Converts the {@code room} to a {@link Color} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param room
+     * @throws RemoteException
+     */
     @Override
     public void receiveRoom(String room) throws RemoteException {
         synchronized (lock) {
@@ -232,6 +299,12 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a stop from the client.
+     * Checks if a stop is currently in {@link #observerTypes}.
+     * Calls the related method on the {@link EventHandler}.
+     * @throws RemoteException
+     */
     @Override
     public void receiveStopAction() throws RemoteException {
         synchronized (lock) {
@@ -248,6 +321,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a list of tiles from the client.
+     * Checks if the tiles are currently in {@link #observerTypes}.
+     * Converts the {@link ViewTileCoords} to a {@link Tile} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param viewTiles
+     * @throws RemoteException
+     */
     @Override
     public void receiveTiles(ArrayList<ViewTileCoords> viewTiles) throws RemoteException {
         synchronized (lock) {
@@ -265,6 +346,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         }
     }
 
+    /**
+     * Handles receiving a weapon from the client.
+     * Checks if the weapon is currently in {@link #observerTypes}.
+     * Converts the string to a {@link Weapon} using the {@link #eventHelper}.
+     * Calls the related method on the {@link EventHandler}.
+     * @param weapon
+     * @throws RemoteException
+     */
     @Override
     public void receiveWeapon(String weapon) throws RemoteException {
         synchronized (lock) {
@@ -275,24 +364,23 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.WEAPON);
                     eventHandler.receiveWeapon(relatedWeapon);
                 } else
-                    throw new IncorrectEvent("Non posso accettare armi!");
+                    throw new IncorrectEvent("Can't accept weapon!");
             } catch (IncorrectEvent e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
     }
 
+    /**
+     * Add receiving types to the current accepted types, linking them to the {@code eventhandler}
+     * @param receivingTypes list of accepted {@link ReceivingType}
+     * @param eventHandler handler for requests related to the list sent
+     */
     public void addReceivingType(List<ReceivingType> receivingTypes, EventHandler eventHandler) {
         synchronized (lock) {
             for (ReceivingType receivingType : receivingTypes) {
                 observerTypes.put(receivingType, eventHandler);
             }
-        }
-    }
-
-    public void removeReceivingType(List<ReceivingType> receivingTypes) {
-        synchronized (lock) {
-            observerTypes.remove(receivingTypes);
         }
     }
 

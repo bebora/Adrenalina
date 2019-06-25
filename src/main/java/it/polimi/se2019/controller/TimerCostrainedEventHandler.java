@@ -79,7 +79,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
 
     /**
      * Check if the timer is already finished.
-     * If finished, {@link #active} is set to false, to stop the running Thread.
+     * If finished:
+     * <li>Sets active to false, to avoid further requests to pass through and stop running the Thread..</li>
+     * <li>Clear the options showed to the view</li>
+     * <li>Notifies all the players of the lack of response from the player</li>
      * @return
      */
     public synchronized boolean checkFinished() {
@@ -104,10 +107,15 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         return false;
     }
 
+
     public synchronized void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
 
+    /**
+     * Check if it needs to notify to the {@link #observer} the end of the method with a {@link #observer#receiveStop}.
+     * @return
+     */
     public synchronized boolean checkIfNotify() {
         return !blocked && notifyOnEnd;
     }

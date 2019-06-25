@@ -15,6 +15,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Handles the computing of a Weapon's effects.
+ * Supports showing the usable effects, and using multiple effects.
+ */
 public class WeaponController extends Observer {
     private int curEffect;
     private int lastUsedIndex;
@@ -38,6 +42,13 @@ public class WeaponController extends Observer {
         updateOnWeapon(weapon);
     }
 
+    /**
+     * Returns a list containing the usable effects; it supports:
+     * <li>Relative priority</li>
+     * <li>Absolute priority</li>
+     * <li>Checks already used effects</li>
+     * @return lists containing usable effects from the current player
+     */
     public List<String> getUsableEffects() {
         List<Effect> allEffects = weapon.getEffects();
 
@@ -75,6 +86,11 @@ public class WeaponController extends Observer {
         return match;
     }
 
+    /**
+     * Prompts the current user asking him to select an effect.
+     * If the current weapon can finish, it prompts him with a non-reverse stop.
+     * @param stopAllowed whether the current weapon already finished its mandatory effects.
+     */
     public void askForEffect(boolean stopAllowed) {
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.EFFECT));
         String prompt;
@@ -100,6 +116,10 @@ public class WeaponController extends Observer {
         }
     }
 
+    /**
+     * Handles receiving a weapon from the current player.
+     * @param newWeapon chose by the player
+     */
     @Override
     public void updateOnWeapon(Weapon newWeapon) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
@@ -110,6 +130,11 @@ public class WeaponController extends Observer {
             askForEffect(false);
     }
 
+    /**
+     * Handles receiving an effect from the current player.
+     * It starts the payment process using {@link PaymentController}.
+     * @param effect
+     */
     @Override
     public synchronized void updateOnEffect(String effect) {
         curPlayer = match.getPlayers().get(match.getCurrentPlayer());
@@ -126,6 +151,10 @@ public class WeaponController extends Observer {
         }
     }
 
+    /**
+     * Start the computing of the effect after a confirmation of the payment has been received from the {@link PaymentController}.
+     * It updates {@link #lastUsedIndex} to keep count of the index.
+     */
     @Override
     public void concludePayment() {
         match.updateViews();
@@ -136,6 +165,13 @@ public class WeaponController extends Observer {
         effectController.nextStep();
     }
 
+    /**
+     * Handles receiving a notification from the {@link #effectController} that the current effect finished.
+     * Checks if {@link #getUsableEffects()} is empty or not:
+     * <li>If empty and the weapon can finish, it notifies the {@link #actionController} of the conclusion.</li>
+     * <li>If empty and the weapon can't finish, it send a reverse stop to {@link #actionController}</li>
+     * <li>If not empty, it prompts the user for an effect<</li>
+     */
     @Override
     public void updateOnConclusion() {
         effectController = null;
@@ -144,7 +180,6 @@ public class WeaponController extends Observer {
                 && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
         boolean finished = weapon.getEffects().get(0).getActivated() || modalWeaponActivated;
         if (getUsableEffects().isEmpty())
-
             if (finished) {
                 weapon.setLoaded(false);
                 actionController.updateOnConclusion();
@@ -164,6 +199,12 @@ public class WeaponController extends Observer {
         }
     }
 
+    /**
+     * Handles receiving a stop notification.
+     * <li>If it's a reverse-stop, it gets propagated to the {@link #actionController}</li>
+     * <li>If it's a non-reverse stop, the action controller gets notified of the conclusion</li>
+     * @param skip
+     */
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         if (skip.toBoolean() || acceptableTypes.isReverse()) {

@@ -3,16 +3,21 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 
+/**
+ * Utility class to expect an ack in return from the client, every {@link #timeout}.
+ * If not found, it disconnects the player, pinging the other players.
+ */
 public class NetworkTimeoutControllerServer extends Thread{
     private long lastRequest;
     private boolean checkingTimeout = true;
     private RequestDispatcher requestDispatcher;
+    int timeout = 5000;
     public NetworkTimeoutControllerServer(RequestDispatcher requestDispatcher){
         this.requestDispatcher = requestDispatcher;
     }
     @Override
     public void run() {
-        int timeout = 500000000;
+
         do {
             try {
                 Thread.sleep(timeout);

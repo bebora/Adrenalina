@@ -5,17 +5,22 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.view.Status;
 import it.polimi.se2019.view.View;
 
+/**
+ * Utility class to expect an ack in return from the server, every {@link #timeout}.
+ * If not found, it disconnects the view.
+ */
 public class NetworkTimeoutControllerClient extends Thread{
     private View view;
     private long lastRequest;
     private boolean checkingTimeout = true;
+    int timeout = 50000;
     public NetworkTimeoutControllerClient(View linkedView) {
         this.view = linkedView;
     }
 
     @Override
     public void run() {
-        int timeout = 50000;
+
         do {
             try {
                 Thread.sleep(timeout);
