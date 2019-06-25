@@ -60,6 +60,10 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         this.notifyOnEnd = true;
     }
 
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public void setNotifyOnEnd(boolean notifyOnEnd) {
         this.notifyOnEnd = notifyOnEnd;
     }
@@ -70,6 +74,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public void endHandler() {
         blocked = true;
         active = false;
+        requestDispatcher.clear();
     }
 
     /**
@@ -80,6 +85,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized boolean checkFinished() {
         if (System.currentTimeMillis() >= start + time) {
             active = false;
+            requestDispatcher.clear();
             String nick = requestDispatcher.getLinkedVirtualView().getUsername();
             try {
                 List<Player> players = observer.getMatch().getPlayers().stream().filter(Player::getOnline).collect(Collectors.toList());
@@ -121,7 +127,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Logger.log(Priority.WARNING, "Sleep interrupted");
             }
         }
-        requestDispatcher.clear();
         Logger.log(Priority.DEBUG,"Ended event related to " + acceptableTypes.getAcceptedTypes());
         if (checkIfNotify()) {
             observer.updateOnStopSelection(ThreeState.TRUE);

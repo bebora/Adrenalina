@@ -32,10 +32,31 @@ public class DominationMatch extends Match {
         spawnPoints = new ArrayList<>();
     }
 
+    public void setCurrentTurn(int currentTurn) {
+        this.currentTurn = currentTurn;
+    }
+
+    public void setSpawnPoints(List<SpawnPlayer> spawnPoints) {
+        this.spawnPoints = spawnPoints;
+    }
+
+    public int getCurrentTurn() {
+        return currentTurn;
+    }
+
+    @Override
+    public void restoreMatch(Match oldMatch) {
+        DominationMatch oldDominationMatch = (DominationMatch) oldMatch;
+        oldDominationMatch.setCurrentTurn(currentTurn);
+        super.restoreMatch(oldMatch);
+        oldDominationMatch.setSpawnPoints(spawnPoints);
+    }
+
     public DominationMatch(Match match){
         super(match);
         this.spawnPoints = match.players.stream().filter(Player::getDominationSpawn).map(p -> (SpawnPlayer) p).map(SpawnPlayer::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
         this.players.addAll(spawnPoints);
+        this.currentTurn = ((DominationMatch) match).getCurrentTurn();
     }
 
     /**
@@ -58,7 +79,7 @@ public class DominationMatch extends Match {
                     filter(p -> !p.getDominationSpawn()).
                     filter(p -> p.getTile() == currentPlayer.getTile()).count();
             if (numPlayerInTile == 1) {
-                SpawnPlayer spawnPoint = (SpawnPlayer) spawnPoints.
+                SpawnPlayer spawnPoint = spawnPoints.
                         stream().
                         filter(s -> s.getTile().equals(currentPlayer.getTile())).findFirst().
                         orElseThrow(UnsupportedOperationException::new);

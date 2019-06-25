@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
  */
 public class LobbyController{
     private List<GameController> games;
+    /**
+     * List of {@link Player} waiting for relative mode
+     */
     private Map<Mode, List<Player>> waitingPlayers;
     private Map<Mode, Timer> waitingTimers;
 

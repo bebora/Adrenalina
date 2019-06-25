@@ -16,6 +16,8 @@ import java.util.List;
  */
 public interface EventHandler {
 
+    void setActive(boolean active);
+
     void receiveAction(Action action);
 
     void receiveDirection(Direction direction);

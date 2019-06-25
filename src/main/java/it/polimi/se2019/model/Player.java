@@ -509,6 +509,10 @@ public class Player {
 		return false;
 	}
 
+	/**
+	 * Handles
+	 * @return
+	 */
 	public List<Ammo> totalAmmoPool(){
 		List<Ammo> totalPool = powerUps.stream()
 				.map(PowerUp::getDiscardAward)

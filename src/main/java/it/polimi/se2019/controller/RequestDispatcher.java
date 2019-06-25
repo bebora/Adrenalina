@@ -39,7 +39,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void clear() {
         synchronized (lock) {
             for (EventHandler eventHandler : observerTypes.values()) {
-                eventHandler.setBlocked(true);
+                eventHandler.setActive(true);
             }
             observerTypes.clear();
             acceptableTypes = new AcceptableTypes(new ArrayList<>());
