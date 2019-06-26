@@ -1,15 +1,8 @@
 package it.polimi.se2019.controller.updatemessage;
 
-import it.polimi.se2019.controller.ModelToViewConverter;
-import it.polimi.se2019.model.Player;
-import it.polimi.se2019.model.board.Board;
-import it.polimi.se2019.model.cards.PowerUp;
-import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.*;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Represent whole View when the game starts or when a player reconnects

@@ -80,6 +80,8 @@ public class ModelToViewConverter {
         ret.setAlive(player.getAlive());
         ret.setDominationSpawn(player.getDominationSpawn());
         ret.setMaxActions(player.getMaxActions());
+        ret.setFrenzyActions(player.isFrenzyActions());
+        ret.setFrenzyBoard(player.isFrenzyBoard());
         if (player.getTile() == null) ret.setTile(null);
         else ret.setTile(ModelToViewConverter.fromTileToViewTile(player.getTile()));
         return ret;

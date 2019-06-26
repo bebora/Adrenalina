@@ -1,7 +1,6 @@
 package it.polimi.se2019.controller.updatemessage;
 
 import it.polimi.se2019.controller.ModelToViewConverter;
-import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.UpdateVisitor;

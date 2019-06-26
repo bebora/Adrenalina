@@ -82,7 +82,7 @@ public class MatchTest {
         match.newTurn();
         //"skulls are set aside", so rewardPoints does not change anymore
         assertEquals(Arrays.asList(2, 1, 1, 1), current.getRewardPoints());
-        assertEquals(Arrays.asList(2, 1, 1, 1), other.getRewardPoints());
+        assertEquals(Arrays.asList(1, 1, 1), other.getRewardPoints());
     }
 
     @Test

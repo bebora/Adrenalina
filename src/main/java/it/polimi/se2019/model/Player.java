@@ -43,6 +43,8 @@ public class Player {
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
 		this.setMaxActions(2);
 		firstShotReward = Boolean.TRUE;
+		frenzyActions = false;
+		frenzyBoard = false;
 	}
 
 	/**
@@ -79,6 +81,8 @@ public class Player {
 		this.powerUps.addAll(originalPlayer.powerUps);
 		this.firstShotReward = originalPlayer.firstShotReward;
 		this.perspective = originalPlayer.getPerspective();
+		this.frenzyActions = originalPlayer.frenzyActions;
+		this.frenzyBoard = originalPlayer.frenzyBoard;
 	}
 
 	public Player() {
@@ -210,6 +214,15 @@ public class Player {
 	 */
 	private Boolean dominationSpawn;
 
+	/**
+	 * True if player is in frenzy mode
+	 */
+	private boolean frenzyActions;
+
+	/**
+	 * True if player board has been flipped after starting frenzy
+	 */
+	private boolean frenzyBoard;
 
 	public void setDominationSpawn(Boolean dominationSpawn) {
 		this.dominationSpawn = dominationSpawn;
@@ -241,6 +254,22 @@ public class Player {
 
 	public void setFirstShotReward(boolean firstShotReward) {
 		this.firstShotReward = firstShotReward;
+	}
+
+	public boolean isFrenzyActions() {
+		return frenzyActions;
+	}
+
+	public void setFrenzyActions(boolean frenzyActions) {
+		this.frenzyActions = frenzyActions;
+	}
+
+	public boolean isFrenzyBoard() {
+		return frenzyBoard;
+	}
+
+	public void setFrenzyBoard(boolean frenzyBoard) {
+		this.frenzyBoard = frenzyBoard;
 	}
 
 	/**
@@ -394,6 +423,7 @@ public class Player {
 	public boolean getFirstPlayer() {
 		return firstPlayer;
 	}
+
 	public void setFirstPlayer(boolean firstPlayer) {
 		this.firstPlayer = firstPlayer;
 	}
@@ -473,6 +503,7 @@ public class Player {
 	public void addPoints(int points) {
 		this.points += points;
 	}
+
 	/**
 	 * Update available actions based on current health
 	 */

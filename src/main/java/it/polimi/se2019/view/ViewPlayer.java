@@ -35,6 +35,10 @@ public class ViewPlayer implements Serializable {
 
 	private String username;
 
+	private boolean frenzyActions;
+
+	private boolean frenzyBoard;
+
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -81,6 +85,14 @@ public class ViewPlayer implements Serializable {
 
 	public void setMaxActions(int maxActions) {
 		this.maxActions = maxActions;
+	}
+
+	public void setFrenzyActions(boolean frenzyActions) {
+		this.frenzyActions = frenzyActions;
+	}
+
+	public void setFrenzyBoard(boolean frenzyBoard) {
+		this.frenzyBoard = frenzyBoard;
 	}
 
 	public String getId() {
@@ -135,5 +147,13 @@ public class ViewPlayer implements Serializable {
 
 	public void setDominationSpawn(Boolean dominationSpawn) {
 		this.dominationSpawn = dominationSpawn;
+	}
+
+	public boolean isFrenzyActions() {
+		return frenzyActions;
+	}
+
+	public boolean isFrenzyBoard() {
+		return frenzyBoard;
 	}
 }

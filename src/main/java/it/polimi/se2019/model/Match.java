@@ -79,7 +79,7 @@ public abstract class Match {
 	/**
 	 * Sender used to send updates to players in the match
 	 */
-    UpdateSender updateSender;
+    private UpdateSender updateSender;
 
 	/**
 	 * True if player turn has ended
@@ -89,27 +89,27 @@ public abstract class Match {
 	/**
 	 * Board used for the Match
 	 */
-	Board board;
+	private Board board;
 
 	/**
 	 * List of players playing the match
 	 */
-	List <Player> players;
+	private List <Player> players;
 
 	/**
 	 * Index of the player whose turn is the current
 	 */
-	int currentPlayer;
+	private int currentPlayer;
 
 	/**
 	 * Index of the firstPlayer
 	 */
-	int firstPlayer;
+	private int firstPlayer;
 
 	/**
 	 * If True, the activated mode is finalFrenzy
 	 */
-	boolean finalFrenzy;
+	private boolean finalFrenzy;
 
 	public void setCurrentPlayer(Player player) {
 		this.currentPlayer = players.indexOf(player);
@@ -144,9 +144,14 @@ public abstract class Match {
 		}
 		// Update reward points for players with no damage
 		for (Player p : toUpdate) {
+			p.setFrenzyActions(true);
 			if (p.getDamages().isEmpty()) {
 				p.setFirstShotReward(false);
+				p.setFrenzyBoard(true);
 				p.setRewardPoints(new ArrayList<>(Arrays.asList(2, 1, 1, 1)));
+			}
+			else {
+				p.setFrenzyBoard(false);
 			}
 		}
 		updateViews();
@@ -180,10 +185,11 @@ public abstract class Match {
 			scorePlayerBoard(p);
 			p.resetPlayer();
 			p.addPowerUp(board.drawPowerUp(), false);
-			// Set reward points and rewards to players who haven't changed it yet
-			if (finalFrenzy  && !p.getRewardPoints().equals(new ArrayList<>(Arrays.asList(2,1,1,1)))) {
-				p.setRewardPoints(new ArrayList<>(Arrays.asList(2,1,1,1)));
+			// Set reward points and first shot reward to players who haven't changed it yet
+			if (finalFrenzy  && !p.isFrenzyBoard()) {
+				p.setRewardPoints(Arrays.asList(2, 1, 1, 1));
 				p.setFirstShotReward(false);
+				p.setFrenzyBoard(true);
 			}
 		}
 
