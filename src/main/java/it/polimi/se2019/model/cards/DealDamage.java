@@ -3,6 +3,10 @@ package it.polimi.se2019.model.cards;
 
 import it.polimi.se2019.model.ThreeState;
 
+/**
+ * Handles a DealDamage subAction in an Effect.
+ * Supports giving damages and marks to a Target defined in {@link #target}.
+ */
 public class DealDamage {
 
 	/**

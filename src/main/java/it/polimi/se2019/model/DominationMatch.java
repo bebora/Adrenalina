@@ -7,6 +7,12 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
+/**
+ * Contains and supports the information for the flow of a Match in domination mode.
+ * Supports the SpawnPoints and inserts them after a turn of every player passed.
+ */
+
 public class DominationMatch extends Match {
 
     /**
@@ -44,6 +50,10 @@ public class DominationMatch extends Match {
         return currentTurn;
     }
 
+    /**
+     * Restores a Domination Match, by setting the current Turn to the current one, avoiding to insert spawnPoints more than once.
+     * @param oldMatch to restore
+     */
     @Override
     public void restoreMatch(Match oldMatch) {
         DominationMatch oldDominationMatch = (DominationMatch) oldMatch;

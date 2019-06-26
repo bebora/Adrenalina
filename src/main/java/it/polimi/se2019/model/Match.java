@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.TRUE;
 
 /**
- * Container class for all the information of the Match being played
+ * Container class for all the information of the Match being played.
+ * Abstract class, supporting common logic in the different modes.
  */
 public abstract class Match {
 
@@ -44,7 +45,12 @@ public abstract class Match {
 		}
     }
 
-    public Match(Match originalMatch){
+	/**
+	 * Clones the match, creating a new one to save progress.
+	 * Used in {@link it.polimi.se2019.controller.ActionController#sandboxMatch}.
+	 * @param originalMatch
+	 */
+	public Match(Match originalMatch){
     	this.currentPlayer = originalMatch.getCurrentPlayer();
      	this.finalFrenzy = originalMatch.getFinalFrenzy();
     	this.firstPlayer = originalMatch.getFirstPlayer();
@@ -56,6 +62,10 @@ public abstract class Match {
     	//Initialize match and notify player with the first totalUpdate
 	}
 
+	/**
+	 * Restores the {@code oldMatch}, updating the players.
+	 * @param oldMatch to restore
+	 */
 	public void restoreMatch(Match oldMatch){
     	for(int i = 0; i < players.size(); i++)
     		this.players.get(i).restorePlayer(oldMatch.getPlayers().get(i));
@@ -65,7 +75,7 @@ public abstract class Match {
 	}
 
 
-    Random rand = new Random();
+    private Random rand = new Random();
 	/**
 	 * Sender used to send updates to players in the match
 	 */

@@ -3,6 +3,11 @@ package it.polimi.se2019.model.cards;
 
 import it.polimi.se2019.model.ThreeState;
 
+/**
+ * Supports a subAction in an effect that allows the movement of player(s).
+ * It handles the player to move using {@link #objectToMove} and {@link #targetSource}.
+ * It handles the destination tiles using {@link #targetDestination}.
+ */
 public class Move {
 
 	/**
@@ -31,7 +36,7 @@ public class Move {
 	private Target targetSource;
 
 	/**
-	 * Prompt string that may be associated with some special moves
+	 * Prompt string that may be associated with some special moves.
 	 * e.g. when moving the player perspective
 	 */
 	private String prompt;

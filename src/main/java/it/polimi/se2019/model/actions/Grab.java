@@ -2,6 +2,9 @@ package it.polimi.se2019.model.actions;
 
 import java.util.ArrayList;
 
+/**
+ * Allows the player to grab a {@link it.polimi.se2019.model.cards.Weapon} or an {@link it.polimi.se2019.model.ammos.AmmoCard}
+ */
 public class Grab extends Action {
     public Grab(){
         subActions = new ArrayList<>();

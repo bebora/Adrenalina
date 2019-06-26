@@ -335,6 +335,12 @@ public class Target {
         else return t -> true;
 	}
 
+	/**
+	 * Get a Predicate using a distance filter
+	 * @param board the used board
+	 * @param tile the starting tile
+	 * @return
+	 */
 	public Predicate<Tile> getDistanceFilter(Board board, Tile tile) {
     	return t -> board.reachable(tile,minDistance,maxDistance,throughWalls).contains(t);
 	}
@@ -357,12 +363,27 @@ public class Target {
                 and(getSameDirectionTile(tile, direction));
 	}
 
+	/**
+	 * Get a Predicate using {@link #samePlayerRoom} value and visibility filter, to filter rooms.
+	 * @param board
+	 * @param tile
+	 * @return
+	 */
 	public Predicate<Tile> getFilterRoom(Board board, Tile tile){
 		return getVisibilityFilter(board,tile)
 				.and(getSamePlayerRoomFilter(tile));
 	}
 
 
+	/**
+	 * Filter players using TargetList and BlackList
+	 * <li>If a List is true, the player must in that list</li>
+	 * <li>If a List if false, the player mustn't be in that list</li>
+	 * @param player
+	 * @param targetList
+	 * @param blackList
+	 * @return
+	 */
 	public Predicate<Player> getPlayerListFilter(Player player, List<Player> targetList, List<Player> blackList) {
 		Predicate<Player> optionalTarget =
 				p -> checkTargetList == ThreeState.OPTIONAL;

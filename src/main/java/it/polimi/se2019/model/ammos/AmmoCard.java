@@ -1,6 +1,9 @@
 package it.polimi.se2019.model.ammos;
 import java.util.*;
 
+/**
+ * Represents an AmmoCard, made by {@link Ammo}, following Adrenalina's rules.
+ */
 public class AmmoCard {
     private List<Ammo> ammos;
 

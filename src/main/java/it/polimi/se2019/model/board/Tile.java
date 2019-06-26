@@ -5,14 +5,17 @@ import it.polimi.se2019.model.cards.Weapon;
 
 import java.util.*;
 
-
+/**
+ * Contains all information needed for a Tile, a single part of a board.
+ * It supports grabbing {@link AmmoCard} or {@link Weapon}.
+ */
 public class Tile {
 
 	public static class Builder {
 		private Color sRoom;
-		private int sPosx;
-		private int sPosy;
-		private Boolean sSpawn;
+		private int posx;
+		private int posy;
+		private boolean spawn;
 		private List<Weapon> weapons = new ArrayList<>();
 		private AmmoCard ammoCard = null;
 
@@ -22,13 +25,13 @@ public class Tile {
 		}
 
 		public Builder setPos(int posx, int posy) {
-			sPosx = posx;
-			sPosy = posy;
+			this.posx = posx;
+			this.posy = posy;
 			return this;
 		}
 
 		public Builder setSpawn(Boolean spawn) {
-			sSpawn = spawn;
+			this.spawn = spawn;
 			return this;
 		}
 
@@ -40,9 +43,9 @@ public class Tile {
 	}
 	public Tile(Builder builder) {
 		room = builder.sRoom;
-		posx = builder.sPosx;
-		posy = builder.sPosy;
-		spawn = builder.sSpawn;
+		posx = builder.posx;
+		posy = builder.posy;
+		spawn = builder.spawn;
 		weapons = builder.weapons;
 		ammoCard = builder.ammoCard;
 	}

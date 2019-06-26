@@ -14,9 +14,21 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+/**
+ * Parser used for reading configuration files for a Board.
+ * It also parses PowerUps and Weapons and AmmoCards using the related Parsers, to create a Match-ready Board.
+ *
+ */
 public class BoardCreator {
     private BoardCreator() {}
+
+    /**
+     * It parses a board in the format .btlb.
+     * It adds to the decks of the Board the parsed weapons and powerUps and AmmoCards.
+     * @param filename name of the board to parse
+     * @param skulls number of skulls to use
+     * @return a Match-ready board
+     */
     public static Board parseBoard(String filename, int skulls) {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         List<List<Tile>> tiles = new ArrayList<>();
@@ -69,7 +81,7 @@ public class BoardCreator {
         }
 
         // Looping through weapons to add to weapons deck
-        weaponsDeck = parseWeapon(classloader, "weapons");
+        weaponsDeck = parseWeapons(classloader, "weapons");
         powerUps = parsePowerUps(classloader, "powerups");
         ammoCards = generateAmmos();
 
@@ -84,7 +96,13 @@ public class BoardCreator {
                 build();
     }
 
-    public static Deck parseWeapon(ClassLoader classloader, String weaponPath) {
+    /**
+     * Parses all the weapons in {@code weaponPath}, adding them to an LimitedDeck.
+     * @param classloader
+     * @param weaponPath containing the weapons
+     * @return a Deck containing weapons.
+     */
+    public static Deck parseWeapons(ClassLoader classloader, String weaponPath) {
         List<Weapon> weapons = new ArrayList<>();
         String nameDir = classloader.getResource(weaponPath).getPath();
         File dir = new File(nameDir);
@@ -95,9 +113,15 @@ public class BoardCreator {
             }
         }
         Collections.shuffle(weapons);
-        return new UnlimitedDeck<>(weapons);
+        return new LimitedDeck<>(weapons);
     }
 
+    /**
+     * Parses all the powerUps in {@code powerUpsPath}, adding them to an UnlimitedDeck.
+     * @param classloader
+     * @param powerUpsPath containing the powerUps
+     * @return a Deck containing powerUps.
+     */
     public static Deck parsePowerUps(ClassLoader classloader, String powerUpsPath) {
         List<PowerUp> powerUps = new ArrayList<>();
         String nameDir = classloader.getResource(powerUpsPath).getPath();
@@ -116,6 +140,10 @@ public class BoardCreator {
         return new UnlimitedDeck<>(powerUps);
     }
 
+    /**
+     * Creates ammo generating them using the Adrenalina's game rules directions.
+     * @return a deck containing the ammoCards.
+     */
     public static Deck generateAmmos() {
         List <AmmoCard> ammoCards = new ArrayList<>();
         List <Ammo> ammosColor = new ArrayList<>(Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW));

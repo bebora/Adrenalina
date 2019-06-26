@@ -2,6 +2,9 @@ package it.polimi.se2019.model.actions;
 
 import java.util.ArrayList;
 
+/**
+ * Allows movement in the board from the player.
+ */
 public class Move extends Action {
     public Move() {
         subActions = new ArrayList<>();
@@ -9,6 +12,10 @@ public class Move extends Action {
         movements = 3;
     }
 
+    /**
+     * In frenzy, every player not after the first gets 4 movements.
+     * @param afterFirst
+     */
     @Override
     public void updateOnFrenzy(Boolean afterFirst) {
         if (!afterFirst)

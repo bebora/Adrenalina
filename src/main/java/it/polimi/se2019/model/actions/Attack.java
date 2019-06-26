@@ -2,6 +2,9 @@ package it.polimi.se2019.model.actions;
 
 import java.util.ArrayList;
 
+/**
+ * Allows the player to attack using a weapon.
+ */
 public class Attack extends Action {
     /**
      * Stores if the health update has already been applied

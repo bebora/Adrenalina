@@ -9,14 +9,19 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+/**
+ * Contains tiles and keeps track of:
+ * <li>killShotRewards</li>
+ * <li>Skulls</li>
+ * <li>Ammos and Weapons and PowerUps deck</li>
+ */
 public class Board {
-
-    Random rand = new Random();
-
     private String name;
 
-    private List<Integer> killShotReward;
+	/**
+	 * List of possible rewards for killShot
+	 */
+	private List<Integer> killShotReward;
 	/**
 	 * List of tiles that make up the Board
 	 */
@@ -224,6 +229,12 @@ public class Board {
 		return weaponsDeck;
 	}
 
+	/**
+	 * Get the tile asked, returning null if it doesn't exist
+	 * @param posy
+	 * @param posx
+	 * @return the requested Tile
+	 */
 	public Tile getTile(int posy, int posx) {
 		if (posy < tiles.size() && posy >= 0 && posx < tiles.get(posy).size() && posx >= 0)
 			try {
@@ -263,6 +274,9 @@ public class Board {
 		this.killShotTrack = killShotTrack;
 	}
 
+	/**
+	 * Refresh the weapons, adding weapons to empty spawns, till the weapons can be added.
+	 */
 	public void refreshWeapons() {
 		List <Tile> spawnTiles = tiles.stream().flatMap(List::stream).filter(Objects::nonNull).filter(Tile::isSpawn).collect(Collectors.toList());
 		for (Tile t : spawnTiles) {
@@ -272,6 +286,9 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Refresh ammos, adding {@link AmmoCard} from {@link #ammoCards} to empty non-spawn Tiles.
+	 */
 	public void refreshAmmos() {
         List <Tile> emptyAmmosTiles = tiles.stream().
                 flatMap(List::stream).
@@ -283,7 +300,12 @@ public class Board {
         }
     }
 
-    public Tile getSpawningPoint(PowerUp powerUp) {
+	/**
+	 * Get the spawning point related to the powerUp
+	 * @param powerUp
+	 * @return tile related to the {@link PowerUp#discardAward}
+	 */
+	public Tile getSpawningPoint(PowerUp powerUp) {
 		Ammo ammo = powerUp.getDiscardAward();
 		powerUps.addToDiscarded(powerUp);
 		return tiles.stream().

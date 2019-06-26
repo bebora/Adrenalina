@@ -8,6 +8,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Contains the information to handle to computing of a PowerUp.
+ * Assumptions are made with different types of {@link #applicability} PowerUps.
+ * <li>{@link Moment#OWNROUND} powerUps get computed fully, without any assumptions.</li>
+ * <li>{@link Moment#DAMAGED} powerUps must contain a {@link DealDamage}, and target the player that damaged them.</li>
+ * <li>{@link Moment#DAMAGED} powerUps must contain a {@link DealDamage}, and target the damaging Player.
+ * Also, those powerUps requires the payment of an additional ammo, choice of the current player.</li>
+ */
 public class PowerUp {
 
 	/**

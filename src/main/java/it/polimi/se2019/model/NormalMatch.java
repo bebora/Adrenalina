@@ -3,6 +3,10 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Contains and supports the information for the flow of a Match in standard mode.
+ * Supports the killShotTrack and a custom parsing of winners, compared to the general {@link Match}.
+ */
 public class NormalMatch extends Match {
 
 	public NormalMatch(List<Player> players, String boardFilename, int numSkulls) {
@@ -12,6 +16,12 @@ public class NormalMatch extends Match {
 		super(originalMatch);
 	}
 
+	/**
+	 * Score a deadShot to {@code player}.
+	 * The player that gave the kill shot gets added to the killShotTrack.
+	 * If an overkill took place, the player that overkilled gets added to the track and a mark gets added to the overkiller.
+	 * @param player who got the killshot
+	 */
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));
 		player.getRewardPoints().remove(0);
@@ -23,6 +33,15 @@ public class NormalMatch extends Match {
 		}
 	}
 
+	/**
+	 * Parse the winners of the current Game, at the end of it.
+	 * <p><ul>
+	 *    * <li>It scores the players in the game.
+	 *    * <li>It scores the killShotTrack, sorting looking at the players that gave the more shots.
+	 *    * <li>It checks the online players, and the order of the killings to create the list of winners.
+	 *    * </ul><p>
+	 * @return winning players
+	 */
 	public List<Player> getWinners() {
 		for (Player p : players)
 			scorePlayerBoard(p);

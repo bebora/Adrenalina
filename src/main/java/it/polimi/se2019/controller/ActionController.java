@@ -289,6 +289,7 @@ public class ActionController extends Observer {
                             stream().
                             filter(w -> !w.getLoaded() && curPlayer.checkForAmmos(w.getCost())).
                             collect(Collectors.toList());
+                    //If the current action is RELOAD, then it must be the last action in the turn.
                     if (selectableWeapon.isEmpty()) {
                         if (curAction.toString().equals("RELOAD"))
                             updateOnStopSelection(OPTIONAL);

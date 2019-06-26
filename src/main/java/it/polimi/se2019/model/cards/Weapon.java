@@ -4,7 +4,9 @@ import it.polimi.se2019.model.ammos.Ammo;
 
 import java.util.*;
 
-
+/**
+ * Contains the information needed to compute the use of a Weapon, used during an {@link it.polimi.se2019.model.actions.Attack}.
+ */
 public class Weapon {
 
 	public static class Builder {

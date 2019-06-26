@@ -1,5 +1,6 @@
 package it.polimi.se2019.model;
 
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.actions.Action;
@@ -20,6 +21,11 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 
 
+/**
+ * Contains information related to the player, necessary to the state of the game.
+ * Supports cloning into another instance to save current progress of the player.
+ *
+ */
 public class Player {
 
 	public Player(String token) {
@@ -39,6 +45,11 @@ public class Player {
 		firstShotReward = Boolean.TRUE;
 	}
 
+	/**
+	 * Create a new instance of the player, cloning the player.
+	 * Used in {@link it.polimi.se2019.controller.ActionController#sandboxMatch}.
+	 * @param originalPlayer to clone
+	 */
 	public Player(Player originalPlayer){
 		this.match = originalPlayer.getMatch();
 		this.id = originalPlayer.getId();
@@ -99,8 +110,14 @@ public class Player {
 
 	private Color color;
 
+	/**
+	 * Whether the player is the first player in the game.
+	 */
 	private boolean firstPlayer;
 
+	/**
+	 * Whether the player deserves the reward for first shot.
+	 */
 	private boolean firstShotReward;
 
 	private Match match;
@@ -266,6 +283,9 @@ public class Player {
 		notifyHealthChange();
 	}
 
+	/**
+	 * @return whether the player can reload any weapon.
+	 */
 	public boolean canReload() {
 		return weapons.stream().anyMatch(w -> (!w.getLoaded() && checkForAmmos(w.getCost())));
 	}
@@ -279,7 +299,7 @@ public class Player {
 	 * @param weapon weapon to add
 	 */
 	public void addWeapon(Weapon weapon) {
-		if(weapons.size()<3)
+		if(weapons.size() < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")));
 			weapons.add(weapon);
 		sendTotalUpdate();
 	}
@@ -288,6 +308,9 @@ public class Player {
 		return weapons;
 	}
 
+	/**
+	 * @return whether the player is online; returns false if virtualView is not initialized.
+	 */
 	public boolean getOnline() {
 		if (virtualView != null) {
 			return virtualView.isOnline();
@@ -316,6 +339,11 @@ public class Player {
 		sendTotalUpdate();
 	}
 
+	/**
+	 * Check if the player can pay the {@code cost} using the {@link #totalAmmoPool()}
+	 * @param cost amount of ammos to pay
+	 * @return whether the player can pay or not
+	 */
 	public boolean checkForAmmos(List<Ammo> cost) {
 		List<Ammo> pool = totalAmmoPool();
 		for (Ammo c : cost)
@@ -510,7 +538,9 @@ public class Player {
 	}
 
 	/**
-	 * Handles
+	 * Returns the total pool of ammos for the player, considering:
+	 * <li>{@link #ammos}</li>
+	 * <li>{@link PowerUp#discardAward} of {@link PowerUp#discardAward}</li>
 	 * @return
 	 */
 	public List<Ammo> totalAmmoPool(){
