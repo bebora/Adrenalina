@@ -15,10 +15,6 @@ import java.util.List;
 public interface ViewUpdater {
 
     void sendPing();
-    /**
-     * Expect to have the new ammos already in player
-     * @param player
-     */
     void sendAmmosTaken(Player player);
     void sendAttackPlayer(Player attacker, Player receiver, int damageAmount, int marksAmount);
     void sendMovePlayer(Player player);

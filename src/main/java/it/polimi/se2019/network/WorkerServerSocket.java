@@ -26,7 +26,11 @@ import java.util.concurrent.LinkedBlockingDeque;
 import static it.polimi.se2019.Priority.DEBUG;
 import static it.polimi.se2019.Priority.WARNING;
 
-
+/**
+ * Handles each client, containing information needed to:
+ * <li>Receiving events and applying them to the related Game</li>
+ * <li>Sending updates to them, converted in json files.</li>
+ */
 public class WorkerServerSocket extends Thread {
     private Socket socket;
     private VirtualView virtualView;
@@ -36,6 +40,13 @@ public class WorkerServerSocket extends Thread {
     BlockingQueue queue = new LinkedBlockingDeque();
     private EventVisitor eventVisitor;
 
+    /**
+     * Creates a Worker for a client.
+     * Setup the Serializer and Deserializer.
+     * Setup the virtualView, and asks to {@code lobbyController} to process the infos.
+     * @param socket
+     * @param lobbyController
+     */
     public WorkerServerSocket(Socket socket, LobbyController lobbyController) {
         GsonBuilder gsonBuilder;
         this.socket = socket;
@@ -60,7 +71,9 @@ public class WorkerServerSocket extends Thread {
             throw new AuthenticationErrorException();
         }
         try {
+            //Expects a connection event
             ConnectionRequest connection = (ConnectionRequest) event;
+            //Create the VirtualView and the related ViewUpdater
             virtualView = new VirtualView(lobbyController);
             ViewUpdater viewUpdater = new ViewUpdaterSocket(this);
             String username = connection.getUsername();
@@ -69,9 +82,9 @@ public class WorkerServerSocket extends Thread {
             String mode = connection.getMode();
             boolean existingGame = connection.getExistingGame();
             virtualView.setViewUpdater(viewUpdater, existingGame);
-            if (!existingGame) {
+            //Notifies the lobbyController with a new connection.
+            if (!existingGame)
                 lobbyController.connectPlayer(username, password, mode, virtualView);
-            }
             else
                 lobbyController.reconnectPlayer(username,password,virtualView);
             virtualView.setOnline(true);
@@ -90,7 +103,10 @@ public class WorkerServerSocket extends Thread {
         }
     }
 
-
+    /**
+     * Runs the updater and the listener.
+     * It runs a Pinger to send it to the client.
+     */
     @Override
     public void run() {
         Updater updater = new Updater();
@@ -112,6 +128,9 @@ public class WorkerServerSocket extends Thread {
         }
     }
 
+    /**
+     * Utility class to send updates to the view, polling them from the queue.
+     */
     private class Updater extends Thread {
             @Override
             public void run() {
@@ -140,6 +159,10 @@ public class WorkerServerSocket extends Thread {
             }
     }
 
+    /**
+     * Utility class listening for new events sent by the client.
+     * They are visited using the {@link #eventVisitor}.
+     */
     private class Listener extends Thread {
         @Override
         public void run() {

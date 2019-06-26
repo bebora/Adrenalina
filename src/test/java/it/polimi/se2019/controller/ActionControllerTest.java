@@ -29,14 +29,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class ActionControllerTest {
-    GameController gameController = Mockito.spy(new GameController(Arrays.asList(new
- Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null));
-    ActionController actionController = Mockito.spy(new ActionController(gameController.getMatch(),gameController));
-    Player currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
-    Board board = gameController.getMatch().getBoard();
+    GameController gameController;
+    ActionController actionController;
+    Player currentPlayer;
+    Board board;
 
     @BeforeEach
     void beforeEach() {
+        gameController = Mockito.spy(new GameController(Arrays.asList(new
+                Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null));
+        currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
+        board = gameController.getMatch().getBoard();
+        actionController = Mockito.spy(new ActionController(gameController.getMatch(),gameController));
         currentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
         VirtualView view = new VirtualView();
         ViewUpdater viewUpdater = null;
@@ -70,6 +74,11 @@ public class ActionControllerTest {
 
     @Test
     void testReloadWeaponOnce() {
+        for (int i = 0; i < 3; i++) {
+            currentPlayer.addAmmo(Ammo.RED);
+            currentPlayer.addAmmo(Ammo.BLUE);
+            currentPlayer.addAmmo(Ammo.YELLOW);
+        }
         Mockito.doNothing().when(actionController).updateOnStopSelection(any());
         //Test it stops the action once no weapon can be no more reload, and it reloads one
         currentPlayer.setTile(board.getTile(0,2));

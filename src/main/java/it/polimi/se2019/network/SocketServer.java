@@ -9,7 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * ServerSocket for creating related WorkerServerSocket for each client connecting
+ * SocketServer for creating related WorkerServerSocket for each client connecting.
  */
 public class SocketServer extends Thread{
     private ServerSocket serverSocket;
@@ -21,6 +21,10 @@ public class SocketServer extends Thread{
         this.lobbyController = lobbyController;
     }
 
+    /**
+     * Initialize the socket, accepting new connections.
+     * It opens a {@link WorkerServerSocket} for every new connection.
+     */
     @Override
     public void run() {
         if (!initializeSocket()) {
@@ -43,6 +47,7 @@ public class SocketServer extends Thread{
             }
         }
     }
+
     public boolean initializeSocket() {
         try {
             this.serverSocket = new ServerSocket(this.serverPort);

@@ -1,13 +1,17 @@
 package it.polimi.se2019.model.board;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,8 +42,8 @@ public class BoardCreator {
         Deck<PowerUp> powerUps;
         List<Tile> temp;
         Deck <AmmoCard> ammoCards;
-        try (InputStreamReader input = new InputStreamReader(new FileInputStream(classloader.getResource("boards/"+filename).getFile()), StandardCharsets.UTF_8);
-             BufferedReader bufRead = new BufferedReader(input)
+        try (InputStream input = classloader.getResourceAsStream("boards/"+filename);
+             BufferedReader bufRead = new BufferedReader(new InputStreamReader(input));
         ) {
             String curLine;
             int line = 0;
@@ -97,6 +101,27 @@ public class BoardCreator {
     }
 
     /**
+     * Retrieves the index file of a folder containing one, avoiding the Java restriction of listing files in directories.
+     * @param folder
+     * @return list of the files in the directory, listed in the the index.
+     */
+    public static List<String> listIndex(ClassLoader classLoader, String folder) {
+        InputStream is = classLoader.getResourceAsStream(folder+"/index");
+        BufferedReader r = new BufferedReader(new InputStreamReader(is));
+        List<String> files = new ArrayList<>();
+        String line;
+        try {
+            while ((line= r.readLine()) != null) {
+                files.add(line);
+            }
+        }
+        catch (IOException e) {
+            Logger.log(Priority.ERROR, String.format("Can't read index file for %s, because of %s", folder, e.getMessage()));
+        }
+        return files;
+    }
+
+    /**
      * Parses all the weapons in {@code weaponPath}, adding them to an LimitedDeck.
      * @param classloader
      * @param weaponPath containing the weapons
@@ -104,17 +129,13 @@ public class BoardCreator {
      */
     public static Deck parseWeapons(ClassLoader classloader, String weaponPath) {
         List<Weapon> weapons = new ArrayList<>();
-        String nameDir = classloader.getResource(weaponPath).getPath();
-        File dir = new File(nameDir);
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null) {
-            for (File weapon : directoryListing) {
-                weapons.add(CardCreator.parseWeapon(weapon.getName()));
-            }
-        }
+        List<String> weaponNames = listIndex(classloader, weaponPath);
+        for (String weapon : weaponNames)
+            weapons.add(CardCreator.parseWeapon(weapon));
         Collections.shuffle(weapons);
         return new LimitedDeck<>(weapons);
     }
+
 
     /**
      * Parses all the powerUps in {@code powerUpsPath}, adding them to an UnlimitedDeck.
@@ -124,18 +145,13 @@ public class BoardCreator {
      */
     public static Deck parsePowerUps(ClassLoader classloader, String powerUpsPath) {
         List<PowerUp> powerUps = new ArrayList<>();
-        String nameDir = classloader.getResource(powerUpsPath).getPath();
-        File dir = new File(nameDir);
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null) {
-            for (File powerUp : directoryListing) {
-                for (int i = 0; i < 2; i++) {
-                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.BLUE));
-                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.RED));
-                    powerUps.add(CardCreator.parsePowerUp(powerUp.getName(), Ammo.YELLOW));
-                }
+        List<String> powerUpsNames = listIndex(classloader, powerUpsPath);
+        for (String powerUp : powerUpsNames)
+            for (int i = 0; i < 2; i++) {
+                powerUps.add(CardCreator.parsePowerUp(powerUp, Ammo.BLUE));
+                powerUps.add(CardCreator.parsePowerUp(powerUp, Ammo.RED));
+                powerUps.add(CardCreator.parsePowerUp(powerUp, Ammo.YELLOW));
             }
-        }
         Collections.shuffle(powerUps);
         return new UnlimitedDeck<>(powerUps);
     }

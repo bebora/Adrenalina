@@ -6,10 +6,10 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.network.AuthenticationErrorException;
 import it.polimi.se2019.view.VirtualView;
 
-import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -177,11 +177,9 @@ public class LobbyController{
         //Setup the game
         waitingPlayers.get(mode).removeAll(playing);
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        String nameDir = classloader.getResource("boards").getPath();
-        File dir = new File(nameDir);
-        File[] directoryListing = dir.listFiles();
-        int rnd = new Random().nextInt(directoryListing.length);
-        String boardName = directoryListing[rnd].getName();
+        List<String> boards = BoardCreator.listIndex(classloader, "boards");
+        int rnd = new Random().nextInt(boards.size());
+        String boardName = boards.get(rnd);
         GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION), this);
         games.add(gameController);
         playing.forEach(p -> p.getVirtualView().setGameController(gameController));

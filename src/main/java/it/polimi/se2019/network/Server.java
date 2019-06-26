@@ -7,20 +7,25 @@ import it.polimi.se2019.model.Mode;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Properties;
 
+/**
+ * Main class to start the server.
+ * It runs both the RMI and Socket service.
+ */
 public class Server {
     public static void main(String[] args) {
         Properties connectionProperties = new Properties();
-        FileInputStream fin;
+        InputStream fin;
         try{
             fin = new FileInputStream("./connection.properties");
             connectionProperties.load(fin);
         }catch (IOException e){
             Logger.log(Priority.ERROR,e.getMessage());
             try {
-                fin = new FileInputStream(Server.class.getClassLoader().getResource("connection.properties").getPath());
+                fin = Server.class.getClassLoader().getResourceAsStream("connection.properties");
                 connectionProperties.load(fin);
             }
             catch (IOException ex) {

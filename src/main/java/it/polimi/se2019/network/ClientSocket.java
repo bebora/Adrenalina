@@ -2,6 +2,7 @@ package it.polimi.se2019.network;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
@@ -40,6 +41,15 @@ public class ClientSocket extends Thread{
         }
     }
 
+    /**
+     * Creates the socket, sends a {@code connectionRequest}.
+     * It then waits for the response,
+     * @param serverIP for the socket
+     * @param port for the socket
+     * @param connectionRequest event containing username and password
+     * @param updateVisitor visitor used for the computing of info from the server
+     * @throws RemoteException if the socket doesn't answer with a success signal
+     */
     public ClientSocket(String serverIP,
                         int port,
                         ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) throws RemoteException{
@@ -61,11 +71,14 @@ public class ClientSocket extends Thread{
             UpdateVisitable update = gson.fromJson(json, UpdateVisitable.class);
             update.accept(updateVisitor);
         }
-        catch (IOException e) {
+        catch (IOException | JsonParseException e) {
             throw new RemoteException();
         }
     }
 
+    /**
+     * Run the listener and the updater
+     * */
     @Override
     public void run() {
         Listener listener = new Listener();
@@ -78,6 +91,9 @@ public class ClientSocket extends Thread{
         this.queue.add(event);
     }
 
+    /**
+     * Utility class to listen for {@link EventVisitable} added to the queue, and sending them.
+     */
     private class Updater extends Thread {
         @Override
         public void run() {
@@ -100,6 +116,10 @@ public class ClientSocket extends Thread{
     }
 
 
+    /**
+     * Utility class for listening for events received.
+     * They are then accepted using {@link #updateVisitor}.
+     */
     private class Listener extends Thread {
         @Override
         public void run() {
