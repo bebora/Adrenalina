@@ -132,7 +132,6 @@ public class ModelToViewConverter {
         SelectableOptionsWrapper ret = new SelectableOptionsWrapper();
         ret.setAcceptedTypes(acceptableTypes.getAcceptedTypes());
         for (ReceivingType receivingType : acceptableTypes.getAcceptedTypes()) {
-            //TODO ADD REMAINING TYPE
             switch (receivingType) {
                 case ACTION:
                     SelectableOptions<String> selectableActions = new SelectableOptions<>(acceptableTypes.getSelectableActions());
