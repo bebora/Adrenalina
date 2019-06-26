@@ -40,8 +40,6 @@ public class ViewBoard implements Serializable {
 		return tiles;
 	}
 
-	public ViewBoard () {}
-
 	public boolean isLinked(ViewTile tile1, ViewTile tile2, boolean throughWalls) {
 		if (!throughWalls)
 			return doors.contains(new ViewDoor(tile1,tile2)) || (tile1.getRoom().equals(tile2.getRoom()) && ViewTile.cabDistance(tile1,tile2) == 1);

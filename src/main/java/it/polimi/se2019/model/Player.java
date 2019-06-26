@@ -299,9 +299,10 @@ public class Player {
 	 * @param weapon weapon to add
 	 */
 	public void addWeapon(Weapon weapon) {
-		if(weapons.size() < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")));
+		if(weapons.size() < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
 			weapons.add(weapon);
-		sendTotalUpdate();
+			sendTotalUpdate();
+		}
 	}
 
 	public List<Weapon> getWeapons() {

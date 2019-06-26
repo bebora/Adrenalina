@@ -7,7 +7,10 @@ import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import it.polimi.se2019.view.gui.LoginScreen;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -16,7 +19,7 @@ public class CliInputHandler implements Runnable{
     private String in = "notQuit";
     private CLI view;
     private EventUpdater eventUpdater;
-    private static final String wrongInputMessage = "Wrong input!";
+    private static final String WRONGINPUT = "Wrong input!";
     private String[] args;
 
     public CliInputHandler(String[] args){
@@ -24,20 +27,20 @@ public class CliInputHandler implements Runnable{
     }
 
     private void tileInfoMode(BufferedReader input){
-        String in = "InitialValue";
+        String tileIn = "InitialValue";
         String[] inSplit;
         int requestedX;
         int requestedY;
         CLI.moveCursor(1,AsciiBoard.boardBottomBorder+6);
-        while(!in.equals("q")){
+        while(!tileIn.equals("q")){
             try{
-                in = input.readLine();
+                tileIn = input.readLine();
             }catch (IOException e){
                 Logger.log(Priority.ERROR,"Failed to read stdin");
             }
             CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder+6,AsciiBoard.boardBottomBorder+8,1);
-            if(in.matches("^\\d+(,\\d+)")){
-                inSplit = in.split(",");
+            if(tileIn.matches("^\\d+(,\\d+)")){
+                inSplit = tileIn.split(",");
                 CLI.moveCursor(1, AsciiBoard.boardBottomBorder+6);
                 CLI.cleanRow();
                 requestedX = Math.abs(Integer.parseInt(inSplit[0]));
@@ -184,7 +187,7 @@ public class CliInputHandler implements Runnable{
                 if (singleParsed != null)
                     selected.add(singleParsed);
             } else {
-                CLI.printMessage(wrongInputMessage, "R");
+                CLI.printMessage(WRONGINPUT, "R");
                 return false;
             }
         }
@@ -204,7 +207,7 @@ public class CliInputHandler implements Runnable{
                 selectedCoords.add(new ViewTileCoords(x,y));
             }else
             {
-                CLI.printMessage(wrongInputMessage,"R");
+                CLI.printMessage(WRONGINPUT,"R");
                 error = true;
                 break;
             }
@@ -225,7 +228,7 @@ public class CliInputHandler implements Runnable{
         if(possibleDirections.contains(direction))
             eventUpdater.sendDirection(direction);
         else
-            CLI.printMessage(wrongInputMessage,"R");
+            CLI.printMessage(WRONGINPUT,"R");
     }
 
     private void parseAction(String action){
@@ -235,7 +238,7 @@ public class CliInputHandler implements Runnable{
         if(selectedOption != null)
             eventUpdater.sendAction(selectedOption);
         else
-            CLI.printMessage(wrongInputMessage, "R");
+            CLI.printMessage(WRONGINPUT, "R");
     }
 
     private void parsePowerUps(String[] powerUps){
@@ -335,30 +338,7 @@ public class CliInputHandler implements Runnable{
         }
     }
 
-    public void run(){
-        boolean cliSelected = viewChoice();
-        if(cliSelected)
-            connectionChoice(input);
-        else {
-            LoginScreen.main(args);
-            return;
-        }
-        while(view.getStatus()==Status.WAITING) {
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-            }
-        }
-        if(view.getStatus()==Status.PLAYING){
-            System.out.println(view.getStatus().name());
-        } else {
-            Thread start = new Thread(new CliInputHandler(args));
-            start.start();
-            Thread.currentThread().interrupt();
-        }
-        AsciiBoard.setBoard(view.getBoard());
+    private void handleInput() {
         while(!in.equals("quit") && !view.getStatus().equals(Status.END)){
             CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+6);
             CLI.cleanRow();
@@ -399,6 +379,33 @@ public class CliInputHandler implements Runnable{
                 }
             }
         }
+    }
+
+    public void run(){
+        boolean cliSelected = viewChoice();
+        if(cliSelected)
+            connectionChoice(input);
+        else {
+            LoginScreen.main(args);
+            return;
+        }
+        while(view.getStatus()==Status.WAITING) {
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+            }
+        }
+        if(view.getStatus()==Status.PLAYING){
+            System.out.println(view.getStatus().name());
+        } else {
+            Thread start = new Thread(new CliInputHandler(args));
+            start.start();
+            Thread.currentThread().interrupt();
+        }
+        AsciiBoard.setBoard(view.getBoard());
+        handleInput();
         if (view.getStatus().equals(Status.END)) {
             Thread start = new Thread(new CliInputHandler(args));
             start.start();

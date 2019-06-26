@@ -4,6 +4,7 @@ import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
@@ -42,6 +43,19 @@ public class EventHelper {
                 .filter(p -> p.getUsername().equals(id))
                 .findAny()
                 .orElse(null);
+    }
+
+    /**
+     * @param ammo chosen ammos
+     * @return the Ammo related to the sent string
+     */
+    public Ammo getAmmoFromString(String ammo) {
+        try {
+            return Ammo.valueOf(ammo);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IncorrectEvent("Ammo doesn't exist!");
+        }
     }
 
     /**

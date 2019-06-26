@@ -34,7 +34,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receivePing() {
         this.linkedView.setLastRequest(System.nanoTime());
-        //Logger.log(Priority.DEBUG, "PING RECEIVED");
         if (linkedView.getEventUpdater() != null) {
             linkedView.getEventUpdater().sendAck();
         }

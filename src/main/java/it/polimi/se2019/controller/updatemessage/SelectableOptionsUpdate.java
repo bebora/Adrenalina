@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller.updatemessage;
 
-import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.view.SelectableOptionsWrapper;
 import it.polimi.se2019.view.UpdateVisitor;
 
@@ -18,7 +17,7 @@ public class SelectableOptionsUpdate implements UpdateVisitable {
         return selectableOptionsWrapper;
     }
 
-    public SelectableOptionsUpdate(AcceptableTypes acceptableTypes) {
-        selectableOptionsWrapper = new SelectableOptionsWrapper(acceptableTypes);
+    public SelectableOptionsUpdate(SelectableOptionsWrapper selectableOptionsWrapper) {
+        this.selectableOptionsWrapper = selectableOptionsWrapper;
     }
 }

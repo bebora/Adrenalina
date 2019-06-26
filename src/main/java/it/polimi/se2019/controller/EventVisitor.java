@@ -28,10 +28,7 @@ public class EventVisitor {
         try {
             requestHandler.receiveAck();
         }
-        catch (RemoteException e) {
-            Logger.log(Priority.WARNING, error + e.getMessage());
-        }
-        catch (NullPointerException e) {
+        catch (RemoteException | NullPointerException e) {
             Logger.log(Priority.WARNING, error + e.getMessage());
         }
     }

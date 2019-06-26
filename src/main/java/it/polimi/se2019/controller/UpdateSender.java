@@ -98,6 +98,9 @@ public class UpdateSender implements ViewUpdater {
         receivingPlayer.getVirtualView().getViewUpdater().sendTile(tile);
     }
 
+    /**
+     * @deprecated
+     */
     @Deprecated
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,

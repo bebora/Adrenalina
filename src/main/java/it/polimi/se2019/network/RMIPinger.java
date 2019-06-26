@@ -15,6 +15,7 @@ public class RMIPinger extends Thread{
         this.view = view;
     }
 
+    @Override
     public void run() {
         viewUpdaterRMI = (ViewUpdaterRMI) view.getViewUpdater();
         do {

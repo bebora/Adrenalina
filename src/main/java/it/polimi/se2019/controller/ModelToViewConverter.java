@@ -1,9 +1,10 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;
+import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Door;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Effect;
@@ -122,6 +123,94 @@ public class ModelToViewConverter {
         ret.setCost(weapon.getCost().stream()
                 .map(Ammo::name)
                 .collect(Collectors.toCollection(ArrayList::new)));
+        return ret;
+    }
+
+    public static SelectableOptionsWrapper fromAcceptableTypes(AcceptableTypes acceptableTypes) {
+        SelectableOptionsWrapper ret = new SelectableOptionsWrapper();
+        ret.setAcceptedTypes(acceptableTypes.getAcceptedTypes());
+        for (ReceivingType receivingType : acceptableTypes.getAcceptedTypes()) {
+            //TODO ADD REMAINING TYPE
+            switch (receivingType) {
+                case ACTION:
+                    SelectableOptions<String> selectableActions = new SelectableOptions<>(acceptableTypes.getSelectableActions());
+                    selectableActions.setOptions(acceptableTypes.
+                            getSelectableActions().
+                            getOptions().
+                            stream().
+                            map(Action::toString).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableActions(selectableActions);
+                    break;
+                case EFFECT:
+                    SelectableOptions<String> selectableEffects = new SelectableOptions<>(acceptableTypes.getSelectableEffects());
+                    selectableEffects.setOptions(new ArrayList<>(acceptableTypes.
+                            getSelectableEffects().
+                            getOptions()));
+                    ret.setSelectableEffects(selectableEffects);
+                    break;
+                case PLAYERS:
+                    SelectableOptions<String> selectablePlayers = new SelectableOptions<>(acceptableTypes.getSelectablePlayers());
+                    selectablePlayers.setOptions(acceptableTypes.
+                            getSelectablePlayers().
+                            getOptions().
+                            stream().
+                            filter(p -> p.getToken() != null).
+                            map(Player::getUsername).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectablePlayers(selectablePlayers);
+                    break;
+                case POWERUP:
+                    SelectableOptions<ViewPowerUp> selectablePowerUps = new SelectableOptions<>(acceptableTypes.getSelectablePowerUps());
+                    selectablePowerUps.setOptions(acceptableTypes.getSelectablePowerUps().
+                            getOptions().
+                            stream().
+                            map(ModelToViewConverter::fromPowerUp).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectablePowerUps(selectablePowerUps);
+                    break;
+                case ROOM:
+                    SelectableOptions<String> selectableRooms = new SelectableOptions<>(acceptableTypes.getSelectableRooms());
+                    selectableRooms.setOptions(acceptableTypes.getSelectableRooms().
+                            getOptions().
+                            stream().
+                            map(Color::toString).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableRooms(selectableRooms);
+                    break;
+                case TILES:
+                    SelectableOptions<ViewTileCoords> selectableTileCoords = new SelectableOptions<>(acceptableTypes.getSelectableTileCoords());
+                    selectableTileCoords.setOptions(acceptableTypes.getSelectableTileCoords().
+                            getOptions().
+                            stream().
+                            map(ModelToViewConverter::fromTileToViewTileCoords).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableTileCoords(selectableTileCoords);
+                    break;
+                case WEAPON:
+                    SelectableOptions<String> selectableWeapons = new SelectableOptions<>(acceptableTypes.getSelectableWeapons());
+                    selectableWeapons.setOptions(acceptableTypes.getSelectableWeapons().
+                            getOptions().
+                            stream().
+                            map(Weapon::getName).
+                            collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableWeapons(selectableWeapons);
+                    break;
+                case DIRECTION:
+                    SelectableOptions<String> selectableDirections = new SelectableOptions<>(acceptableTypes.getSelectableDirections());
+                    selectableDirections.setOptions(acceptableTypes.getSelectableDirections().getOptions().stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableDirections(selectableDirections);
+                    break;
+                case AMMO:
+                    SelectableOptions<String> selectableAmmos = new SelectableOptions<>(acceptableTypes.getSelectableAmmos());
+                    selectableAmmos.setOptions(acceptableTypes.getSelectableAmmos().getOptions().stream().map(Enum::toString).collect(Collectors.toCollection(ArrayList::new)));
+                    ret.setSelectableAmmos(selectableAmmos);
+                    break;
+                case STOP:
+                    ret.setStopPrompt(acceptableTypes.getStopPrompt());
+                    break;
+            }
+        }
         return ret;
     }
 }
