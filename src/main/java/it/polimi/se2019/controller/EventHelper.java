@@ -49,7 +49,7 @@ public class EventHelper {
      * @param ammo chosen ammos
      * @return the Ammo related to the sent string
      */
-    public Ammo getAmmoFromString(String ammo) {
+    public static Ammo getAmmoFromString(String ammo) {
         try {
             return Ammo.valueOf(ammo);
         }

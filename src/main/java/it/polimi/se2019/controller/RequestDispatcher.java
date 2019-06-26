@@ -125,7 +125,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                 lastRequest = System.nanoTime();
                 Ammo relatedAmmo;
                 if (observerTypes.keySet().contains(ReceivingType.AMMO)) {
-                    relatedAmmo = eventHelper.getAmmoFromString(ammo);
+                    relatedAmmo = EventHelper.getAmmoFromString(ammo);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.AMMO);
                     eventHandler.receiveAmmo(relatedAmmo);
                 } else {

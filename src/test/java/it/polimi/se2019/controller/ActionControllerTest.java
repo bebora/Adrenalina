@@ -3,6 +3,8 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
+import it.polimi.se2019.model.actions.Action;
+import it.polimi.se2019.model.actions.Reload;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Board;
@@ -14,6 +16,7 @@ import it.polimi.se2019.view.ConcreteViewReceiver;
 import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -22,10 +25,13 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 public class ActionControllerTest {
-    GameController gameController = new GameController(Arrays.asList(new Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null);
-    ActionController actionController = new ActionController(gameController.getMatch(),gameController);
+    GameController gameController = Mockito.spy(new GameController(Arrays.asList(new
+ Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null));
+    ActionController actionController = Mockito.spy(new ActionController(gameController.getMatch(),gameController));
     Player currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
     Board board = gameController.getMatch().getBoard();
 
@@ -63,6 +69,50 @@ public class ActionControllerTest {
     }
 
     @Test
+    void testReloadWeaponOnce() {
+        Mockito.doNothing().when(actionController).updateOnStopSelection(any());
+        //Test it stops the action once no weapon can be no more reload, and it reloads one
+        currentPlayer.setTile(board.getTile(0,2));
+        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        currentPlayer.addWeapon(grabbableWeapon);
+        grabbableWeapon.setLoaded(false);
+        Action reload = new Reload();
+        currentPlayer.getActions().add(reload);
+        actionController.updateOnAction(reload);
+        actionController.updateOnWeapon(grabbableWeapon);
+        Mockito.verify(actionController).updateOnStopSelection(any());
+        assertTrue(grabbableWeapon.getLoaded());
+    }
+
+    @Test
+    void testReloadMoreWeapons() {
+        for (int i = 0; i < 3; i++) {
+            currentPlayer.addAmmo(Ammo.RED);
+            currentPlayer.addAmmo(Ammo.BLUE);
+            currentPlayer.addAmmo(Ammo.YELLOW);
+        }
+        Mockito.doNothing().when(actionController).updateOnStopSelection(any());
+        //Test it stops the action once no weapon can be no more reload, and it reloads one
+        currentPlayer.setTile(board.getTile(0,2));
+        Weapon grabbableWeapon = null;
+        try {
+            for (int i = 0; i < 2; i++) {
+                grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0))) && !currentPlayer.getWeapons().contains(w)).findAny().orElseThrow(UnsupportedOperationException::new);
+                currentPlayer.addWeapon(grabbableWeapon);
+                grabbableWeapon.setLoaded(false);
+            }
+        } catch (UnsupportedOperationException e) {
+            return;
+        }
+        Action reload = new Reload();
+        currentPlayer.getActions().add(reload);
+        actionController.updateOnAction(reload);
+        actionController.updateOnWeapon(grabbableWeapon);
+        Mockito.verify(actionController, times(0)).updateOnStopSelection(any());
+        assertTrue(grabbableWeapon.getLoaded());
+    }
+
+    @Test
     void testGrabPowerUp(){
         currentPlayer.setTile(board.getTile(0,0));
         AmmoCard grabbableAmmocard = currentPlayer.getTile().getAmmoCard();
@@ -78,12 +128,12 @@ public class ActionControllerTest {
     @Test
     void testDiscardWeapon() {
         currentPlayer.setTile(board.getTile(0,2));
-        actionController.updateOnAction(currentPlayer.getActions().get(1));
-        actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
         Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
         for (int i = 0; i < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")); i++) {
             currentPlayer.addWeapon(grabbableWeapon);
         }
+        actionController.updateOnAction(currentPlayer.getActions().get(1));
+        actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
         //Test discarding of a weapon
         actionController.updateOnAction(currentPlayer.getActions().get(1));
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
@@ -94,6 +144,7 @@ public class ActionControllerTest {
         actionController.updateOnWeapon(grabbableWeapon);
         assertEquals(3, currentPlayer.getWeapons().size());
     }
+
 
     @Test
     void testAttack(){
