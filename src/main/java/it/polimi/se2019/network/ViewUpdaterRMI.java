@@ -96,7 +96,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {
         executor.submit(() -> {
             try {
-                remoteReceiver.receiveSelectablesWrapper(new SelectableOptionsWrapper(acceptableTypes));
+                remoteReceiver.receiveSelectablesWrapper(ModelToViewConverter.fromAcceptableTypes(acceptableTypes));
             } catch (RemoteException e) {
                 Logger.log(Priority.ERROR, "Unable to send acceptable type: " + e.getMessage());
             }

@@ -3,7 +3,6 @@ package it.polimi.se2019.view.gui;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.ReceivingType;
-import it.polimi.se2019.model.Player;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
 import javafx.fxml.FXML;

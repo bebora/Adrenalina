@@ -2,10 +2,7 @@ package it.polimi.se2019.view;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.AcceptableTypes;
-import it.polimi.se2019.controller.GameController;
-import it.polimi.se2019.controller.NetworkTimeoutControllerClient;
-import it.polimi.se2019.controller.ReceivingType;
+import it.polimi.se2019.controller.*;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.EventUpdaterSocket;
@@ -85,9 +82,8 @@ public abstract class View {
 		}
 		messages = new ArrayList<>();
 		online = false;
-		List<ReceivingType> temp = new ArrayList<>();
-		AcceptableTypes acceptableTypes = new AcceptableTypes(temp);
-		selectableOptionsWrapper = new SelectableOptionsWrapper(acceptableTypes);
+		selectableOptionsWrapper = new SelectableOptionsWrapper();
+		selectableOptionsWrapper.setAcceptedTypes(new ArrayList<>());
 		networkTimeoutController = new NetworkTimeoutControllerClient(this);
 	}
 

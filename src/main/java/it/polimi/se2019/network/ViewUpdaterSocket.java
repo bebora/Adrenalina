@@ -1,6 +1,8 @@
 package it.polimi.se2019.network;
 
 import it.polimi.se2019.controller.AcceptableTypes;
+import it.polimi.se2019.controller.ModelToViewConverter;
+import it.polimi.se2019.controller.UpdateMessageCreator;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Tile;
@@ -28,7 +30,7 @@ public class ViewUpdaterSocket implements ViewUpdater{
 
     @Override
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {
-        UpdateVisitable selectableOptionsUpdate = new SelectableOptionsUpdate(acceptableTypes);
+        UpdateVisitable selectableOptionsUpdate = new SelectableOptionsUpdate(ModelToViewConverter.fromAcceptableTypes(acceptableTypes));
         workerServerSocket.update(selectableOptionsUpdate);
     }
 
@@ -66,7 +68,7 @@ public class ViewUpdaterSocket implements ViewUpdater{
     public void sendTotalUpdate(String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
-        UpdateVisitable totalUpdate = new TotalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
+        UpdateVisitable totalUpdate = UpdateMessageCreator.totalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
         workerServerSocket.update(totalUpdate);
     }
 
