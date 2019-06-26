@@ -75,41 +75,41 @@ public abstract class Match {
 	}
 
 
-    private Random rand = new Random();
+    protected Random rand = new Random();
 	/**
 	 * Sender used to send updates to players in the match
 	 */
-    private UpdateSender updateSender;
+    protected UpdateSender updateSender;
 
 	/**
 	 * True if player turn has ended
 	 */
-	boolean turnEnd;
+	protected boolean turnEnd;
 
 	/**
 	 * Board used for the Match
 	 */
-	private Board board;
+	protected Board board;
 
 	/**
 	 * List of players playing the match
 	 */
-	private List <Player> players;
+	protected List <Player> players;
 
 	/**
 	 * Index of the player whose turn is the current
 	 */
-	private int currentPlayer;
+	protected int currentPlayer;
 
 	/**
 	 * Index of the firstPlayer
 	 */
-	private int firstPlayer;
+	protected int firstPlayer;
 
 	/**
 	 * If True, the activated mode is finalFrenzy
 	 */
-	private boolean finalFrenzy;
+	protected boolean finalFrenzy;
 
 	public void setCurrentPlayer(Player player) {
 		this.currentPlayer = players.indexOf(player);

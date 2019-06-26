@@ -4,10 +4,10 @@ import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -25,24 +25,28 @@ import static org.mockito.Mockito.spy;
 class DamagedControllerTest {
     DamagedController damagedController;
     PowerUp p1, p2;
+    Player damaging, damaged1, damaged2;
 
-    @Spy
-    Player pippo;
+    @BeforeEach
+    void prepare() {
+        damaged1 = spy(new Player("d1$"));
+        Mockito.doNothing().when(damaged1).discardPowerUp(any(PowerUp.class), any(boolean.class));
+        damaged2 = spy(new Player("d1$"));
+        Mockito.doNothing().when(damaged2).discardPowerUp(any(PowerUp.class), any(boolean.class));
+        damaging = spy(new Player("foo$"));
+        p1 = CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE);
+        p2 = CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE);
 
+    }
     @Test
     void testDamaged() {
-        pippo = spy(new Player("pippo$"));
-        Mockito.doNothing().when(pippo).discardPowerUp(any(PowerUp.class), any(boolean.class));
-        Player foo = spy(new Player("foo$"));
-        p1 = CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE);
-        pippo.addPowerUp(p1, false);
         //Test marks giving with tagbackGrenade
         CountDownLatch countDownLatch = new CountDownLatch(2);
-        damagedController = new DamagedController(countDownLatch, pippo, foo, Collections.singletonList(p1));
+        damagedController = new DamagedController(countDownLatch, damaged1, damaging, Collections.singletonList(p1));
         damagedController.updateOnPowerUps(Collections.singletonList(p1));
         assertEquals(1, countDownLatch.getCount());
-        assertEquals(1, foo.getMarks().size());
-        assertEquals(pippo, foo.getMarks().get(0));
+        assertEquals(1, damaging.getMarks().size());
+        assertEquals(damaged1, damaging.getMarks().get(0));
 
         //Test updateStopSelection
         damagedController.updateOnStopSelection(TRUE);
@@ -68,15 +72,8 @@ class DamagedControllerTest {
                 damagedController.updateOnPowerUps(Collections.singletonList(p));
             }
         }
-        //Setup players and relative DamagedController
-        p1 = CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE);
-        p2 = CardCreator.parsePowerUp("tagbackGrenade.btl", Ammo.BLUE);
-        Player damaged1 = spy(new Player("d1"));
-        Player damaged2 = spy(new Player("d2"));
-        Player damaging = spy(new Player("d3"));
+        //Setup executor and DamagedController
         ThreadPoolExecutor eventExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
-        Mockito.doNothing().when(damaged1).discardPowerUp(any(PowerUp.class), any(boolean.class));
-        Mockito.doNothing().when(damaged2).discardPowerUp(any(PowerUp.class), any(boolean.class));
         DamagedController d1 = new DamagedController(countDownLatch, damaged1, damaging, Collections.singletonList(p1));
         DamagedController d2 = new DamagedController(countDownLatch, damaged2, damaging, Collections.singletonList(p2));
 
