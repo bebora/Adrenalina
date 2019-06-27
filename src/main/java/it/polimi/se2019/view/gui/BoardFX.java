@@ -8,6 +8,7 @@ import it.polimi.se2019.view.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -21,11 +22,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.RecursiveAction;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BoardFX extends StackPane {
@@ -53,7 +50,9 @@ public class BoardFX extends StackPane {
 
     ViewBoard viewBoard;
     List<ViewPlayer> players;
+    String username;
     ViewTileCoords clientPlayerPosition;
+    ChoiceDialog<String> choiceDialog;
     List<ViewTileCoords> selectedCoords;
     List<String> selectedPlayers;
     List<String> blueWeapons;
@@ -321,51 +320,13 @@ public class BoardFX extends StackPane {
     }
 
     void showPossibleDirections(List<String> directions) {
-        for (String d : directions) {
-            switch (d) {
-                case "SOUTH":
-                    for (int i = clientPlayerPosition.getPosy() + 1; i < viewBoard.getTiles().get(clientPlayerPosition.getPosx()).size(); i++) {
-                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, clientPlayerPosition.getPosx(), i);
-                        selectionRectangle.setOpacity(0.30);
-                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
-                    }
-                    break;
-                case "NORTH":
-                    for(int i = clientPlayerPosition.getPosy() - 1; i >= 0; i--){
-                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, clientPlayerPosition.getPosx(), i);
-                        selectionRectangle.setOpacity(0.30);
-                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
-                    }
-                    break;
-                case "EAST":
-                    for(int i = clientPlayerPosition.getPosx() + 1; i < viewBoard.getTiles().size(); i++){
-                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, i, clientPlayerPosition.getPosy());
-                        selectionRectangle.setOpacity(0.30);
-                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
-                    }
-                    break;
-                case "WEST":
-                    for(int i = 0; i < clientPlayerPosition.getPosx(); i++){
-                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, i, clientPlayerPosition.getPosy());
-                        selectionRectangle.setOpacity(0.30);
-                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
-                    }
-                    break;
-            }
+        if(choiceDialog == null) {
+            choiceDialog = new ChoiceDialog<>(null, directions);
+            Optional<String> choice = choiceDialog.showAndWait();
+            choice.ifPresent(c -> eventUpdater.sendDirection(c));
         }
     }
 
-    private void selectDirection(MouseEvent event){
-        Node n = (Node)event.getSource();
-        if(GridPane.getColumnIndex(n) > clientPlayerPosition.getPosx())
-            eventUpdater.sendDirection("EAST");
-        else if(GridPane.getColumnIndex(n) < clientPlayerPosition.getPosx())
-            eventUpdater.sendDirection("WEST");
-        else if(GridPane.getRowIndex(n) > clientPlayerPosition.getPosy())
-            eventUpdater.sendDirection("SOUTH");
-        else if(GridPane.getRowIndex(n) < clientPlayerPosition.getPosy())
-            eventUpdater.sendDirection("NORTH");
-    }
 
 
     void selectRoom(MouseEvent mouseEvent){

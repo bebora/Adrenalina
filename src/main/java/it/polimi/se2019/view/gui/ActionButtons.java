@@ -16,6 +16,7 @@ public class ActionButtons extends HBox {
     Button grab;
     Button reload;
     Button stop;
+    Button info;
     SenderButton send;
 
     public List<String> possibleActions;
@@ -39,8 +40,9 @@ public class ActionButtons extends HBox {
         send = new SenderButton(eventUpdater);
         stop = new Button();
         stop.setText("STOP");
+        info = new Button();
+        info.setText("INFO");
         this.getChildren().addAll(attack,move,grab,reload,send,stop);
-
     }
 
     private void onClick(MouseEvent mouseEvent){

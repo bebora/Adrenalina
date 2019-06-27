@@ -6,6 +6,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.util.Properties;
@@ -47,7 +49,12 @@ public class LoginScreen extends Application {
         String gameMode = mode.getValue() != null ? mode.getValue() : mode.getPromptText();
         view.setGameMode(gameMode);
         view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-        //TODO:prevent further input and display some kind of loading screen when it gets set to WAITING
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode()) {
+                primaryStage.close();
+            }
+        });
+        primaryStage.setFullScreenExitHint("Press ESC to close the application");
     }
 
     public static void main(String[] args){

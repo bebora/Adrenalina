@@ -66,8 +66,10 @@ public class WeaponsBox extends HBox {
     }
 
     public void setSelectableEffects(SelectableOptions<String> selectableEffects) {
-        this.selectableEffects = selectableEffects;
-        showSelectableEffects();
+        if(this.selectableEffects == null || !this.selectableEffects.equals(selectableEffects)) {
+            this.selectableEffects = selectableEffects;
+            showSelectableEffects();
+        }
     }
 
     private void showSelectableEffects(){
@@ -76,7 +78,8 @@ public class WeaponsBox extends HBox {
         dialog.setHeaderText("Select the effect that you want to use:");
         dialog.setContentText("Selectable effects:");
         Optional<String> result = dialog.showAndWait();
-        result.ifPresent(e->eventUpdater.sendEffect(result.get()));
+        result.ifPresent(e->eventUpdater.sendEffect(e));
+        dialog.close();
     }
 
 }

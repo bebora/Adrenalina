@@ -136,7 +136,7 @@ public class BoardScreen extends HBox {
                     boardFX.showPossibleRooms(selectableOptionsWrapper.getSelectableRooms().getOptions());
                     break;
                 case DIRECTION:
-                    boardFX.showPossibleDirections(Arrays.asList("NORTH", "SOUTH", "WEST", "EAST"));
+                    boardFX.showPossibleDirections(selectableOptionsWrapper.getSelectableDirections().getOptions());
                     break;
                 case EFFECT:
                     weaponsBox.setSelectableEffects(selectableOptionsWrapper.getSelectableEffects());
