@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BoardFX extends StackPane {
@@ -49,6 +50,7 @@ public class BoardFX extends StackPane {
     EventUpdater eventUpdater;
 
     SelectableOptionsWrapper selectableOptionsWrapper;
+    SenderButton senderButton;
 
     ViewBoard viewBoard;
     List<ViewPlayer> players;
@@ -135,12 +137,17 @@ public class BoardFX extends StackPane {
             Logger.log(Priority.DEBUG,e.getMessage());
         }
     }
+
     public void setBoard(ViewBoard viewBoard){
         this.viewBoard = viewBoard;
         Image boardImage = new Image(getClass().getClassLoader().getResourceAsStream(
                 "assets/boards/" + viewBoard.getName() + ".png"
         ));
         boardView.setImage(boardImage);
+    }
+
+    public void setSenderButton(SenderButton senderButton){
+        this.senderButton = senderButton;
     }
 
     public void setDominationPane(DominationBoardFX dominationPane){
@@ -200,6 +207,7 @@ public class BoardFX extends StackPane {
     }
 
     void showPossiblePlayers(List<String> players) {
+        selectedPlayers = new ArrayList<>();
         for (String p : players) {
             Circle playerCircle = playersCircles.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
             GuiHelper.applyBorder(playerCircle,30);
@@ -207,8 +215,8 @@ public class BoardFX extends StackPane {
         }
     }
 
-    @FXML
-    public void selectPlayer(MouseEvent mouseEvent){
+
+    void selectPlayer(MouseEvent mouseEvent){
         Circle circle = (Circle)mouseEvent.getSource();
         String playerName = (String)circle.getUserData();
         if(selectedPlayers.contains(playerName))
@@ -217,6 +225,8 @@ public class BoardFX extends StackPane {
             selectedPlayers.add(playerName);
             circle.setOpacity(0.60);
         }
+        if(selectableOptionsWrapper.getSelectablePlayers().checkForCoherency(selectedPlayers))
+            senderButton.setPlayers(selectedPlayers);
         if(selectedPlayers.size() == selectableOptionsWrapper.getSelectablePlayers().getMaxSelectables())
             eventUpdater.sendPlayers(selectedPlayers);
     }
@@ -274,12 +284,14 @@ public class BoardFX extends StackPane {
             selectable.setEffect(colorAdjust);
             selectedCoords.add(selectedCoord);
         }
+        if(selectableOptionsWrapper.getSelectableTileCoords().checkForCoherency(selectedCoords))
+            senderButton.setViewTileCoords(selectedCoords);
         if(selectedCoords.size() == selectableOptionsWrapper.getSelectableTileCoords().getMaxSelectables())
             eventUpdater.sendTiles(selectedCoords);
 
     }
 
-    public void showPossibleTiles(List<ViewTileCoords> tileCoords){
+    void showPossibleTiles(List<ViewTileCoords> tileCoords){
         selectedCoords = new ArrayList<>();
         for(ViewTileCoords t: tileCoords){
             Rectangle selectionRectangle = (Rectangle)GuiHelper.getNodeByIndex(selectionBoard,t.getPosx(),t.getPosy());
@@ -288,7 +300,29 @@ public class BoardFX extends StackPane {
         }
     }
 
-    public void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper){
+    void showPossibleRooms(List<String> rooms){
+        for(String r : rooms){
+            List<ViewTileCoords> roomTiles = viewBoard.getTiles().stream()
+                    .flatMap(Collection::stream)
+                    .filter(Objects::nonNull)
+                    .filter(t->t.getRoom().equals(r))
+                    .map(ViewTile::getCoords)
+                    .collect(Collectors.toList());
+            for(ViewTileCoords t: roomTiles){
+                Rectangle selectionRectangle = (Rectangle)GuiHelper.getNodeByIndex(selectionBoard,t.getPosx(),t.getPosy());
+                selectionRectangle.setOpacity(0.30);
+                selectionRectangle.setOnMouseClicked(e->selectRoom(e));
+            }
+        }
+    }
+
+    void selectRoom(MouseEvent mouseEvent){
+        Rectangle rectangle = (Rectangle)mouseEvent.getSource();
+        String room = viewBoard.getTiles().get(GridPane.getRowIndex(rectangle)).get(GridPane.getColumnIndex(rectangle)).getRoom();
+        eventUpdater.sendRoom(room);
+    }
+
+    void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper){
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         if(selectableOptionsWrapper.getAcceptedTypes().contains(ReceivingType.WEAPON))
             showPossibleWeapons();

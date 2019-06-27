@@ -41,7 +41,8 @@ public class BoardScreen extends HBox {
         VBox boardZone = new VBox();
         boardZone.setSpacing(20);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
-        powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater());
+        powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater(),actionButtons.getSenderButton());
+        boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         boardZone.getChildren().addAll(boardFX,actionButtons);
         clientPlayer = new PlayerBoardFX();
@@ -128,6 +129,14 @@ public class BoardScreen extends HBox {
                     break;
                 case PLAYERS:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
+                    break;
+                case ROOM:
+                    boardFX.showPossibleRooms(selectableOptionsWrapper.getSelectableRooms().getOptions());
+                    break;
+                case DIRECTION:
+
+                case EFFECT:
+                    weaponsBox.setSelectableEffects(selectableOptionsWrapper.getSelectableEffects());
                     break;
                 default:
                     break;

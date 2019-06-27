@@ -15,7 +15,7 @@ public class ActionButtons extends HBox {
     Button move;
     Button grab;
     Button reload;
-    Button send;
+    SenderButton send;
 
     public List<String> possibleActions;
     EventUpdater eventUpdater;
@@ -35,10 +35,7 @@ public class ActionButtons extends HBox {
         reload = new Button();
         reload.setText("RELOAD");
         reload.setOnMouseClicked(e->onClick(e));
-        send = new Button();
-        send.setText("SEND");
-
-
+        send = new SenderButton(eventUpdater);
         this.getChildren().addAll(attack,move,grab,reload,send);
     }
 
@@ -55,10 +52,10 @@ public class ActionButtons extends HBox {
         }
     }
 
-    public void setPossibleActions(List<String> possibleActions){
+    public void setPossibleActions(List<String> possibleActions) {
         this.possibleActions = possibleActions;
-        for(String s: possibleActions){
-            switch (s){
+        for (String s : possibleActions) {
+            switch (s) {
                 case "ATTACK":
                     attack.setDisable(false);
                     break;
@@ -77,7 +74,7 @@ public class ActionButtons extends HBox {
         }
     }
 
-    public void setSendType(ReceivingType receivingType){
-
+    public SenderButton getSenderButton(){
+        return send;
     }
 }

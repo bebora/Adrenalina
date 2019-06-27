@@ -18,8 +18,10 @@ public class PowerUpsBox extends HBox {
     List<ViewPowerUp> selectedPowerUp;
     SelectableOptions<ViewPowerUp> powerUpSelectableOptions;
     EventUpdater eventUpdater;
+    SenderButton senderButton;
 
-    public PowerUpsBox(EventUpdater eventUpdater){
+    public PowerUpsBox(EventUpdater eventUpdater,SenderButton senderButton){
+        this.senderButton = senderButton;
         this.eventUpdater = eventUpdater;
     }
     public void setPowerUps(List<ViewPowerUp> powerUps){
