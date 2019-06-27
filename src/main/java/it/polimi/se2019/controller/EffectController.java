@@ -301,7 +301,12 @@ public class EffectController extends Observer {
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt().split("\\$")[1]));
+                    try {
+                        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt().split("\\$")[1]));
+                    }
+                    catch (Exception e ) {
+                        System.out.println(curMove.getPrompt());
+                    }
                 }
                 break;
         }
@@ -605,7 +610,12 @@ public class EffectController extends Observer {
             updateOnTiles(tiles);
         }
         else {
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
+                try {
+                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
+                }
+                catch (Exception e) {
+                    System.out.println(curMove.getPrompt());
+                }
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
             }

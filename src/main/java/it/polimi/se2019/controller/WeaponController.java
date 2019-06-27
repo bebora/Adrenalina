@@ -175,7 +175,7 @@ public class WeaponController extends Observer {
     @Override
     public void updateOnConclusion() {
         effectController = null;
-        boolean modalWeaponActivated = (weapon.getEffects().get(0).getAbsolutePriority() == 1)
+        boolean modalWeaponActivated = (weapon.getEffects().size() > 1) && (weapon.getEffects().get(0).getAbsolutePriority() == 1)
                 && (weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority())
                 && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
         boolean finished = weapon.getEffects().get(0).getActivated() || modalWeaponActivated;

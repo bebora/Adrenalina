@@ -1,21 +1,15 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.controller.events.EffectControllerFramework;
 import it.polimi.se2019.model.Match;
-import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.network.ViewUpdater;
-import it.polimi.se2019.network.ViewUpdaterRMI;
-import it.polimi.se2019.view.ConcreteViewReceiver;
-import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,42 +17,11 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class EffectControllerTest {
-    private List<Player> testPlayers;
-    private GameController gameController;
-    private Match testMatch;
-    private Match sandboxMatch;
-    private Weapon testWeapon;
-    private Player currentPlayer;
-    private Player originalCurrentPlayer;
-    private ActionController actionController;
-    private WeaponController wp;
-
+public class EffectControllerTest extends EffectControllerFramework {
 
     @BeforeEach
     void prepareWeapon(){
-        testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
-        gameController = new GameController(testPlayers,"board1" +".btlb",5,false, null);
-        testMatch = gameController.getMatch();
-        testWeapon = CardCreator.parseWeapon("cyberblade.btl");
-        originalCurrentPlayer = testMatch.getPlayers().get(testMatch.getCurrentPlayer());
-        originalCurrentPlayer.setVirtualView(new VirtualView(new LobbyController(new ArrayList<>(Arrays.asList(Mode.NORMAL)))));
-        VirtualView view = new VirtualView();
-        ViewUpdater viewUpdater = null;
-        try {
-            viewUpdater = new ViewUpdaterRMI(new ConcreteViewReceiver(view), view);
-        }
-        catch (RemoteException e) {
-            System.out.println("Unable to create ViewReceiver");
-        }
-        originalCurrentPlayer.getVirtualView().setViewUpdater(viewUpdater, false);
-        actionController = new ActionController(testMatch,gameController);
-        sandboxMatch = new NormalMatch(testMatch);
-        currentPlayer = sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer());
-        currentPlayer.addWeapon(testWeapon);
-        testWeapon.setLoaded(true);
-        wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),null);
-        wp.updateOnWeapon(testWeapon);
+        prepareWeapon("cyberblade.btl");
     }
     @Test
     void testCorrectTarget(){
@@ -72,7 +35,6 @@ public class EffectControllerTest {
                 .findAny().orElse(null);
         //player satisfy the target condition
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
-        notCurrentPlayer.remove(1);
         notCurrentPlayer.get(0).setTile(testMatch.getBoard().getTile(0,0));
         ec.updateOnPlayers(Arrays.asList(originalNotCurrentPlayer));
         sandboxMatch.restoreMatch(testMatch);

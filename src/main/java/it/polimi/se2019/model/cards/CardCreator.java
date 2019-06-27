@@ -428,6 +428,7 @@ public class CardCreator {
                     objectToMove = ObjectToMove.SELF;
                     targetDestination = new Target.Builder().build();
                     targeting = ThreeState.OPTIONAL;
+                    prompt = "";
                     targetSource = new Target.Builder().build();
                     break;
                 case "objecttomove":

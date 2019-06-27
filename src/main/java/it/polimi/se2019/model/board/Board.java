@@ -196,8 +196,8 @@ public class Board {
 		}
 		if (maxDistance == -1) {
 		    if (minDistance > 0) {
-				reachableTiles.removeAll(reachableTiles.get(minDistance - 1));
-				return reachableTiles.get(minDistance);
+				totalTiles.removeAll(reachableTiles.get(minDistance - 1));
+				return totalTiles;
 			} else {
 				return totalTiles;
 			}

@@ -1,5 +1,7 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
@@ -121,9 +123,11 @@ public class EventHelper {
      */
     public Color getRoomFromString(String room) {
         Set<Color> colors = match.getBoard().getTiles().stream().
-                flatMap(List::stream).map(Tile::getRoom).collect(Collectors.toSet());
+                flatMap(List::stream).filter(t -> t != null).map(Tile::getRoom).collect(Collectors.toSet());
         try {
+            Logger.log(Priority.DEBUG, "Color choice is " + room);
             Color relatedColor = Color.valueOf(room);
+            Logger.log(Priority.DEBUG, relatedColor.toString());
             if (colors.contains(relatedColor))
                 return relatedColor;
             else throw new IncorrectEvent("Color is not present in the map!");

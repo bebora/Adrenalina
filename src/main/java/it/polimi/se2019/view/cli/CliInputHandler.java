@@ -17,11 +17,14 @@ import java.util.stream.Collectors;
 public class CliInputHandler implements Runnable{
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     private String in = "notQuit";
-    private CLI view;
-    private EventUpdater eventUpdater;
+    protected CLI view;
+    protected EventUpdater eventUpdater;
     private static final String WRONGINPUT = "Wrong input!";
     private String[] args;
 
+    public CliInputHandler() {
+        //Default constructor doesn't need to initialize nothing
+    }
     public CliInputHandler(String[] args){
         this.args = args;
     }
@@ -78,14 +81,14 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage("No valid player", "R");
     }
 
-    private void parseAmmo(String ammo)  {
+    void parseAmmo(String ammo)  {
         if(view.getSelectableOptionsWrapper().getSelectableAmmos().getOptions().contains(ammo))
             eventUpdater.sendAmmo(ammo);
         else
             CLI.printMessage("Wrong input","R");
     }
 
-    private void parseSelection(String[] inSplit){
+    void parseSelection(String[] inSplit){
         String error = "This is not something you can select!";
         String[] selectedElements = new String[inSplit.length-2];
         System.arraycopy(inSplit,2,selectedElements,0,inSplit.length-2);
@@ -135,7 +138,7 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage(error, "R");
     }
 
-    private void parsePlayers(String[] players) {
+    void parsePlayers(String[] players) {
         List<String> selectedViewPlayers = new ArrayList<>();
         SelectableOptions<String> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePlayers();
         boolean success;
@@ -276,7 +279,7 @@ public class CliInputHandler implements Runnable{
         }
     }
 
-    private void connectionChoice(BufferedReader input){
+    protected void connectionChoice(BufferedReader input){
         final String DEFAULTNETWORK = "rmi";
         final String DEFAULTURL = "localhost";
         final String DEFAULTRMIPORT = "1099";
@@ -389,7 +392,7 @@ public class CliInputHandler implements Runnable{
             LoginScreen.main(args);
             return;
         }
-        while(view.getStatus()==Status.WAITING) {
+        while(view.getStatus() == null || view.getStatus()==Status.WAITING) {
             try {
                 Thread.sleep(100);
             }

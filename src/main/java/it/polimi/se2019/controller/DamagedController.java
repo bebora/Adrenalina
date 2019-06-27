@@ -1,5 +1,6 @@
 package it.polimi.se2019.controller;
 
+import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.cards.PowerUp;
@@ -17,6 +18,11 @@ public class DamagedController extends Observer {
     private Player damagingPlayer;
     private List<PowerUp> applicable;
     private CountDownLatch countDownLatch;
+
+    @Override
+    public Match getMatch() {
+        return damagingPlayer.getMatch();
+    }
 
     /**
      * @param countDownLatch latch notified when the DamagedController finishes its actions

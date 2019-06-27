@@ -3,7 +3,10 @@ package it.polimi.se2019.view;
 import it.polimi.se2019.controller.ReceivingType;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
+
+import static it.polimi.se2019.controller.ReceivingType.*;
 
 public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<String> selectableActions;
@@ -59,6 +62,10 @@ public class SelectableOptionsWrapper implements Serializable {
         return selectableWeapons;
     }
 
+    public SelectableOptions<String> getSelectableDirections() {
+        return selectableDirections;
+    }
+
     public void setSelectableActions(SelectableOptions<String> selectableActions) {
         this.selectableActions = selectableActions;
     }
@@ -103,8 +110,18 @@ public class SelectableOptionsWrapper implements Serializable {
         this.stopPrompt = stopPrompt;
     }
 
+    public SelectableOptions<String> getSelectableStringOptions(ReceivingType selected) {
+        List<ReceivingType> types = Arrays.asList(AMMO, ROOM, WEAPON, ACTION, EFFECT, DIRECTION);
+        if (types.contains(selected)) {
+            return getSelectableOptions(selected);
+        }
+        else throw new UnsupportedOperationException();
+    }
+
     public SelectableOptions getSelectableOptions(ReceivingType selected){
         switch (selected){
+            case DIRECTION:
+                return getSelectableDirections();
             case AMMO:
                 return getSelectableAmmos();
             case ROOM:

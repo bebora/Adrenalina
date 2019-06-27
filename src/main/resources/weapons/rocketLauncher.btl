@@ -33,7 +33,7 @@ name:rocket launcher
        objectToMove:TARGETSOURCE
        targetSource:
          checkTargetList:TRUE
-         maxTargets:1
+         maxTargets:0
        targetDestination:
          minDistance:0
          maxDistance:1

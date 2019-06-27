@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Generic Controller - observer class used for receiving the updates from the {@link RequestDispatcher}
  */
-public class Observer {
+public abstract class Observer {
     public void updateOnTiles(List<Tile> tiles) {
         throw new IncorrectEvent("Can't accept tiles!");
     }
@@ -66,7 +66,5 @@ public class Observer {
         throw new IncorrectEvent("Can't process!");
     }
 
-    public Match getMatch() {
-        throw new UnsupportedOperationException();
-    }
+    public abstract Match getMatch();
 }
