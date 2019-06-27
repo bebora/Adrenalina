@@ -15,6 +15,7 @@ public class ActionButtons extends HBox {
     Button move;
     Button grab;
     Button reload;
+    Button stop;
     SenderButton send;
 
     public List<String> possibleActions;
@@ -36,7 +37,10 @@ public class ActionButtons extends HBox {
         reload.setText("RELOAD");
         reload.setOnMouseClicked(e->onClick(e));
         send = new SenderButton(eventUpdater);
-        this.getChildren().addAll(attack,move,grab,reload,send);
+        stop = new Button();
+        stop.setText("STOP");
+        this.getChildren().addAll(attack,move,grab,reload,send,stop);
+
     }
 
     private void onClick(MouseEvent mouseEvent){
@@ -72,6 +76,11 @@ public class ActionButtons extends HBox {
                     break;
             }
         }
+    }
+
+    public void enableStop(){
+        stop.setDisable(false);
+        stop.setOnMouseClicked(e->eventUpdater.sendStop());
     }
 
     public SenderButton getSenderButton(){

@@ -20,13 +20,12 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 
-
-import javax.print.DocFlavor;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.RecursiveAction;
 import java.util.stream.Collectors;
 
 public class BoardFX extends StackPane {
@@ -54,6 +53,7 @@ public class BoardFX extends StackPane {
 
     ViewBoard viewBoard;
     List<ViewPlayer> players;
+    ViewTileCoords clientPlayerPosition;
     List<ViewTileCoords> selectedCoords;
     List<String> selectedPlayers;
     List<String> blueWeapons;
@@ -203,6 +203,7 @@ public class BoardFX extends StackPane {
         for(Node n: selectionBoard.getChildren()){
             n.setEffect(null);
             n.setOpacity(0);
+            n.setOnMouseClicked(null);
         }
     }
 
@@ -212,6 +213,7 @@ public class BoardFX extends StackPane {
             Circle playerCircle = playersCircles.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
             GuiHelper.applyBorder(playerCircle,30);
             playerCircle.setOnMouseClicked(e->selectPlayer(e));
+            tileBoard.toFront();
         }
     }
 
@@ -298,6 +300,7 @@ public class BoardFX extends StackPane {
             selectionRectangle.setOpacity(0.50);
             selectionRectangle.setOnMouseClicked(e->selectTile(e));
         }
+        selectionBoard.toFront();
     }
 
     void showPossibleRooms(List<String> rooms){
@@ -311,10 +314,59 @@ public class BoardFX extends StackPane {
             for(ViewTileCoords t: roomTiles){
                 Rectangle selectionRectangle = (Rectangle)GuiHelper.getNodeByIndex(selectionBoard,t.getPosx(),t.getPosy());
                 selectionRectangle.setOpacity(0.30);
+                selectionRectangle.setMouseTransparent(false);
                 selectionRectangle.setOnMouseClicked(e->selectRoom(e));
             }
         }
     }
+
+    void showPossibleDirections(List<String> directions) {
+        for (String d : directions) {
+            switch (d) {
+                case "SOUTH":
+                    for (int i = clientPlayerPosition.getPosy() + 1; i < viewBoard.getTiles().get(clientPlayerPosition.getPosx()).size(); i++) {
+                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, clientPlayerPosition.getPosx(), i);
+                        selectionRectangle.setOpacity(0.30);
+                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
+                    }
+                    break;
+                case "NORTH":
+                    for(int i = clientPlayerPosition.getPosy() - 1; i >= 0; i--){
+                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, clientPlayerPosition.getPosx(), i);
+                        selectionRectangle.setOpacity(0.30);
+                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
+                    }
+                    break;
+                case "EAST":
+                    for(int i = clientPlayerPosition.getPosx() + 1; i < viewBoard.getTiles().size(); i++){
+                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, i, clientPlayerPosition.getPosy());
+                        selectionRectangle.setOpacity(0.30);
+                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
+                    }
+                    break;
+                case "WEST":
+                    for(int i = 0; i < clientPlayerPosition.getPosx(); i++){
+                        Rectangle selectionRectangle = (Rectangle) GuiHelper.getNodeByIndex(selectionBoard, i, clientPlayerPosition.getPosy());
+                        selectionRectangle.setOpacity(0.30);
+                        selectionRectangle.setOnMouseClicked(e -> selectDirection(e));
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void selectDirection(MouseEvent event){
+        Node n = (Node)event.getSource();
+        if(GridPane.getColumnIndex(n) > clientPlayerPosition.getPosx())
+            eventUpdater.sendDirection("EAST");
+        else if(GridPane.getColumnIndex(n) < clientPlayerPosition.getPosx())
+            eventUpdater.sendDirection("WEST");
+        else if(GridPane.getRowIndex(n) > clientPlayerPosition.getPosy())
+            eventUpdater.sendDirection("SOUTH");
+        else if(GridPane.getRowIndex(n) < clientPlayerPosition.getPosy())
+            eventUpdater.sendDirection("NORTH");
+    }
+
 
     void selectRoom(MouseEvent mouseEvent){
         Rectangle rectangle = (Rectangle)mouseEvent.getSource();

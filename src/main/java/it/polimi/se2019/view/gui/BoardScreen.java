@@ -7,6 +7,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
+
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -134,9 +136,13 @@ public class BoardScreen extends HBox {
                     boardFX.showPossibleRooms(selectableOptionsWrapper.getSelectableRooms().getOptions());
                     break;
                 case DIRECTION:
-
+                    boardFX.showPossibleDirections(Arrays.asList("NORTH", "SOUTH", "WEST", "EAST"));
+                    break;
                 case EFFECT:
                     weaponsBox.setSelectableEffects(selectableOptionsWrapper.getSelectableEffects());
+                    break;
+                case STOP:
+                    actionButtons.enableStop();
                     break;
                 default:
                     break;
