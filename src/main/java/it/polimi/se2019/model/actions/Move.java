@@ -22,6 +22,7 @@ public class Move extends Action {
             movements = 4;
     }
 
+    @Override
     public String toString() {
         return "MOVE";
     }

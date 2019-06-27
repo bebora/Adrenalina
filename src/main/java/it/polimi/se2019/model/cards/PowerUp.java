@@ -63,6 +63,7 @@ public class PowerUp {
 			this.name = name;
 			return this;
 		}
+
 		public PowerUp build(){
 			return new PowerUp(this);
 		}
@@ -99,11 +100,8 @@ public class PowerUp {
 	 * @return
 	 */
 	public static boolean checkCompatibility(List<PowerUp> powerUps, List<Ammo> ammos) {
-
 		List<Ammo> relatedAmmos = powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList());
 		return Player.checkForAmmos(ammos, relatedAmmos);
-
-
 	}
 
 	@Override

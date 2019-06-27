@@ -15,9 +15,6 @@ import static it.polimi.se2019.model.ThreeState.OPTIONAL;
  * Parser used for reading configuration files for PowerUps and Weapons
  */
 public class CardCreator {
-    private CardCreator() {
-        throw new IllegalStateException("Utility class");
-    }
     /**
      * Returns a PowerUp object after parsing its configuration from a btl file.
      * The file must be in the resource folder.
@@ -212,8 +209,8 @@ public class CardCreator {
 
 
     }
-    private static ArrayList<Ammo> parseCost(BufferedReader bufRead) throws IOException{
-        ArrayList<Ammo> temp = new ArrayList<>();
+    private static List<Ammo> parseCost(BufferedReader bufRead) throws IOException{
+        List<Ammo> temp = new ArrayList<>();
         String curLine;
         curLine = bufRead.readLine().trim();
         while(!curLine.contains(":")){
@@ -479,6 +476,5 @@ public class CardCreator {
         bufRead.reset();
         return order;
     }
-
 }
 

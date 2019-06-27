@@ -27,6 +27,7 @@ public class Grab extends Action {
             movements = 2;
     }
 
+    @Override
     public String toString(){
         return "GRAB";
     }

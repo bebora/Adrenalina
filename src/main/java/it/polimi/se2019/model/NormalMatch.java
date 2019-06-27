@@ -22,6 +22,7 @@ public class NormalMatch extends Match {
 	 * If an overkill took place, the player that overkilled gets added to the track and a mark gets added to the overkiller.
 	 * @param player who got the killshot
 	 */
+	@Override
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));
 		player.getRewardPoints().remove(0);
@@ -42,6 +43,7 @@ public class NormalMatch extends Match {
 	 *    * </ul><p>
 	 * @return winning players
 	 */
+	@Override
 	public List<Player> getWinners() {
 		for (Player p : players)
 			scorePlayerBoard(p);

@@ -36,6 +36,7 @@ public class Attack extends Action {
             movements = 1;
     }
 
+    @Override
     public String toString() {
         return "ATTACK";
     }

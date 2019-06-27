@@ -218,5 +218,4 @@ public class DominationMatch extends Match {
 
     @Override
     public List<SpawnPlayer> getSpawnPoints(){ return spawnPoints; }
-
 }
