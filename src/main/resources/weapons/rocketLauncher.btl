@@ -27,7 +27,6 @@ name:rocket launcher
        prompt:Select the tile of the player you just attacked
        targetDestination:
          maxDistance:0
-         maxTargets:0
          pointOfView:LASTPLAYER
      move:
        objectToMove:TARGETSOURCE

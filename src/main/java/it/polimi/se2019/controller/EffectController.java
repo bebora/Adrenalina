@@ -327,6 +327,7 @@ public class EffectController extends Observer {
      * <li>Attacking every player in a {@link Tile}</li>
      * <li>Attacking every player in a Room</li>
      * <li>Attack single players</li>
+     * <li>If all the tiles need to be selected, attack every tile</li>
      * The target gets parsed from {@link Target}, using the related Predicates.
      */
     private void processDealDamage(){
@@ -340,6 +341,10 @@ public class EffectController extends Observer {
                 List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
                 if (selectableTiles.isEmpty()) {
                     updateOnStopSelection(OPTIONAL);
+                    skip = true;
+                }
+                else if (max == 0) {
+                    updateOnTiles(selectableTiles);
                     skip = true;
                 }
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));

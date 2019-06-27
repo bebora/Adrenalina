@@ -186,6 +186,7 @@ public class WeaponController extends Observer {
             }
             else {
                 curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Weapon can't be used this way! Try another time");
+                actionController.updateOnStopSelection(ThreeState.OPTIONAL);
             }
         else {
             if (finished) {

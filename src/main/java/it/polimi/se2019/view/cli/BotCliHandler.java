@@ -37,7 +37,14 @@ public class BotCliHandler extends CliInputHandler {
 
     @Override
     public void run() {
-        String string = "\n\n\n\n\n\n\n\n";
+        int rnd = random.nextInt(2);
+        String string;
+        if (rnd == 1) {
+            string = "rmi\nlocalhost\n1099\n\n\n\n\n\n";
+        }
+        else {
+            string = "socket\nlocalhost\n1337\n\n\n\n\n\n";
+        }
         Reader inputString = new StringReader(string);
         BufferedReader reader = new BufferedReader(inputString);
         connectionChoice(reader);
@@ -67,11 +74,11 @@ public class BotCliHandler extends CliInputHandler {
             } catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "Interrupted!");
             }
-
-            if (view.getStatus().equals(Status.END)) {
-                System.out.println("Finished with " + view.getReceivingTypes());
-            }
         }
+        if (view.getStatus().equals(Status.END)) {
+            System.out.println("Finished with " + view.getReceivingTypes());
+        }
+        System.exit(0);
     }
 
     public void selectRandom(List<ReceivingType> types) {

@@ -265,7 +265,7 @@ public class GameController extends Observer {
      * @return
      */
     private boolean checkEndTurn() {
-        if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && (!match.getFinalFrenzy()) && !currentPlayer.canReload())) || actionCounter == currentPlayer.getMaxActions() +1)
+        if ((actionCounter == currentPlayer.getMaxActions() && (!currentPlayer.hasPowerUp(Moment.OWNROUND) && (!match.getFinalFrenzy()) && !currentPlayer.canReload() || match.getFinalFrenzy())) || actionCounter == currentPlayer.getMaxActions() +1)
             return true;
         else return false;
     }
