@@ -145,6 +145,10 @@ public class BoardFX extends StackPane {
         boardView.setImage(boardImage);
     }
 
+    public void updateBoard(ViewBoard viewBoard){
+        this.viewBoard = viewBoard;
+    }
+
     public void setSenderButton(SenderButton senderButton){
         this.senderButton = senderButton;
     }

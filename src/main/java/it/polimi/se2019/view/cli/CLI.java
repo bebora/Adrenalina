@@ -183,8 +183,7 @@ public class CLI extends View {
     public synchronized void  refresh(){
         if (getPlayers() != null && !getPlayers().isEmpty() && !getStatus().equals(Status.END)) {
             displayedPlayer = getSelf();
-            if (AsciiBoard.board == null)
-                AsciiBoard.board = this.getBoard();
+            AsciiBoard.board = this.getBoard();
             AsciiBoard.drawBoard(getPlayers().stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList()));
             AsciiPlayer.drawPlayerInfo(getSelf(), getLoadedWeapons(), getSelf().getUnloadedWeapons());
             AsciiPlayer.printPowerUps(this);

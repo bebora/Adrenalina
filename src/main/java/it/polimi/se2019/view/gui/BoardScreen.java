@@ -75,6 +75,7 @@ public class BoardScreen extends HBox {
     }
 
     void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
+        boardFX.updateBoard(viewBoard);
         boardFX.clearPlayers();
         boardFX.drawPlayers(players);
         boardFX.drawAmmoCard();
