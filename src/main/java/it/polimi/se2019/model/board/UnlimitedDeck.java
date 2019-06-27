@@ -22,8 +22,6 @@ public class UnlimitedDeck<T> implements Deck<T>{
         remainingCards = new LinkedList<>();
     }
 
-
-
     @Override
     public void add(T t) {
         remainingCards.add(t);
