@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.EffectControllerFramework;
 import it.polimi.se2019.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,10 +46,8 @@ public class RocketLauncherInteractionTest extends EffectControllerFramework {
         Utils.waitABit();
         //Assert that the controller is waiting for tiles
         Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerCostrainedEventHandler.class));
-        // Choose the tile
-        ec.updateOnTiles(Collections.singletonList(sandboxMatch.getBoard().getTile(0,1)));
-        Utils.waitABit();
-        Mockito.verify(requestDispatcher, times(2)).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerCostrainedEventHandler.class));
+        // Choose the tile to move the player just hit
+        Mockito.verify(requestDispatcher, times(1)).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerCostrainedEventHandler.class));
         ec.updateOnTiles(Collections.singletonList(sandboxMatch.getBoard().getTile(0,0)));
         //Verify
         sandboxMatch.restoreMatch(testMatch);

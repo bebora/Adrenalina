@@ -71,7 +71,8 @@ public class EffectController extends Observer {
     private Player currentEnemy;
     private TimerCostrainedEventHandler timerCostrainedEventHandler;
     private AcceptableTypes acceptableTypes;
-    EffectController(Effect curEffect, Weapon weapon,Match match,Player player,List<Player> originalPlayers, Observer controller){
+
+    EffectController(Effect curEffect, Weapon weapon, Match match, Player player, List<Player> originalPlayers, Observer controller) {
         this.curMatch = match;
         this.curEffect = curEffect;
         this.moveIndex = -1;
@@ -97,22 +98,21 @@ public class EffectController extends Observer {
      * If there is no next ActionType prepare clean the EffectController
      * for a new input.
      */
-     void nextStep(){
+    void nextStep() {
         playersToMove = new ArrayList<>();
-        orderIndex+=1;
+        orderIndex += 1;
         //Checks if effect completed
-        if(orderIndex < curEffect.getOrder().size()) {
+        if (orderIndex < curEffect.getOrder().size()) {
             curActionType = curEffect.getOrder().get(orderIndex);
-            if(curActionType == MOVE) {
+            if (curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
                 //Check if the move need to compute the source or destination first
-                if(curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null && curMove.getObjectToMove().equals(ObjectToMove.TARGETSOURCE))
+                if (curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null && curMove.getObjectToMove().equals(ObjectToMove.TARGETSOURCE))
                     processDirection(curMove.getTargetSource());
                 else
                     processDirection(curMove.getTargetDestination());
-            }
-            else {
+            } else {
                 dealDamageIndex += 1;
                 curDealDamage = curEffect.getDamages().get(dealDamageIndex);
                 processDirection(curDealDamage.getTarget());
@@ -130,8 +130,8 @@ public class EffectController extends Observer {
      * Check the value of the current ActionType
      * and call the proper method to prepare for user input
      */
-    private void processStep(){
-        if(curActionType == MOVE)
+    private void processStep() {
+        if (curActionType == MOVE)
             processMove();
         else
             processDealDamage();
@@ -140,11 +140,12 @@ public class EffectController extends Observer {
     /**
      * If the current value is null memorize the new value,
      * otherwise tell the user to send another Direction
+     *
      * @param direction the Direction in which the effect is applied
      * @see Direction
      */
     @Override
-    public void updateOnDirection(Direction direction){
+    public void updateOnDirection(Direction direction) {
         curEffect.setDirection(direction);
         processStep();
     }
@@ -152,10 +153,11 @@ public class EffectController extends Observer {
     /**
      * players is a list of players provided from the user to which the
      * current Move or DealDamage is applied.
+     *
      * @param originalPlayers a List of Player to which the current subeffect is applied
      */
     @Override
-    public void updateOnPlayers(List<Player> originalPlayers){
+    public void updateOnPlayers(List<Player> originalPlayers) {
         Target target;
         List<Player> players = getSandboxPlayers(originalPlayers);
         if (curActionType == MOVE) {
@@ -183,26 +185,26 @@ public class EffectController extends Observer {
      * to which the selected objects must be moved.
      * If the current sub effect is DealDamage tiles contains
      * the targets for the area damage.
+     *
      * @param tiles a target for Move(must contain a single tile) or DealDamage
      * @see Tile
      */
     @Override
-    public void updateOnTiles(List<Tile> tiles){
-        if(curActionType == MOVE) {
-            if(curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
+    public void updateOnTiles(List<Tile> tiles) {
+        if (curActionType == MOVE) {
+            if (curMove.getObjectToMove() != ObjectToMove.PERSPECTIVE)
                 playersToMove.forEach(p -> p.setTile(tiles.get(0)));
             else
                 player.setPerspective(tiles.get(0));
             handleTargeting(curMove.getTargeting(), playersToMove);
             nextStep();
-        }
-        else if (curActionType == DEALDAMAGE) {
+        } else if (curActionType == DEALDAMAGE) {
             List<Player> temp = tiles.stream()
                     .map(t -> curMatch.getPlayersInTile(t))
                     .flatMap(List::stream).collect(Collectors.toList());
             temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
-            temp.forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
-            handleTargeting(curDealDamage.getTargeting(),temp);
+            temp.forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(), curDealDamage.getMarksAmount(), true));
+            handleTargeting(curDealDamage.getTargeting(), temp);
             checkPowerUps(temp);
             nextStep();
         }
@@ -213,14 +215,15 @@ public class EffectController extends Observer {
      * to all the Player in the room (but the player itself). If the room is not a valid target
      * signals the mistake to the player.
      * Only check for using samePlayerRoom and Visibility filters.
+     *
      * @param room the color of the target room
      */
     @Override
-    public void updateOnRoom(Color room){
+    public void updateOnRoom(Color room) {
         List<Player> possibleTargets = curMatch.getPlayersInRoom(room);
         possibleTargets.removeIf(p -> p.getUsername().equals(player.getUsername()));
-        possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player),curDealDamage.getDamagesAmount(),curDealDamage.getMarksAmount(), true));
-        handleTargeting(curDealDamage.getTargeting(),possibleTargets);
+        possibleTargets.forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(), curDealDamage.getMarksAmount(), true));
+        handleTargeting(curDealDamage.getTargeting(), possibleTargets);
         checkPowerUps(possibleTargets);
         nextStep();
     }
@@ -228,28 +231,29 @@ public class EffectController extends Observer {
     /**
      * Handles receiving a stop from the client.
      * No non-reverting stops are accepted into the {@link EffectController}, so it always reverts the action.
+     *
      * @param skip
      */
     @Override
-    public void updateOnStopSelection(ThreeState skip){
+    public void updateOnStopSelection(ThreeState skip) {
         controller.updateOnStopSelection(skip);
     }
 
     /**
      * Ask the player for a Direction if the current target requires one,
      * otherwise go on with the effect
+     *
      * @param target the target of the current SubAction
-     * */
-    private void processDirection(Target target){
+     */
+    private void processDirection(Target target) {
         if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             List<Direction> directions = Arrays.asList(Direction.values());
-            acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1,1,"Select a direction!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1, 1, "Select a direction!"));
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
-        }
-        else processStep();
+        } else processStep();
     }
 
     /**
@@ -259,17 +263,17 @@ public class EffectController extends Observer {
      * <li>Moving the player itself</li>
      * <li>Moving other players, asking the player who to move.</li>
      */
-    private void processMove(){
+    private void processMove() {
         List<Tile> selectableTiles = new ArrayList<>();
         List<ReceivingType> receivingTypes;
-        switch(curMove.getObjectToMove()){
+        switch (curMove.getObjectToMove()) {
             //Handles the move of the perspective
             case PERSPECTIVE:
                 selectableTiles = tileTargets(curMove.getTargetDestination());
                 receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                 askingForSource = false;
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, curMove.getPrompt()));
                 break;
             //Handles the move of the player itself
             case SELF:
@@ -278,7 +282,7 @@ public class EffectController extends Observer {
                 askingForSource = false;
                 playersToMove.add(player);
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt()));
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, curMove.getPrompt()));
                 break;
             //Handles moving other targets; if they are chosen without the user input, they are automatically selected.
             //If user input is needed, it parses the movable targets using TargetSource
@@ -301,12 +305,7 @@ public class EffectController extends Observer {
                     }
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
                     acceptableTypes = new AcceptableTypes(receivingTypes);
-                    try {
-                        acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1,1, curMove.getPrompt().split("\\$")[1]));
-                    }
-                    catch (Exception e ) {
-                        System.out.println(curMove.getPrompt());
-                    }
+                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
                 }
                 break;
         }
@@ -314,12 +313,13 @@ public class EffectController extends Observer {
         if (!askingForSource) {
             if (selectableTiles.isEmpty()) {
                 updateOnStopSelection(OPTIONAL);
-            }else {
+            } else if (selectableTiles.size() == 1) {
+                updateOnTiles(selectableTiles);
+            } else {
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 timerCostrainedEventHandler.start();
             }
         }
-
     }
     /**
      * Ask the player for the proper target after checking the current DealDamage

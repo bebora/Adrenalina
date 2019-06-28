@@ -1,9 +1,5 @@
-package it.polimi.se2019.controller.events;
+package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.ActionController;
-import it.polimi.se2019.controller.GameController;
-import it.polimi.se2019.controller.LobbyController;
-import it.polimi.se2019.controller.WeaponController;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.NormalMatch;
@@ -21,15 +17,15 @@ import java.util.Arrays;
 import java.util.List;
 
 public class EffectControllerFramework {
-    protected List<Player> testPlayers;
-    protected GameController gameController;
-    protected Match testMatch;
-    protected Match sandboxMatch;
-    protected Weapon testWeapon;
-    protected Player currentPlayer;
-    protected Player originalCurrentPlayer;
-    protected ActionController actionController;
-    protected WeaponController wp;
+    List<Player> testPlayers;
+    GameController gameController;
+    Match testMatch;
+    Match sandboxMatch;
+    Weapon testWeapon;
+    Player currentPlayer;
+    Player originalCurrentPlayer;
+    ActionController actionController;
+    WeaponController wp;
     public void prepareWeapon(String weapon) {
         testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
         gameController = new GameController(testPlayers,"board1" +".btlb",5,false, null);

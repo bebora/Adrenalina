@@ -1,12 +1,9 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.EffectControllerFramework;
-import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.NormalMatch;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.cards.CardCreator;
-import it.polimi.se2019.model.cards.Weapon;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

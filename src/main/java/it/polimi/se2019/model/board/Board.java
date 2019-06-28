@@ -145,7 +145,10 @@ public class Board {
 	 * @return true if the tiles are connected
 	 */
 	public boolean isLinked(Tile tile1,Tile tile2, boolean throughWalls) {
-		if (!throughWalls)
+		if (tile1 == null || tile2 == null) {
+			return false;
+		}
+		else if (!throughWalls)
 			return doors.contains(new Door(tile1,tile2)) || (tile1.getRoom() == tile2.getRoom() && Tile.cabDistance(tile1,tile2) == 1);
 		else return Tile.cabDistance(tile1,tile2) == 1;
 	}
@@ -283,6 +286,7 @@ public class Board {
 			int numberWeapons = t.getWeapons().size();
 			for (int i = 0; i < 3 - numberWeapons; i++)
 			    t.addWeapon(drawWeapon());
+			t.getWeapons().removeIf(Objects::isNull);
 		}
 	}
 
