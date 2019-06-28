@@ -2,7 +2,6 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.Reload;
@@ -116,12 +115,7 @@ public class GameController extends Observer {
      */
     @Override
     public void updateOnPlayers(List<Player> players) {
-        if (acceptableTypes.getSelectablePlayers().checkForCoherency(players)) {
-            players.get(0).receiveShot(currentPlayer, 1, 0, true);
-        }
-        else {
-            throw new IncorrectEvent("Wrong players!");
-        }
+        players.get(0).receiveShot(currentPlayer, 1, 0, true);
         countDownLatch.countDown();
     }
 
@@ -137,7 +131,7 @@ public class GameController extends Observer {
         if (currentPlayer.getAlive() == OPTIONAL) {
             currentPlayer.setAlive(TRUE);
             Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                    filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().orElseThrow(() -> new IncorrectEvent("Error in PowerUps!"));
+                    filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().get();
             currentPlayer.setTile(tile);
             currentPlayer.discardPowerUp(powerUps.get(0), false);
             if (!skip)

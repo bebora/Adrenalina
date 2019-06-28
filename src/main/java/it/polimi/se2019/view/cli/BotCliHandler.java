@@ -38,13 +38,12 @@ public class BotCliHandler extends CliInputHandler {
     @Override
     public void run() {
         int rnd = random.nextInt(2);
-        rnd = 0;
         String string;
         if (rnd == 1) {
-            string = "rmi\n2.34.11.92\n1099\n\nkek\n\n\n\n";
+            string = "rmi\nlocalhost\n1099\n\nkek\n\n\n\n";
         }
         else {
-            string = "socket\n2.34.11.92\n1337\n\nkek\n\n\n\n";
+            string = "socket\nlocalhost\n1337\n\nkek\n\n\n\n";
         }
         Reader inputString = new StringReader(string);
         BufferedReader reader = new BufferedReader(inputString);
@@ -62,6 +61,11 @@ public class BotCliHandler extends CliInputHandler {
         }
         AsciiBoard.setBoard(view.getBoard());
         while (!view.getStatus().equals(Status.END)) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Logger.log(Priority.WARNING, "Interrupted!");
+            }
             List<ReceivingType> types = view.getSelectableOptionsWrapper().
                     getAcceptedTypes();
             try {
@@ -70,11 +74,7 @@ public class BotCliHandler extends CliInputHandler {
             catch (Exception e) {
                 Logger.log(Priority.WARNING, "Selection error due to " + e.getMessage());
             }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Logger.log(Priority.WARNING, "Interrupted!");
-            }
+            Logger.log(Priority.DEBUG, "Trying to choose an action");
         }
         if (view.getStatus().equals(Status.END)) {
             System.out.println("Finished with " + view.getReceivingTypes());

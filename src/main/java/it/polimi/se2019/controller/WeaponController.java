@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -147,7 +146,7 @@ public class WeaponController extends Observer {
         } else {
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerCostrainedEventHandler.start();
-            throw new IncorrectEvent("Effect not present!");
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("The effect you sent doesn't exist!");
         }
     }
 
@@ -189,11 +188,6 @@ public class WeaponController extends Observer {
                 actionController.updateOnStopSelection(ThreeState.OPTIONAL);
             }
         else {
-            if (finished) {
-                weapon.setLoaded(false);
-                if (actionController!= null)
-                    match.restoreMatch(actionController.getOriginalMatch());
-            }
             //Control for unit test purposes, actionController is always!=null
             if (actionController != null)
                 askForEffect(finished);

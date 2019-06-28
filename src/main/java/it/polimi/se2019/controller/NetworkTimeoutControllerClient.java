@@ -29,6 +29,7 @@ public class NetworkTimeoutControllerClient extends Thread{
                     view.disconnect();
                     checkingTimeout = false;
                 }
+                else lastRequest = viewLastRequest;
             } catch (InterruptedException e) {
                 Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
             }

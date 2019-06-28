@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -100,7 +99,7 @@ public class PaymentController extends Observer{
         } else {
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
             timerCostrainedEventHandler.start();
-            throw new IncorrectEvent("Error! Not enough powerUps to pay remaining cost! Give me more!");
+            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Not enough powerups! Give me more!");
         }
     }
 

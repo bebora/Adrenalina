@@ -15,4 +15,5 @@ effect:
         minDistance:1
         maxDistance:2
         cardinal:TRUE
+        throughWalls:FALSE
         pointOfView:TARGET

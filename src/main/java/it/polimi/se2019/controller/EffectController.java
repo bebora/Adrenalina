@@ -2,7 +2,6 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -17,6 +16,7 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
+import static it.polimi.se2019.controller.ReceivingType.DIRECTION;
 import static it.polimi.se2019.model.ThreeState.*;
 import static it.polimi.se2019.model.cards.ActionType.DEALDAMAGE;
 import static it.polimi.se2019.model.cards.ActionType.MOVE;
@@ -137,19 +137,6 @@ public class EffectController extends Observer {
     }
 
     /**
-     * If the current value is null memorize the new value,
-     * otherwise tell the user to send another Direction
-     *
-     * @param direction the Direction in which the effect is applied
-     * @see Direction
-     */
-    @Override
-    public void updateOnDirection(Direction direction) {
-        curEffect.setDirection(direction);
-        processStep();
-    }
-
-    /**
      * players is a list of players provided from the user to which the
      * current Move or DealDamage is applied.
      *
@@ -240,19 +227,13 @@ public class EffectController extends Observer {
 
     /**
      * Ask the player for a Direction if the current target requires one,
-     * otherwise go on with the effect
-     *
+     * then go on with the effect
      * @param target the target of the current SubAction
      */
     private void processDirection(Target target) {
-        if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null) {
-            List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.DIRECTION));
-            acceptableTypes = new AcceptableTypes(receivingTypes);
-            List<Direction> directions = Arrays.asList(Direction.values());
-            acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1, 1, "Select a direction!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
-        } else processStep();
+        if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null)
+            updateDirection();
+        processStep();
     }
 
     /**
@@ -288,25 +269,7 @@ public class EffectController extends Observer {
             case TARGETSOURCE:
                 askingForSource = true;
                 processTargetSource(curMove.getTargetSource());
-                if (!askingForSource) {
-                    selectableTiles = tileTargets(curMove.getTargetDestination());
-                    //Check if no players can't be moved or no tiles can be selected
-                    if (playersToMove.isEmpty() || selectableTiles.isEmpty()) {
-                        if (curMove.getTargetSource().getMinTargets() == 0)
-                            nextStep();
-                        else
-                            updateOnStopSelection(OPTIONAL);
-                        return;
-                    }
-                    //Check if there is a spawnPlayer
-                    else if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
-                        selectableTiles = Collections.singletonList(playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("No tiles!")).getTile());
-                    }
-                    receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.TILES));
-                    acceptableTypes = new AcceptableTypes(receivingTypes);
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
-                }
-                break;
+                return;
         }
         //Check if asking for source and need to handle the request to the client
         if (!askingForSource) {
@@ -420,14 +383,14 @@ public class EffectController extends Observer {
     private void processTargetSource(Target target){
         //Check if target imposes to hit list players.
         if(target.getMaxTargets() == 0 && target.getCheckTargetList() == TRUE){
-            askingForSource = false;
             playersToMove = new ArrayList<>(curWeapon.getTargetPlayers());
             filterPlayers(playersToMove, target);
+            updateMoveOnPlayers(playersToMove);
         }
         else if(target.getMaxTargets() == 0 && target.getCheckBlackList() == TRUE){
-            askingForSource = false;
             playersToMove = new ArrayList<>(curWeapon.getBlackListPlayers());
             filterPlayers(playersToMove, target);
+            updateMoveOnPlayers(playersToMove);
         }
         //Handles to ask the players to move to the current player
         else {
@@ -585,6 +548,26 @@ public class EffectController extends Observer {
     }
 
     /**
+     * Utility method to update the current {@link Effect#direction}.
+     * It asks to the current player for a direction, and updates the related attribute.
+     */
+    public void updateDirection() {
+        AcceptableTypes acceptableTypes = new AcceptableTypes(Collections.singletonList(DIRECTION));
+        List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
+        acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1, 1, "Select a direction for the target!"));
+        Choice directionRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes, curMatch);
+        switch (directionRequest.getReceivingType()) {
+            case STOP:
+                updateOnStopSelection(TRUE);
+                break;
+            case DIRECTION:
+                Direction direction = directionRequest.getDirection();
+                curEffect.setDirection(direction);
+                break;
+        }
+    }
+
+    /**
      * Handles the move of selected players, from client input or directly from the card.
      * <li>If the possible tile is one, it automatically moves the players.</li>
      * <li>If the possible tiles are more than one, it prompt the user with the choice.</li>
@@ -598,6 +581,8 @@ public class EffectController extends Observer {
         }
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
             pointOfView = players.get(0).getTile();
+        if (curMove.getTargetDestination().getCardinal() == TRUE || curEffect.getDirection() == null)
+            updateDirection();
         askingForSource = false;
         playersToMove = players;
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
@@ -605,7 +590,7 @@ public class EffectController extends Observer {
         acceptableTypes = new AcceptableTypes(receivingTypes);
         //Handles when player try to move a domination spawn - remove every tile but the one the domination spawn is in.
         if (playersToMove.stream().anyMatch(Player::getDominationSpawn)) {
-            Tile spawnTile = playersToMove.stream().filter(Player::getDominationSpawn).findFirst().orElseThrow(() -> new IncorrectEvent("Error in event!")).getTile();
+            Tile spawnTile = playersToMove.stream().filter(Player::getDominationSpawn).findFirst().get().getTile();
             tiles.removeIf(tile -> !tile.equals(spawnTile));
         }
         if (tiles.isEmpty())
@@ -614,15 +599,15 @@ public class EffectController extends Observer {
             updateOnTiles(tiles);
         }
         else {
-                try {
-                    acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
-                }
-                catch (Exception e) {
-                    System.out.println(curMove.getPrompt());
-                }
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                timerCostrainedEventHandler.start();
+            try {
+                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
             }
+            catch (Exception e) {
+                System.out.println(curMove.getPrompt());
+            }
+            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerCostrainedEventHandler.start();
+        }
     }
 
     /**

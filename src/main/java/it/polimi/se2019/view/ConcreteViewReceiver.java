@@ -1,5 +1,6 @@
 package it.polimi.se2019.view;
 
+import it.polimi.se2019.Logger;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static it.polimi.se2019.Priority.DEBUG;
 
 /**
  * Concrete class that receives updates from model.
@@ -35,10 +38,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
 
     @Override
     public void receivePing() {
-        this.linkedView.setLastRequest(System.nanoTime());
+        this.linkedView.setLastRequest(System.currentTimeMillis());
         if (linkedView.getEventUpdater() != null) {
             linkedView.getEventUpdater().sendAck();
         }
+        else
+            Logger.log(DEBUG, "Disconnected");
     }
 
     /**
