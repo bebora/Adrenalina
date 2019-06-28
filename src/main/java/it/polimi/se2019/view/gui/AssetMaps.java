@@ -37,6 +37,15 @@ public class AssetMaps {
             "YELLOW","yellow_player_board.png"
     );
 
+    static final Map<String,String> colorToFrenzyActions = Map.of(
+            "RED","yellow_player_frenzy_actions.png",
+            "BLUE","blue_player_frenzy_actions.png",
+            "GREEN","green_player_frenzy_actions.png",
+            "PURPLE","purple_player_frenzy_actions.png",
+            "WHITE","white_player_frenzy_actions.png",
+            "YELLOW","yellow_player_frenzy_actions.png"
+    );
+
     static final Map<String,String> powerUpsAssets = Map.ofEntries(
             Map.entry("tagback grenadeRED","AD_powerups_IT_023.png"),
             Map.entry("tagback grenadeBLUE","AD_powerups_IT_022.png"),

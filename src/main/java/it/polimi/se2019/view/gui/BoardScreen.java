@@ -1,17 +1,21 @@
 package it.polimi.se2019.view.gui;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.view.*;
+import javafx.collections.FXCollections;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,7 +30,10 @@ public class BoardScreen extends HBox {
     DominationBoardFX dominationBoardFX;
     ScrollPane playerBoardScroller;
     SelectableOptionsWrapper selectableOptionsWrapper;
+    SelectableOptionsWrapper oldSelectable;
     View guiView;
+    ListView<String> messageBox;
+    ChoiceDialog<String> ammoChoice;
 
     BoardScreen(View GUIView){
         guiView = GUIView;
@@ -41,16 +48,22 @@ public class BoardScreen extends HBox {
         playerBoardScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playerBoardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox boardZone = new VBox();
-        boardZone.setSpacing(20);
+        boardZone.setSpacing(10);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
         powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater(),actionButtons.getSenderButton());
         boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
-        boardZone.getChildren().addAll(boardFX,actionButtons);
-        clientPlayer = new PlayerBoardFX();
+        messageBox = new ListView<>();
+        ScrollPane messageScroll = new ScrollPane(messageBox);
+        messageScroll.setPrefSize(200,100);
+        messageScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        messageScroll.setPannable(true);
+        messageScroll.setFitToWidth(true);
+        boardZone.getChildren().addAll(boardFX,actionButtons,messageScroll);
+        clientPlayer = new PlayerBoardFX(guiView.getSelf().getUsername());
         for(ViewPlayer p: GUIView.getPlayers()) {
             if (!p.getDominationSpawn() && !p.getUsername().equals(GUIView.getSelf().getUsername())) {
-                PlayerBoardFX temp = new PlayerBoardFX();
+                PlayerBoardFX temp = new PlayerBoardFX(p.getUsername());
                 temp.updatePlayerInfo(p);
                 playerBoardBox.getChildren().addAll(temp);
             }
@@ -84,23 +97,8 @@ public class BoardScreen extends HBox {
         boardFX.setRedWeapons(getWeaponsFromColor("RED",viewBoard));
         int i = 0;
         for(ViewPlayer p: players){
-            if(!p.getDominationSpawn()){
-                if(!p.getUsername().equals(guiView.getSelf().getUsername())){
-                    PlayerBoardFX playerBoardFX = (PlayerBoardFX)playerBoardBox.getChildren().get(i);
-                    playerBoardFX.updatePlayerInfo(p);
-                    if(p == guiView.getCurrentPlayer())
-                        GuiHelper.applyBorder(playerBoardFX,50);
-                    else
-                        playerBoardFX.setEffect(null);
-                    i++;
-                }else {
-                    clientPlayer.updatePlayerInfo(p);
-                    if(p == guiView.getCurrentPlayer())
-                        GuiHelper.applyBorder(clientPlayer,50);
-                    else
-                        clientPlayer.setEffect(null);
-                }
-            }
+            if (updatePlayer(p,i))
+                i++;
         }
         List<ViewPlayer> dominationPlayers = players.stream()
                 .filter(ViewPlayer::getDominationSpawn)
@@ -111,7 +109,30 @@ public class BoardScreen extends HBox {
         }
     }
 
+    private boolean updatePlayer(ViewPlayer p,int i){
+        if(!p.getDominationSpawn()){
+            if(!p.getUsername().equals(guiView.getSelf().getUsername())){
+                PlayerBoardFX playerBoardFX = (PlayerBoardFX)playerBoardBox.getChildren().get(i);
+                playerBoardFX.updatePlayerInfo(p);
+                if(p == guiView.getCurrentPlayer())
+                    GuiHelper.applyBorder(playerBoardFX,50);
+                else
+                    playerBoardFX.setEffect(null);
+                return true;
+            }else {
+                clientPlayer.updatePlayerInfo(p);
+                if(p == guiView.getCurrentPlayer())
+                    GuiHelper.applyBorder(clientPlayer,50);
+                else
+                    clientPlayer.setEffect(null);
+            }
+        }
+        return false;
+    }
+
     void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
+        if(this.selectableOptionsWrapper != null)
+            oldSelectable = this.selectableOptionsWrapper;
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         actionButtons.clearPossibleActions();
         for(ReceivingType ac: selectableOptionsWrapper.getAcceptedTypes()){
@@ -132,6 +153,10 @@ public class BoardScreen extends HBox {
                     break;
                 case PLAYERS:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
+                    break;
+                case AMMO:
+                    if(oldSelectable != null && !oldSelectable.getAcceptedTypes().contains(ReceivingType.AMMO))
+                        showAmmoChoice(selectableOptionsWrapper.getSelectableAmmos().getOptions());
                     break;
                 case ROOM:
                     boardFX.showPossibleRooms(selectableOptionsWrapper.getSelectableRooms().getOptions());
@@ -171,6 +196,16 @@ public class BoardScreen extends HBox {
         weaponsBox.setWeapons(weaponsNames);
     }
 
+    void updateMessages(List<String> messages){
+        messageBox.setItems(FXCollections.observableList(messages));
+    }
 
+    private void showAmmoChoice(List<String> ammoChoiceOptions){
+        ammoChoice = new ChoiceDialog<>(null, ammoChoiceOptions);
+        ammoChoice.setContentText("Selectable ammos:");
+        ammoChoice.setHeaderText("Select an ammo. If you prefer paying with a powerUp close this message and click on it:");
+        Optional<String> ammo = ammoChoice.showAndWait();
+        ammo.ifPresent(a->guiView.getEventUpdater().sendAmmo(a));
+    }
 
 }

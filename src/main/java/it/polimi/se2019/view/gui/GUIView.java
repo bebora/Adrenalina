@@ -45,6 +45,7 @@ public class GUIView extends View {
         List<ViewWeapon> allWeapons = Stream.concat(getLoadedWeapons().stream(),getSelf().getUnloadedWeapons().stream()).collect(Collectors.toList());
         boardScreen.updateWeapons(allWeapons);
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
+        boardScreen.updateMessages(getMessages());
     }
 
     public void setCredentials(String username, String password){

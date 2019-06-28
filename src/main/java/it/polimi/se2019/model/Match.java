@@ -22,7 +22,7 @@ public abstract class Match {
 
     public Match(List<Player> players, String boardFilename, int numSkulls) {
         this.players = players;
-        List<Color> colors = Arrays.asList(Color.values());
+        List<Color> colors = Arrays.stream(Color.values()).filter(c->c!=Color.RED).collect(Collectors.toList());
         Collections.shuffle(colors);
         int i = 0;
         for (Player p : players) {
