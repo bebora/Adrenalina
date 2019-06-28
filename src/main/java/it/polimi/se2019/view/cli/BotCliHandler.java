@@ -38,12 +38,13 @@ public class BotCliHandler extends CliInputHandler {
     @Override
     public void run() {
         int rnd = random.nextInt(2);
+        rnd = 0;
         String string;
         if (rnd == 1) {
-            string = "rmi\nlocalhost\n1099\n\nkek\n\n\n\n";
+            string = "rmi\n2.34.11.92\n1099\n\nkek\n\n\n\n";
         }
         else {
-            string = "socket\nlocalhost\n1337\n\nkek\n\n\n\n";
+            string = "socket\n2.34.11.92\n1337\n\nkek\n\n\n\n";
         }
         Reader inputString = new StringReader(string);
         BufferedReader reader = new BufferedReader(inputString);
@@ -70,7 +71,7 @@ public class BotCliHandler extends CliInputHandler {
                 Logger.log(Priority.WARNING, "Selection error due to " + e.getMessage());
             }
             try {
-                Thread.sleep(50);
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "Interrupted!");
             }

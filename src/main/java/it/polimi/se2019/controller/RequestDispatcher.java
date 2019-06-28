@@ -29,7 +29,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     private transient Map<ReceivingType, EventHandler> observerTypes;
     private transient View linkedVirtualView;
     private transient NetworkTimeoutControllerServer networkTimeoutController;
-    private transient Long lastRequest = null;
+    private transient long lastRequest;
     private transient AcceptableTypes acceptableTypes;
     final transient Object lock = new Object();
 
@@ -387,7 +387,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
         return linkedVirtualView;
     }
 
-    public Long getLastRequest() {
+    public long getLastRequest() {
         return lastRequest;
     }
 }

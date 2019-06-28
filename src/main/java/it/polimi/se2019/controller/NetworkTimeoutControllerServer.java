@@ -21,8 +21,7 @@ public class NetworkTimeoutControllerServer extends Thread{
         do {
             try {
                 Thread.sleep(timeout);
-                Long dispatcherLastRequest = requestDispatcher.getLastRequest();
-                if(dispatcherLastRequest == null) continue;
+                long dispatcherLastRequest = requestDispatcher.getLastRequest();
                 if (dispatcherLastRequest == lastRequest) {
                     Logger.log(Priority.DEBUG, String.format("Did not receive any ack in %dms, assuming disconnected from %s", timeout, requestDispatcher.getLinkedVirtualView().getUsername()));
                     requestDispatcher.getLinkedVirtualView().setOnline(false);

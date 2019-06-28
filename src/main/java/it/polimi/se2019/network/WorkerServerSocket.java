@@ -8,12 +8,12 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.EventVisitable;
 import it.polimi.se2019.controller.EventVisitor;
 import it.polimi.se2019.controller.LobbyController;
+import it.polimi.se2019.controller.VirtualView;
 import it.polimi.se2019.controller.events.ConnectionRequest;
 import it.polimi.se2019.controller.events.EventDeserializer;
 import it.polimi.se2019.controller.updatemessage.PingUpdate;
 import it.polimi.se2019.controller.updatemessage.UpdateSerializer;
 import it.polimi.se2019.controller.updatemessage.UpdateVisitable;
-import it.polimi.se2019.controller.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -177,7 +177,8 @@ public class WorkerServerSocket extends Thread {
                     }
                 }
                 catch (IOException | ClassCastException | NullPointerException e) {
-                    Logger.log(DEBUG, "Can't read, wrong event: " + e.getMessage());
+                    if (!e.getMessage().equals("Connection reset"))
+                        Logger.log(DEBUG, "Can't read, wrong event: " + e.getMessage());
                 }
             }
         }
@@ -190,7 +191,7 @@ public class WorkerServerSocket extends Thread {
             while (!socket.isClosed()) {
                 update(ping);
                 try {
-                    Thread.sleep(50);
+                    Thread.sleep(500);
                 }
                 catch (InterruptedException e) {
                     Logger.log(WARNING,"Interrupted");
