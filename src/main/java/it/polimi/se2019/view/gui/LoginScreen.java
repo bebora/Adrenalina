@@ -1,6 +1,10 @@
 package it.polimi.se2019.view.gui;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
+import it.polimi.se2019.view.Status;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +25,7 @@ public class LoginScreen extends Application {
     @FXML TextField url;
     @FXML CheckBox existingGame;
     @FXML ComboBox<String> mode;
+    GUIView view;
 
     private static Stage primaryStage;
 
@@ -36,11 +41,17 @@ public class LoginScreen extends Application {
         stage.setTitle("LoginScreen");
         stage.setScene(scene);
         stage.show();
+        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
+            if (KeyCode.ESCAPE == event.getCode()) {
+                concludeGame();
+            }
+        });
+        primaryStage.setFullScreenExitHint("Press ESC to close the application");
     }
 
 
     public void login(){
-        GUIView view = new GUIView();
+        view = new GUIView();
         Properties connectionProperties = new Properties();
         connectionProperties.setProperty("url", url.getText());
         connectionProperties.setProperty("port", port.getText());
@@ -49,12 +60,32 @@ public class LoginScreen extends Application {
         String gameMode = mode.getValue() != null ? mode.getValue() : mode.getPromptText();
         view.setGameMode(gameMode);
         view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-        primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
-            if (KeyCode.ESCAPE == event.getCode()) {
-                primaryStage.close();
+
+        while(view.getStatus() == null) {
+            try {
+                Thread.sleep(10);
             }
-        });
-        primaryStage.setFullScreenExitHint("Press ESC to close the application");
+            catch (InterruptedException e) {
+                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+            }
+        }
+        if(view.getStatus() == Status.END){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Login failed!!");
+            alert.setContentText(view.getMessages().get(0));
+            alert.showAndWait();
+        }else if(view.getStatus() == Status.WAITING){
+            new TextScreen(primaryStage, "Waiting to play...");
+        }
+    }
+
+    private void concludeGame(){
+        Platform.exit();
+    }
+
+    @Override
+    public void stop(){
+        System.exit(0);
     }
 
     public static void main(String[] args){

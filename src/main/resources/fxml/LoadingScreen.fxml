@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<fx:root minHeight="768.0" minWidth="1368.0" prefHeight="1080.0" prefWidth="1920.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+      <ProgressIndicator fx:id="progress" layoutX="923.0" layoutY="555.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="472.0" AnchorPane.leftAnchor="923.0" AnchorPane.rightAnchor="945.0" AnchorPane.topAnchor="555.0" />
+      <Text fx:id="text" layoutX="707.0" layoutY="425.20556640625" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" wrappingWidth="482.0" AnchorPane.bottomAnchor="649.0" AnchorPane.leftAnchor="707.0" AnchorPane.rightAnchor="731.0" AnchorPane.topAnchor="402.0">
+         <font>
+            <Font name="DejaVu Sans Bold" size="25.0" />
+         </font>
+      </Text>
+</fx:root>
