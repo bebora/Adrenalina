@@ -4,7 +4,6 @@ import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.cards.PowerUp;
-import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

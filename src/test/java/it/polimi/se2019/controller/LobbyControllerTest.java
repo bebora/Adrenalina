@@ -4,7 +4,6 @@ import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.view.View;
-import it.polimi.se2019.view.VirtualView;
 import it.polimi.se2019.view.cli.CLI;
 import org.junit.jupiter.api.Test;
 

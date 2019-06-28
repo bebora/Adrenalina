@@ -13,7 +13,7 @@ import it.polimi.se2019.controller.events.EventDeserializer;
 import it.polimi.se2019.controller.updatemessage.PingUpdate;
 import it.polimi.se2019.controller.updatemessage.UpdateSerializer;
 import it.polimi.se2019.controller.updatemessage.UpdateVisitable;
-import it.polimi.se2019.view.VirtualView;
+import it.polimi.se2019.controller.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -173,8 +173,8 @@ public class WorkerServerSocket extends Thread {
                     EventVisitable event = gson.fromJson(json, EventVisitable.class);
                     event.accept(eventVisitor);
                 }
-                catch (IOException e) {
-                    Logger.log(WARNING, "Can't read event: "+e.getMessage());
+                catch (IOException | ClassCastException | NullPointerException e) {
+                    Logger.log(DEBUG, "Can't read, wrong event: " + e.getMessage());
                 }
             }
         }

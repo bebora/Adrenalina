@@ -1,6 +1,6 @@
 package it.polimi.se2019.model;
 
-import it.polimi.se2019.view.VirtualView;
+import it.polimi.se2019.controller.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

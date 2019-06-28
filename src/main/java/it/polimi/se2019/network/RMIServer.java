@@ -10,7 +10,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 /**
- * Create WorkerServerRMI and export it on the RMI registry
+ * Creates WorkerServerRMI and export it on the RMI registry.
+ * It bind the {@link ConnectHandler} to the registry, allowing clients to send logins.
  */
 public class RMIServer extends Thread{
     private static int defaultPort = 1099;

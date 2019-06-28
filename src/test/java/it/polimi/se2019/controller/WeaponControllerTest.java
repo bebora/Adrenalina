@@ -9,7 +9,6 @@ import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
-import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;

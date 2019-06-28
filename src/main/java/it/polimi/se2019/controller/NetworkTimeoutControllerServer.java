@@ -11,7 +11,7 @@ public class NetworkTimeoutControllerServer extends Thread{
     private long lastRequest;
     private boolean checkingTimeout = true;
     private RequestDispatcher requestDispatcher;
-    int timeout = 5000;
+    int timeout = 3000;
     public NetworkTimeoutControllerServer(RequestDispatcher requestDispatcher){
         this.requestDispatcher = requestDispatcher;
     }

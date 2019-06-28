@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  * <li>Sending events from the {@link #View#eventUpdater}</li>
  */
 public abstract class View {
+
 	private Status status;
 
 	private List<String> messages;
@@ -210,6 +211,15 @@ public abstract class View {
 
     }
 
+	/**
+	 * Setup the connection
+	 * @param connectionType
+	 * @param username
+	 * @param password
+	 * @param connectionProperties
+	 * @param existingGame
+	 * @param gameMode
+	 */
     public void setupConnection(String connectionType, String username, String password, Properties connectionProperties, boolean existingGame, String gameMode){
 		String url = connectionProperties.getProperty("url");
 		int port = Integer.parseInt(connectionProperties.getProperty("port"));

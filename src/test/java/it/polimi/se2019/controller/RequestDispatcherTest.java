@@ -7,7 +7,6 @@ import it.polimi.se2019.network.EventUpdaterRMI;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
 import it.polimi.se2019.view.SelectableOptions;
-import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

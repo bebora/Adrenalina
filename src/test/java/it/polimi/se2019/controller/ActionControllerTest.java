@@ -13,7 +13,6 @@ import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 import it.polimi.se2019.network.ViewUpdaterRMI;
 import it.polimi.se2019.view.ConcreteViewReceiver;
-import it.polimi.se2019.view.VirtualView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -104,20 +103,25 @@ public class ActionControllerTest {
         //Test it stops the action once no weapon can be no more reload, and it reloads one
         currentPlayer.setTile(board.getTile(0,2));
         Weapon grabbableWeapon = null;
-        try {
-            for (int i = 0; i < 2; i++) {
-                grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0))) && !currentPlayer.getWeapons().contains(w)).findAny().orElseThrow(UnsupportedOperationException::new);
-                currentPlayer.addWeapon(grabbableWeapon);
-                grabbableWeapon.setLoaded(false);
-            }
-        } catch (UnsupportedOperationException e) {
-            return;
+        for (int i = 0; i < 2; i++) {
+            grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0))) && !currentPlayer.getWeapons().contains(w)).findAny().orElseThrow(UnsupportedOperationException::new);
+            currentPlayer.addWeapon(grabbableWeapon);
+            grabbableWeapon.setLoaded(false);
         }
         Action reload = new Reload();
         currentPlayer.getActions().add(reload);
+        for (int i = 0; i < 3; i++) {
+            currentPlayer.addAmmo(Ammo.RED);
+            currentPlayer.addAmmo(Ammo.BLUE);
+            currentPlayer.addAmmo(Ammo.YELLOW);
+        }
         actionController.updateOnAction(reload);
+        Utils.waitABit();
         actionController.updateOnWeapon(grabbableWeapon);
-        Mockito.verify(actionController, times(0)).updateOnStopSelection(any());
+        if (currentPlayer.getWeapons().stream().noneMatch(w -> !w.getLoaded() && currentPlayer.checkForAmmos(w.getCost())))
+            Mockito.verify(actionController, times(1)).updateOnStopSelection(any());
+        else
+            Mockito.verify(actionController, times(0)).updateOnStopSelection(any());
         assertTrue(grabbableWeapon.getLoaded());
     }
 

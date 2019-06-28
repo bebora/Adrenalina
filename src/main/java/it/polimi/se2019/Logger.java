@@ -7,6 +7,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Utility class to log errors and debug info.
+ * Supports writing log info to a file of choice.
+ */
 public final class Logger {
 
 
@@ -15,10 +19,20 @@ public final class Logger {
     }
 
     private static final String HOME = System.getProperty("user.home");
+    /**
+     * Defines the format for the file used to log in.
+     */
     private static String LOG = String.format("%s/adrenalina.log", HOME);
     private static boolean logToFile;
     private static boolean debugMode;
     private static BufferedWriter bw;
+
+    /**
+     * Logs the {@code toLog} string with the priority defined in {@code priority}
+     * If {@link #logToFile} is true, the log gets written to the corresponding file
+     * @param priority type of the message
+     * @param toLog message to be logged
+     */
     public static void log(Priority priority, String toLog) {
         DateFormat dateFormat = new SimpleDateFormat("[yyyy/MM/dd - HH:mm:ss:SSS]");
         Date now = new Date();
@@ -48,6 +62,10 @@ public final class Logger {
         System.out.println(logWithTime);
     }
 
+    /**
+     * Set the suffix to append to the {@link #LOG}, to define the name of the file used to log info.
+     * @param suffix
+     */
     public static void setLogFileSuffix(String suffix) {
         if (!logToFile) {
             LOG += suffix;

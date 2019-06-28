@@ -9,9 +9,16 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Visitor class for visiting Socket updates.
+ * Currently used updates are:
+ * <li>{@link SelectableOptionsUpdate}</li>
+ * <li>{@link PopupMessageUpdate}</li>
+ * <li>{@link TotalUpdate}</li>
+ */
 public class UpdateVisitor {
     private ViewReceiverInterface concreteViewReceiver;
-    private String UNEXPECTEDCALL = "Unexpected RemoteException while calling local method";
+    private final static String UNEXPECTEDCALL = "Unexpected RemoteException while calling local method";
 
     public UpdateVisitor(ViewReceiverInterface concreteViewReceiver) {
         this.concreteViewReceiver = concreteViewReceiver;
@@ -26,6 +33,11 @@ public class UpdateVisitor {
         }
     }
 
+    /**
+     * Parse the content of the SelectableOptionsUpdate.
+     * It calls the related {@link ConcreteViewReceiver#receiveSelectablesWrapper(SelectableOptionsWrapper)} method.
+     * @param selectableOptionsWrapper update to parse
+     */
     public void visit(SelectableOptionsUpdate selectableOptionsWrapper) {
         SelectableOptionsWrapper selectableOptions = selectableOptionsWrapper.getSelectableOptionsWrapper();
         try {
@@ -70,6 +82,12 @@ public class UpdateVisitor {
             Logger.log(Priority.ERROR, UNEXPECTEDCALL);
         }
     }
+
+    /**
+     * Parses the message update.
+     * It notifies the view with the message, using {@link ConcreteViewReceiver#receivePopupMessage(String)}.
+     * @param update
+     */
     public void visit(PopupMessageUpdate update) {
         String message = update.getMessage();
         try {
@@ -93,6 +111,12 @@ public class UpdateVisitor {
             Logger.log(Priority.ERROR, UNEXPECTEDCALL);
         }
     }
+
+    /**
+     * Parse the content of a TotalUpdate.
+     * It calls the related {@link #concreteViewReceiver} method, to notify the view.
+     * @param update
+     */
     public void visit(TotalUpdate update) {
         String username = update.getUsername();
         ViewBoard board = update.getBoard();

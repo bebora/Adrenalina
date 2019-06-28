@@ -1,6 +1,7 @@
-package it.polimi.se2019;
+package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.*;
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;

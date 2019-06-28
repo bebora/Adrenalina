@@ -1,6 +1,5 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.Choice;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.events.IncorrectEvent;

@@ -4,6 +4,7 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.ModelToViewConverter;
+import it.polimi.se2019.controller.VirtualView;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.board.Board;

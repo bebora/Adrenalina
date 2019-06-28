@@ -1,10 +1,9 @@
-package it.polimi.se2019.view;
+package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.LobbyController;
-import it.polimi.se2019.controller.RequestDispatcher;
 import it.polimi.se2019.network.ViewUpdater;
+import it.polimi.se2019.view.View;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.List;
  * <li>Receive and compute events from the client, using {@link #requestDispatcher}</li>
  * Every client has its own VirtualView
  */
-public class VirtualView extends View  {
+public class VirtualView extends View {
     private LobbyController lobbyController;
     private ViewUpdater viewUpdater;
     private RequestDispatcher requestDispatcher;

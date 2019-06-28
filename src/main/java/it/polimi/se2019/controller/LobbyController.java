@@ -8,7 +8,6 @@ import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.BoardCreator;
 import it.polimi.se2019.network.AuthenticationErrorException;
-import it.polimi.se2019.view.VirtualView;
 
 import java.util.*;
 import java.util.stream.Collectors;

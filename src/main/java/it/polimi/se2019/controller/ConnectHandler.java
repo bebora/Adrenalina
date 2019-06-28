@@ -4,7 +4,6 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.network.ViewReceiverInterface;
 import it.polimi.se2019.network.ViewUpdaterRMI;
-import it.polimi.se2019.view.VirtualView;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

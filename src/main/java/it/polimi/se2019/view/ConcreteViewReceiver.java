@@ -10,7 +10,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Concrete class that actually receives updates from model
+ * Concrete class that receives updates from model.
+ * The updates get parsed and the relative {@link #linkedView} gets modified accordingly.
+ *
  */
 public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
     private transient View linkedView;

@@ -8,6 +8,21 @@ import java.util.List;
 
 import static it.polimi.se2019.controller.ReceivingType.*;
 
+/**
+ * Wrapper to contain the options selectable for the Client.
+ * It supports:
+ * <li>Actions</li>
+ * <li>Effects</li>
+ * <li>Players</li>
+ * <li>PowerUps</li>
+ * <li>Rooms</li>
+ * <li>Coordinates</li>
+ * <li>Weapons</li>
+ * <li>Direction</li>
+ * <li>Ammo</li>
+ * <li>Stop, with prompt defined in {@link #stopPrompt}</li>
+ * It's possible to get the related option, from the ReceivingType, using {@link #getSelectableOptions(ReceivingType)}.
+ */
 public class SelectableOptionsWrapper implements Serializable {
     private SelectableOptions<String> selectableActions;
     private SelectableOptions<String> selectableEffects;
@@ -110,6 +125,12 @@ public class SelectableOptionsWrapper implements Serializable {
         this.stopPrompt = stopPrompt;
     }
 
+    /**
+     * Gets the related option from a ReceivingType, supporting only String options.
+     * If the ReceivingType is not supported, it throws {@link UnsupportedOperationException}.
+     * @param selected selected type.
+     * @return
+     */
     public SelectableOptions<String> getSelectableStringOptions(ReceivingType selected) {
         List<ReceivingType> types = Arrays.asList(AMMO, ROOM, WEAPON, ACTION, EFFECT, DIRECTION);
         if (types.contains(selected)) {
@@ -118,6 +139,11 @@ public class SelectableOptionsWrapper implements Serializable {
         else throw new UnsupportedOperationException();
     }
 
+    /**
+     * Gets the related option from a ReceivingType.
+     * @param selected selected type
+     * @return
+     */
     public SelectableOptions getSelectableOptions(ReceivingType selected){
         switch (selected){
             case DIRECTION:

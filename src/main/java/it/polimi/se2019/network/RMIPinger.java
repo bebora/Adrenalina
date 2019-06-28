@@ -2,7 +2,7 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.view.VirtualView;
+import it.polimi.se2019.controller.VirtualView;
 
 /**
  * Class used by server controller to send ping periodically to the client, which should reply with an ack

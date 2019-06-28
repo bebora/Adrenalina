@@ -39,6 +39,7 @@ public class RocketLauncherInteractionTest extends EffectControllerFramework {
         notCurrentPlayer.get(0).setTile(testMatch.getBoard().getTile(0,1));
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
         EffectController ec = spy(wp.getEffectController());
+        Utils.waitABit();
         Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.PLAYERS)), any(TimerCostrainedEventHandler.class));
         ec.updateOnPlayers(Arrays.asList(originalNotCurrentPlayer));
         sandboxMatch.restoreMatch(testMatch);
