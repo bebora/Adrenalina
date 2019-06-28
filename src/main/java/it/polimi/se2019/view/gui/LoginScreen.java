@@ -59,8 +59,9 @@ public class LoginScreen extends Application {
         String connection = connectionType.getValue() != null ? connectionType.getValue() : connectionType.getPromptText();
         String gameMode = mode.getValue() != null ? mode.getValue() : mode.getPromptText();
         view.setGameMode(gameMode);
+        view.setCredentials(username.getText(),password.getText());
+        view.setConnectionProperties(connectionProperties,connection);
         view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
-
         while(view.getStatus() == null) {
             try {
                 Thread.sleep(10);
