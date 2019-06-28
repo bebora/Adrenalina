@@ -124,7 +124,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
         requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
         requestDispatcher.updateView(acceptableTypes);
         this.start = System.currentTimeMillis();
-        Logger.log(Priority.DEBUG, "Started event regarding " + acceptableTypes.getAcceptedTypes() + String.format("%d time remaining", time));
+        Logger.log(Priority.DEBUG, String.format("Started event regarding %s for player %s - time remaining: %d", acceptableTypes.getAcceptedTypes(), requestDispatcher.getLinkedVirtualView().getUsername(), time));
         while (!blocked) {
             if (checkFinished())
                 break;
@@ -135,7 +135,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Logger.log(Priority.WARNING, "Sleep interrupted");
             }
         }
-        Logger.log(Priority.DEBUG,"Ended event related to " + acceptableTypes.getAcceptedTypes());
+        Logger.log(Priority.DEBUG,String.format("Ended event regarding %s for player %s", acceptableTypes.getAcceptedTypes(), requestDispatcher.getLinkedVirtualView().getUsername()));
         if (checkIfNotify()) {
             observer.updateOnStopSelection(ThreeState.TRUE);
         }

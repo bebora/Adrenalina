@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import static it.polimi.se2019.Priority.DEBUG;
+
 /**
  * Handler exposed by the RMI server to the client so that it can request to connect
  */
@@ -32,6 +34,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
         virtualView.setUsername(username);
         ViewUpdaterRMI updater = new ViewUpdaterRMI(receiver, virtualView);
         virtualView.setViewUpdater(updater, existingGame);
+        Logger.log(DEBUG, username+" is trying to connect via RMI");
         if (!existingGame)
             lobbyController.connectPlayer(username, password, mode, virtualView);
         else

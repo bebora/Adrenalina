@@ -82,6 +82,7 @@ public class WorkerServerSocket extends Thread {
             String mode = connection.getMode();
             boolean existingGame = connection.getExistingGame();
             virtualView.setViewUpdater(viewUpdater, existingGame);
+            Logger.log(DEBUG, username+" is trying to connect via socket");
             //Notifies the lobbyController with a new connection.
             if (!existingGame)
                 lobbyController.connectPlayer(username, password, mode, virtualView);
@@ -185,13 +186,14 @@ public class WorkerServerSocket extends Thread {
     }
 
     private class Ping extends Thread {
+        private int PING_SLEEP_DELAY = 250;
         @Override
         public void run() {
             UpdateVisitable ping = new PingUpdate();
             while (!socket.isClosed()) {
                 update(ping);
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(PING_SLEEP_DELAY);
                 }
                 catch (InterruptedException e) {
                     Logger.log(WARNING,"Interrupted");

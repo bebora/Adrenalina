@@ -158,10 +158,10 @@ public class LobbyController{
      * @param mode
      */
     public synchronized void startGame(Mode mode) {
-        Logger.log(Priority.DEBUG, "GAME TRYING TO START");
         List<Player> currentWaiting = waitingPlayers.get(mode);
         currentWaiting.removeAll(currentWaiting.stream().filter(p -> !p.getOnline()).collect(Collectors.toList()));
         List<Player> playing = new ArrayList<>(currentWaiting);
+        Logger.log(Priority.DEBUG, String.format("%s GAME TRYING TO START WITH %d PLAYERS", mode.name(), playing.size()));
         if (playing.size() > 5) {
             playing = new ArrayList<>(playing.subList(0,5));
         }
