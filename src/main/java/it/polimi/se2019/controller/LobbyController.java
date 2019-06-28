@@ -112,7 +112,7 @@ public class LobbyController{
         if (modeWaiting == null) {
             view.getViewUpdater().sendPopupMessage("END - Selected mode does not exist! Make a PR!");
         } else {
-            Logger.log(Priority.DEBUG, "PLAYER CONNECTED");
+            Logger.log(Priority.DEBUG, "PLAYER CONNECTED: "+username);
             modeWaiting.add(player);
 
             view.getViewUpdater().sendPopupMessage("SUCCESS");

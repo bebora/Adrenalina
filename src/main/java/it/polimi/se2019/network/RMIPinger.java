@@ -10,7 +10,7 @@ import it.polimi.se2019.controller.VirtualView;
 public class RMIPinger extends Thread{
     private VirtualView view;
     private ViewUpdaterRMI viewUpdaterRMI;
-    private int PING_SLEEP_DELAY = 250;
+    private int PING_SLEEP_DELAY = 1000;
     public RMIPinger(VirtualView view) {
         this.view = view;
     }

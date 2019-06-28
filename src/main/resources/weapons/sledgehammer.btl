@@ -31,8 +31,10 @@ effects:
   moves:
     move:
       objectToMove:TARGETSOURCE
-      targetDestination:
+      targetSource:
         checkTargetList:TRUE
+      targetDestination:
         cardinal:TRUE
         maxDistance:2
         throughWalls:FALSE
+        perspective:TARGET

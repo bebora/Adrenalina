@@ -13,7 +13,7 @@ public class NetworkTimeoutControllerClient extends Thread{
     private View view;
     private long lastRequest;
     private boolean checkingTimeout = true;
-    int timeout = 3000;
+    int timeout = 5000;
     public NetworkTimeoutControllerClient(View linkedView) {
         this.view = linkedView;
     }

@@ -164,14 +164,17 @@ public class WorkerServerSocket extends Thread {
      * They are visited using the {@link #eventVisitor}.
      */
     private class Listener extends Thread {
+        private String json;
+        private EventVisitable event;
         @Override
         public void run() {
             while(!socket.isClosed() && virtualView.isOnline()) {
-                String json;
                 try {
                     json = jsonReader.readLine();
-                    EventVisitable event = gson.fromJson(json, EventVisitable.class);
-                    event.accept(eventVisitor);
+                    if (json != null) {
+                        event = gson.fromJson(json, EventVisitable.class);
+                        event.accept(eventVisitor);
+                    }
                 }
                 catch (IOException | ClassCastException | NullPointerException e) {
                     Logger.log(DEBUG, "Can't read, wrong event: " + e.getMessage());
