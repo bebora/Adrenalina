@@ -186,7 +186,7 @@ public class WorkerServerSocket extends Thread {
     }
 
     private class Ping extends Thread {
-        private int PING_SLEEP_DELAY = 250;
+        private int PING_SLEEP_DELAY = 1000;
         @Override
         public void run() {
             UpdateVisitable ping = new PingUpdate();

@@ -13,8 +13,8 @@ import it.polimi.se2019.view.View;
 public class NetworkTimeoutControllerClient extends Thread{
     private View view;
     private long lastRequest;
-    private boolean checkingTimeout = true;
-    int timeout = 5000;
+    private Boolean checkingTimeout = true;
+    int timeout = 10000;
     private ClientAcker clientAcker;
     public NetworkTimeoutControllerClient(View linkedView) {
         this.view = linkedView;

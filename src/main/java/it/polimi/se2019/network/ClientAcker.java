@@ -18,7 +18,7 @@ public class ClientAcker extends Thread {
     public void run() {
         while (!view.isOnline()) {
             try {
-                Thread.sleep(ACK_SLEEP_DELAY*2);
+                Thread.sleep(ACK_SLEEP_DELAY);
             }
             catch (InterruptedException e) {
                 Logger.log(Priority.ERROR, "InterruptedException in ClientAcker: "+e.getMessage());

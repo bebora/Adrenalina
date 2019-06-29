@@ -19,7 +19,9 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * ClientSocket, need to be inside EventUpdaterSocket and used to send events to connected server.
@@ -30,6 +32,8 @@ public class ClientSocket extends Thread{
     private UpdateVisitor updateVisitor;
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
+    private ThreadPoolExecutor updateExecutor;
+
     Gson gson;
 
     public void closeSocket() {
@@ -53,6 +57,7 @@ public class ClientSocket extends Thread{
     public ClientSocket(String serverIP,
                         int port,
                         ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) throws RemoteException{
+        updateExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
         this.updateVisitor = updateVisitor;
         GsonBuilder gsonBuilder;
         gsonBuilder = new GsonBuilder();
@@ -127,8 +132,11 @@ public class ClientSocket extends Thread{
                 String json;
                 try {
                     json = jsonReader.readLine();
-                    UpdateVisitable update = gson.fromJson(json, UpdateVisitable.class);
-                    update.accept(updateVisitor);
+                    Runnable runnable = () -> {
+                        UpdateVisitable update = gson.fromJson(json, UpdateVisitable.class);
+                        update.accept(updateVisitor);
+                    };
+                    updateExecutor.submit(runnable);
                 }
                 catch (IOException e) {
                     Logger.log(Priority.WARNING, "IOException receiving update");

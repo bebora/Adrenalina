@@ -117,7 +117,7 @@ public class UpdateVisitor {
      * It calls the related {@link #concreteViewReceiver} method, to notify the view.
      * @param update
      */
-    public void visit(TotalUpdate update) {
+    public synchronized void visit(TotalUpdate update) {
         String username = update.getUsername();
         ViewBoard board = update.getBoard();
         ViewTileCoords perspective = update.getPerspective();

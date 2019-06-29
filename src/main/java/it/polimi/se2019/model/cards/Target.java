@@ -5,8 +5,10 @@ import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Target {
 
@@ -278,9 +280,9 @@ public class Target {
 	public boolean checkDifferentSquare(List<Player> players) {
 		switch (differentSquare) {
 			case TRUE:
-				return players.stream().map(Player::getTile).distinct().count() == 1;
-			case FALSE:
 				return players.stream().map(Player::getTile).distinct().count() == players.size();
+			case FALSE:
+				return players.stream().map(Player::getTile).distinct().count() == 1;
 			default:
 				return true;
 		}
@@ -370,8 +372,14 @@ public class Target {
 	 * @return
 	 */
 	public Predicate<Tile> getFilterRoom(Board board, Tile tile){
-		return getVisibilityFilter(board,tile)
-				.and(getSamePlayerRoomFilter(tile));
+		List<Predicate> predicates  = new ArrayList<>();
+		List<Tile> sameRoomTiles = board.getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.getRoom() == tile.getRoom()).collect(Collectors.toList());
+		for (Tile t : sameRoomTiles) {
+			predicates.add(getVisibilityFilter(board, t));
+		}
+		Predicate<Tile> tilesRoom = predicates.stream().reduce(Predicate::or).orElse(x->true);
+		return tilesRoom.
+				and(getSamePlayerRoomFilter(tile));
 	}
 
 

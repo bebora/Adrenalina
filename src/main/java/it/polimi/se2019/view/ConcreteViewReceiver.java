@@ -1,6 +1,5 @@
 package it.polimi.se2019.view;
 
-import it.polimi.se2019.Logger;
 import it.polimi.se2019.network.ViewReceiverInterface;
 
 import java.rmi.RemoteException;
@@ -9,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static it.polimi.se2019.Priority.DEBUG;
 
 /**
  * Concrete class that receives updates from model.
@@ -30,6 +27,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         synchronized (lock) {
+            this.linkedView.setLastRequest(System.currentTimeMillis());
             linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
             linkedView.addMessage("RECEIVED OPTIONS " + selectableOptionsWrapper.getAcceptedTypes());
             linkedView.refresh();
@@ -39,11 +37,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     @Override
     public void receivePing() {
         this.linkedView.setLastRequest(System.currentTimeMillis());
-        if (linkedView.getEventUpdater() != null) {
-            linkedView.getEventUpdater().sendAck();
-        }
-        else
-            Logger.log(DEBUG, "Disconnected");
     }
 
     /**
@@ -114,6 +107,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             }
         }
         else{
+            this.linkedView.setLastRequest(System.currentTimeMillis());
             if (message.contains("WINNERS")) {
                 List<String> winners =  new ArrayList<>(Arrays.asList(message.split(",")));
                 winners.remove(0);
@@ -157,6 +151,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
         synchronized (lock) {
+            this.linkedView.setLastRequest(System.currentTimeMillis());
             linkedView.setUsername(username);
             linkedView.setBoard(board);
             linkedView.setPerspective(helper.getTileFromCoords(perspective));

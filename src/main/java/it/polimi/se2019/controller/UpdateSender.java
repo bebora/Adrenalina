@@ -10,7 +10,9 @@ import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.network.ViewUpdater;
 
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Used by the server to send updates to a player or to all players
@@ -18,9 +20,51 @@ import java.util.List;
  */
 public class UpdateSender implements ViewUpdater {
     private Match match;
+    private Map<String,Deque<Runnable>> totalUpdates;
+    private Map<String, Object> locks;
 
     public UpdateSender(Match match) {
         this.match = match;
+        totalUpdates = new HashMap<>();
+        locks = new HashMap<>();
+        for (Player p : match.getPlayers()) {
+            totalUpdates.put(p.getUsername(), new ArrayDeque<>());
+            locks.put(p.getUsername(), new Object());
+        }
+        UpdatePoller updatePoller = new UpdatePoller(locks);
+        updatePoller.start();
+    }
+
+    class UpdatePoller extends Thread{
+        private ThreadPoolExecutor updateExecutor;
+        private Map<String, Object> locks;
+
+        public UpdatePoller(Map<String, Object> locks) {
+            updateExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+            this.locks = locks;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                    for (Map.Entry entry : totalUpdates.entrySet()) {
+                        synchronized (locks.get((String) entry.getKey())) {
+                            try {
+                                Runnable task = (Runnable) ((Deque) entry.getValue()).pop();
+                                updateExecutor.submit(task);
+                                ((Deque) entry.getValue()).clear();
+                            } catch (NoSuchElementException e) {
+                                //Do nothing if empty
+                            }
+                        }
+                    }
+                try {
+                    sleep(1000);
+                } catch (InterruptedException e) {
+                    Logger.log(Priority.ERROR, "interrupted update poller");
+                }
+            }
+        }
     }
 
     @Override
@@ -118,9 +162,14 @@ public class UpdateSender implements ViewUpdater {
             Logger.log(Priority.DEBUG, "Can't send total update to offline player " + receivingPlayer.getUsername());
         }
         else {
-            receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
-                    idView, points, powerUps,
-                    loadedWeapons, currentPlayer);
+            synchronized (locks.get(receivingPlayer.getUsername())) {
+                Runnable update = () -> {
+                    receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
+                            idView, points, powerUps,
+                            loadedWeapons, currentPlayer);
+                };
+                totalUpdates.get(receivingPlayer.getUsername()).add(update);
+            }
         }
     }
 

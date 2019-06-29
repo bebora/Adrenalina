@@ -241,6 +241,7 @@ public abstract class View {
 		}
 		try {
 			eventUpdater.login(this, username, password, existingGame, gameMode);
+			online = true;
 			networkTimeoutController.start();
 		}
 		catch (RemoteException e) {
