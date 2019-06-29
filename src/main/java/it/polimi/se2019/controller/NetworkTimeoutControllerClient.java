@@ -25,7 +25,7 @@ public class NetworkTimeoutControllerClient extends Thread{
             try {
                 Thread.sleep(timeout);
                 long viewLastRequest = view.getLastRequest();
-                if (viewLastRequest == lastRequest || view.getStatus() == Status.END) {
+                if (viewLastRequest != 0 && viewLastRequest == lastRequest || view.getStatus() == Status.END) {
                     view.disconnect();
                     checkingTimeout = false;
                 }

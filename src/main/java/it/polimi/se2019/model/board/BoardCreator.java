@@ -12,10 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -131,6 +128,7 @@ public class BoardCreator {
         for (String weapon : weaponNames)
             weapons.add(CardCreator.parseWeapon(weapon));
         Collections.shuffle(weapons);
+        weapons.removeIf(Objects::isNull);
         return new LimitedDeck<>(weapons);
     }
 
@@ -151,6 +149,7 @@ public class BoardCreator {
                 powerUps.add(CardCreator.parsePowerUp(powerUp, Ammo.YELLOW));
             }
         Collections.shuffle(powerUps);
+        powerUps.removeIf(Objects::isNull);
         return new UnlimitedDeck<>(powerUps);
     }
 

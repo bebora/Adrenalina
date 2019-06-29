@@ -581,7 +581,7 @@ public class EffectController extends Observer {
         }
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
             pointOfView = players.get(0).getTile();
-        if (curMove.getTargetDestination().getCardinal() == TRUE || curEffect.getDirection() == null)
+        if (curMove.getTargetDestination().getCardinal() == TRUE && curEffect.getDirection() == null)
             updateDirection();
         askingForSource = false;
         playersToMove = players;
