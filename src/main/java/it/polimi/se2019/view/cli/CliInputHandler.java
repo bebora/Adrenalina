@@ -14,6 +14,8 @@ import java.io.PrintStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Map.entry;
+
 public class CliInputHandler implements Runnable{
     private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     private String in = "notQuit";
@@ -21,6 +23,17 @@ public class CliInputHandler implements Runnable{
     protected EventUpdater eventUpdater;
     private static final String WRONGINPUT = "Wrong input!";
     private String[] args;
+    //Default values for connection setup
+    private Map<String, String> dv = Map.ofEntries(
+            entry("network", "rmi"),
+            entry("url", "localhost"),
+            entry("rmiport", "1099"),
+            entry("socketport", "1337"),
+            entry("username", String.format("Player-%05d",new Random().nextInt(99999))),
+            entry("pw", String.format("%05d", new Random().nextInt(99999))),
+            entry("gamemode", "DOMINATION"),
+            entry("existinggame", "n")
+    );
 
     public CliInputHandler() {
         //Default constructor doesn't need to initialize nothing
@@ -279,50 +292,68 @@ public class CliInputHandler implements Runnable{
         }
     }
 
-    protected void connectionChoice(BufferedReader input){
-        final String DEFAULTNETWORK = "rmi";
-        final String DEFAULTURL = "localhost";
-        final String DEFAULTRMIPORT = "1099";
-        final String DEFAULTSOCKETPORT = "1337";
-        final String DEFAULTUSERNAME = String.format("Player-%05d",new Random().nextInt(99999));
-        final String DEFAULTPW = String.format("%05d", new Random().nextInt(99999));
-        final String DEFAULTGAMEMODE = "DOMINATION";
-        final String DEFAULTEXISTINGGAME = "n";
+    /**
+     * Ask parameters with automatic default values
+     * @param input
+     */
+    protected Map<String, String> connectionChoice(BufferedReader input) {
+        return connectionChoice(input, dv);
+    }
+
+    /**
+     * Ask parameters to connect with custom default values
+     * @param input
+     * @param dv default values for asked parameters
+     */
+    protected Map<String, String> connectionChoice(BufferedReader input, Map<String, String> dv){
         CLI.printInColor("W","RMI or Socket?\n");
         try{
-            String connectionType = parseOption(Arrays.asList("rmi", "socket"), null, DEFAULTNETWORK, input.readLine().toLowerCase(), "network mode");
+            String connectionType = parseOption(Arrays.asList("rmi", "socket"), null, dv.get("network"), input.readLine().toLowerCase(), "network mode");
             CLI.printInColor("W","URL: ");
-            String url = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTURL, input.readLine(), "url");
+            String url = parseOption(new ArrayList<>(), Arrays.asList(""), dv.get("url"), input.readLine(), "url");
             CLI.printInColor("W","Port: ");
-            String port;
+            String rmiport = dv.get("rmiport");
+            String socketport = dv.get("socketport");
             if (connectionType.equalsIgnoreCase("RMI")) {
-                port = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTRMIPORT, input.readLine(), "RMI port");
+                rmiport = parseOption(new ArrayList<>(), Arrays.asList(""), dv.get("rmiport"), input.readLine(), "RMI port");
             }
             else {
-                port = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTSOCKETPORT, input.readLine(), "socket port");
+                socketport = parseOption(new ArrayList<>(), Arrays.asList(""), dv.get("socketport"), input.readLine(), "socket port");
             }
             CLI.printInColor("W","Username: ");
-            String username = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTUSERNAME, input.readLine(), "username");
+            String username = parseOption(new ArrayList<>(), Arrays.asList(""), dv.get("username"), input.readLine(), "username");
             Logger.setLogFileSuffix(username);
             System.setErr(new PrintStream(System.getProperty("user.home")+"/rawlog"+username));
             CLI.printInColor("W","Password: ");
-            String pw = parseOption(new ArrayList<>(), Arrays.asList(""), DEFAULTPW, input.readLine(), "password");
-            CLI.printInColor("W","Do you want to re enter an existing match? (y/N)");
-            String existingGame = parseOption(Arrays.asList("y", "n"), null, DEFAULTEXISTINGGAME, input.readLine().toLowerCase(), "existing game");
+            String pw = parseOption(new ArrayList<>(), Arrays.asList(""), dv.get("pw"), input.readLine(), "password");
+            CLI.printInColor("W","Do you want to re enter an existing match? (y/n)");
+            String existingGame = parseOption(Arrays.asList("y", "n"), null, dv.get("existinggame"), input.readLine().toLowerCase(), "existing game");
             if (existingGame.equals("y")) existingGame = "true";
             else if (existingGame.equals("n")) existingGame = "false";
             CLI.printInColor("W", "Game mode (NORMAL/DOMINATION)");
-            String gameMode = parseOption(Arrays.asList("NORMAL", "DOMINATION"), null, DEFAULTGAMEMODE, input.readLine().toUpperCase(), "gamemode");
+            String gameMode = parseOption(Arrays.asList("NORMAL", "DOMINATION"), null, dv.get("gamemode"), input.readLine().toUpperCase(), "gamemode");
 
             view = new CLI();
             Properties connectionProperties = new Properties();
             connectionProperties.setProperty("url", url);
-            connectionProperties.setProperty("port", port);
+            connectionProperties.setProperty("port", connectionType.equalsIgnoreCase("rmi") ? rmiport : socketport);
             view.setGameMode(gameMode);
             view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode);
             eventUpdater = view.getEventUpdater();
+            Map<String, String> customValues = Map.ofEntries(
+                    entry("network", connectionType),
+                    entry("url", url),
+                    entry("rmiport", rmiport),
+                    entry("socketport", socketport),
+                    entry("username", username),
+                    entry("pw", pw),
+                    entry("gamemode", gameMode),
+                    entry("existinggame", existingGame)
+            );
+            return customValues;
         }catch (IOException e) {
             Logger.log(Priority.ERROR, "Can't read from stdin, aborting connection setup");
+            return dv;
         }
     }
 
@@ -384,10 +415,15 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    public void setDefaultValues(Map<String, String> defaultValues) {
+        dv = defaultValues;
+    }
+
     public void run(){
         boolean cliSelected = viewChoice();
+        Map<String, String> selectedValues;
         if(cliSelected)
-            connectionChoice(input);
+            selectedValues = connectionChoice(input, dv);
         else {
             LoginScreen.main(args);
             return;
@@ -403,14 +439,20 @@ public class CliInputHandler implements Runnable{
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
         } else {
-            Thread start = new Thread(new CliInputHandler(args));
+            CliInputHandler cliInputHandler = new CliInputHandler(args);
+            cliInputHandler.setDefaultValues(selectedValues);
+            Thread start = new Thread(cliInputHandler);
             start.start();
             Thread.currentThread().interrupt();
         }
         AsciiBoard.setBoard(view.getBoard());
         handleInput();
         if (view.getStatus().equals(Status.END)) {
-            Thread start = new Thread(new CliInputHandler(args));
+            //Previous match ended, start a new one
+            CLI.printInColor("w", "Using previous selected values as default");
+            CliInputHandler cliInputHandler = new CliInputHandler(args);
+            cliInputHandler.setDefaultValues(selectedValues);
+            Thread start = new Thread(cliInputHandler);
             start.start();
             Thread.currentThread().interrupt();
         }

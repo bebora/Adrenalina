@@ -43,6 +43,7 @@ public class ActionButtons extends HBox {
         info = new Button();
         info.setText("INFO");
         this.getChildren().addAll(attack,move,grab,reload,send,stop);
+        clearPossibleActions();
     }
 
     private void onClick(MouseEvent mouseEvent){

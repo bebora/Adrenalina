@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Map.entry;
+
 public class BoardFX extends StackPane {
     @FXML
     VBox yellowWeaponsBox;
@@ -324,10 +326,16 @@ public class BoardFX extends StackPane {
     }
 
     void showPossibleDirections(List<String> directions) {
+        Map<String, String> arrows = Map.ofEntries(
+                entry("NORTH", " ↑"),
+                entry("SOUTH", " ↓"),
+                entry("EAST", " →"),
+                entry("WEST", " ←")
+        );
         if(choiceDialog == null) {
-            choiceDialog = new ChoiceDialog<>(null, directions);
+            choiceDialog = new ChoiceDialog<>(null, directions.stream().map(d -> d+arrows.get(d)).collect(Collectors.toList()));
             Optional<String> choice = choiceDialog.showAndWait();
-            choice.ifPresent(c -> eventUpdater.sendDirection(c));
+            choice.ifPresent(c -> eventUpdater.sendDirection(c.split(" ")[0]));
         }
     }
 
