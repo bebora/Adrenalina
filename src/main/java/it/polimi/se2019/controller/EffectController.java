@@ -102,20 +102,25 @@ public class EffectController extends Observer {
         orderIndex += 1;
         //Checks if effect completed
         if (orderIndex < curEffect.getOrder().size()) {
+            Target target;
             curActionType = curEffect.getOrder().get(orderIndex);
             if (curActionType == MOVE) {
                 moveIndex += 1;
                 curMove = curEffect.getMoves().get(moveIndex);
                 //Check if the move need to compute the source or destination first
                 if (curMove.getTargetSource() != null && curMove.getTargetSource().getVisibility() != null && curMove.getObjectToMove().equals(ObjectToMove.TARGETSOURCE))
-                    processDirection(curMove.getTargetSource());
+                    target = curMove.getTargetSource();
                 else
-                    processDirection(curMove.getTargetDestination());
+                    target = curMove.getTargetDestination();
             } else {
                 dealDamageIndex += 1;
                 curDealDamage = curEffect.getDamages().get(dealDamageIndex);
-                processDirection(curDealDamage.getTarget());
+                target = curDealDamage.getTarget();
             }
+            //Asks the player for a direction if the target needs it, block the flow if the player didn't answer
+            if (!updateDirection(target))
+                return;
+            processStep();
         }
         //Notifies the upper level controller of conclusion.
         else {
@@ -223,17 +228,6 @@ public class EffectController extends Observer {
     @Override
     public void updateOnStopSelection(ThreeState skip) {
         controller.updateOnStopSelection(skip);
-    }
-
-    /**
-     * Ask the player for a Direction if the current target requires one,
-     * then go on with the effect
-     * @param target the target of the current SubAction
-     */
-    private void processDirection(Target target) {
-        if ((target.getCardinal() == TRUE || target.getCardinal() == ThreeState.FALSE) && curEffect.getDirection() == null)
-            updateDirection();
-        processStep();
     }
 
     /**
@@ -549,22 +543,27 @@ public class EffectController extends Observer {
 
     /**
      * Utility method to update the current {@link Effect#direction}.
-     * It asks to the current player for a direction, and updates the related attribute.
+     * If direction need to be asked, asks to the current player for a direction, and updates the related attribute.
+     * @return false if the player didn't answer and flow need to be stopped
      */
-    public void updateDirection() {
-        AcceptableTypes acceptableTypes = new AcceptableTypes(Collections.singletonList(DIRECTION));
-        List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
-        acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1, 1, "Select a direction for the target!"));
-        Choice directionRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes, curMatch);
-        switch (directionRequest.getReceivingType()) {
-            case STOP:
-                updateOnStopSelection(TRUE);
-                break;
-            case DIRECTION:
-                Direction direction = directionRequest.getDirection();
-                curEffect.setDirection(direction);
-                break;
+    public boolean updateDirection(Target target) {
+        //Check if direction need to be asked
+        if (target.getCardinal() == TRUE && curEffect.getDirection() == null) {
+            acceptableTypes = new AcceptableTypes(Collections.singletonList(DIRECTION));
+            List<Direction> directions = new ArrayList<>(Arrays.asList(Direction.values()));
+            acceptableTypes.setSelectableDirections(new SelectableOptions<>(directions, 1, 1, "Select a direction for the target!"));
+            Choice directionRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes, curMatch);
+            switch (directionRequest.getReceivingType()) {
+                case STOP:
+                    updateOnStopSelection(TRUE);
+                    return false;
+                case DIRECTION:
+                    Direction direction = directionRequest.getDirection();
+                    curEffect.setDirection(direction);
+                    break;
+            }
         }
+        return true;
     }
 
     /**
@@ -581,8 +580,9 @@ public class EffectController extends Observer {
         }
         if (curMove.getTargetDestination().getPointOfView() == PointOfView.TARGET)
             pointOfView = players.get(0).getTile();
-        if (curMove.getTargetDestination().getCardinal() == TRUE && curEffect.getDirection() == null)
-            updateDirection();
+        //Check if direction need to be asked, if so ask it and block the flow if the player didn't answer
+        if (!updateDirection(curMove.getTargetDestination()))
+            return;
         askingForSource = false;
         playersToMove = players;
         List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.TILES));
