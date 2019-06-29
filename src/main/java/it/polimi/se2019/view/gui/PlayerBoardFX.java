@@ -3,8 +3,10 @@ package it.polimi.se2019.view.gui;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.view.ViewPlayer;
+import it.polimi.se2019.view.ViewWeapon;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,22 +21,22 @@ import java.io.IOException;
 import java.util.List;
 
 public class PlayerBoardFX extends AnchorPane {
-    @FXML
-    HBox damagesList;
-    @FXML
-    ImageView playerBoardView;
-    @FXML
-    TilePane ammoPane;
+    @FXML HBox damagesList;
+    @FXML ImageView playerBoardView;
+    @FXML TilePane ammoPane;
     @FXML HBox marksBox;
-    @FXML
-    Text username;
-
+    @FXML Text username;
     @FXML ImageView frenzyActions;
+    @FXML HBox skullBox;
+    @FXML HBox weaponBox;
 
     Image boardImage;
+    Image skull;
     ViewPlayer viewPlayer;
+    int originalRewardSize;
 
-    PlayerBoardFX(String username) {
+
+    PlayerBoardFX(ViewPlayer viewPlayer) {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "fxml/PlayerBoardFX.fxml"));
         fxmlLoader.setController(this);
@@ -44,7 +46,9 @@ public class PlayerBoardFX extends AnchorPane {
         } catch (IOException exception) {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
-        this.username.setText(username);
+        this.username.setText(viewPlayer.getUsername());
+        this.originalRewardSize = viewPlayer.getRewardPoints().size();
+
     }
 
     private void updateImage(String color){
@@ -52,6 +56,7 @@ public class PlayerBoardFX extends AnchorPane {
                 "assets/player_board/" + AssetMaps.colorToPlayerBoard.get(color)));
         Image frenzyActionImage = new Image(getClass().getClassLoader().getResourceAsStream(
                 "assets/player_board/" + AssetMaps.colorToFrenzyActions.get(color)));
+        skull = new Image(getClass().getClassLoader().getResourceAsStream("assets/skull.png"));
         playerBoardView.setImage(boardImage);
         frenzyActions.setImage(frenzyActionImage);
         frenzyActions.setVisible(false);
@@ -110,6 +115,8 @@ public class PlayerBoardFX extends AnchorPane {
         displayAmmos(viewPlayer.getAmmos());
         displayMarks(viewPlayer.getMarks());
         triggerFrenzy();
+        drawSkulls();
+        drawWeapons();
     }
 
     private void triggerFrenzy(){
@@ -119,8 +126,37 @@ public class PlayerBoardFX extends AnchorPane {
             boardImage = new Image(getClass().getClassLoader().getResourceAsStream(
                     "assets/player_board/" + viewPlayer.getColor().toLowerCase() + "_player_board_back.png"));
             playerBoardView.setImage(boardImage);
+            damagesList.setSpacing(11);
+            damagesList.setPadding(new Insets(0,0,0,2));
+            damagesList.setLayoutX(45);
+            skullBox.setLayoutX(130);
+            originalRewardSize = viewPlayer.getRewardPoints().size();
+        }
+    }
+
+    private void drawSkulls(){
+        skullBox.getChildren().clear();
+        for(int i = 0; i < originalRewardSize - viewPlayer.getRewardPoints().size(); i++){
+            ImageView imageView = new ImageView(skull);
+            imageView.setFitHeight(32);
+            imageView.setFitWidth(23);
+            skullBox.getChildren().addAll(imageView);
         }
 
     }
+
+    private void drawWeapons(){
+        weaponBox.getChildren().clear();
+        for(ViewWeapon w: viewPlayer.getUnloadedWeapons()){
+            Image weapon = new Image(getClass().getClassLoader().getResourceAsStream(
+                    "assets/cards/" + AssetMaps.weaponsAssetsMap.get(w.getName())
+            ));
+            ImageView weaponView = new ImageView(weapon);
+            weaponView.setFitWidth(40);
+            weaponView.setFitHeight(63);
+            weaponBox.getChildren().addAll(weaponView);
+        }
+    }
+
 
 }

@@ -60,10 +60,10 @@ public class BoardScreen extends HBox {
         messageScroll.setPannable(true);
         messageScroll.setFitToWidth(true);
         boardZone.getChildren().addAll(boardFX,actionButtons,messageScroll);
-        clientPlayer = new PlayerBoardFX(guiView.getSelf().getUsername());
+        clientPlayer = new PlayerBoardFX(guiView.getSelf());
         for(ViewPlayer p: GUIView.getPlayers()) {
             if (!p.getDominationSpawn() && !p.getUsername().equals(GUIView.getSelf().getUsername())) {
-                PlayerBoardFX temp = new PlayerBoardFX(p.getUsername());
+                PlayerBoardFX temp = new PlayerBoardFX(p);
                 temp.updatePlayerInfo(p);
                 playerBoardBox.getChildren().addAll(temp);
             }

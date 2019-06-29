@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.effect.ColorAdjust?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -119,7 +120,7 @@
             </ImageView>
          </children>
       </HBox>
-      <TilePane fx:id="ammoPane" hgap="5.0" layoutX="389.0" layoutY="7.0" prefHeight="104.0" prefWidth="96.0" vgap="5.0" />
+      <TilePane fx:id="ammoPane" hgap="5.0" layoutX="389.0" layoutY="7.0" prefHeight="40.0" prefWidth="101.0" vgap="5.0" />
       <HBox fx:id="marksBox" layoutX="233.0" layoutY="-2.0" prefHeight="23.0" prefWidth="140.0" spacing="5.0">
          <padding>
             <Insets top="5.0" />
@@ -177,5 +178,15 @@
             <Image url="@../assets/player_board/blue_player_frenzy_actions.png" />
          </image>
       </ImageView>
+      <HBox fx:id="skullBox" layoutX="99.0" layoutY="84.0" prefHeight="33.0" prefWidth="159.0" spacing="3.0">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </HBox>
+      <ScrollPane layoutX="380.0" layoutY="56.0" pannable="true" stylesheets="@PLayerBoardFXStyle.css" vbarPolicy="NEVER" hbarPolicy="NEVER">
+         <content>
+            <HBox fx:id="weaponBox" prefHeight="66.0" prefWidth="111.0" style="-fx-background-color: transparent;" />
+         </content>
+      </ScrollPane>
    </children>
 </fx:root>

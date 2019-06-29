@@ -6,6 +6,8 @@ import it.polimi.se2019.view.ViewPlayer;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.TilePane;
@@ -18,6 +20,11 @@ public class DominationBoardFX extends Pane {
     @FXML HBox blueSpawnBox;
     @FXML HBox redSpawnBox;
     @FXML HBox yellowSpawnBox;
+    @FXML HBox excessBlueDamageBox;
+    @FXML HBox excessYellowDamageBox;
+    @FXML HBox excessRedDamageBox;
+    @FXML ImageView alternateFrenzyTrigger;
+    Image drop;
 
     DominationBoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
@@ -29,30 +36,40 @@ public class DominationBoardFX extends Pane {
         } catch (IOException exception) {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
+        drop = new Image(getClass().getClassLoader().getResourceAsStream(
+                "assets/red_damage.png"
+        ));
     }
 
     void updateSkulls(int skulls){
-        skullsPane.getChildren().forEach(n->n.setVisible(false));
-        for(int i =0; i < skulls; i++)
-            skullsPane.getChildren().get(i).setVisible(true);
+        for(int i = 0; i < skullsPane.getChildren().size() -skulls ; i++)
+            skullsPane.getChildren().get(i).setVisible(false);
     }
 
     void updateSpawns(List<ViewPlayer> players){
+        int overDamagedSpawns = 0;
         for(ViewPlayer s: players){
             switch(s.getColor()){
                 case "RED":
                     updateDamages(redSpawnBox,s.getDamages());
+                    updateExcessDamage(excessRedDamageBox,s.getDamages());
                     break;
                 case "YELLOW":
                     updateDamages(yellowSpawnBox,s.getDamages());
+                    updateExcessDamage(excessYellowDamageBox,s.getDamages());
                     break;
                 case "BLUE":
                     updateDamages(blueSpawnBox,s.getDamages());
+                    updateExcessDamage(excessBlueDamageBox,s.getDamages());
                     break;
                 default:
                     break;
             }
+            if(s.getDamages().size() >= 8)
+                overDamagedSpawns += 1;
         }
+        if(overDamagedSpawns >= 2)
+            alternateFrenzyTrigger.setVisible(false);
     }
 
     private void updateDamages(HBox spawnBox, List<String> damages){
@@ -62,6 +79,19 @@ public class DominationBoardFX extends Pane {
             GuiHelper.hueShifter(damages.get(i),colorAdjust);
             spawnBox.getChildren().get(i).setEffect(colorAdjust);
             spawnBox.getChildren().get(i).setVisible(true);
+        }
+    }
+
+    private void updateExcessDamage(HBox excessDamageBox, List<String> damages) {
+        excessDamageBox.getChildren().clear();
+        for (int i = 8; i < damages.size(); i++) {
+            ImageView imageView = new ImageView(drop);
+            imageView.setFitWidth(16);
+            imageView.setFitHeight(26);
+            ColorAdjust colorAdjust = new ColorAdjust();
+            GuiHelper.hueShifter(damages.get(i), colorAdjust);
+            imageView.setEffect(colorAdjust);
+            excessDamageBox.getChildren().addAll(imageView);
         }
     }
 

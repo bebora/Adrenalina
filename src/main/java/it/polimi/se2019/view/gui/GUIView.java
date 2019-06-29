@@ -64,13 +64,14 @@ public class GUIView extends View {
 
     @Override
     public void disconnect() {
-        boardScreen = null;
-        setStatus(Status.END);
-        Platform.runLater(() -> new ReconnectionScreen(LoginScreen.getPrimaryStage(),"Press ENTER to reconnect!",this));
+        if(getStatus() != Status.END){
+            boardScreen = null;
+            setStatus(Status.END);
+            Platform.runLater(() -> new ReconnectionScreen(LoginScreen.getPrimaryStage(),"Press ENTER to reconnect!",this));
+        }
     }
 
     @Override
     public void printWinners(List<String> winners) {
-        //TODO FABIO
     }
 }
