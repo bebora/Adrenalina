@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.network.ClientAcker;
 import it.polimi.se2019.view.Status;
 import it.polimi.se2019.view.View;
 
@@ -14,13 +15,15 @@ public class NetworkTimeoutControllerClient extends Thread{
     private long lastRequest;
     private boolean checkingTimeout = true;
     int timeout = 5000;
+    private ClientAcker clientAcker;
     public NetworkTimeoutControllerClient(View linkedView) {
         this.view = linkedView;
     }
 
     @Override
     public void run() {
-
+        clientAcker = new ClientAcker(view);
+        clientAcker.start();
         do {
             try {
                 Thread.sleep(timeout);
