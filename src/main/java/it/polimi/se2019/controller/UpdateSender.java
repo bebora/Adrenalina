@@ -36,11 +36,14 @@ public class UpdateSender implements ViewUpdater {
     }
 
     class UpdatePoller extends Thread{
-        private ThreadPoolExecutor updateExecutor;
+        private Map<String, ThreadPoolExecutor> updateExecutor;
         private Map<String, Object> locks;
 
         public UpdatePoller(Map<String, Object> locks) {
-            updateExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+            updateExecutor = new HashMap<>();
+            for (String key : locks.keySet()) {
+                updateExecutor.put(key, (ThreadPoolExecutor) Executors.newFixedThreadPool(1));
+            }
             this.locks = locks;
         }
 
@@ -51,7 +54,7 @@ public class UpdateSender implements ViewUpdater {
                         synchronized (locks.get((String) entry.getKey())) {
                             try {
                                 Runnable task = (Runnable) ((Deque) entry.getValue()).pop();
-                                updateExecutor.submit(task);
+                                updateExecutor.get((String) entry.getKey()).submit(task);
                                 ((Deque) entry.getValue()).clear();
                             } catch (NoSuchElementException e) {
                                 //Do nothing if empty
@@ -59,7 +62,7 @@ public class UpdateSender implements ViewUpdater {
                         }
                     }
                 try {
-                    sleep(1000);
+                    sleep(500);
                 } catch (InterruptedException e) {
                     Logger.log(Priority.ERROR, "interrupted update poller");
                 }
@@ -168,7 +171,7 @@ public class UpdateSender implements ViewUpdater {
                             idView, points, powerUps,
                             loadedWeapons, currentPlayer);
                 };
-                totalUpdates.get(receivingPlayer.getUsername()).add(update);
+                totalUpdates.get(receivingPlayer.getUsername()).push(update);
             }
         }
     }

@@ -318,7 +318,7 @@ public class EffectController extends Observer {
                         stream().
                         flatMap(List::stream).
                         filter(Objects::nonNull).
-                        filter(curDealDamage.getTarget().getFilterRoom(board, pointOfView)). //Filter the tiles using the current Target
+                        filter(curDealDamage.getTarget().getFilterRoom(board, player.getTile())). //Filter the tiles using the current Target
                         map(Tile::getRoom).
                         distinct().
                         collect(Collectors.toList());
