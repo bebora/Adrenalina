@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.controller.events.IncorrectEvent;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.Reload;
@@ -103,6 +104,7 @@ public class GameController extends Observer {
     @Override
     public void updateOnAction(Action action){
         this.action = true;
+        match.updatePopupViews(String.format("%s chose %s action!",currentPlayer.getUsername(), action.toString()));
         actionController = new ActionController(match,this);
         actionController.updateOnAction(action);
     }
@@ -130,10 +132,18 @@ public class GameController extends Observer {
     public void updateOnPowerUps(List<PowerUp> powerUps) {
         if (currentPlayer.getAlive() == OPTIONAL) {
             currentPlayer.setAlive(TRUE);
-            Tile tile = match.getBoard().getTiles().stream().flatMap(List::stream).
-                    filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).findFirst().get();
+            Tile tile = match.getBoard().getTiles().
+                    stream().
+                    flatMap(List::stream).
+                    filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).
+                    findFirst().
+                    orElseThrow(() -> new IncorrectEvent("Can't find tile, board not correctly formatted"));
             currentPlayer.setTile(tile);
             currentPlayer.discardPowerUp(powerUps.get(0), false);
+            match.updatePopupViews(String.format("%s discarded %s to spawn in %s room!",
+                    currentPlayer.getUsername(),
+                    powerUps.get(0).getName(),
+                    powerUps.get(0).getDiscardAward().toString()));
             if (!skip)
                 playTurn();
             else {
@@ -144,6 +154,9 @@ public class GameController extends Observer {
         else {
             this.action = false;
             currentPlayer.discardPowerUp(powerUps.get(0), false);
+            match.updatePopupViews(String.format("%s chose to use %s!",
+                    currentPlayer.getUsername(),
+                    powerUps.get(0).getName()));
             EffectController effectController = new EffectController(powerUps.get(0).getEffect(), null, match, currentPlayer, match.getPlayers(), this);
             effectController.nextStep();
         }
@@ -172,6 +185,7 @@ public class GameController extends Observer {
         turnEnd = false;
         skip = false;
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
+        match.updateViews();
     }
 
     public void startTurn(){
@@ -185,7 +199,7 @@ public class GameController extends Observer {
             }
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(currentPlayer.getPowerUps(), 1,1, "Seleziona un PowerUp!"));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(currentPlayer.getPowerUps(), 1,1, "Select a PowerUp to discard to spawn!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                     this,
                     currentPlayer.getVirtualView().getRequestDispatcher(),
@@ -383,6 +397,7 @@ public class GameController extends Observer {
         catch (InterruptedException e) {
             assert false;
         }
+        match.getUpdateSender().getUpdatePoller().interrupt();
         //Set the players offline
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));
     }

@@ -309,6 +309,8 @@ public class Player {
 			receiveMark(shooter);
 			marks--;
 		}
+		if (match != null)
+			match.updatePopupViews(String.format("%s receive %d marks and %d damages from %s", getUsername(), marks, damage, shooter.getUsername()));
 		notifyHealthChange();
 	}
 

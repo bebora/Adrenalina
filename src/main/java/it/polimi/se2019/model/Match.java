@@ -336,4 +336,8 @@ public abstract class Match {
 					p.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList()), players.get(currentPlayer));
 		}
 	}
+
+	public void updatePopupViews(String popup) {
+		updateSender.sendPopupMessage(popup);
+	}
 }

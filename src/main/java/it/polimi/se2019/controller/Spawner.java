@@ -50,6 +50,8 @@ public class Spawner extends Observer {
                 .filter(t -> t.getRoom() == Color.valueOf(discarded.getDiscardAward().name()))
                 .findFirst().orElse(null));
         playerToSpawn.setAlive(ThreeState.TRUE);
+        if (getMatch() != null)
+            getMatch().updatePopupViews(String.format("%s spawned in %s tile, discarding %s!",playerToSpawn.getUsername(), powerUps.get(0).getDiscardAward(), powerUps.get(0).getName()));
         countDownLatch.countDown();
     }
 

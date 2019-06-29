@@ -514,7 +514,7 @@ public class EffectController extends Observer {
                 currentEnemy = p;
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Seleziona tra 0 e %d PowerUp!", selectablePowerUps.size())));
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Select from 0 to %d PowerUp!, to use against %s", selectablePowerUps.size(), p.getUsername())));
                 timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 countDownLatch = new CountDownLatch(1);
                 timerCostrainedEventHandler.start();
@@ -534,7 +534,7 @@ public class EffectController extends Observer {
         for(Player p : damagedPlayers){
             List<PowerUp> applicable = p.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGED)).collect(Collectors.toList());
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Select from 0 and %d powerUps!", applicable.size())));
+            acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Select from 0 and %d powerUps to answer from %s attack", applicable.size(), player.getUsername())));
             Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
             TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
             temp.start();
@@ -685,6 +685,10 @@ public class EffectController extends Observer {
                     return;
             }
             player.discardPowerUp(p, false);
+            curMatch.updatePopupViews(String.format("%s use %s against %s",
+                    player.getUsername(),
+                    p.getName(),
+                    currentEnemy.getUsername()));
             damagesAmount = p.getEffect().getDamages().get(0).getDamagesAmount();
             marksAmount = p.getEffect().getDamages().get(0).getMarksAmount();
             currentEnemy.receiveShot(player,damagesAmount,marksAmount, false);

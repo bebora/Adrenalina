@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Concrete class that receives updates from model.
@@ -25,7 +26,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     @Override
-    public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         synchronized (lock) {
             this.linkedView.setLastRequest(System.currentTimeMillis());
             linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
@@ -91,31 +92,29 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
-        if (linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null) {
-            if (message.contains("SUCCESS")) {
-                linkedView.setStatus(Status.WAITING);
-                System.out.println("WAITING TO PLAY...");
-                linkedView.getMessages().clear();
-            }
-            else if (message.contains("END")){
-                System.out.println(message);
-                linkedView.addMessage(message);
-                linkedView.setStatus(Status.END);
-            }
-            else {
-                linkedView.addMessage(message);
-            }
-        }
-        else{
-            this.linkedView.setLastRequest(System.currentTimeMillis());
-            if (message.contains("WINNERS")) {
-                List<String> winners =  new ArrayList<>(Arrays.asList(message.split(",")));
-                winners.remove(0);
-                linkedView.printWinners(winners);
-            }
-            else if(linkedView.getMessages() != null) {
-                linkedView.addMessage(message);
-                linkedView.refresh();
+        synchronized (lock) {
+            if (linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null) {
+                if (message.contains("SUCCESS")) {
+                    linkedView.setStatus(Status.WAITING);
+                    System.out.println("WAITING TO PLAY...");
+                    linkedView.getMessages().clear();
+                } else if (message.contains("END")) {
+                    System.out.println(message);
+                    linkedView.addMessage(message);
+                    linkedView.setStatus(Status.END);
+                } else {
+                    linkedView.addMessage(message);
+                }
+            } else {
+                this.linkedView.setLastRequest(System.currentTimeMillis());
+                if (message.contains("WINNERS")) {
+                    List<String> winners = new ArrayList<>(Arrays.asList(message.split(",")));
+                    winners.remove(0);
+                    linkedView.printWinners(winners);
+                } else if (linkedView.getMessages() != null) {
+                    linkedView.addMessage(message);
+                    linkedView.refresh();
+                }
             }
         }
     }

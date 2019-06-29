@@ -160,6 +160,7 @@ public class WeaponController extends Observer {
         curEffect++;
         selectedEffect.setActivated(true);
         lastUsedIndex = weapon.getEffects().indexOf(selectedEffect) + 1;
+        match.updatePopupViews(String.format("%s is using %s effect!", curPlayer.getUsername(), selectedEffect));
         effectController = new EffectController(selectedEffect, weapon, match, curPlayer, originalPlayers, this);
         effectController.nextStep();
     }

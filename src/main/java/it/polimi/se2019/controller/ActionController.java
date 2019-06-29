@@ -97,6 +97,9 @@ public class ActionController extends Observer {
     public void updateOnWeapon(Weapon weapon){
         if (curSubAction == GRAB) {
             if (curPlayer.getWeapons().size() == Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons"))) {
+                sandboxMatch.updatePopupViews(String.format("%s discard %s!",
+                        curPlayer.getUsername(),
+                        weapon.getName()));
                 subActionIndex--;
                 toDiscard = weapon;
                 curPlayer.getWeapons().remove(toDiscard);
@@ -104,6 +107,9 @@ public class ActionController extends Observer {
                 nextStep();
             }
             else {
+                sandboxMatch.updatePopupViews(String.format("%s draw %s!",
+                        curPlayer.getUsername(),
+                        weapon.getName()));
                 //Add the discarded weapon to the Tile
                 if (toDiscard != null) {
                     curPlayer.getTile().addWeapon(toDiscard);
@@ -114,6 +120,9 @@ public class ActionController extends Observer {
                 startPayingProcess();
             }
         } else if (curSubAction == SubAction.SHOOT) {
+            sandboxMatch.updatePopupViews(String.format("%s use %s!",
+                    curPlayer.getUsername(),
+                    weapon.getName()));
             weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
         } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
             selectedWeapon = weapon;

@@ -13,6 +13,7 @@ import it.polimi.se2019.network.ViewUpdater;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
 
 /**
  * Used by the server to send updates to a player or to all players
@@ -22,6 +23,7 @@ public class UpdateSender implements ViewUpdater {
     private Match match;
     private Map<String,Deque<Runnable>> totalUpdates;
     private Map<String, Object> locks;
+    private UpdatePoller updatePoller;
 
     public UpdateSender(Match match) {
         this.match = match;
@@ -31,22 +33,34 @@ public class UpdateSender implements ViewUpdater {
             totalUpdates.put(p.getUsername(), new ArrayDeque<>());
             locks.put(p.getUsername(), new Object());
         }
-        UpdatePoller updatePoller = new UpdatePoller(locks);
+        updatePoller = new UpdatePoller();
         updatePoller.start();
     }
 
+    public UpdatePoller getUpdatePoller() {
+        return updatePoller;
+    }
+
+    /**
+     * Utility class to send the latest update to the corresponding player.
+     * Every {@link #timeout}, the latest update for every player gets fetched from {@link #totalUpdates}.
+     * The polling is made allows to avoid sending too many update at the same time.
+     */
     class UpdatePoller extends Thread{
         private Map<String, ThreadPoolExecutor> updateExecutor;
-        private Map<String, Object> locks;
+        private int timeout = 500;
 
-        public UpdatePoller(Map<String, Object> locks) {
+        public UpdatePoller() {
             updateExecutor = new HashMap<>();
             for (String key : locks.keySet()) {
                 updateExecutor.put(key, (ThreadPoolExecutor) Executors.newFixedThreadPool(1));
             }
-            this.locks = locks;
         }
 
+        /**
+         * Handles parsing the current update to send to each player, and sending the latest update in the Deque.
+         * After sending it, it clears the other elements present and release the lock.
+         */
         @Override
         public void run() {
             while (true) {
@@ -62,7 +76,7 @@ public class UpdateSender implements ViewUpdater {
                         }
                     }
                 try {
-                    sleep(500);
+                    sleep(timeout);
                 } catch (InterruptedException e) {
                     Logger.log(Priority.ERROR, "interrupted update poller");
                 }
@@ -157,7 +171,21 @@ public class UpdateSender implements ViewUpdater {
 
     }
 
-    public void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
+    /**
+     * Send a total update to {@code receivingPlayer}.
+     * It creates a Runnable, adding it to the related Deque for the player.
+     * The Runnable gets parsed after from {@link #updatePoller}.
+     * @param receivingPlayer the player that receives the Update
+     * @param username  of the player
+     * @param board of the game
+     * @param players all the players present in the game
+     * @param idView id of the view
+     * @param points of the receiving player
+     * @param powerUps of the receiving player
+     * @param loadedWeapons of the receiving player
+     * @param currentPlayer who is currently playing th turn
+     */
+    public synchronized void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
                                 String idView, int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
         if (receivingPlayer.getVirtualView().getViewUpdater() == null) return;
@@ -171,7 +199,7 @@ public class UpdateSender implements ViewUpdater {
                             idView, points, powerUps,
                             loadedWeapons, currentPlayer);
                 };
-                totalUpdates.get(receivingPlayer.getUsername()).push(update);
+                totalUpdates.get(receivingPlayer.getUsername()).addFirst(update);
             }
         }
     }

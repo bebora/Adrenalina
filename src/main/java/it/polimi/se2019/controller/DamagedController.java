@@ -45,6 +45,11 @@ public class DamagedController extends Observer {
     public void updateOnPowerUps(List<PowerUp> powerUps) {
         for (PowerUp p : powerUps) {
             if (applicable.contains(p)) {
+                if (getMatch() != null)
+                    getMatch().updatePopupViews(String.format("%s use %s against %s!",
+                        damagedPlayer.getUsername(),
+                        p.getName(),
+                        damagingPlayer.getUsername()));
                 damagedPlayer.discardPowerUp(p, false);
                 damagingPlayer.receiveShot(damagedPlayer,p.getEffect().getDamages().get(0).getDamagesAmount(),p.getEffect().getDamages().get(0).getMarksAmount(), false);
             }
