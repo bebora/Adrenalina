@@ -32,6 +32,17 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     private transient long lastRequest;
     private transient AcceptableTypes acceptableTypes;
     final transient Object lock = new Object();
+    private transient boolean block = false;
+
+    /**
+     * Clear the current accepted types, and block further additions of more types
+     */
+    public void block() {
+        synchronized (lock) {
+            clear();
+            block = true;
+        }
+    }
 
     /**
      * Clear the current accepted types, sending the update to the related view.
@@ -39,7 +50,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
     public void clear() {
         synchronized (lock) {
             for (EventHandler eventHandler : observerTypes.values()) {
-                eventHandler.setActive(true);
+                eventHandler.setActive(false);
             }
             observerTypes.clear();
             acceptableTypes = new AcceptableTypes(new ArrayList<>());
@@ -52,15 +63,19 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
      * @param acceptableTypes accepted types and options
      */
     public void updateView(AcceptableTypes acceptableTypes) {
-        this.acceptableTypes = acceptableTypes;
-        viewUpdater.sendAcceptableType(acceptableTypes);
+        synchronized (lock) {
+            this.acceptableTypes = acceptableTypes;
+            viewUpdater.sendAcceptableType(acceptableTypes);
+        }
     }
 
     /**
      * Update the view with current selectable options.
      */
     public void updateView() {
-        viewUpdater.sendAcceptableType(acceptableTypes);
+        synchronized (lock) {
+            viewUpdater.sendAcceptableType(acceptableTypes);
+        }
     }
 
     public void setEventHelper(Match match, Player player) {
@@ -105,9 +120,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
      */
     @Override
     public void receiveAck() throws RemoteException {
-        synchronized (lock) {
-            lastRequest = System.nanoTime();
-        }
+        lastRequest = System.nanoTime();
     }
 
     /**
@@ -371,10 +384,14 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
      * @param receivingTypes list of accepted {@link ReceivingType}
      * @param eventHandler handler for requests related to the list sent
      */
-    public void addReceivingType(List<ReceivingType> receivingTypes, EventHandler eventHandler) {
+    public void addReceivingType(List<ReceivingType> receivingTypes, EventHandler eventHandler) throws UnsupportedOperationException {
         synchronized (lock) {
-            for (ReceivingType receivingType : receivingTypes) {
-                observerTypes.put(receivingType, eventHandler);
+            if (!block)
+                for (ReceivingType receivingType : receivingTypes) {
+                    observerTypes.put(receivingType, eventHandler);
+                }
+            else {
+                throw new UnsupportedOperationException();
             }
         }
     }

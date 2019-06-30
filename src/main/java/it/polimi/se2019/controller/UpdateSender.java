@@ -13,7 +13,6 @@ import it.polimi.se2019.network.ViewUpdater;
 import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.stream.Collectors;
 
 /**
  * Used by the server to send updates to a player or to all players
@@ -63,7 +62,7 @@ public class UpdateSender implements ViewUpdater {
          */
         @Override
         public void run() {
-            while (true) {
+            while (!isInterrupted()) {
                     for (Map.Entry entry : totalUpdates.entrySet()) {
                         synchronized (locks.get((String) entry.getKey())) {
                             try {

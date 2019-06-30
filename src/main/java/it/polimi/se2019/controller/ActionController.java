@@ -178,7 +178,7 @@ public class ActionController extends Observer {
         }
         else if (!selectableTiles.isEmpty()) {
             acceptableTypes = new AcceptableTypes(receivingTypes);
-            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, "Seleziona una Tile dove muoverti!"));
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, "Select a tile to move!"));
             timerCostrainedEventHandler = new TimerCostrainedEventHandler(
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),

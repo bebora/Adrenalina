@@ -33,7 +33,6 @@ public interface EventUpdater {
     void sendWeapon(String weapon);
     void sendStop();
     void sendAmmo(String ammo);
-
     /**
      * Login to controller
      * Calling other methods before login may throw an exception

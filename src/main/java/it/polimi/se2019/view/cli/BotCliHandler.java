@@ -46,6 +46,7 @@ public class BotCliHandler extends CliInputHandler {
         else {
             string = "socket\nlocalhost\n1337\n\nkek\n\n\n\n";
         }
+        System.out.print(string);
         Reader inputString = new StringReader(string);
         BufferedReader reader = new BufferedReader(inputString);
         connectionChoice(reader);
@@ -63,7 +64,7 @@ public class BotCliHandler extends CliInputHandler {
         AsciiBoard.setBoard(view.getBoard());
         while (!view.getStatus().equals(Status.END)) {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 Logger.log(Priority.WARNING, "Interrupted!");
             }

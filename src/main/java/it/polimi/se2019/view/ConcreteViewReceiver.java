@@ -25,12 +25,14 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     @Override
-    public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         synchronized (lock) {
-            this.linkedView.setLastRequest(System.currentTimeMillis());
-            linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
-            if (!(linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null))
-                linkedView.refresh();
+            if (linkedView.getStatus() != Status.END) {
+                this.linkedView.setLastRequest(System.currentTimeMillis());
+                linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
+                if (!(linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null))
+                    linkedView.refresh();
+            }
         }
     }
 
@@ -106,7 +108,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                 } else {
                     linkedView.addMessage(message);
                 }
-            } else {
+            } else if (linkedView.getStatus() != Status.END) {
                 this.linkedView.setLastRequest(System.currentTimeMillis());
                 if (message.contains("WINNERS")) {
                     List<String> winners = new ArrayList<>(Arrays.asList(message.split(",")));
@@ -152,22 +154,22 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
         synchronized (lock) {
-            this.linkedView.setLastRequest(System.currentTimeMillis());
-            linkedView.setUsername(username);
-            linkedView.setBoard(board);
-            linkedView.setPerspective(helper.getTileFromCoords(perspective));
-            linkedView.setPlayers(players);
-            linkedView.setIdView(idView);
-            linkedView.setPoints(points);
-            linkedView.setPowerUps(powerUps);
-            linkedView.setLoadedWeapons(loadedWeapons);
-            linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
-            if (linkedView.getStatus() != Status.PLAYING && linkedView.getStatus() != Status.END) {
-                linkedView.setStatus(Status.PLAYING);
-                //First refresh to clean the View
+                this.linkedView.setLastRequest(System.currentTimeMillis());
+                linkedView.setUsername(username);
+                linkedView.setBoard(board);
+                linkedView.setPerspective(helper.getTileFromCoords(perspective));
+                linkedView.setPlayers(players);
+                linkedView.setIdView(idView);
+                linkedView.setPoints(points);
+                linkedView.setPowerUps(powerUps);
+                linkedView.setLoadedWeapons(loadedWeapons);
+                linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
+                if (linkedView.getStatus() != Status.PLAYING && linkedView.getStatus() != Status.END) {
+                    linkedView.setStatus(Status.PLAYING);
+                    //First refresh to clean the View
+                    linkedView.refresh();
+                }
                 linkedView.refresh();
-            }
-            linkedView.refresh();
         }
     }
 
@@ -180,7 +182,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public void receiveWeaponTaken(ViewWeapon takenWeapon, ViewWeapon discardedWeapon, String playerId) throws RemoteException {
-        //TODO tell clients that a player has taken the weapon
         ViewPlayer player = helper.getPlayerFromId(playerId);
         ViewTile tile = player.getTile();
         if (!tile.getWeapons().contains(takenWeapon.getName()))

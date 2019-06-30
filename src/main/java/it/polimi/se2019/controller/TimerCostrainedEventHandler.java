@@ -31,9 +31,14 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     private RequestDispatcher requestDispatcher;
     private AcceptableTypes acceptableTypes;
     private boolean notifyOnEnd;
+    private boolean error = false;
 
     public synchronized boolean  isBlocked() {
         return blocked;
+    }
+
+    public boolean isError() {
+        return error;
     }
 
     /**
@@ -73,8 +78,11 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
      */
     public void endHandler() {
         blocked = true;
+        if (active) {
+            Logger.log(Priority.DEBUG, String.format("Ended event regarding %s for player %s", acceptableTypes.getAcceptedTypes(), requestDispatcher.getLinkedVirtualView().getUsername()));
+            requestDispatcher.clear();
+        }
         active = false;
-        requestDispatcher.clear();
     }
 
     /**
@@ -119,9 +127,16 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     public synchronized boolean checkIfNotify() {
         return !blocked && notifyOnEnd;
     }
+
     @Override
     public void run() {
-        requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
+        try {
+            requestDispatcher.addReceivingType(acceptableTypes.getAcceptedTypes(), this);
+        } catch (UnsupportedOperationException e) {
+            error = true;
+            Logger.log(Priority.DEBUG, "Blocked the run of a timer");
+            return;
+        }
         requestDispatcher.updateView(acceptableTypes);
         this.start = System.currentTimeMillis();
         Logger.log(Priority.DEBUG, String.format("Started event regarding %s for player %s - time remaining: %d", acceptableTypes.getAcceptedTypes(), requestDispatcher.getLinkedVirtualView().getUsername(), time));
@@ -135,7 +150,6 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
                 Logger.log(Priority.WARNING, "Sleep interrupted");
             }
         }
-        Logger.log(Priority.DEBUG,String.format("Ended event regarding %s for player %s", acceptableTypes.getAcceptedTypes(), requestDispatcher.getLinkedVirtualView().getUsername()));
         if (checkIfNotify()) {
             observer.updateOnStopSelection(ThreeState.TRUE);
         }
@@ -151,7 +165,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public void receiveDirection(Direction direction) {
+    public synchronized void receiveDirection(Direction direction) {
         if (active && acceptableTypes.getSelectableDirections().checkForCoherency(Collections.singletonList(direction))) {
             endHandler();
             Runnable task = () -> observer.updateOnDirection(direction);
@@ -224,7 +238,7 @@ public class TimerCostrainedEventHandler extends Thread implements EventHandler 
     }
 
     @Override
-    public void receiveAmmo(Ammo ammo) {
+    public synchronized void receiveAmmo(Ammo ammo) {
         if (active && acceptableTypes.getSelectableAmmos().checkForCoherency(Collections.singletonList(ammo))) {
             endHandler();
             Runnable task = () -> observer.updateOnAmmo(ammo);

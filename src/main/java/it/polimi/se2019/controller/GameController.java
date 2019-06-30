@@ -386,7 +386,7 @@ public class GameController extends Observer {
         //Reset timers
         for (Player p : match.getPlayers())
             if (p.getVirtualView() != null)
-                p.getVirtualView().getRequestDispatcher().clear();
+                p.getVirtualView().getRequestDispatcher().block();
         lobbyController.getGames().remove(this);
         Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();
@@ -446,6 +446,8 @@ public class GameController extends Observer {
      */
     @Override
     public void updateOnStopSelection(ThreeState skip){
+        if (matchEnd)
+            return;
         if (countDownLatch != null && countDownLatch.getCount() != 0 && dominationOverkill)
             countDownLatch.countDown();
         else if (currentPlayer.getAlive() == OPTIONAL) {

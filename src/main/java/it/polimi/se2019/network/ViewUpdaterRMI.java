@@ -93,8 +93,13 @@ public class ViewUpdaterRMI implements ViewUpdater {
         });
     }
 
+    /**
+     * Send accepted options to the client.
+     * The method is synchronized to avoid coherency errors in sending acceptable types.
+     * @param acceptableTypes accepted options that can be selected
+     */
     @Override
-    public void sendAcceptableType(AcceptableTypes acceptableTypes) {
+    public synchronized void sendAcceptableType(AcceptableTypes acceptableTypes) {
         executor.submit(() -> {
             try {
                 remoteReceiver.receiveSelectablesWrapper(ModelToViewConverter.fromAcceptableTypes(acceptableTypes));

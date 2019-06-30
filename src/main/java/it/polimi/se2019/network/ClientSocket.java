@@ -57,7 +57,7 @@ public class ClientSocket extends Thread{
     public ClientSocket(String serverIP,
                         int port,
                         ConnectionRequest connectionRequest, UpdateVisitor updateVisitor) throws RemoteException{
-        updateExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        updateExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
         this.updateVisitor = updateVisitor;
         GsonBuilder gsonBuilder;
         gsonBuilder = new GsonBuilder();

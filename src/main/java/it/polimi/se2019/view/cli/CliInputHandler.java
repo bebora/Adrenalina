@@ -460,7 +460,7 @@ public class CliInputHandler implements Runnable{
             cliInputHandler.setDefaultValues(selectedValues);
             Thread start = new Thread(cliInputHandler);
             start.start();
-            Thread.currentThread().interrupt();
+            return;
         }
         AsciiBoard.setBoard(view.getBoard());
         handleInput();
@@ -471,7 +471,7 @@ public class CliInputHandler implements Runnable{
             cliInputHandler.setDefaultValues(selectedValues);
             Thread start = new Thread(cliInputHandler);
             start.start();
-            Thread.currentThread().interrupt();
+            return;
         }
     }
 }

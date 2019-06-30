@@ -29,7 +29,7 @@ public class ViewUpdaterSocket implements ViewUpdater{
     }
 
     @Override
-    public void sendAcceptableType(AcceptableTypes acceptableTypes) {
+    public synchronized void sendAcceptableType(AcceptableTypes acceptableTypes) {
         UpdateVisitable selectableOptionsUpdate = new SelectableOptionsUpdate(ModelToViewConverter.fromAcceptableTypes(acceptableTypes));
         workerServerSocket.update(selectableOptionsUpdate);
     }

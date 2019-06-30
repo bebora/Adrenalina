@@ -16,6 +16,8 @@ import it.polimi.se2019.model.cards.Weapon;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
+import static it.polimi.se2019.model.ThreeState.TRUE;
+
 /**
  * Blocking class to wait for client interaction
  * It joins on TimerCostrainedEventHandler, that will update this object with the received object from client
@@ -40,6 +42,10 @@ public class Choice extends Observer {
         receivingType = ReceivingType.NULL;
         timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerCostrainedEventHandler.start();
+        if (timerCostrainedEventHandler.isError()) {
+            updateOnStopSelection(TRUE);
+            return;
+        }
         countDownLatch = new CountDownLatch(1);
         try {
             countDownLatch.await();
