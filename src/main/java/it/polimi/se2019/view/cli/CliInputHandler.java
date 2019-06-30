@@ -23,7 +23,9 @@ public class CliInputHandler implements Runnable{
     protected EventUpdater eventUpdater;
     private static final String WRONGINPUT = "Wrong input!";
     private String[] args;
-    //Default values for connection setup
+    /**
+     * //Default values for connection setup
+     */
     private Map<String, String> dv = Map.ofEntries(
             entry("network", "rmi"),
             entry("url", "localhost"),
@@ -293,8 +295,8 @@ public class CliInputHandler implements Runnable{
     }
 
     /**
-     * Ask parameters with automatic default values
-     * @param input
+     * Ask connection parameters with automatic default values
+     * @param input BufferedReader that reads input
      */
     protected Map<String, String> connectionChoice(BufferedReader input) {
         return connectionChoice(input, dv);
@@ -302,7 +304,7 @@ public class CliInputHandler implements Runnable{
 
     /**
      * Ask parameters to connect with custom default values
-     * @param input
+     * @param input BufferedReader that reads input
      * @param dv default values for asked parameters
      */
     protected Map<String, String> connectionChoice(BufferedReader input, Map<String, String> dv){
