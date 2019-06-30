@@ -11,17 +11,17 @@ public class AsciiWeapon {
         CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.boardBottomBorder,AsciiBoard.offsetX);
         int x = AsciiBoard.offsetX;
         int y = AsciiBoard.offsetY;
-        CLI.printInColor("w","Nome: ");
+        CLI.printInColor("w","Name: ");
         CLI.printInColor(weapon.getColor(),weapon.getName());
         CLI.moveCursor(x,++y);
-        CLI.printInColor("w","Costo: ");
+        CLI.printInColor("w","Cost: ");
         for(String c: weapon.getCost())
             CLI.printInColor(c, AsciiTile.unicodeAmmo + " ");
         CLI.moveCursor(x,++y);
         for(ViewEffect e: weapon.getEffects()){
             CLI.printInColor("w",e.getName());
             CLI.moveCursor(x,++y);
-            CLI.printInColor("w", "Costo: ");
+            CLI.printInColor("w", "Cost: ");
             for(String a: e.getCost())
                 CLI.printInColor(a,AsciiTile.unicodeAmmo + " ");
             CLI.moveCursor(x,++y);

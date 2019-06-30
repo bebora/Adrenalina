@@ -42,12 +42,13 @@ public class BoardScreen extends HBox {
         playerBoardScroller.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         playerBoardScroller.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         VBox boardZone = new VBox();
-        boardZone.setSpacing(10);
+        boardZone.setSpacing(2);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
         powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater(),actionButtons.getSenderButton());
         boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         messageBox = new ListView<>();
+        messageBox.setMaxHeight(150);
         ScrollPane messageScroll = new ScrollPane(messageBox);
         messageScroll.setPrefSize(200,100);
         messageScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);

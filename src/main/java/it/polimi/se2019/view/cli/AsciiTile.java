@@ -37,7 +37,7 @@ class AsciiTile {
         int i = 1;
         CLI.moveCursor(x,y);
         CLI.clearUntilEndOfLine(y,y+8,x);
-        CLI.printInColor("w","Armi:");
+        CLI.printInColor("w","Weapons:");
         y++;
         CLI.moveCursor(x,y);
         for(String w: tile.getWeapons()){
@@ -46,7 +46,7 @@ class AsciiTile {
             i++;
             CLI.moveCursor(x,y);
         }
-        CLI.printInColor("w","Munizioni:");
+        CLI.printInColor("w","Ammos:");
         y++;
         CLI.moveCursor(x,y);
         for(String p: tile.getAmmos()){

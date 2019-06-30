@@ -11,7 +11,7 @@
             <Image url="@../assets/endgame.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="loseView" fitHeight="235.0" fitWidth="596.0" layoutX="694.0" layoutY="415.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="loseView" fitHeight="235.0" fitWidth="596.0" layoutX="662.0" layoutY="406.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/lose.png" />
          </image>

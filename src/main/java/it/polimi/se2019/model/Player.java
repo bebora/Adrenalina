@@ -290,7 +290,7 @@ public class Player {
 	 * Add given number of {@code damage} given by {@code shooter}
 	 * Convert marks related to the shooting player in damages
 	 * Add given number of {@code marks} given by {@code shooter}
-	 * Change avaiable actions of the receiving player accordingly
+	 * Change available actions of the receiving player accordingly
 	 * Synchronized to avoid instant powerup with MOMENT.DAMAGED activation
 	 * @param shooter player who shoots
 	 * @param damage number of damages to add
@@ -298,19 +298,24 @@ public class Player {
 	 */
 	public synchronized void receiveShot(Player shooter, int damage, int marks, boolean convert) {
 		int temp = damage;
-		if(shooter == this) Logger.log(Priority.DEBUG, "Receiving damage from spawnpoint");
-		while (damage > 0 && damages.size() < 13) {
-			damages.add(shooter);
-			damage--;
+		String shooterName = shooter.getUsername();
+		if(shooter == this) {
+			Logger.log(Priority.DEBUG, "Receiving damage from spawnpoint");
+			shooterName = this.tile.getRoom().name() + " spawnpoint";
 		}
-		if (convert && temp != 0)
+		while (temp > 0 && damages.size() < 13) {
+			damages.add(shooter);
+			temp--;
+		}
+		if (convert && damage != 0)
 			convertMarks(shooter);
-		while (marks > 0) {
+		temp = marks;
+		while (temp > 0) {
 			receiveMark(shooter);
-			marks--;
+			temp--;
 		}
 		if (match != null)
-			match.updatePopupViews(String.format("%s receive %d marks and %d damages from %s", getUsername(), marks, damage, shooter.getUsername()));
+			match.updatePopupViews(String.format("%s receives %d marks and %d damages from %s", getUsername(), marks, damage, shooterName));
 		notifyHealthChange();
 	}
 

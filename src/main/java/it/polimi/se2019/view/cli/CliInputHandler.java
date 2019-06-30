@@ -295,19 +295,30 @@ public class CliInputHandler implements Runnable{
     }
 
     /**
-     * Ask connection parameters with automatic default values
+     * Asks connection parameters with automatic default values
      * @param input BufferedReader that reads input
+     * @return map of options selected by the player, that can be passed at the next invocation of the overloaded method as default values
      */
-    protected Map<String, String> connectionChoice(BufferedReader input) {
+    Map<String, String> connectionChoice(BufferedReader input) {
         return connectionChoice(input, dv);
     }
 
     /**
-     * Ask parameters to connect with custom default values
+     * Asks parameters to connect with custom default values provided with {@code dv}
+     * Asks in order:
+     * <li>Connection type (RMI/Socket)</li>
+     * <li>Server url</li>
+     * <li>Server port</li>
+     * <li>Username</li>
+     * <li>Password</li>
+     * <li>Whether to re enter an existing match</li>
+     * <li>Gamemode (Normal/Domination)</li>
+     * Then proceeds to connect to the server and get an {@link EventUpdater}
      * @param input BufferedReader that reads input
      * @param dv default values for asked parameters
+     * @return map of options selected by the player, that can be passed at the next invocation of this method as default values
      */
-    protected Map<String, String> connectionChoice(BufferedReader input, Map<String, String> dv){
+    Map<String, String> connectionChoice(BufferedReader input, Map<String, String> dv){
         CLI.printInColor("W","RMI or Socket?\n");
         try{
             String connectionType = parseOption(Arrays.asList("rmi", "socket"), null, dv.get("network"), input.readLine().toLowerCase(), "network mode");
@@ -360,7 +371,7 @@ public class CliInputHandler implements Runnable{
     }
 
     /**
-     * @return cli selected or not
+     * @return cli selected or not, asking to the player via stdin
      */
     private boolean viewChoice(){
         CLI.printInColor("W","GUI or CLI?\n");
@@ -417,6 +428,10 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Set {@link #dv} with custom values
+     * @param defaultValues
+     */
     public void setDefaultValues(Map<String, String> defaultValues) {
         dv = defaultValues;
     }
