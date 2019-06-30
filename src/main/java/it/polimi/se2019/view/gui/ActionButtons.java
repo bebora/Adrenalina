@@ -42,7 +42,7 @@ public class ActionButtons extends HBox {
         stop.setText("STOP");
         info = new Button();
         info.setText("INFO");
-        this.getChildren().addAll(attack,move,grab,reload,send,stop);
+        this.getChildren().addAll(attack,move,grab,reload,send,info,stop);
         clearPossibleActions();
     }
 
@@ -88,5 +88,9 @@ public class ActionButtons extends HBox {
 
     public SenderButton getSenderButton(){
         return send;
+    }
+
+    public Button getInfo() {
+        return info;
     }
 }

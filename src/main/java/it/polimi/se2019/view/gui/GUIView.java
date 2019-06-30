@@ -40,12 +40,12 @@ public class GUIView extends View {
     }
 
     private void totalUpdate(){
+        boardScreen.updateMessages(getMessages());
         boardScreen.updateBoard(getBoard(),getPlayers());
         boardScreen.updatePowerUps(getPowerUps());
         List<ViewWeapon> allWeapons = Stream.concat(getLoadedWeapons().stream(),getSelf().getUnloadedWeapons().stream()).collect(Collectors.toList());
         boardScreen.updateWeapons(allWeapons);
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
-        boardScreen.updateMessages(getMessages());
     }
 
     public void setCredentials(String username, String password){
@@ -73,5 +73,10 @@ public class GUIView extends View {
 
     @Override
     public void printWinners(List<String> winners) {
+        if(getStatus() != Status.END) {
+            boolean loser = !winners.contains(getSelf().getUsername());
+            setStatus(Status.END);
+            Platform.runLater(() -> new FinalScreen(loser, LoginScreen.getPrimaryStage(),winners));
+        }
     }
 }

@@ -3,19 +3,13 @@ import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.view.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -146,6 +140,7 @@ public class BoardScreen extends HBox {
                     break;
                 case POWERUP:
                     powerUpsBox.highlightSelectablePowerUps(selectableOptionsWrapper.getSelectablePowerUps());
+                    actionButtons.getSenderButton().setPowerUps(new ArrayList<>());
                     break;
                 case WEAPON:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
@@ -174,6 +169,8 @@ public class BoardScreen extends HBox {
                     break;
             }
         }
+        actionButtons.getInfo().setOnMouseClicked(e->InfoAlert.handleAlert(formatSelectableOptions()));
+        actionButtons.getInfo().setDisable(false);
     }
 
     private List<String> getWeaponsFromColor(String color, ViewBoard viewBoard){
@@ -206,6 +203,37 @@ public class BoardScreen extends HBox {
         ammoChoice.setHeaderText("Select an ammo. If you prefer paying with a powerUp close this message and click on it:");
         Optional<String> ammo = ammoChoice.showAndWait();
         ammo.ifPresent(a->guiView.getEventUpdater().sendAmmo(a));
+    }
+
+    private String formatSelectableOptions(){
+        String result = "";
+        for(ReceivingType r: selectableOptionsWrapper.getAcceptedTypes()){
+            result = result.concat(r.name() + "\n");
+            switch (r){
+                case POWERUP:
+                    for(ViewPowerUp w: selectableOptionsWrapper.getSelectablePowerUps().getOptions())
+                        result = result.concat(w.getName() + " ");
+                    result = result.concat("\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectablePowerUps().getPrompt() + "\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectablePowerUps().getNumericalCostraints() + "\n");
+                    break;
+                case TILES:
+                    for(ViewTileCoords v: selectableOptionsWrapper.getSelectableTileCoords().getOptions())
+                        result = result.concat(v.toString() + " ");
+                    result = result.concat("\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectableTileCoords().getPrompt() + "\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectableTileCoords().getNumericalCostraints() + "\n");
+                    break;
+                default:
+                    for(String s: selectableOptionsWrapper.getSelectableStringOptions(r).getOptions())
+                        result = result.concat(s + " ");
+                    result = result.concat("\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectableStringOptions(r).getPrompt() + "\n");
+                    result = result.concat(selectableOptionsWrapper.getSelectableStringOptions(r).getNumericalCostraints() + "\n");
+                    break;
+            }
+        }
+        return result;
     }
 
 }

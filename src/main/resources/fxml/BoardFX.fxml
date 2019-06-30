@@ -159,6 +159,109 @@
                   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#fbff21" height="173.0" layoutX="10.0" layoutY="8.0" opacity="0.0" stroke="BLACK" strokeType="INSIDE" width="158.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                </children>
             </GridPane>
+            <HBox fx:id="killshotDamageBox" layoutX="68.0" layoutY="13.0" prefHeight="100.0" prefWidth="323.0">
+               <children>
+                  <VBox prefHeight="61.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="53.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="96.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="139.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="182.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="225.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox layoutX="268.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
+                     <children>
+                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../assets/skull.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets left="-4.0" />
+               </padding>
+            </HBox>
          </children>
       </AnchorPane>
    </children>

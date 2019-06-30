@@ -21,10 +21,10 @@ public class AssetMaps {
             Map.entry("hellion","AD_weapons_IT_0215.png"),
             Map.entry("t.h.o.r.","AD_weapons_IT_0216.png"),
             Map.entry("tractor beam","AD_weapons_IT_0217.png"),
-            Map.entry("lock rifle","AD_weapons_IT_0218.png"),
+            Map.entry("lock rifle","AD_weapons_IT_0221.png"),
             Map.entry("plasma gun","AD_weapons_IT_0219.png"),
             Map.entry("machine gun","AD_weapons_IT_0220.png"),
-            Map.entry("whisper","AD_weapons_IT_0221.png"),
+            Map.entry("whisper","AD_weapons_IT_0218.png"),
             Map.entry("electroscythe","AD_weapons_IT_0222.png")
     );
 

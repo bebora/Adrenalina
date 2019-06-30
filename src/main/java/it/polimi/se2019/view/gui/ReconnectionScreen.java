@@ -11,7 +11,7 @@ public class ReconnectionScreen extends TextScreen {
         stage = primaryStage;
         primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (KeyCode.ENTER == event.getCode()) {
-
+                reconnect(view);
             }
         });
     }

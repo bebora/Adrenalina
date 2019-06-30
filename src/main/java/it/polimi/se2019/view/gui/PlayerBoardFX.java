@@ -7,6 +7,7 @@ import it.polimi.se2019.view.ViewWeapon;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -65,22 +66,18 @@ public class PlayerBoardFX extends AnchorPane {
 
     private void displayDamages(List<String> damages) {
         int i = 0;
+        for(Node n: damagesList.getChildren()){
+           n.setOpacity(0.0);
+        }
         for (String color : damages) {
             ImageView imageView = (ImageView)damagesList.getChildren().get(i);
-
             ColorAdjust colorAdjust = new ColorAdjust();
             colorAdjust.setHue(0);
             imageView.effectProperty().setValue(colorAdjust);
             GuiHelper.hueShifter(color,colorAdjust);
-            for(int j = i; j<damagesList.getChildren().size(); j++){
-                damagesList.getChildren().get(j).setOpacity(0.0);
-            }
-
             imageView.setOpacity(1.0);
             imageView.effectProperty().setValue(colorAdjust);
-
             i++;
-
         }
     }
 

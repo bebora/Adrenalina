@@ -35,6 +35,8 @@ public class BoardFX extends StackPane {
     @FXML
     HBox blueWeaponsBox;
     @FXML
+    HBox killshotDamageBox;
+    @FXML
     ImageView powerUpsDeck;
     @FXML
     ImageView weaponDeck;
@@ -61,6 +63,7 @@ public class BoardFX extends StackPane {
     List<String> redWeapons;
     List<String> yellowWeapons;
     List<Circle> playersCircles;
+    Image drop;
 
     public BoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
@@ -72,6 +75,9 @@ public class BoardFX extends StackPane {
         } catch (IOException exception) {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
+        drop = new Image(getClass().getClassLoader().getResourceAsStream(
+                "assets/red_damage.png"
+        ));
     }
 
 
@@ -149,6 +155,7 @@ public class BoardFX extends StackPane {
 
     public void updateBoard(ViewBoard viewBoard){
         this.viewBoard = viewBoard;
+        updateSkulls();
     }
 
     public void setSenderButton(SenderButton senderButton){
@@ -171,7 +178,7 @@ public class BoardFX extends StackPane {
         this.players = players.stream().filter(v->!v.getDominationSpawn()).collect(Collectors.toList());
         playersCircles = new ArrayList<>();
         for(ViewPlayer player: players) {
-            if(player.getTile() != null) {
+            if(player.getTile() != null && !player.getDominationSpawn()) {
                 int playerX = player.getTile().getCoords().getPosx();
                 int playerY = player.getTile().getCoords().getPosy();
                 TilePane tile = (TilePane) GuiHelper.getNodeByIndex(tileBoard, playerX, playerY);
@@ -400,6 +407,27 @@ public class BoardFX extends StackPane {
         if(imageView.getEffect() != null){
             int weaponIndex = yellowWeaponsBox.getChildren().indexOf((ImageView)mouseEvent.getSource());
             eventUpdater.sendWeapon(yellowWeapons.get(weaponIndex));
+        }
+    }
+
+    private void updateSkulls(){
+        for(int i = 0; i < killshotDamageBox.getChildren().size() - viewBoard.getSkulls(); i++) {
+            VBox sameShot = (VBox) killshotDamageBox.getChildren().get(i);
+            sameShot.getChildren().clear();
+        }
+        for(int i = 0; i < viewBoard.getKillShotTrack().size(); i++){
+            for(int j = 0; j < 2; j++){
+                VBox sameShot = (VBox)killshotDamageBox.getChildren().get(i);
+                ImageView dropView = new ImageView(drop);
+                dropView.setFitWidth(23);
+                dropView.setFitHeight(32);
+                if(viewBoard.getKillShotTrack().get(i) != null) {
+                    ColorAdjust colorAdjust = new ColorAdjust();
+                    GuiHelper.hueShifter(viewBoard.getKillShotTrack().get(i),colorAdjust);
+                    dropView.setEffect(colorAdjust);
+                    sameShot.getChildren().addAll(dropView);
+                }
+            }
         }
     }
 }
