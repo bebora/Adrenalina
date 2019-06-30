@@ -19,6 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.transform.Scale;
 
 import java.io.IOException;
@@ -54,15 +55,13 @@ public class BoardFX extends StackPane {
 
     ViewBoard viewBoard;
     List<ViewPlayer> players;
-    String username;
-    ViewTileCoords clientPlayerPosition;
     ChoiceDialog<String> choiceDialog;
     List<ViewTileCoords> selectedCoords;
     List<String> selectedPlayers;
     List<String> blueWeapons;
     List<String> redWeapons;
     List<String> yellowWeapons;
-    List<Circle> playersCircles;
+    List<Shape> playersShapes;
     Image drop;
 
     public BoardFX() {
@@ -176,16 +175,20 @@ public class BoardFX extends StackPane {
 
     void drawPlayers(List<ViewPlayer> players){
         this.players = players.stream().filter(v->!v.getDominationSpawn()).collect(Collectors.toList());
-        playersCircles = new ArrayList<>();
+        playersShapes = new ArrayList<>();
         for(ViewPlayer player: players) {
-            if(player.getTile() != null && !player.getDominationSpawn()) {
+            if(player.getTile() != null) {
                 int playerX = player.getTile().getCoords().getPosx();
                 int playerY = player.getTile().getCoords().getPosy();
                 TilePane tile = (TilePane) GuiHelper.getNodeByIndex(tileBoard, playerX, playerY);
-                Circle playerCircle = new Circle(15.0, Paint.valueOf(GuiHelper.getColorHexValue(player.getColor())));
-                playerCircle.setUserData(player.getUsername());
-                playersCircles.add(playerCircle);
-                tile.getChildren().add(playerCircle);
+                Shape playerShape;
+                if(!player.getDominationSpawn())
+                    playerShape = new Circle(15.0, Paint.valueOf(GuiHelper.getColorHexValue(player.getColor())));
+                else
+                    playerShape = new Rectangle(30,30,Paint.valueOf(GuiHelper.getColorHexValue(player.getColor())));
+                playerShape.setUserData(player.getUsername());
+                playersShapes.add(playerShape);
+                tile.getChildren().add(playerShape);
             }
         }
     }
@@ -222,22 +225,22 @@ public class BoardFX extends StackPane {
     void showPossiblePlayers(List<String> players) {
         selectedPlayers = new ArrayList<>();
         for (String p : players) {
-            Circle playerCircle = playersCircles.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
-            GuiHelper.applyBorder(playerCircle,30);
-            playerCircle.setOnMouseClicked(e->selectPlayer(e));
+            Shape playerShape = playersShapes.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
+            GuiHelper.applyBorder(playerShape,30);
+            playerShape.setOnMouseClicked(e->selectPlayer(e));
             tileBoard.toFront();
         }
     }
 
 
     void selectPlayer(MouseEvent mouseEvent){
-        Circle circle = (Circle)mouseEvent.getSource();
-        String playerName = (String)circle.getUserData();
+        Shape shape = (Shape)mouseEvent.getSource();
+        String playerName = (String)shape.getUserData();
         if(selectedPlayers.contains(playerName))
             selectedPlayers.remove(playerName);
         else {
             selectedPlayers.add(playerName);
-            circle.setOpacity(0.60);
+            shape.setOpacity(0.60);
         }
         if(selectableOptionsWrapper.getSelectablePlayers().checkForCoherency(selectedPlayers))
             senderButton.setPlayers(selectedPlayers);
