@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Concrete class that receives updates from model.
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
 public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewReceiverInterface {
     private transient View linkedView;
     private transient ConcreteViewReceiverHelper helper;
-    private transient final Object lock = new Object();
+    private final static transient Object lock = new Object();
 
     public ConcreteViewReceiver(View linkedView) throws RemoteException {
         this.linkedView = linkedView;
@@ -26,11 +25,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     @Override
-    public void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
+    public synchronized void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException {
         synchronized (lock) {
             this.linkedView.setLastRequest(System.currentTimeMillis());
             linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
-            linkedView.refresh();
+            if (!(linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null))
+                linkedView.refresh();
         }
     }
 
@@ -92,7 +92,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      * @param message received from server
      */
     @Override
-    public void receivePopupMessage(String message) throws RemoteException {
+    public synchronized void receivePopupMessage(String message) throws RemoteException {
         synchronized (lock) {
             if (linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null) {
                 if (message.contains("SUCCESS")) {
@@ -114,7 +114,8 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
                     linkedView.printWinners(winners);
                 } else if (linkedView.getMessages() != null) {
                     linkedView.addMessage(message);
-                    linkedView.refresh();
+                    if (!(linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null))
+                        linkedView.refresh();
                 }
             }
         }
@@ -147,7 +148,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      * @param currentPlayerId
      */
     @Override
-    public void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
+    public synchronized void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
                                    ArrayList<ViewPlayer> players, String idView, int points,
                                    ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
         synchronized (lock) {
@@ -159,11 +160,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             linkedView.setIdView(idView);
             linkedView.setPoints(points);
             linkedView.setPowerUps(powerUps);
-            System.out.println(powerUps.stream().map(ViewPowerUp::getName).collect(Collectors.toList()));
             linkedView.setLoadedWeapons(loadedWeapons);
             linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
             if (linkedView.getStatus() != Status.PLAYING && linkedView.getStatus() != Status.END) {
                 linkedView.setStatus(Status.PLAYING);
+                //First refresh to clean the View
+                linkedView.refresh();
             }
             linkedView.refresh();
         }
