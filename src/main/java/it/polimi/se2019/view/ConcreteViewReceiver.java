@@ -30,7 +30,6 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
         synchronized (lock) {
             this.linkedView.setLastRequest(System.currentTimeMillis());
             linkedView.setSelectableOptionsWrapper(selectableOptionsWrapper);
-            linkedView.addMessage("RECEIVED OPTIONS " + selectableOptionsWrapper.getAcceptedTypes());
             linkedView.refresh();
         }
     }
@@ -87,8 +86,10 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
     }
 
     /**
-     * Receive and show a message
-     * @param message
+     * Receive and show a message.
+     * If player is in Login state, parse the message and update the state of the view accordingly.
+     * Otherwise, add the message to {@link View#messages}.
+     * @param message received from server
      */
     @Override
     public void receivePopupMessage(String message) throws RemoteException {
@@ -158,12 +159,12 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             linkedView.setIdView(idView);
             linkedView.setPoints(points);
             linkedView.setPowerUps(powerUps);
+            System.out.println(powerUps.stream().map(ViewPowerUp::getName).collect(Collectors.toList()));
             linkedView.setLoadedWeapons(loadedWeapons);
             linkedView.setCurrentPlayer(helper.getPlayerFromId(currentPlayerId));
             if (linkedView.getStatus() != Status.PLAYING && linkedView.getStatus() != Status.END) {
                 linkedView.setStatus(Status.PLAYING);
             }
-            linkedView.addMessage("RECEIVED TOTAL UPDATE");
             linkedView.refresh();
         }
     }
