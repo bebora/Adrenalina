@@ -383,6 +383,10 @@ public class GameController extends Observer {
      */
     public void sendWinners() {
         matchEnd = true;
+        //Reset timers
+        for (Player p : match.getPlayers())
+            if (p.getVirtualView() != null)
+                p.getVirtualView().getRequestDispatcher().clear();
         lobbyController.getGames().remove(this);
         Logger.log(Priority.DEBUG, "Parsing winners");
         List<Player> players = match.getWinners();

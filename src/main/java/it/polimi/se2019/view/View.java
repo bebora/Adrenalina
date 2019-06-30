@@ -268,7 +268,7 @@ public abstract class View {
 		this.status = status;
 	}
 
-	public abstract void refresh();
+	public  abstract void refresh();
 
 	public long getLastRequest() {
 		return lastRequest;

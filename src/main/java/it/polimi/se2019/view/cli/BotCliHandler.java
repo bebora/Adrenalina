@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class BotCliHandler extends CliInputHandler {
     Random random = new Random();
@@ -74,7 +75,6 @@ public class BotCliHandler extends CliInputHandler {
             catch (Exception e) {
                 Logger.log(Priority.WARNING, "Selection error due to " + e.getMessage());
             }
-            Logger.log(Priority.DEBUG, "Trying to choose an action");
         }
         if (view.getStatus().equals(Status.END)) {
             System.out.println("Finished with " + view.getReceivingTypes());
@@ -84,6 +84,8 @@ public class BotCliHandler extends CliInputHandler {
 
     public void selectRandom(List<ReceivingType> types) {
         if (!types.isEmpty()) {
+            Logger.log(Priority.DEBUG, "Trying to choose an action");
+            System.out.println(types.stream().map(Enum::toString).collect(Collectors.toList()));
             SelectableOptionsWrapper wrapper = view.getSelectableOptionsWrapper();
             ReceivingType type = getRandom(types);
             switch (type) {
