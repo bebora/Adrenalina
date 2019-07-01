@@ -238,8 +238,4 @@ public class BoardScreen extends HBox {
         return result;
     }
 
-    public void hideKillshotTrack(){
-        boardFX.hideKillShotTrack();
-    }
-
 }

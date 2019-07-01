@@ -16,15 +16,15 @@ import java.io.IOException;
 import java.util.List;
 
 public class DominationBoardFX extends Pane {
-    @FXML TilePane skullsPane;
-    @FXML HBox blueSpawnBox;
-    @FXML HBox redSpawnBox;
-    @FXML HBox yellowSpawnBox;
-    @FXML HBox excessBlueDamageBox;
-    @FXML HBox excessYellowDamageBox;
-    @FXML HBox excessRedDamageBox;
-    @FXML ImageView alternateFrenzyTrigger;
-    Image drop;
+    @FXML private TilePane skullsPane;
+    @FXML private HBox blueSpawnBox;
+    @FXML private HBox redSpawnBox;
+    @FXML private HBox yellowSpawnBox;
+    @FXML private HBox excessBlueDamageBox;
+    @FXML private HBox excessYellowDamageBox;
+    @FXML private HBox excessRedDamageBox;
+    @FXML private ImageView alternateFrenzyTrigger;
+    private Image drop;
 
     DominationBoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(

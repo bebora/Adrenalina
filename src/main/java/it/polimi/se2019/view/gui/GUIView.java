@@ -40,8 +40,6 @@ public class GUIView extends View {
         scene.setFill(Color.BLACK);
         LoginScreen.getPrimaryStage().setScene(scene);
         LoginScreen.getPrimaryStage().setFullScreen(true);
-        if(getGameMode().equals("DOMINATION"))
-            boardScreen.hideKillshotTrack();
     }
 
     private void totalUpdate(){

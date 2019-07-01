@@ -23,6 +23,12 @@ public class ActionButtons extends HBox {
     EventUpdater eventUpdater;
     ReceivingType receivingType;
 
+    /**
+     * Buttons that allow choosing actions or requesting info during the game.
+     * The parameter is the eventUpdater of the corresponding view and
+     * its used to send the selected actions.
+     * @param eventUpdater the eventUpdter of the corresponding view
+     */
     public ActionButtons(EventUpdater eventUpdater) {
         this.eventUpdater = eventUpdater;
         attack = new Button();
@@ -53,6 +59,11 @@ public class ActionButtons extends HBox {
         clearPossibleActions();
     }
 
+    /**
+     * Gets the corresponding action from the button.
+     * Each button contains the corresponding action name as text.
+     * @param mouseEvent
+     */
     private void onClick(MouseEvent mouseEvent){
         Button source = (Button)mouseEvent.getSource();
         if(possibleActions.contains(source.getText())){
@@ -66,6 +77,11 @@ public class ActionButtons extends HBox {
         }
     }
 
+    /**
+     * Enables only the buttons corresponding to the actions
+     * that the player can currently use
+     * @param possibleActions a list of actions that the player can use at the moment
+     */
     public void setPossibleActions(List<String> possibleActions) {
         this.possibleActions = possibleActions;
         for (String s : possibleActions) {
@@ -87,6 +103,7 @@ public class ActionButtons extends HBox {
             }
         }
     }
+
 
     public void enableStop(){
         stop.setDisable(false);

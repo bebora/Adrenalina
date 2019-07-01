@@ -41,6 +41,7 @@ public class LoginScreen extends Application {
         stage.setTitle("LoginScreen");
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(false);
         primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (KeyCode.ESCAPE == event.getCode()) {
                 concludeGame();
@@ -61,14 +62,12 @@ public class LoginScreen extends Application {
         view.setGameMode(gameMode);
         view.setCredentials(username.getText(),password.getText());
         view.setConnectionProperties(connectionProperties,connection);
-        while (!view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode)) {
-            try {
-                Thread.sleep(5);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, "Interrupted exception while waiting to re attempt a login: "+e.getMessage());
-            }
-            //TODO alert the user of the failed login
+        if (!view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Login failed!!");
+            alert.setContentText("Server is unreachable, try again later");
+            alert.showAndWait();
+            return;
         }
 
         while(view.getStatus() == null) {

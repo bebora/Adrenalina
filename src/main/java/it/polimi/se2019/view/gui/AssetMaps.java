@@ -2,7 +2,12 @@ package it.polimi.se2019.view.gui;
 
 import java.util.Map;
 
+/**
+ * An utility class containing all the maps related to the assets
+ * used in the game
+ */
 public class AssetMaps {
+    private AssetMaps(){}
 
     static final Map<String,String> weaponsAssetsMap = Map.ofEntries(
             Map.entry("sledgehammer","AD_weapons_IT_022.png"),

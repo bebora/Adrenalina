@@ -30,39 +30,39 @@ import static java.util.Map.entry;
 
 public class BoardFX extends StackPane {
     @FXML
-    VBox yellowWeaponsBox;
+    private VBox yellowWeaponsBox;
     @FXML
-    VBox redWeaponsBox;
+    private VBox redWeaponsBox;
     @FXML
-    HBox blueWeaponsBox;
+    private HBox blueWeaponsBox;
     @FXML
-    HBox killshotDamageBox;
+    private HBox killshotDamageBox;
     @FXML
-    ImageView powerUpsDeck;
+    private ImageView powerUpsDeck;
     @FXML
-    ImageView weaponDeck;
+    private ImageView weaponDeck;
     @FXML
-    GridPane tileBoard;
+    private GridPane tileBoard;
     @FXML
-    ImageView boardView;
-    @FXML GridPane selectionBoard;
-    @FXML AnchorPane anchorPane;
+    private ImageView boardView;
+    @FXML private GridPane selectionBoard;
+    @FXML private  AnchorPane anchorPane;
 
     EventUpdater eventUpdater;
 
     SelectableOptionsWrapper selectableOptionsWrapper;
     SenderButton senderButton;
 
-    ViewBoard viewBoard;
-    List<ViewPlayer> players;
-    ChoiceDialog<String> choiceDialog;
-    List<ViewTileCoords> selectedCoords;
-    List<String> selectedPlayers;
-    List<String> blueWeapons;
-    List<String> redWeapons;
-    List<String> yellowWeapons;
-    List<Shape> playersShapes;
-    Image drop;
+    private ViewBoard viewBoard;
+    private List<ViewPlayer> players;
+    private ChoiceDialog<String> choiceDialog;
+    private List<ViewTileCoords> selectedCoords;
+    private List<String> selectedPlayers;
+    private List<String> blueWeapons;
+    private List<String> redWeapons;
+    private List<String> yellowWeapons;
+    private List<Shape> playersShapes;
+    private Image drop;
 
     public BoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
@@ -79,7 +79,11 @@ public class BoardFX extends StackPane {
         ));
     }
 
-
+    /**
+     * Shows the player the weapons currently located in the blue spawn point
+     * and memorize them to allow future selection
+     * @param blueWeapons a list of weapons currently in the blue spawn point
+     */
     public void setBlueWeapons(List<String> blueWeapons){
         int i = 0;
         this.blueWeapons = blueWeapons;
@@ -101,6 +105,11 @@ public class BoardFX extends StackPane {
         }
     }
 
+    /**
+     * Shows the player the weapons currently located in the red spawn point
+     * and memorize them to allow future selection
+     * @param redWeapons a list of weapons currently in the red spawn point
+     */
     public void setRedWeapons(List<String> redWeapons){
         int i = 0;
         this.redWeapons = redWeapons;
@@ -123,6 +132,11 @@ public class BoardFX extends StackPane {
 
     }
 
+    /**
+     * Shows the player the weapons currently located in the yellow spawn point
+     * and memorize them to allow future selection
+     * @param yellowWeapons a list of weapons currently in the yellow spawn point
+     */
     public void setYellowWeapons(List<String> yellowWeapons){
         int i = 0;
         this.yellowWeapons = yellowWeapons;
@@ -144,6 +158,11 @@ public class BoardFX extends StackPane {
         }
     }
 
+    /**
+     *Sets the initial viewBoard and loads the corresponding asset.
+     * This method should be used only at the beginning of the game.
+     * @param viewBoard the ViewBoard used for the current match
+     */
     public void setBoard(ViewBoard viewBoard){
         this.viewBoard = viewBoard;
         Image boardImage = new Image(getClass().getClassLoader().getResourceAsStream(
@@ -152,17 +171,32 @@ public class BoardFX extends StackPane {
         boardView.setImage(boardImage);
     }
 
+    /**
+     * Updates the viewBoard during every totalUpdate
+     * and update the killshotTrack if the current game is normal
+     * @param viewBoard the current viewBoard received during the latest update
+     */
     public void updateBoard(ViewBoard viewBoard){
         this.viewBoard = viewBoard;
         if(killshotDamageBox.isVisible())
             updateSkulls();
     }
 
+    /**
+     * Sets a senderButton used for sending selections numerically inferior
+     * to the maximum allowed.
+     * @param senderButton the senderButton corresponding to the player view
+     */
     public void setSenderButton(SenderButton senderButton){
         this.senderButton = senderButton;
     }
 
-    public void setDominationPane(DominationBoardFX dominationPane){
+    /**
+     * Places on the board the dominationBoard necessary for
+     * the domination game mode.
+     * @param dominationPane an empty dominationPane to be placed on the board
+     */
+    void setDominationPane(DominationBoardFX dominationPane){
         anchorPane.getChildren().addAll(dominationPane);
         dominationPane.setLayoutX(58);
         dominationPane.setLayoutY(5);
@@ -172,8 +206,18 @@ public class BoardFX extends StackPane {
         scale.setX(0.80);
         scale.setY(0.80);
         dominationPane.getTransforms().addAll(scale);
+        killshotDamageBox.setVisible(false);
     }
 
+    /**
+     * Updates the positions of the shapes representing the players
+     * on the map according to the latest update and memorizes
+     * each player username in their corresponding shape.
+     *  Each shape is filled with the corresponding player color,
+     *  squares represent actual spawn points, while circles
+     *  represent actual players.
+     * @param players the players to be displayed on the map
+     */
     void drawPlayers(List<ViewPlayer> players){
         this.players = players.stream().filter(v->!v.getDominationSpawn()).collect(Collectors.toList());
         playersShapes = new ArrayList<>();
@@ -194,6 +238,11 @@ public class BoardFX extends StackPane {
         }
     }
 
+    /**
+     * Shows the ammo tiles currently present on the game map.
+     * Their position inside each tiles is not fixed but change depending on
+     * the number of players in the same tile.
+     */
     void drawAmmoCard(){
         for(ViewTile w: viewBoard.getTiles().stream().flatMap(Collection::stream).collect(Collectors.toList())) {
             if (w != null && !w.getAmmos().isEmpty()) {
@@ -212,6 +261,11 @@ public class BoardFX extends StackPane {
         }
     }
 
+    /**
+     * Removes player shapes from the map in order to update
+     * their position and clears the board used for showing
+     * selectable tiles.
+     */
     void clearPlayers(){
         for(Node n:tileBoard.getChildren()){
             ((TilePane) n).getChildren().clear();
@@ -223,7 +277,12 @@ public class BoardFX extends StackPane {
         }
     }
 
-    void showPossiblePlayers(List<String> players) {
+    /**
+     * Applies a glowing effect to the player currently selectable according
+     * to the selectableOptionsWrapper and enable actual selection by clicking.
+     * @param players the players selectable during the current action
+     */
+    private void showPossiblePlayers(List<String> players) {
         selectedPlayers = new ArrayList<>();
         for (String p : players) {
             Shape playerShape = playersShapes.stream().filter(c->c.getUserData().equals(p)).findAny().orElse(null);
@@ -234,7 +293,13 @@ public class BoardFX extends StackPane {
     }
 
 
-    void selectPlayer(MouseEvent mouseEvent){
+    /**
+     * Adds a player to the currently selected player and change
+     * the senderButton action to send the selected players.
+     * If the selected players are enough it sends them automatically.
+     * @param mouseEvent the mouseEvent registered by the shape representing the player
+     */
+    private void selectPlayer(MouseEvent mouseEvent){
         Shape shape = (Shape)mouseEvent.getSource();
         String playerName = (String)shape.getUserData();
         if(selectedPlayers.contains(playerName))
@@ -290,7 +355,7 @@ public class BoardFX extends StackPane {
     }
 
     @FXML
-    public void selectTile(MouseEvent event){
+    private void selectTile(MouseEvent event){
         Rectangle selectable = (Rectangle)event.getSource();
         ViewTileCoords selectedCoord = new ViewTileCoords(GridPane.getRowIndex(selectable),GridPane.getColumnIndex(selectable));
         if(selectable.getEffect() != null){
@@ -352,7 +417,7 @@ public class BoardFX extends StackPane {
 
 
 
-    void selectRoom(MouseEvent mouseEvent){
+    private void selectRoom(MouseEvent mouseEvent){
         Rectangle rectangle = (Rectangle)mouseEvent.getSource();
         String room = viewBoard.getTiles().get(GridPane.getRowIndex(rectangle)).get(GridPane.getColumnIndex(rectangle)).getRoom();
         eventUpdater.sendRoom(room);
@@ -435,7 +500,7 @@ public class BoardFX extends StackPane {
         }
     }
 
-    public void hideKillShotTrack(){
-        killshotDamageBox.setVisible(false);
+    void hideKillShotTrack(){
+
     }
 }
