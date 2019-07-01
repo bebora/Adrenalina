@@ -1,9 +1,9 @@
 package it.polimi.se2019.view;
 
 import it.polimi.se2019.controller.ModelToViewConverter;
-import it.polimi.se2019.controller.UpdateMessageCreator;
-import it.polimi.se2019.controller.updatemessage.PopupMessageUpdate;
-import it.polimi.se2019.controller.updatemessage.TotalUpdate;
+import it.polimi.se2019.network.UpdateMessageCreator;
+import it.polimi.se2019.network.updatemessage.PopupMessageUpdate;
+import it.polimi.se2019.network.updatemessage.TotalUpdate;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;

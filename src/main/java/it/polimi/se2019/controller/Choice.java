@@ -20,7 +20,7 @@ import static it.polimi.se2019.model.ThreeState.TRUE;
 
 /**
  * Blocking class to wait for client interaction
- * It joins on TimerCostrainedEventHandler, that will update this object with the received object from client
+ * It joins on TimerConstrainedEventHandler, that will update this object with the received object from client
  **/
 public class Choice extends Observer {
     private List<PowerUp> powerUps;
@@ -34,15 +34,15 @@ public class Choice extends Observer {
     private Ammo ammo;
     private ThreeState stop;
     private ReceivingType receivingType;
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private CountDownLatch countDownLatch;
     private Match match;
 
     public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes, Match match) {
         receivingType = ReceivingType.NULL;
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, requestDispatcher, acceptableTypes);
-        timerCostrainedEventHandler.start();
-        if (timerCostrainedEventHandler.isError()) {
+        timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, requestDispatcher, acceptableTypes);
+        timerConstrainedEventHandler.start();
+        if (timerConstrainedEventHandler.isError()) {
             updateOnStopSelection(TRUE);
             return;
         }

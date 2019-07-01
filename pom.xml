@@ -23,9 +23,11 @@
     </repositories>
     <dependencies>
         <dependency>
+            <!-- bytebuddy is a dependency of mockito-->
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
             <version>1.9.10</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

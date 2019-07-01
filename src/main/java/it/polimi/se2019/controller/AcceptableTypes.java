@@ -20,14 +20,14 @@ import java.util.List;
  */
 public class AcceptableTypes {
     private SelectableOptions<Action> selectableActions;
-    private SelectableOptions<String> selectabeEffects;
+    private SelectableOptions<Ammo> selectableAmmos;
+    private SelectableOptions<Direction> selectableDirections;
+    private SelectableOptions<String> selectableEffects;
     private SelectableOptions<Player> selectablePlayers;
     private SelectableOptions<PowerUp> selectablePowerUps;
     private SelectableOptions<Color> selectableRooms;
     private SelectableOptions<Tile> selectableTileCoords;
     private SelectableOptions<Weapon> selectableWeapons;
-    private SelectableOptions<Ammo> selectableAmmos;
-    private SelectableOptions<Direction> selectableDirections;
     private boolean reverse;
     private String stopPrompt;
     private List<ReceivingType> acceptedTypes;
@@ -75,11 +75,11 @@ public class AcceptableTypes {
     }
 
     public SelectableOptions<String> getSelectableEffects() {
-        return selectabeEffects;
+        return selectableEffects;
     }
 
-    public void setSelectabeEffects(SelectableOptions<String> selectabeEffects) {
-        this.selectabeEffects = selectabeEffects;
+    public void setSelectableEffects(SelectableOptions<String> selectableEffects) {
+        this.selectableEffects = selectableEffects;
     }
 
     public SelectableOptions<Player> getSelectablePlayers() {

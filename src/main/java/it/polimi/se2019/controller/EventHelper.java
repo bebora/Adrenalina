@@ -2,7 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
@@ -34,6 +34,7 @@ public class EventHelper {
         this.match = match;
         this.player = player;
     }
+
     /**
      * Return a Player with the given id.
      * If there is no corresponding player in the current match return null.
@@ -56,7 +57,7 @@ public class EventHelper {
             return Ammo.valueOf(ammo);
         }
         catch (IllegalArgumentException e) {
-            throw new IncorrectEvent("Ammo doesn't exist!");
+            throw new IncorrectEventException("Ammo doesn't exist!");
         }
     }
 
@@ -73,7 +74,7 @@ public class EventHelper {
         id.forEach(i -> temp.add(getSinglePlayerFromId(i)));
         temp.removeAll(Collections.singleton(null));
         if(temp.size() != id.size() || temp.contains(null))
-            throw new IncorrectEvent("Player ID not correct");
+            throw new IncorrectEventException("Player ID not correct");
         return temp;
     }
 
@@ -88,7 +89,7 @@ public class EventHelper {
                 .map(v -> board.getTile(v.getPosy(),v.getPosx()))
                 .collect(Collectors.toList());
         if (tiles.size() != viewTiles.size() || tiles.contains(null))
-            throw new IncorrectEvent("Wrong tiles!");
+            throw new IncorrectEventException("Wrong tiles!");
         else {
             return tiles;
         }
@@ -110,7 +111,7 @@ public class EventHelper {
                         .filter(w -> w.getName().equals(weapon))
                         .findAny().orElse(null));
         if(realWeapon == null){
-            throw new IncorrectEvent("Weapon is not present!");
+            throw new IncorrectEventException("Weapon is not present!");
         }
         return realWeapon;
     }
@@ -130,10 +131,10 @@ public class EventHelper {
             Logger.log(Priority.DEBUG, relatedColor.toString());
             if (colors.contains(relatedColor))
                 return relatedColor;
-            else throw new IncorrectEvent("Color is not present in the map!");
+            else throw new IncorrectEventException("Color is not present in the map!");
         }
         catch (IllegalArgumentException e) {
-            throw new IncorrectEvent("Color is wrong!");
+            throw new IncorrectEventException("Color is wrong!");
         }
     }
 
@@ -145,7 +146,7 @@ public class EventHelper {
     public Action getActionFromString(String action) {
         List<Action> actions = match.getPlayers().get(match.getCurrentPlayer()).getActions();
         return  actions.stream().
-                filter(a -> a.toString().equals(action)).findFirst().orElseThrow(() -> new IncorrectEvent("Action doesn't exist!"));
+                filter(a -> a.toString().equals(action)).findFirst().orElseThrow(() -> new IncorrectEventException("Action doesn't exist!"));
     }
 
     /**
@@ -158,7 +159,7 @@ public class EventHelper {
             return Direction.valueOf(direction.toUpperCase());
         }
         catch (IllegalArgumentException e) {
-            throw new IncorrectEvent("Direction doesn't exist!");
+            throw new IncorrectEventException("Direction doesn't exist!");
         }
     }
 

@@ -23,7 +23,7 @@ public class PaymentController extends Observer{
     private List<Ammo> stillToPay;
     private Player curPlayer;
     private AcceptableTypes acceptableTypes;
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
 
     @Override
     public Match getMatch() {
@@ -67,11 +67,11 @@ public class PaymentController extends Observer{
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, prompt));
 
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler.start();
             }
             else if (stillToPay.isEmpty()) {
                 observer.concludePayment();
@@ -97,8 +97,8 @@ public class PaymentController extends Observer{
                 observer.concludePayment();
             }
         } else {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(timerConstrainedEventHandler);
+            timerConstrainedEventHandler.start();
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Not enough powerups! Give me more!");
         }
     }

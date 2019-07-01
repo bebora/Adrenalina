@@ -28,7 +28,7 @@ public class WeaponController extends Observer {
     private EffectController effectController;
     private Effect selectedEffect;
     private ActionController actionController;
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private List<Ammo> stillToPay;
     private AcceptableTypes acceptableTypes;
 
@@ -106,12 +106,12 @@ public class WeaponController extends Observer {
             }else {
                 prompt = "You have to select an effect!";
             }
-            acceptableTypes.setSelectabeEffects(new SelectableOptions<>(selectableEffect, 1, 1, prompt));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+            acceptableTypes.setSelectableEffects(new SelectableOptions<>(selectableEffect, 1, 1, prompt));
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler.start();
         }
     }
 
@@ -144,8 +144,8 @@ public class WeaponController extends Observer {
             PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
             paymentController.startPaying();
         } else {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerConstrainedEventHandler.start();
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("The effect you sent doesn't exist!");
         }
     }

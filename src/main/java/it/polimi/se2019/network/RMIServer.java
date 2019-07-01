@@ -2,7 +2,6 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.ConnectHandler;
 import it.polimi.se2019.controller.LobbyController;
 
 import java.rmi.RemoteException;

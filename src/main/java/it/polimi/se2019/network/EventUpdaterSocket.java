@@ -1,7 +1,7 @@
 package it.polimi.se2019.network;
 
-import it.polimi.se2019.controller.EventVisitable;
-import it.polimi.se2019.controller.events.*;
+import it.polimi.se2019.network.events.EventVisitable;
+import it.polimi.se2019.network.events.*;
 import it.polimi.se2019.view.UpdateVisitor;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewPowerUp;

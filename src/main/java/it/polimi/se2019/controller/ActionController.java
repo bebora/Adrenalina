@@ -52,7 +52,7 @@ public class ActionController extends Observer {
     private Player curPlayer;
     private Weapon selectedWeapon;
     private List<Ammo> stillToPay = new ArrayList<>();
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private AcceptableTypes acceptableTypes;
     private Weapon toDiscard;
 
@@ -179,11 +179,11 @@ public class ActionController extends Observer {
         else if (!selectableTiles.isEmpty()) {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(selectableTiles, 1, 1, "Select a tile to move!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                     this,
                     curPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler.start();
         }
         else {
             curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You can't move nowhere!");
@@ -224,11 +224,11 @@ public class ActionController extends Observer {
                 nextStep();
             } else {
                 acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 1, prompt));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                         this,
                         curPlayer.getVirtualView().getRequestDispatcher(),
                         acceptableTypes);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler.start();
             }
         }
         else {
@@ -281,11 +281,11 @@ public class ActionController extends Observer {
                         updateOnWeapon(selectableWeapon.get(0));
                     }
                     else {
-                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                        timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                                 this,
                                 curPlayer.getVirtualView().getRequestDispatcher(),
                                 acceptableTypes);
-                        timerCostrainedEventHandler.start();
+                        timerConstrainedEventHandler.start();
                     }
                     break;
                 case GRAB:
@@ -308,11 +308,11 @@ public class ActionController extends Observer {
                         acceptableTypes = new AcceptableTypes(receivingTypes);
                         acceptableTypes.setSelectableWeapons(new SelectableOptions<>(selectableWeapon, 1, 1, "Choose what weapon to reload if you want!"));
                         acceptableTypes.setStop(true, "Stop reloading");
-                        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+                        timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                                 this,
                                 curPlayer.getVirtualView().getRequestDispatcher(),
                                 acceptableTypes);
-                        timerCostrainedEventHandler.start();
+                        timerConstrainedEventHandler.start();
                     }
                     break;
                 default:

@@ -2,7 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.Reload;
@@ -70,7 +70,7 @@ public class GameController extends Observer {
      * Flag to indicate whether the controller is waiting for answers for overkilled players in DominationMode.
      */
     private boolean dominationOverkill;
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private AcceptableTypes acceptableTypes;
     private CountDownLatch countDownLatch;
 
@@ -137,7 +137,7 @@ public class GameController extends Observer {
                     flatMap(List::stream).
                     filter(t -> t != null && t.isSpawn() && t.getRoom().equals(Color.valueOf(powerUps.get(0).getDiscardAward().toString()))).
                     findFirst().
-                    orElseThrow(() -> new IncorrectEvent("Can't find tile, board not correctly formatted"));
+                    orElseThrow(() -> new IncorrectEventException("Can't find tile, board not correctly formatted"));
             currentPlayer.setTile(tile);
             currentPlayer.discardPowerUp(powerUps.get(0), false);
             match.updatePopupViews(String.format("%s discarded %s to spawn in %s room!",
@@ -200,11 +200,11 @@ public class GameController extends Observer {
             List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(currentPlayer.getPowerUps(), 1,1, "Select a PowerUp to discard to spawn!"));
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                     this,
                     currentPlayer.getVirtualView().getRequestDispatcher(),
                     acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler.start();
         }
         //End turn if current player is not online
         else if (!currentPlayer.getOnline() || skip) {
@@ -253,11 +253,11 @@ public class GameController extends Observer {
             receivingTypes.add(STOP);
             acceptableTypes.setStop(false, "End turn");
         }
-        timerCostrainedEventHandler = new TimerCostrainedEventHandler(
+        timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                 this,
                 currentPlayer.getVirtualView().getRequestDispatcher(),
                 acceptableTypes);
-        timerCostrainedEventHandler.start();
+        timerConstrainedEventHandler.start();
     }
 
     @Override
@@ -320,15 +320,15 @@ public class GameController extends Observer {
             acceptableTypes = new AcceptableTypes(Collections.singletonList(PLAYERS));
             for (Player current : overkillPlayers) {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(spawnPoints, 1, 1, String.format("Select a spawn point to deposit %s overkill", current.getUsername())));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, currentPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 countDownLatch = new CountDownLatch(1);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler.start();
                 try {
                     countDownLatch.await();
                 } catch (InterruptedException e) {
                     Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
                 }
-                if (!timerCostrainedEventHandler.isBlocked()) {
+                if (!timerConstrainedEventHandler.isBlocked()) {
                     Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
                     if (spawnPoint != null) {
                         spawnPoint.receiveShot(currentPlayer, overkilledSize, 0, true);
@@ -412,7 +412,7 @@ public class GameController extends Observer {
      * <li>It handles the online players asynchronously.</li>
      */
     public void startSpawning(){
-        List<TimerCostrainedEventHandler> timerCostrainedEventHandlers = new ArrayList<>();
+        List<TimerConstrainedEventHandler> timerConstrainedEventHandlers = new ArrayList<>();
         countDownLatch = new CountDownLatch(spawnablePlayers.size());
         for(Player p: spawnablePlayers) {
             Observer spawner = new Spawner(countDownLatch, p, match.getBoard());
@@ -424,9 +424,9 @@ public class GameController extends Observer {
             List<ReceivingType> receivingTypes = Collections.singletonList(ReceivingType.POWERUP);
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(p.getPowerUps(), 1, 1, "Select a PowerUp to discard!"));
-            timerCostrainedEventHandlers.add(new TimerCostrainedEventHandler(spawner, p.getVirtualView().getRequestDispatcher(), acceptableTypes));
+            timerConstrainedEventHandlers.add(new TimerConstrainedEventHandler(spawner, p.getVirtualView().getRequestDispatcher(), acceptableTypes));
         }
-        timerCostrainedEventHandlers.forEach(Thread::start);
+        timerConstrainedEventHandlers.forEach(Thread::start);
         try {
             countDownLatch.await();
             Logger.log(Priority.DEBUG, "Spawning done!");

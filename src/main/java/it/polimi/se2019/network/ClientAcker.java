@@ -9,7 +9,7 @@ import it.polimi.se2019.view.View;
  */
 public class ClientAcker extends Thread {
     private View view;
-    private int ACK_SLEEP_DELAY = 250;
+    private int ACK_SLEEP_DELAY = 500;
     public ClientAcker(View linkedView) {
         this.view = linkedView;
     }

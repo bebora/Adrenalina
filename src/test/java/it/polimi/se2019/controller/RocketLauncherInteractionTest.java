@@ -40,15 +40,15 @@ public class RocketLauncherInteractionTest extends EffectControllerFramework {
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
         EffectController ec = spy(wp.getEffectController());
         Utils.waitABit();
-        Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.PLAYERS)), any(TimerCostrainedEventHandler.class));
+        Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.PLAYERS)), any(TimerConstrainedEventHandler.class));
         ec.updateOnPlayers(Arrays.asList(originalNotCurrentPlayer));
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(2, notCurrentPlayer.get(0).getDamagesCount());
         Utils.waitABit();
         //Assert that the controller is waiting for tiles
-        Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerCostrainedEventHandler.class));
+        Mockito.verify(requestDispatcher).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerConstrainedEventHandler.class));
         // Choose the tile to move the player just hit
-        Mockito.verify(requestDispatcher, times(1)).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerCostrainedEventHandler.class));
+        Mockito.verify(requestDispatcher, times(1)).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.TILES)), any(TimerConstrainedEventHandler.class));
         ec.updateOnTiles(Collections.singletonList(sandboxMatch.getBoard().getTile(0,0)));
         //Verify
         sandboxMatch.restoreMatch(testMatch);

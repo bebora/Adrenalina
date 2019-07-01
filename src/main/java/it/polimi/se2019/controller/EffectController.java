@@ -68,7 +68,7 @@ public class EffectController extends Observer {
     private boolean askingForSource;
 
     private Player currentEnemy;
-    private TimerCostrainedEventHandler timerCostrainedEventHandler;
+    private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private AcceptableTypes acceptableTypes;
 
     EffectController(Effect curEffect, Weapon weapon, Match match, Player player, List<Player> originalPlayers, Observer controller) {
@@ -166,8 +166,8 @@ public class EffectController extends Observer {
         }
         //Restart the timer at the time it stopped if the check fails
         else {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(timerCostrainedEventHandler);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(timerConstrainedEventHandler);
+            timerConstrainedEventHandler.start();
         }
     }
 
@@ -272,8 +272,8 @@ public class EffectController extends Observer {
             } else if (selectableTiles.size() == 1) {
                 updateOnTiles(selectableTiles);
             } else {
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerConstrainedEventHandler.start();
             }
         }
     }
@@ -345,8 +345,8 @@ public class EffectController extends Observer {
                 break;
         }
         if (!skip) {
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerConstrainedEventHandler.start();
         }
     }
 
@@ -404,8 +404,8 @@ public class EffectController extends Observer {
             }
             else {
                 acceptableTypes.setSelectablePlayers(new SelectableOptions<>(players, max, min,curMove.getPrompt().split("\\$")[0]));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerConstrainedEventHandler.start();
             }
         }
     }
@@ -509,9 +509,9 @@ public class EffectController extends Observer {
                 List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
                 acceptableTypes = new AcceptableTypes(receivingTypes);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Select from 0 to %d PowerUp!, to use against %s", selectablePowerUps.size(), p.getUsername())));
-                timerCostrainedEventHandler = new TimerCostrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
                 countDownLatch = new CountDownLatch(1);
-                timerCostrainedEventHandler.start();
+                timerConstrainedEventHandler.start();
                 try {
                     countDownLatch.await();
                 }
@@ -530,7 +530,7 @@ public class EffectController extends Observer {
             acceptableTypes = new AcceptableTypes(receivingTypes);
             acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(applicable, applicable.size(), 0, String.format("Select from 0 and %d powerUps to answer from %s attack", applicable.size(), player.getUsername())));
             Observer damagedController = new DamagedController(countDownLatch, p, player, applicable);
-            TimerCostrainedEventHandler temp = new TimerCostrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            TimerConstrainedEventHandler temp = new TimerConstrainedEventHandler(damagedController,p.getVirtualView().getRequestDispatcher(), acceptableTypes);
             temp.start();
         }
         try {
@@ -605,8 +605,8 @@ public class EffectController extends Observer {
             catch (Exception e) {
                 System.out.println(curMove.getPrompt());
             }
-            timerCostrainedEventHandler = new TimerCostrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerCostrainedEventHandler.start();
+            timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+            timerConstrainedEventHandler.start();
         }
     }
 

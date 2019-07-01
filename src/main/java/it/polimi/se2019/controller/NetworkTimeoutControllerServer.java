@@ -11,13 +11,14 @@ public class NetworkTimeoutControllerServer extends Thread{
     private long lastRequest;
     private boolean checkingTimeout = true;
     private RequestDispatcher requestDispatcher;
-    int timeout = 5000;
+    private int timeout = 5000;
+
     public NetworkTimeoutControllerServer(RequestDispatcher requestDispatcher){
         this.requestDispatcher = requestDispatcher;
     }
+
     @Override
     public void run() {
-
         do {
             try {
                 Thread.sleep(timeout);

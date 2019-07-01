@@ -40,11 +40,12 @@ public class BotCliHandler extends CliInputHandler {
     public void run() {
         int rnd = random.nextInt(2);
         String string;
+        rnd = 0;
         if (rnd == 1) {
             string = "rmi\nlocalhost\n1099\n\nkek\n\n\n\n";
         }
         else {
-            string = "socket\nlocalhost\n1337\n\nkek\n\n\n\n";
+            string = "socket\nbebaruba.tk\n1337\n\nkek\n\n\n\n";
         }
         System.out.print(string);
         Reader inputString = new StringReader(string);

@@ -14,7 +14,7 @@ public class NetworkTimeoutControllerClient extends Thread{
     private View view;
     private long lastRequest;
     private Boolean checkingTimeout = true;
-    int timeout = 10000;
+    private int timeout = 5000;
     private ClientAcker clientAcker;
     public NetworkTimeoutControllerClient(View linkedView) {
         this.view = linkedView;
@@ -30,6 +30,7 @@ public class NetworkTimeoutControllerClient extends Thread{
                 long viewLastRequest = view.getLastRequest();
                 if (viewLastRequest != 0 && viewLastRequest == lastRequest || view.getStatus() == Status.END) {
                     view.disconnect();
+                    view.setOnline(false);
                     checkingTimeout = false;
                 }
                 else lastRequest = viewLastRequest;

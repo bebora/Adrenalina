@@ -1,6 +1,7 @@
 package it.polimi.se2019.controller;
 
-import it.polimi.se2019.controller.events.IncorrectEvent;
+import it.polimi.se2019.network.RequestDispatcherInterface;
+import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.actions.Action;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
  * Dispatcher class used by the VirtualView to allow the use of a EventHandler for each Receiving type; if null, the type can't be accepted.
  * Locking on an object for fixing lack of RMI documentation on synchronization.
  */
-public class RequestDispatcher extends UnicastRemoteObject implements RequestDispatcherInterface{
+public class RequestDispatcher extends UnicastRemoteObject implements RequestDispatcherInterface {
     private transient EventHelper eventHelper;
     private transient ViewUpdater viewUpdater;
     private transient Map<ReceivingType, EventHandler> observerTypes;
@@ -142,9 +143,9 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.AMMO);
                     eventHandler.receiveAmmo(relatedAmmo);
                 } else {
-                    throw new IncorrectEvent("Can't accept ammo!");
+                    throw new IncorrectEventException("Can't accept ammo!");
                 }
-            } catch (IncorrectEvent e) {
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -168,9 +169,9 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.ACTION);
                     eventHandler.receiveAction(action);
                 } else {
-                    throw new IncorrectEvent("Non posso accettare Action!");
+                    throw new IncorrectEventException("Can't accept Action!");
                 }
-            } catch (IncorrectEvent e) {
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -193,8 +194,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.DIRECTION);
                         eventHandler.receiveDirection(eventHelper.getDirectionFromString(direction));
                 } else
-                    throw new IncorrectEvent("Non posso accettare una direzione!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept direction!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -217,8 +218,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.EFFECT);
                     eventHandler.receiveEffect(effect);
                 } else
-                    throw new IncorrectEvent("Non posso accettare un effetto!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept effett!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -242,9 +243,9 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.PLAYERS);
                     eventHandler.receivePlayer(relatedPlayers);
                 } else {
-                    throw new IncorrectEvent("Non posso accettare ROOM!");
+                    throw new IncorrectEventException("Can't accept ROOM!");
                 }
-            } catch (IncorrectEvent e) {
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -271,10 +272,10 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     if (relatedPowerUps.size() == powerUps.size()) {
                         EventHandler eventHandler = observerTypes.get(ReceivingType.POWERUP);
                         eventHandler.receivePowerUps(relatedPowerUps);
-                    } else throw new IncorrectEvent("Wrong powerUps!");
+                    } else throw new IncorrectEventException("Wrong powerUps!");
                 } else
-                    throw new IncorrectEvent("Non posso accettare powerUp!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept powerUp!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -299,9 +300,9 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.ROOM);
                     eventHandler.receiveRoom(relatedRoom);
                 } else {
-                    throw new IncorrectEvent("Non posso accettare ROOM!");
+                    throw new IncorrectEventException("Can't accept ROOM!");
                 }
-            } catch (IncorrectEvent e) {
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -322,8 +323,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.STOP);
                     eventHandler.receiveStop();
                 } else
-                    throw new IncorrectEvent("Non posso accettare uno stop!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept stop!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -347,8 +348,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.TILES);
                     eventHandler.receiveTiles(tiles);
                 } else
-                    throw new IncorrectEvent("Non posso accettare TILES!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept TILES!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }
@@ -372,8 +373,8 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
                     EventHandler eventHandler = observerTypes.get(ReceivingType.WEAPON);
                     eventHandler.receiveWeapon(relatedWeapon);
                 } else
-                    throw new IncorrectEvent("Can't accept weapon!");
-            } catch (IncorrectEvent e) {
+                    throw new IncorrectEventException("Can't accept weapon!");
+            } catch (IncorrectEventException e) {
                 viewUpdater.sendPopupMessage(e.getMessage());
             }
         }

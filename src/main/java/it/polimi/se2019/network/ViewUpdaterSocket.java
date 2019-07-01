@@ -2,13 +2,12 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.controller.AcceptableTypes;
 import it.polimi.se2019.controller.ModelToViewConverter;
-import it.polimi.se2019.controller.UpdateMessageCreator;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
-import it.polimi.se2019.controller.updatemessage.*;
+import it.polimi.se2019.network.updatemessage.*;
 
 import java.util.List;
 

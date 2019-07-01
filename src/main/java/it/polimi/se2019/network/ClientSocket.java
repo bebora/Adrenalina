@@ -5,11 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
-import it.polimi.se2019.controller.EventVisitable;
-import it.polimi.se2019.controller.events.ConnectionRequest;
-import it.polimi.se2019.controller.events.EventSerializer;
-import it.polimi.se2019.controller.updatemessage.UpdateDeserializer;
-import it.polimi.se2019.controller.updatemessage.UpdateVisitable;
+import it.polimi.se2019.network.events.EventVisitable;
+import it.polimi.se2019.network.events.ConnectionRequest;
+import it.polimi.se2019.network.events.EventSerializer;
+import it.polimi.se2019.network.updatemessage.UpdateDeserializer;
+import it.polimi.se2019.network.updatemessage.UpdateVisitable;
 import it.polimi.se2019.view.UpdateVisitor;
 
 import java.io.BufferedReader;
