@@ -54,16 +54,19 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <scope>provided</scope>
             <artifactId>javafx-controls</artifactId>
             <version>12.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <scope>provided</scope>
             <artifactId>javafx-graphics</artifactId>
             <version>12.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
+            <scope>provided</scope>
             <artifactId>javafx-fxml</artifactId>
             <version>12.0.1</version>
         </dependency>

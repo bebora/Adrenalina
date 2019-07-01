@@ -219,7 +219,7 @@ public class CLI extends View {
     public void printWinners(List<String> winners) {
         if (!getStatus().equals(Status.END)) {
             printInBlocks("w", "", 35);
-            printInBlocks("r", "THE GAME IS ENDED!", 35);
+            printInBlocks("r", "THE GAME IS OVER!", 35);
             printInBlocks("r", String.format("FAREWELL %s", getUsername()), 35);
             printInBlocks("w", "! WINNERS ! ARE !", 35);
             for (String winner : winners) {

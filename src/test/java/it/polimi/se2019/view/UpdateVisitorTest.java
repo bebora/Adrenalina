@@ -81,6 +81,7 @@ class UpdateVisitorTest {
     @Test
     void visitPopupMessage() {
         String message = "Drink more water";
+        firstView.setStatus(Status.PLAYING);
         PopupMessageUpdate update = new PopupMessageUpdate(message);
         viewVisitor.visit(update);
         assertEquals(message, firstView.getMessages().get(firstView.getMessages().size()-1));
