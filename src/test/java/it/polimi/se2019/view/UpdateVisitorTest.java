@@ -62,7 +62,7 @@ class UpdateVisitorTest {
 
     @Test
     void visitTotalUpdate() {
-        TotalUpdate update = UpdateMessageCreator.totalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
+        TotalUpdate update = UpdateMessageCreator.totalUpdate(username, board, players, points, powerUps, loadedWeapons, currentPlayer);
         viewVisitor.visit(update);
         assertEquals(username, firstView.getUsername());
         assertEquals(ModelToViewConverter.fromTileToViewTile(perspective), firstView.getPerspective());
@@ -70,7 +70,6 @@ class UpdateVisitorTest {
         assertEquals(players.get(2).getUsername(), firstView.getPlayers().get(2).getUsername());
         assertEquals(1, firstView.getPlayers().get(0).getTile().getCoords().getPosx());
         assertEquals(2, firstView.getPlayers().get(0).getTile().getCoords().getPosy());
-        assertEquals(idView, firstView.getIdView());
         assertEquals(points, firstView.getPoints());
         assertEquals(1, firstView.getPowerUps().size());
         assertEquals(powerUp.getDiscardAward().name(), firstView.getPowerUps().get(0).getDiscardAward());

@@ -57,7 +57,6 @@ public final class Logger {
                 logToFile = false;
                 System.out.println("Could not log to file");
             }
-
         }
         System.out.println(logWithTime);
     }

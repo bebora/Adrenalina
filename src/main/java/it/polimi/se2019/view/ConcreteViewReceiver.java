@@ -139,11 +139,11 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      * Set almost all View attributes.
      * This method should be used when a player join or
      * rejoin the match after a disconnection
-     * @param username
+     * Current implementation uses this almost everywhere to prevent synchronization issues
+     * @param username username of the receiver
      * @param board
      * @param perspective
      * @param players
-     * @param idView
      * @param points
      * @param powerUps
      * @param loadedWeapons
@@ -151,15 +151,14 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
      */
     @Override
     public synchronized void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
-                                   ArrayList<ViewPlayer> players, String idView, int points,
-                                   ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
+                                                ArrayList<ViewPlayer> players, int points, ArrayList<ViewPowerUp> powerUps,
+                                                ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) {
         synchronized (lock) {
                 this.linkedView.setLastRequest(System.currentTimeMillis());
                 linkedView.setUsername(username);
                 linkedView.setBoard(board);
                 linkedView.setPerspective(helper.getTileFromCoords(perspective));
                 linkedView.setPlayers(players);
-                linkedView.setIdView(idView);
                 linkedView.setPoints(points);
                 linkedView.setPowerUps(powerUps);
                 linkedView.setLoadedWeapons(loadedWeapons);

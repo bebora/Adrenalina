@@ -42,5 +42,4 @@ public class AsciiWeapon {
         CLI.moveCursor(0, AsciiBoard.boardBottomBorder + 6);
         CLI.cleanRow();
     }
-
 }

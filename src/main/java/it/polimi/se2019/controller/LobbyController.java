@@ -71,8 +71,8 @@ public class LobbyController{
                 player.getVirtualView().
                         getViewUpdater().
                         sendTotalUpdate(username,ownGame.getBoard(), ownGame.getPlayers(),
-                        view.getIdView(), player.getPoints(), player.getPowerUps(),
-                        player.getWeapons(), ownGame.getPlayers().get(ownGame.getCurrentPlayer()));
+                            player.getPoints(), player.getPowerUps(),
+                            player.getWeapons(), ownGame.getPlayers().get(ownGame.getCurrentPlayer()));
                 //Send current options to the player
                 player.getVirtualView().getRequestDispatcher().updateView();
                 break;

@@ -5,38 +5,79 @@ import it.polimi.se2019.model.ThreeState;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Simplified player used by the view, with basic info to display
+ * Some attributes are {@link ArrayList} because regular {@link List} is not {@link Serializable}
+ */
 public class ViewPlayer implements Serializable {
-
+	/**
+	 * Color of the player
+	 */
 	private String color;
 
+    /**
+     * Id of the player
+     */
 	private String id;
 
+    /**
+     * Ordered list of damages containing color of players who have attacked the ViewPlayer
+     */
 	private ArrayList<String> damages;
 
+    /**
+     * Ordered list of marks containing color of players who have attacked the ViewPlayer
+     */
 	private ArrayList<String> marks;
 
+    /**
+     * Colors of the ammos the player has
+     */
 	private ArrayList<String> ammos;
 
+    /**
+     * true if the player is the one who started the game
+     */
 	private Boolean firstPlayer;
 
+    /**
+     * Order list of points that the player can give to others when killed
+     */
 	private ArrayList<Integer> rewardPoints;
 
+    /**
+     * Player's weapons which haven't been loaded
+     */
 	private ArrayList<ViewWeapon> unloadedWeapons;
 
-	private int actionCount;
-
+    /**
+     * Status of the player
+     */
 	private ThreeState alive;
 
+    /**
+     * True if the player isn't a real player but a domination spawn
+     */
 	private Boolean dominationSpawn;
 
-	private int maxActions;
-
+    /**
+     * Tile on which the player stands
+     */
 	private ViewTile tile;
 
+    /**
+     * Username of the player
+     */
 	private String username;
 
+    /**
+     * True if player is in frenzy mode
+     */
 	private boolean frenzyActions;
 
+    /**
+     * True if player board has been flipped after starting frenzy, as by rules
+     */
 	private boolean frenzyBoard;
 
 	public void setUsername(String username) {
@@ -75,16 +116,8 @@ public class ViewPlayer implements Serializable {
 		this.unloadedWeapons = unloadedWeapons;
 	}
 
-	public void setActionCount(int actionCount) {
-		this.actionCount = actionCount;
-	}
-
 	public void setAlive(ThreeState alive) {
 		this.alive = alive;
-	}
-
-	public void setMaxActions(int maxActions) {
-		this.maxActions = maxActions;
 	}
 
 	public void setFrenzyActions(boolean frenzyActions) {

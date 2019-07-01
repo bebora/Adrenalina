@@ -7,7 +7,13 @@ import java.io.Serializable;
  * This class allows tiles to be sent without their unnecessary weapons and ammos
  */
 public class ViewTileCoords implements Serializable {
+    /**
+     * x coordinate of the tile
+     */
     private int posx;
+    /**
+     * y coordinate of the tile
+     */
     private int posy;
 
     public int getPosx() {

@@ -21,14 +21,13 @@ public class UpdateMessageCreator {
      * @param username username of receiving player
      * @param board current match board
      * @param players all players in the receiving player's match
-     * @param idView
      * @param points points of the receiving player
      * @param powerUps powerups of the receiving player
      * @param loadedWeapons loaded weapons of the receiving player
      * @param currentPlayer player who is currently playing its turn in the match
      */
     public static TotalUpdate totalUpdate(String username, Board board, List<Player> players,
-                String idView, int points, List<PowerUp> powerUps,
+                int points, List<PowerUp> powerUps,
                 List<Weapon> loadedWeapons, Player currentPlayer) {
         TotalUpdate ret = new TotalUpdate();
         ret.setUsername(username);
@@ -42,7 +41,6 @@ public class UpdateMessageCreator {
             ret.setPerspective(ModelToViewConverter.fromTileToViewTileCoords(receivingPlayer.getTile()));
         else
             ret.setPerspective(null);
-        ret.setIdView(idView);
         ret.setPoints(points);
         ret.setPowerUps(powerUps.stream().
                 map(ModelToViewConverter::fromPowerUp).collect(Collectors.toCollection(ArrayList::new)));

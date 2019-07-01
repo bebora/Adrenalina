@@ -4,10 +4,23 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Simplified weapon used by the view, with basic info to display
+ */
 public class ViewWeapon implements Serializable {
-
+    /**
+     * Name of the weapon
+     */
     private String name;
+
+    /**
+     * Ammo cost of the basic effect of the weapon
+     */
     private ArrayList<String> cost;
+
+    /**
+     * ViewEffects of the weapon
+     */
     private ArrayList<ViewEffect> effects;
 
     public void setName(String name) {

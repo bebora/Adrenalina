@@ -334,7 +334,7 @@ public abstract class Match {
 			// Some players may not have any virtualView in tests
 			if (p.getMatch() == null || p.getVirtualView() == null  || !p.getOnline()) continue;
 			updateSender.sendTotalUpdate(p, p.getUsername(), board, players,
-					p.getId(), p.getPoints(), p.getPowerUps(),
+					p.getPoints(), p.getPowerUps(),
 					p.getWeapons().stream().filter(Weapon::getLoaded).collect(Collectors.toList()), players.get(currentPlayer));
 		}
 	}

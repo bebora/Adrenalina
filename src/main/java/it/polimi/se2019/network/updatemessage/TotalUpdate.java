@@ -12,7 +12,6 @@ public class TotalUpdate implements UpdateVisitable {
     private ViewBoard board;
     private ViewTileCoords perspective;
     private ArrayList<ViewPlayer> players;
-    private String idView;
     private int points;
     private ArrayList<ViewPowerUp> powerUps;
     private ArrayList<ViewWeapon> loadedWeapons;
@@ -32,10 +31,6 @@ public class TotalUpdate implements UpdateVisitable {
 
     public ArrayList<ViewPlayer> getPlayers() {
         return players;
-    }
-
-    public String getIdView() {
-        return idView;
     }
 
     public int getPoints() {
@@ -68,10 +63,6 @@ public class TotalUpdate implements UpdateVisitable {
 
     public void setPlayers(ArrayList<ViewPlayer> players) {
         this.players = players;
-    }
-
-    public void setIdView(String idView) {
-        this.idView = idView;
     }
 
     public void setPoints(int points) {

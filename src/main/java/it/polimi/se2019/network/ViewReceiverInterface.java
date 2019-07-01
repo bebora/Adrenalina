@@ -18,8 +18,8 @@ public interface ViewReceiverInterface extends Remote, Serializable {
     void receiveSelectablesWrapper(SelectableOptionsWrapper selectableOptionsWrapper) throws RemoteException;
     void receiveTile(ViewTile tile) throws RemoteException;
     void receiveTotalUpdate(String username, ViewBoard board, ViewTileCoords perspective,
-                            ArrayList<ViewPlayer> players, String idView, int points,
-                            ArrayList<ViewPowerUp> powerUps, ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) throws RemoteException;
+                            ArrayList<ViewPlayer> players, int points, ArrayList<ViewPowerUp> powerUps,
+                            ArrayList<ViewWeapon> loadedWeapons, String currentPlayerId) throws RemoteException;
     void receiveWeaponTaken(ViewWeapon takenWeapon, ViewWeapon discardedWeapon, String playerId) throws RemoteException;
     void receivePing() throws RemoteException;
 }

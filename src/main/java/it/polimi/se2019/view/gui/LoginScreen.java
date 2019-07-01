@@ -41,7 +41,6 @@ public class LoginScreen extends Application {
         stage.setTitle("LoginScreen");
         stage.setScene(scene);
         stage.show();
-        stage.setResizable(false);
         primaryStage.addEventHandler(KeyEvent.KEY_RELEASED, (KeyEvent event) -> {
             if (KeyCode.ESCAPE == event.getCode()) {
                 concludeGame();

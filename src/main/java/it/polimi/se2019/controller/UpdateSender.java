@@ -164,7 +164,7 @@ public class UpdateSender implements ViewUpdater {
     @Deprecated
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
-                                String idView, int points, List<PowerUp> powerUps,
+                                int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
         throw new UnsupportedOperationException("Can't send a TotalUpdate to everyone with the same arguments");
 
@@ -178,15 +178,14 @@ public class UpdateSender implements ViewUpdater {
      * @param username  of the player
      * @param board of the game
      * @param players all the players present in the game
-     * @param idView id of the view
+
      * @param points of the receiving player
      * @param powerUps of the receiving player
      * @param loadedWeapons of the receiving player
      * @param currentPlayer who is currently playing th turn
      */
     public synchronized void sendTotalUpdate(Player receivingPlayer, String username, Board board, List<Player> players,
-                                String idView, int points, List<PowerUp> powerUps,
-                                List<Weapon> loadedWeapons, Player currentPlayer) {
+                                int points, List<PowerUp> powerUps, List<Weapon> loadedWeapons, Player currentPlayer) {
         if (receivingPlayer.getVirtualView().getViewUpdater() == null) return;
         if (!receivingPlayer.getOnline()) {
             Logger.log(Priority.DEBUG, "Can't send total update to offline player " + receivingPlayer.getUsername());
@@ -195,8 +194,7 @@ public class UpdateSender implements ViewUpdater {
             synchronized (locks.get(receivingPlayer.getUsername())) {
                 Runnable update = () -> {
                     receivingPlayer.getVirtualView().getViewUpdater().sendTotalUpdate(username, board, players,
-                            idView, points, powerUps,
-                            loadedWeapons, currentPlayer);
+                            points, powerUps, loadedWeapons, currentPlayer);
                 };
                 totalUpdates.get(receivingPlayer.getUsername()).addFirst(update);
             }

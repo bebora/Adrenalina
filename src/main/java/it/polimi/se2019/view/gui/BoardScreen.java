@@ -48,13 +48,13 @@ public class BoardScreen extends HBox {
         boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         messageBox = new ListView<>();
-        messageBox.setMinHeight(150);
-        messageBox.setPrefSize(200,150);
+        messageBox.setMinHeight(130);
+        messageBox.setPrefSize(200,130);
         ScrollPane messageScroll = new ScrollPane(messageBox);
         messageScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         messageScroll.setPannable(true);
-        messageScroll.setMinHeight(150);
-        messageScroll.setMinViewportHeight(150);
+        messageScroll.setMinHeight(130);
+        messageScroll.setMinViewportHeight(130);
         messageScroll.setFitToWidth(true);
         boardZone.getChildren().addAll(boardFX,actionButtons,messageScroll);
         clientPlayer = new PlayerBoardFX(guiView.getSelf());
@@ -79,7 +79,7 @@ public class BoardScreen extends HBox {
         scale.setPivotX(0);
         scale.setPivotY(0);
         scale.setX(primaryScreenBounds.getMaxX()/(boardFX.getPrefWidth() + clientPlayer.getPrefWidth()));
-        scale.setY(primaryScreenBounds.getMaxY()/(boardFX.getPrefHeight() + 174));
+        scale.setY(primaryScreenBounds.getMaxY()/(boardFX.getPrefHeight() + 154));
         this.getTransforms().addAll(scale);
         this.setStyle("-fx-background-color: black");
     }

@@ -124,7 +124,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
 
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
-                                String idView, int points, List<PowerUp> powerUps,
+                                int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
         executor.submit(() -> {
             ViewBoard viewBoard = ModelToViewConverter.fromBoard(board);
@@ -147,7 +147,7 @@ public class ViewUpdaterRMI implements ViewUpdater {
                     collect(Collectors.toCollection(ArrayList::new));
             try {
                 remoteReceiver.receiveTotalUpdate(username, viewBoard, perspective,
-                        viewPlayers, idView, points,
+                        viewPlayers, points,
                         viewPowerUps, viewLoadedWeapons, currentPlayer.getId());
             }
             catch (RemoteException e) {

@@ -65,9 +65,9 @@ public class ViewUpdaterSocket implements ViewUpdater{
 
     @Override
     public void sendTotalUpdate(String username, Board board, List<Player> players,
-                                String idView, int points, List<PowerUp> powerUps,
+                                int points, List<PowerUp> powerUps,
                                 List<Weapon> loadedWeapons, Player currentPlayer) {
-        UpdateVisitable totalUpdate = UpdateMessageCreator.totalUpdate(username, board, players, idView, points, powerUps, loadedWeapons, currentPlayer);
+        UpdateVisitable totalUpdate = UpdateMessageCreator.totalUpdate(username, board, players, points, powerUps, loadedWeapons, currentPlayer);
         workerServerSocket.update(totalUpdate);
     }
 

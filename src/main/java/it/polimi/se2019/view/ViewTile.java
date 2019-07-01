@@ -5,15 +5,33 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Simplified tile used by the view, with basic info to display
+ */
 public class ViewTile implements Serializable {
+    /**
+     * Color of the room as a String
+     */
     private String room;
 
+    /**
+     * Coordinates of the tile
+     */
     private ViewTileCoords coords;
 
+    /**
+     * Weapons contained in tile if it's a spawn tile
+     */
     private ArrayList<String> weapons;
 
+    /**
+     * Ammos contained in tile if it's not a spawn tile
+     */
     private ArrayList<String> ammos;
 
+    /**
+     * {@code true} if tile is a spawn
+     */
     private boolean spawn;
 
     public void setRoom(String room) {
@@ -60,6 +78,13 @@ public class ViewTile implements Serializable {
     public boolean isSpawn(){return spawn;}
 
     public ViewTile() {}
+
+    /**
+     * Manhattan distance between two ViewTiles
+     * @param tile1 first tile
+     * @param tile2 second tile
+     * @return Manhattan distance between the two tiles
+     */
     public static int cabDistance(ViewTile tile1, ViewTile tile2) {
         return Math.abs(tile1.getCoords().getPosx() - tile2.getCoords().getPosx()) + Math.abs(tile1.getCoords().getPosy() - tile2.getCoords().getPosy());
     }
@@ -90,5 +115,4 @@ public class ViewTile implements Serializable {
         this.weapons = new ArrayList<>(weapons);
         this.ammos = new ArrayList<>(ammos);
     }
-
 }

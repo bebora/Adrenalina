@@ -122,7 +122,6 @@ public class UpdateVisitor {
         ViewBoard board = update.getBoard();
         ViewTileCoords perspective = update.getPerspective();
         List<ViewPlayer> players = update.getPlayers();
-        String idView = update.getIdView();
         int points = update.getPoints();
         List<ViewPowerUp> powerUps = update.getPowerUps();
         List<ViewWeapon> loadedWeapons = update.getLoadedWeapons();
@@ -132,7 +131,6 @@ public class UpdateVisitor {
                     board,
                     perspective,
                     new ArrayList<>(players),
-                    idView,
                     points,
                     new ArrayList<>(powerUps),
                     new ArrayList<>(loadedWeapons),
