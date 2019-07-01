@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * View use this to send events to server
+ * Implements the event Updater, allowing a client using RMI to send event to server
  */
 public class EventUpdaterRMI implements EventUpdater{
     /**

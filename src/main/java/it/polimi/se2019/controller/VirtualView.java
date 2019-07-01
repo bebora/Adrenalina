@@ -50,6 +50,10 @@ public class VirtualView extends View {
     }
 
 
+    /**
+     * Set the view to {@code online}
+     * @param online if false, it notifies the gameController.
+     */
     @Override
     public void setOnline(boolean online) {
         super.setOnline(online);
@@ -66,6 +70,10 @@ public class VirtualView extends View {
         return requestDispatcher;
     }
 
+    /**
+     * It sets the requestDispatcher, setting a related view.
+     * @param requestDispatcher
+     */
     public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
         this.requestDispatcher = requestDispatcher;
         requestDispatcher.setView(viewUpdater, this);

@@ -13,25 +13,68 @@ import java.util.List;
  * knows what to do, transforming sendEvent to correspondent receiveEvent
  */
 public interface EventUpdater {
+    /**
+     * Sends an ack to notifies the server of being online.
+     */
     void sendAck();
+
+    /**
+     * Sends the chosen action that need to be executed.
+     * @param action
+     */
     void sendAction(String action);
 
     /**
-     * Send direction the player wants to target
+     * Sends direction the player wants to target
      * @param direction
      */
     void sendDirection(String direction);
     /**
-     * Send effect to activate related to the current weapon
+     * Sends effect to activate related to the current weapon
      * @param effect name of the effect of the current weapon
      */
     void sendEffect(String effect);
+
+    /**
+     * Sends a list of players that will be targets of the current effect
+     * @param players
+     */
     void sendPlayers(List<String> players);
+
+    /**
+     * Sends a list of powerups that will be chosen.
+     * @param powerUp
+     * @param discard @deprecated
+     */
     void sendPowerUp(List<ViewPowerUp> powerUp, boolean discard);
+
+    /**
+     * Sends the chosen room for the current effect.
+     * @param room
+     */
     void sendRoom(String room);
+
+    /**
+     * Sends the chosen tiles for the current effect
+     * @param tiles
+     */
     void sendTiles(List<ViewTileCoords> tiles);
+
+    /**
+     * Sends the chosen weapon to use in a shoot action.
+     * @param weapon
+     */
     void sendWeapon(String weapon);
+
+    /**
+     * Sends a stop action, resetting or reversing the current state.
+     */
     void sendStop();
+
+    /**
+     * Sends ammo used to pay a special cost.
+     * @param ammo
+     */
     void sendAmmo(String ammo);
     /**
      * Login to controller

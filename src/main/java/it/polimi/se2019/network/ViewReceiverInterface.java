@@ -8,7 +8,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 /**
- * Interface for the view that will receive updates from controller/model
+ * Interface for the view that will receive updates from controller/model.
  */
 public interface ViewReceiverInterface extends Remote, Serializable {
     void receiveAmmosTaken(String playerId, ArrayList<String> playerAmmos) throws RemoteException;

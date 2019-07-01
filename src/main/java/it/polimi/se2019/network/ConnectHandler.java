@@ -19,16 +19,6 @@ import static it.polimi.se2019.Priority.DEBUG;
 public class ConnectHandler extends UnicastRemoteObject implements ConnectInterface {
     private transient LobbyController lobbyController;
 
-    /**
-     * Handles connection from client to servers
-     * Creates a virtualView, set the parameters and uses the {@link #lobbyController} methods to connect
-     * @param username chosen from the client
-     * @param password chosen from the client, saved in the server hashed
-     * @param existingGame whether the client is reconnecting
-     * @param mode the mode chosen by the client
-     * @param receiver client to interface used for callbacks
-     * @throws RemoteException
-     */
     @Override
     public void connect(String username, String password, boolean existingGame, String mode, ViewReceiverInterface receiver) throws RemoteException{
         VirtualView virtualView = new VirtualView(lobbyController);

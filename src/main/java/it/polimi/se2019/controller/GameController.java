@@ -186,6 +186,13 @@ public class GameController extends Observer {
         skip = false;
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
         match.updateViews();
+        //Sleep to wait for clients to initialize their views
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) {
+            //Shouldn't enter this
+        }
     }
 
     public void startTurn(){

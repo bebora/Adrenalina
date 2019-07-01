@@ -10,6 +10,9 @@ import it.polimi.se2019.view.ViewTileCoords;
 import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Implements the EventUpdater, allowing clients using socket to send events to the server
+ */
 public class EventUpdaterSocket implements EventUpdater{
     private ClientSocket socket;
     private UpdateVisitor updateVisitor;
