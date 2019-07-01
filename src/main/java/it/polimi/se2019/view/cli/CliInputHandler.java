@@ -17,7 +17,8 @@ import java.util.stream.Collectors;
 import static java.util.Map.entry;
 
 public class CliInputHandler implements Runnable{
-    private BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+    private InputStreamReader inputStreamReader = new InputStreamReader(System.in);
+    private BufferedReader input = new BufferedReader(inputStreamReader);
     private String in = "notQuit";
     protected CLI view;
     protected EventUpdater eventUpdater;
@@ -351,7 +352,17 @@ public class CliInputHandler implements Runnable{
             connectionProperties.setProperty("url", url);
             connectionProperties.setProperty("port", connectionType.equalsIgnoreCase("rmi") ? rmiport : socketport);
             view.setGameMode(gameMode);
-            view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode);
+            int retryTime = 5; //seconds
+            while (!view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode)){
+                Logger.log(Priority.ERROR, String.format("Can't connect to server! Retrying in %d seconds", retryTime));
+                try {
+                    Thread.sleep(retryTime*1000);
+                }
+                catch (InterruptedException e) {
+                    Logger.log(Priority.ERROR, "Interrupted ");
+                }
+            }
+            Logger.log(Priority.DEBUG, "Connected succesfully to server");
             eventUpdater = view.getEventUpdater();
             Map<String, String> customValues = Map.ofEntries(
                     entry("network", connectionType),
@@ -374,6 +385,12 @@ public class CliInputHandler implements Runnable{
      * @return cli selected or not, asking to the player via stdin
      */
     private boolean viewChoice(){
+        try {
+            System.in.read(new byte[System.in.available()]);
+        }
+        catch (IOException e) {
+            Logger.log(Priority.ERROR, "IOException reading stdin");
+        }
         CLI.printInColor("W","GUI or CLI?\n");
         final String DEFAULTVIEW = "CLI";
         try{

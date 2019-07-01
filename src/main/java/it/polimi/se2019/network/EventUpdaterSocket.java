@@ -88,10 +88,13 @@ public class EventUpdaterSocket implements EventUpdater{
     }
 
     @Override
-    public void login(View view, String nickname, String password, boolean existingGame, String mode) throws RemoteException {
+    public boolean login(View view, String nickname, String password, boolean existingGame, String mode) throws RemoteException {
         ConnectionRequest loginEvent = new ConnectionRequest(nickname,password, existingGame, mode);
         updateVisitor = new UpdateVisitor(view.getReceiver());
         socket = new ClientSocket(url,port,loginEvent, updateVisitor);
         socket.start();
+        //return true if everything is ok
+        //RemoteException will be thrown if server is unreachable
+        return true;
     }
 }

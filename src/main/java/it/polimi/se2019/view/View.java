@@ -219,8 +219,9 @@ public abstract class View {
 	 * @param connectionProperties
 	 * @param existingGame
 	 * @param gameMode
+	 * @return {@code true} if connection with server is successful
 	 */
-    public void setupConnection(String connectionType, String username, String password, Properties connectionProperties, boolean existingGame, String gameMode){
+    public boolean setupConnection(String connectionType, String username, String password, Properties connectionProperties, boolean existingGame, String gameMode){
 		String url = connectionProperties.getProperty("url");
 		int port = Integer.parseInt(connectionProperties.getProperty("port"));
 		if (connectionType.equalsIgnoreCase("socket")) {
@@ -236,13 +237,14 @@ public abstract class View {
 			catch (RemoteException e) {
 				Logger.log(Priority.ERROR, "Unable to call local method");
 			}
-
-			return;
+			return false;
 		}
 		try {
-			eventUpdater.login(this, username, password, existingGame, gameMode);
+			boolean loginSuccessful = eventUpdater.login(this, username, password, existingGame, gameMode);
+			if (loginSuccessful == false) return false;
 			online = true;
 			networkTimeoutController.start();
+			return true;
 		}
 		catch (RemoteException e) {
 			try {
@@ -250,6 +252,9 @@ public abstract class View {
 			}
 			catch (RemoteException r) {
 				Logger.log(Priority.ERROR, "Unable to call local method");
+			}
+			finally {
+				return false;
 			}
 		}
 	}

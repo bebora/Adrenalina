@@ -36,15 +36,16 @@ public interface EventUpdater {
     /**
      * Login to controller
      * Calling other methods before login may throw an exception
-     * @param view
-     * @param nickname
-     * @param password
+     * @param view view that should receive updates from the server
+     * @param nickname username of the connecting player
+     * @param password password of the connecting player
      * @param existingGame true if the player is reconnecting, false if the player wants to join a new match
-     * @param mode
+     * @param mode game mode (normal/domination)
+     * @return {@code true} if login to server has been successful
      */
-    void login(View view,
-               String nickname,
-               String password,
-               boolean existingGame,
-               String mode) throws RemoteException;
+    boolean login(View view,
+       String nickname,
+       String password,
+       boolean existingGame,
+       String mode) throws RemoteException;
 }

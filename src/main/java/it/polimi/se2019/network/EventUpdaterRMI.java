@@ -52,11 +52,13 @@ public class EventUpdaterRMI implements EventUpdater{
     }
 
     @Override
-    public void login(View view, String nickname, String password, boolean existingGame, String mode)  throws RemoteException{
+    public boolean login(View view, String nickname, String password, boolean existingGame, String mode)  throws RemoteException{
+        if (connectInterface == null) return false;
         connectInterface.connect(nickname, password, existingGame, mode, view.getReceiver());
         remoteHandler = connectInterface.getRequestHandler(nickname, password);
-        //TODO Manage when login doesn't go as expected!
+        return true;
     }
+
     public EventUpdaterRMI(String url, int port) {
         this.eventExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);
         this.ackExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(1);

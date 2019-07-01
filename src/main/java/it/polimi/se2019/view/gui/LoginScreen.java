@@ -61,7 +61,16 @@ public class LoginScreen extends Application {
         view.setGameMode(gameMode);
         view.setCredentials(username.getText(),password.getText());
         view.setConnectionProperties(connectionProperties,connection);
-        view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode);
+        while (!view.setupConnection(connection,username.getText(),password.getText(),connectionProperties,existingGame.isSelected(),gameMode)) {
+            try {
+                Thread.sleep(5);
+            }
+            catch (InterruptedException e) {
+                Logger.log(Priority.ERROR, "Interrupted exception while waiting to re attempt a login: "+e.getMessage());
+            }
+            //TODO alert the user of the failed login
+        }
+
         while(view.getStatus() == null) {
             try {
                 Thread.sleep(10);
