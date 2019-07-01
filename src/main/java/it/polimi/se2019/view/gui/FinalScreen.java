@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -33,9 +34,7 @@ public class FinalScreen extends Pane {
         } catch (IOException exception) {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
-        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-        this.prefHeight(primaryScreenBounds.getHeight());
-        this.prefWidth(primaryScreenBounds.getWidth());
+        GuiHelper.resizeToScreenSize(this);
         primaryStage.setScene(new Scene(this));
         primaryStage.setFullScreen(true);
         primaryStage.setFullScreenExitHint("Press SPACEBAR to see the list of winners");

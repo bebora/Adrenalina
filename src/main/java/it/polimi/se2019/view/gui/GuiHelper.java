@@ -1,6 +1,7 @@
 package it.polimi.se2019.view.gui;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.effect.ColorAdjust;
@@ -8,7 +9,10 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
 
 public class GuiHelper {
 
@@ -84,6 +88,16 @@ public class GuiHelper {
          borderGlow.setWidth(size);
          borderGlow.setHeight(size);
          n.setEffect(borderGlow);
+     }
+
+     public static void resizeToScreenSize(Pane pane){
+         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+         Scale scale = new Scale();
+         scale.setPivotX(0);
+         scale.setPivotY(0);
+         scale.setX(primaryScreenBounds.getMaxX()/pane.getPrefWidth());
+         scale.setY(primaryScreenBounds.getMaxY()/pane.getPrefHeight());
+         pane.getTransforms().addAll(scale);
      }
 
 }

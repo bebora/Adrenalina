@@ -5,6 +5,7 @@ import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewWeapon;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.Properties;
@@ -35,8 +36,12 @@ public class GUIView extends View {
     }
 
     private void changeStage(){
-        LoginScreen.getPrimaryStage().setScene(new Scene(boardScreen));
+        Scene scene = new Scene(boardScreen);
+        scene.setFill(Color.BLACK);
+        LoginScreen.getPrimaryStage().setScene(scene);
         LoginScreen.getPrimaryStage().setFullScreen(true);
+        if(getGameMode().equals("DOMINATION"))
+            boardScreen.hideKillshotTrack();
     }
 
     private void totalUpdate(){

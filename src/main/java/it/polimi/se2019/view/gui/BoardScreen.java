@@ -48,11 +48,13 @@ public class BoardScreen extends HBox {
         boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         messageBox = new ListView<>();
-        messageBox.setMaxHeight(150);
+        messageBox.setMinHeight(150);
+        messageBox.setPrefSize(200,150);
         ScrollPane messageScroll = new ScrollPane(messageBox);
-        messageScroll.setPrefSize(200,100);
         messageScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         messageScroll.setPannable(true);
+        messageScroll.setMinHeight(150);
+        messageScroll.setMinViewportHeight(150);
         messageScroll.setFitToWidth(true);
         boardZone.getChildren().addAll(boardFX,actionButtons,messageScroll);
         clientPlayer = new PlayerBoardFX(guiView.getSelf());
@@ -77,7 +79,7 @@ public class BoardScreen extends HBox {
         scale.setPivotX(0);
         scale.setPivotY(0);
         scale.setX(primaryScreenBounds.getMaxX()/(boardFX.getPrefWidth() + clientPlayer.getPrefWidth()));
-        scale.setY(primaryScreenBounds.getMaxY()/(boardFX.getPrefHeight() + clientPlayer.getPrefHeight()));
+        scale.setY(primaryScreenBounds.getMaxY()/(boardFX.getPrefHeight() + 174));
         this.getTransforms().addAll(scale);
         this.setStyle("-fx-background-color: black");
     }
@@ -190,8 +192,7 @@ public class BoardScreen extends HBox {
     }
 
     void updateWeapons(List<ViewWeapon> weapons){
-        List<String> weaponsNames = weapons.stream().map(ViewWeapon::getName).collect(Collectors.toList());
-        weaponsBox.setWeapons(weaponsNames);
+        weaponsBox.setWeapons(weapons);
     }
 
     void updateMessages(List<String> messages){
@@ -235,6 +236,10 @@ public class BoardScreen extends HBox {
             }
         }
         return result;
+    }
+
+    public void hideKillshotTrack(){
+        boardFX.hideKillShotTrack();
     }
 
 }

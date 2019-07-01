@@ -30,6 +30,7 @@ public class TextScreen extends AnchorPane {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
         text.setText(message);
+        GuiHelper.resizeToScreenSize(this);
         Scene scene = new Scene(this);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);

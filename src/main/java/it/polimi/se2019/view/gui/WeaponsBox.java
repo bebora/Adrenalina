@@ -3,6 +3,7 @@ package it.polimi.se2019.view.gui;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.SelectableOptions;
 import it.polimi.se2019.view.ViewPowerUp;
+import it.polimi.se2019.view.ViewWeapon;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
@@ -15,6 +16,7 @@ import javafx.stage.Popup;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class WeaponsBox extends HBox {
     List<String> weapons;
@@ -24,13 +26,13 @@ public class WeaponsBox extends HBox {
     public WeaponsBox(EventUpdater eventUpdater){
         this.eventUpdater = eventUpdater;
     }
-    public void setWeapons(List<String> weapons){
-        this.weapons = weapons;
+    public void setWeapons(List<ViewWeapon> viewWeapons){
+        weapons= viewWeapons.stream().map(ViewWeapon::getName).collect(Collectors.toList());
         this.getChildren().clear();
-        for(String w: weapons){
+        for(ViewWeapon w: viewWeapons){
             Image weapon = new Image(getClass().getClassLoader().getResourceAsStream(
                     "assets/cards/"+
-                            AssetMaps.weaponsAssetsMap.get(w)
+                            AssetMaps.weaponsAssetsMap.get(w.getName())
             ));
             ImageView weaponView = new ImageView();
             weaponView.setFitHeight(136);

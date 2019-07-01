@@ -154,7 +154,8 @@ public class BoardFX extends StackPane {
 
     public void updateBoard(ViewBoard viewBoard){
         this.viewBoard = viewBoard;
-        updateSkulls();
+        if(killshotDamageBox.isVisible())
+            updateSkulls();
     }
 
     public void setSenderButton(SenderButton senderButton){
@@ -432,5 +433,9 @@ public class BoardFX extends StackPane {
                 }
             }
         }
+    }
+
+    public void hideKillShotTrack(){
+        killshotDamageBox.setVisible(false);
     }
 }
