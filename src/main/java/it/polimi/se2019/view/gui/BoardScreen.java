@@ -173,8 +173,7 @@ public class BoardScreen extends HBox {
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
                     break;
                 case AMMO:
-                    if(oldSelectable != null && !oldSelectable.getAcceptedTypes().contains(ReceivingType.AMMO))
-                        showAmmoChoice(selectableOptionsWrapper.getSelectableAmmos().getOptions());
+                    showAmmoChoice(selectableOptionsWrapper.getSelectableAmmos().getOptions());
                     break;
                 case ROOM:
                     boardFX.showPossibleRooms(selectableOptionsWrapper.getSelectableRooms().getOptions());
@@ -224,12 +223,18 @@ public class BoardScreen extends HBox {
     }
 
     private void showAmmoChoice(List<String> ammoChoiceOptions){
-        ammoChoice = new ChoiceDialog<>(null, ammoChoiceOptions);
-        ammoChoice.setContentText("Selectable ammos:");
-        ammoChoice.setHeaderText("Select an ammo. If you prefer paying with a powerUp close this message and click on it:");
-        Optional<String> ammo = ammoChoice.showAndWait();
-        ammo.ifPresent(a->guiView.getEventUpdater().sendAmmo(a));
+        if(ammoChoice == null || !ammoChoice.isShowing()) {
+            ammoChoice = new ChoiceDialog<>(null, ammoChoiceOptions);
+            ammoChoice.setContentText("Selectable ammos:");
+            ammoChoice.setHeaderText("Select an ammo. If you prefer paying with a powerUp close this message and click on it:");
+            Optional<String> ammo = ammoChoice.showAndWait();
+            ammo.ifPresent(a -> {
+                guiView.getEventUpdater().sendAmmo(a);
+                ammoChoice = null;
+            });
+        }
     }
+
 
     private String formatSelectableOptions(){
         String result = "";

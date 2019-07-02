@@ -407,7 +407,7 @@ public class BoardFX extends StackPane {
                 entry("EAST", " →"),
                 entry("WEST", " ←")
         );
-        if(choiceDialog == null) {
+        if(choiceDialog == null || !choiceDialog.isShowing()) {
             choiceDialog = new ChoiceDialog<>(null, directions.stream().map(d -> d+arrows.get(d)).collect(Collectors.toList()));
             Optional<String> choice = choiceDialog.showAndWait();
             choice.ifPresent(c -> eventUpdater.sendDirection(c.split(" ")[0]));
@@ -499,7 +499,4 @@ public class BoardFX extends StackPane {
         }
     }
 
-    void hideKillShotTrack(){
-
-    }
 }
