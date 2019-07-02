@@ -66,13 +66,13 @@ public class EventUpdaterRMI implements EventUpdater{
             connectInterface = (ConnectInterface) Naming.lookup(String.format("//%s:%d/AdrenalineServer", url, port));
         }
         catch (RemoteException e) {
-            Logger.log(Priority.ERROR, "Adrenaline server not found due to RemoteException");
+            Logger.log(Priority.DEBUG, "Adrenaline server not found due to RemoteException");
         }
         catch (NotBoundException e) {
-            Logger.log(Priority.ERROR, "Adrenaline server not found due to NotBoundException");
+            Logger.log(Priority.DEBUG, "Adrenaline server not found due to NotBoundException");
         }
         catch (MalformedURLException e) {
-            Logger.log(Priority.ERROR, "Adrenaline server URL is not valid");
+            Logger.log(Priority.DEBUG, "Adrenaline server URL is not valid");
         }
     }
 
@@ -96,7 +96,7 @@ public class EventUpdaterRMI implements EventUpdater{
             try {
                 remoteHandler.receiveAck();
             } catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send ack");
+                Logger.log(Priority.DEBUG, "Failed to send ack");
             }
         });
     }
@@ -107,7 +107,7 @@ public class EventUpdaterRMI implements EventUpdater{
             try {
                 remoteHandler.receiveAction(action);
             } catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send action");
+                Logger.log(Priority.DEBUG, "Failed to send action");
             }
         });
     }
@@ -119,7 +119,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveDirection(direction);
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send effect");
+                Logger.log(Priority.DEBUG, "Failed to send effect");
             }
         });
     }
@@ -131,7 +131,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveEffect(effect);
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send effect");
+                Logger.log(Priority.DEBUG, "Failed to send effect");
             }
         });
     }
@@ -143,7 +143,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receivePlayers(new ArrayList<>(players));
             }
             catch (RemoteException e){
-                Logger.log(Priority.ERROR, "Failed to send player");
+                Logger.log(Priority.DEBUG, "Failed to send player");
             }
         });
     }
@@ -155,7 +155,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveAmmo(ammo);
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send ammo");
+                Logger.log(Priority.DEBUG, "Failed to send ammo");
             }
         });
     }
@@ -167,7 +167,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receivePowerUps(new ArrayList<>(viewPowerUps));
             }
             catch (RemoteException e) {
-                Logger.log(Priority.ERROR, "Failed to send powerup");
+                Logger.log(Priority.DEBUG, "Failed to send powerup");
             }
         });
     }
@@ -179,7 +179,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveRoom(room);
             }
             catch (RemoteException e){
-                Logger.log(Priority.ERROR, "Failed to send room");
+                Logger.log(Priority.DEBUG, "Failed to send room");
             }
         });
     }
@@ -191,7 +191,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveTiles(new ArrayList<>(tiles));
             }
             catch (RemoteException e){
-                Logger.log(Priority.ERROR, "Failed to send tiles");
+                Logger.log(Priority.DEBUG, "Failed to send tiles");
             }
         });
     }
@@ -203,7 +203,7 @@ public class EventUpdaterRMI implements EventUpdater{
                 remoteHandler.receiveWeapon(weapon);
             }
             catch (RemoteException e){
-                Logger.log(Priority.ERROR, "Failed to send weapon");
+                Logger.log(Priority.DEBUG, "Failed to send weapon");
             }
         });
     }

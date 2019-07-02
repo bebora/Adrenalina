@@ -212,11 +212,11 @@ public abstract class View {
 
 	/**
 	 * Setup the connection
-	 * @param connectionType
-	 * @param username
-	 * @param password
-	 * @param connectionProperties
-	 * @param existingGame
+	 * @param connectionType network connection method (RMI/socket)
+	 * @param username username of the connecting player
+	 * @param password password of the connecting player
+	 * @param connectionProperties properties of the remote server, which should contain url and port
+	 * @param existingGame true if player is joining a match from which has been disconnected
 	 * @param gameMode
 	 * @return {@code true} if connection with server is successful
 	 */
@@ -241,7 +241,7 @@ public abstract class View {
 		}
 		try {
 			boolean loginSuccessful = eventUpdater.login(this, username, password, existingGame, gameMode);
-			if (loginSuccessful == false) return false;
+			if (!loginSuccessful) return false;
 			online = true;
 			networkTimeoutController.start();
 			return true;
@@ -253,9 +253,7 @@ public abstract class View {
 			catch (RemoteException r) {
 				Logger.log(Priority.ERROR, "Unable to call local method");
 			}
-			finally {
-				return false;
-			}
+			return false;
 		}
 	}
 

@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Utility class to log errors and debug info.
@@ -19,12 +21,13 @@ public final class Logger {
     }
 
     private static final String HOME = System.getProperty("user.home");
+
     /**
      * Defines the format for the file used to log in.
      */
     private static String LOG = String.format("%s/adrenalina.log", HOME);
     private static boolean logToFile;
-    private static boolean debugMode;
+    private static Set<Priority> prioritiesToPrint = new HashSet<>();
     private static BufferedWriter bw;
 
     /**
@@ -37,17 +40,7 @@ public final class Logger {
         DateFormat dateFormat = new SimpleDateFormat("[yyyy/MM/dd - HH:mm:ss:SSS]");
         Date now = new Date();
         String logWithTime = dateFormat.format(now);
-        switch (priority) {
-            case DEBUG:
-                logWithTime += " DEBUG: " + toLog;
-                break;
-            case ERROR:
-                logWithTime += " ERROR: " + toLog;
-                break;
-            case WARNING:
-                logWithTime += " WARNING: " + toLog;
-                break;
-        }
+        logWithTime += String.format(" %s: %s", priority.name(), toLog);
         if (logToFile) {
             try {
                 bw.write(logWithTime+"\n");
@@ -58,7 +51,8 @@ public final class Logger {
                 System.out.println("Could not log to file");
             }
         }
-        System.out.println(logWithTime);
+        if (prioritiesToPrint.contains(priority))
+            System.out.println(logWithTime);
     }
 
     /**
@@ -77,5 +71,13 @@ public final class Logger {
                 System.out.println("Could not log to file");
             }
         }
+    }
+
+    /**
+     * Sets which {@link Priority} should be printed to stdout
+     * @param enabled Set of priorities that must be printed also on stdout
+     */
+    public static void setPrioritiesLoggingToStdout(Set<Priority> enabled) {
+        prioritiesToPrint = enabled;
     }
 }

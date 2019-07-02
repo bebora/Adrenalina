@@ -25,7 +25,7 @@ public class ConnectHandler extends UnicastRemoteObject implements ConnectInterf
         virtualView.setUsername(username);
         ViewUpdaterRMI updater = new ViewUpdaterRMI(receiver, virtualView);
         virtualView.setViewUpdater(updater, existingGame);
-        Logger.log(DEBUG, username+" is trying to connect via RMI");
+        Logger.log(DEBUG, String.format("%s is trying to connect via RMI for a %s match", username, mode));
         if (!existingGame)
             lobbyController.connectPlayer(username, password, mode, virtualView);
         else

@@ -99,7 +99,7 @@ public class ConcreteViewReceiver extends UnicastRemoteObject implements ViewRec
             if (linkedView.getStatus() == Status.LOGIN || linkedView.getStatus() == null) {
                 if (message.contains("SUCCESS")) {
                     linkedView.setStatus(Status.WAITING);
-                    System.out.println("WAITING TO PLAY...");
+                    System.out.println("Connection successful, waiting to play...");
                     linkedView.getMessages().clear();
                 } else if (message.contains("END")) {
                     System.out.println(message);

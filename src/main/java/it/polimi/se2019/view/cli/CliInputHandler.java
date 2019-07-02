@@ -354,7 +354,7 @@ public class CliInputHandler implements Runnable{
             view.setGameMode(gameMode);
             int retryTime = 5; //seconds
             while (!view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode)){
-                Logger.log(Priority.ERROR, String.format("Can't connect to server! Retrying in %d seconds", retryTime));
+                Logger.log(Priority.INFO, String.format("Can't connect to server! Retrying in %d seconds", retryTime));
                 try {
                     Thread.sleep(retryTime*1000);
                 }
@@ -488,13 +488,12 @@ public class CliInputHandler implements Runnable{
         AsciiBoard.setBoard(view.getBoard());
         handleInput();
         if (view.getStatus().equals(Status.END)) {
-            //Previous match ended, start a new one
-            CLI.printInColor("w", "Using previous selected values as default");
+            //Previous match ended or current connection is broken, start a new one
+            CLI.printInColor("w", "Using previous selected values as default\n");
             CliInputHandler cliInputHandler = new CliInputHandler(args);
             cliInputHandler.setDefaultValues(selectedValues);
             Thread start = new Thread(cliInputHandler);
             start.start();
-            return;
         }
     }
 }

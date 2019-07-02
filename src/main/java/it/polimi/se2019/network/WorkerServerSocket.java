@@ -81,7 +81,7 @@ public class WorkerServerSocket extends Thread {
             String mode = connection.getMode();
             boolean existingGame = connection.getExistingGame();
             virtualView.setViewUpdater(viewUpdater, existingGame);
-            Logger.log(DEBUG, username+" is trying to connect via socket");
+            Logger.log(DEBUG, String.format("%s is trying to connect via socket for a %s match", username, mode));
             //Notifies the lobbyController with a new connection.
             if (!existingGame)
                 lobbyController.connectPlayer(username, password, mode, virtualView);

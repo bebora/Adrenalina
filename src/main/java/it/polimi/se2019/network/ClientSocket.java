@@ -102,22 +102,22 @@ public class ClientSocket extends Thread{
     private class Updater extends Thread {
         @Override
         public void run() {
-                String json;
-                do {
-                    try {
-                        EventVisitable event = queue.take();
-                        json = gson.toJson(event, EventVisitable.class) + "\n";
-                        jsonSender.write(json, 0 ,json.length());
-                        jsonSender.flush();
-                    }
-                    catch (InterruptedException e) {
-                        Logger.log(Priority.WARNING, "Queue interrupted");
-                    }
-                    catch (IOException e) {
-                        Logger.log(Priority.WARNING, "IOException sending event");
-                    }
-                } while (!socket.isClosed());
-            }
+            String json;
+            do {
+                try {
+                    EventVisitable event = queue.take();
+                    json = gson.toJson(event, EventVisitable.class) + "\n";
+                    jsonSender.write(json, 0 ,json.length());
+                    jsonSender.flush();
+                }
+                catch (InterruptedException e) {
+                    Logger.log(Priority.DEBUG, "Queue interrupted");
+                }
+                catch (IOException e) {
+                    Logger.log(Priority.DEBUG, "IOException sending event");
+                }
+            } while (!socket.isClosed());
+        }
     }
 
 

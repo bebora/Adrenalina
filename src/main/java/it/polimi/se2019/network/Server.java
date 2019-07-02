@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Properties;
 
 /**
@@ -17,6 +18,7 @@ import java.util.Properties;
  */
 public class Server {
     public static void main(String[] args) {
+        Logger.setPrioritiesLoggingToStdout(new HashSet<>(Arrays.asList(Priority.values())));
         Properties connectionProperties = new Properties();
         InputStream fin;
         try{
