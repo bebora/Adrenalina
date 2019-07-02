@@ -190,7 +190,8 @@ public class LobbyController{
         List<String> boards = BoardCreator.listIndex(classloader, "boards");
         int rnd = new Random().nextInt(boards.size());
         String boardName = boards.get(rnd);
-        GameController gameController = new GameController(playing, boardName, 8, mode.equals(Mode.DOMINATION), this);
+        int numSkulls = Integer.parseInt(GameProperties.getInstance().getProperty("skulls"));
+        GameController gameController = new GameController(playing, boardName, numSkulls, mode.equals(Mode.DOMINATION), this);
         games.add(gameController);
         playing.forEach(p -> p.getVirtualView().setGameController(gameController));
         gameController.getMatch().updateViews();

@@ -335,6 +335,9 @@ public class EffectController extends Observer {
                         updateOnStopSelection(OPTIONAL);
                     }
                 }
+                else if (players.size() == 1) {
+                    updateOnPlayers(Collections.singletonList(players.get(0)));
+                }
                 else {
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));
                     acceptableTypes = new AcceptableTypes(receivingTypes);

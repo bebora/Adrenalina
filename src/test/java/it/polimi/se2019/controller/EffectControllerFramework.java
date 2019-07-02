@@ -14,6 +14,10 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 
 public class EffectControllerFramework {
     List<Player> testPlayers;
@@ -25,7 +29,14 @@ public class EffectControllerFramework {
     Player originalCurrentPlayer;
     ActionController actionController;
     WeaponController wp;
-    public void prepareWeapon(String weapon) {
+    RequestDispatcher requestDispatcher;
+    List<Player> notCurrentPlayers;
+
+    /**
+     * Utility method to setup the game to for further interactions
+     * @param weapon
+     */
+    public void prepareWeapon(String weapon) throws RemoteException{
         testPlayers = new ArrayList<>(Arrays.asList(new Player("paolo"),new Player("roberto"),new Player("carmelo")));
         gameController = new GameController(testPlayers,"board1" +".btlb",5,false, null);
         testMatch = gameController.getMatch();
@@ -48,5 +59,19 @@ public class EffectControllerFramework {
         testWeapon.setLoaded(true);
         wp = new WeaponController(sandboxMatch,null,testMatch.getPlayers(),null);
         wp.updateOnWeapon(testWeapon);
+    }
+
+    void setupRequestDispatcher() throws RemoteException{
+        requestDispatcher = new RequestDispatcher(mock(ViewUpdater.class), mock(VirtualView.class));
+        requestDispatcher = spy(requestDispatcher);
+        currentPlayer.getVirtualView().setRequestDispatcher(requestDispatcher);
+        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
+        //Setup the player that is shooting and the enemy
+        notCurrentPlayers = sandboxMatch.getPlayers().stream()
+                .filter(p -> p != sandboxMatch.getPlayers().get(sandboxMatch.getCurrentPlayer()))
+                .collect(Collectors.toList());
+        //player satisfy the target condition, not on same tile but visible
+        notCurrentPlayers.get(0).setTile(testMatch.getBoard().getTile(0,1));
+        notCurrentPlayers.get(1).setTile(testMatch.getBoard().getTile(0,2));
     }
 }

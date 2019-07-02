@@ -59,3 +59,4 @@ effects:
       damagesAmount:3
       target:
         checkTargetList:TRUE
+        maxTargets:0

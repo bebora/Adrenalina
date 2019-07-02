@@ -7,6 +7,7 @@ import it.polimi.se2019.model.cards.CardCreator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 public class EffectControllerTest extends EffectControllerFramework {
 
     @BeforeEach
-    void prepareWeapon(){
+    void prepareWeapon() throws RemoteException {
         prepareWeapon("cyberblade.btl");
     }
     @Test
@@ -96,7 +97,6 @@ public class EffectControllerTest extends EffectControllerFramework {
         wp.setMatch(sandboxMatch);
         wp.updateOnWeapon(testWeapon);
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
-        wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
         actionController.updateOnAction(originalCurrentPlayer.getActions().get(0));
         wp.setActionController(actionController);
         wp.getEffectController().updateOnTiles(Arrays.asList(testMatch.getBoard().getTile(0,1)));

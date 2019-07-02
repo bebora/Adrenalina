@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -17,13 +18,10 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 
 public class RocketLauncherInteractionTest extends EffectControllerFramework {
-    RequestDispatcher requestDispatcher;
     @BeforeEach
-    void prepareWeapon() {
+    void prepareWeapon() throws RemoteException {
         prepareWeapon("rocketLauncher.btl");
-        requestDispatcher = Mockito.mock(RequestDispatcher.class);
-        currentPlayer.getVirtualView().setRequestDispatcher(requestDispatcher);
-        currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
+        setupRequestDispatcher();
     }
 
     @Test
