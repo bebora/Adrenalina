@@ -44,6 +44,7 @@ public class GUIView extends View {
         boardScreen.updateMessages(getMessages());
         boardScreen.updateBoard(getBoard(),getPlayers());
         boardScreen.updatePowerUps(getPowerUps());
+        boardScreen.updatePoints(getPoints());
         List<ViewWeapon> allWeapons = Stream.concat(getLoadedWeapons().stream(),getSelf().getUnloadedWeapons().stream()).collect(Collectors.toList());
         boardScreen.updateWeapons(allWeapons);
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());

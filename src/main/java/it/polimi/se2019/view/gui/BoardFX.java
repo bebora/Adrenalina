@@ -371,7 +371,6 @@ public class BoardFX extends StackPane {
             senderButton.setViewTileCoords(selectedCoords);
         if(selectedCoords.size() == selectableOptionsWrapper.getSelectableTileCoords().getMaxSelectables())
             eventUpdater.sendTiles(selectedCoords);
-
     }
 
     void showPossibleTiles(List<ViewTileCoords> tileCoords){

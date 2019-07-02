@@ -159,6 +159,7 @@ public abstract class Match {
 			}
 		}
 		updateViews();
+		updatePopupViews("Frenzy started!");
 		firstPlayer = currentPlayer;
 	}
 

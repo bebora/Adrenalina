@@ -4,8 +4,12 @@ import it.polimi.se2019.view.*;
 import javafx.collections.FXCollections;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.stage.Screen;
 
@@ -28,7 +32,7 @@ public class BoardScreen extends HBox {
     View guiView;
     ListView<String> messageBox;
     ChoiceDialog<String> ammoChoice;
-
+    Text points;
     BoardScreen(View GUIView){
         guiView = GUIView;
         boardFX = new BoardFX();
@@ -58,6 +62,22 @@ public class BoardScreen extends HBox {
         messageScroll.setFitToWidth(true);
         boardZone.getChildren().addAll(boardFX,actionButtons,messageScroll);
         clientPlayer = new PlayerBoardFX(guiView.getSelf());
+        //Set points shadow and style
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(3.0);
+        dropShadow.setOffsetX(1.0);
+        dropShadow.setOffsetY(1.0);
+        dropShadow.setColor(Color.BLUE);
+        String family = "sans-serif";
+        double size = 25;
+        points = new Text();
+        points.setFont(Font.font(family, size));
+        //Player starts with 0 points
+        points.setText("You have 0 points");
+        points.setFill(Color.WHITE);
+        points.setStrokeWidth(0.5);
+        points.setStroke(Color.WHITE);
+        points.setEffect(dropShadow);
         for(ViewPlayer p: GUIView.getPlayers()) {
             if (!p.getDominationSpawn() && !p.getUsername().equals(GUIView.getSelf().getUsername())) {
                 PlayerBoardFX temp = new PlayerBoardFX(p);
@@ -70,7 +90,7 @@ public class BoardScreen extends HBox {
             dominationBoardFX = new DominationBoardFX();
             boardFX.setDominationPane(dominationBoardFX);
         }
-        playerBoardZone.getChildren().addAll(clientPlayer,playerBoardScroller,powerUpsBox,weaponsBox);
+        playerBoardZone.getChildren().addAll(clientPlayer, playerBoardScroller, points , powerUpsBox, weaponsBox);
         playerBoardZone.setSpacing(15);
         updateBoard(GUIView.getBoard(),GUIView.getPlayers());
         this.getChildren().addAll(boardZone,playerBoardZone);
@@ -199,6 +219,10 @@ public class BoardScreen extends HBox {
         messageBox.setItems(FXCollections.observableList(messages));
     }
 
+    void updatePoints(int pts) {
+        points.setText(String.format(" You have %s points", pts));
+    }
+
     private void showAmmoChoice(List<String> ammoChoiceOptions){
         ammoChoice = new ChoiceDialog<>(null, ammoChoiceOptions);
         ammoChoice.setContentText("Selectable ammos:");
@@ -240,5 +264,4 @@ public class BoardScreen extends HBox {
         }
         return result;
     }
-
 }
