@@ -18,6 +18,11 @@ public class Reload extends Action{
     }
 
     @Override
+    public void reset() {
+        //Doesn't update, so no reset is needed
+    }
+
+    @Override
     public String toString() {
         return "RELOAD";
     }

@@ -51,12 +51,7 @@ public class RequestDispatcherTest {
         List<Ammo> ammos = Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW);
         acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1, 1, "Select ammo!"));
         a.getViewUpdater().sendAcceptableType(acceptableTypes);
-        try {
-            Thread.sleep(50);
-        }
-        catch (InterruptedException e){
-            assert false;
-        }
+        Utils.waitABit();
         assertTrue(a.getSelectableOptionsWrapper().getAcceptedTypes().contains(ReceivingType.AMMO));
         assertEquals(a.getSelectableOptionsWrapper().getSelectableAmmos().getOptions(), ammos.stream().map(Enum::toString).collect(Collectors.toList()));
     }
@@ -65,12 +60,7 @@ public class RequestDispatcherTest {
     public void testEventSend() throws RemoteException {
         //Verify that not supported eventHandlers can't be called
         requestDispatcher.receiveAmmo("RED");
-        try {
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e){
-            assert false;
-        }
+        Utils.waitABit();
         assertFalse(a.getMessages().isEmpty());
 
         //Verify that eventHandler get called once supported

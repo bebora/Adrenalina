@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
@@ -186,13 +187,6 @@ public class GameController extends Observer {
         skip = false;
         acceptableTypes = new AcceptableTypes(new ArrayList<>());
         match.updateViews();
-        //Sleep to wait for clients to initialize their views
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException e) {
-            //Shouldn't enter this
-        }
     }
 
     public void startTurn(){
@@ -334,6 +328,7 @@ public class GameController extends Observer {
                     countDownLatch.await();
                 } catch (InterruptedException e) {
                     Logger.log(Priority.ERROR, "Join on domination overkill blocked by " + e.getMessage());
+                    Thread.currentThread().interrupt();
                 }
                 if (!timerConstrainedEventHandler.isBlocked()) {
                     Player spawnPoint = spawnPoints.stream().findAny().orElse(null);
@@ -402,12 +397,7 @@ public class GameController extends Observer {
             stringBuffer.append(p.getUsername() + ",");
         }
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.getVirtualView().getViewUpdater().sendPopupMessage(stringBuffer.toString()));
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException e) {
-            assert false;
-        }
+        Utils.sleepABit(1000);
         match.getUpdateSender().getUpdatePoller().interrupt();
         //Set the players offline
         match.getPlayers().stream().filter(Player::getOnline).forEach(p -> p.setOnline(false));

@@ -2,6 +2,7 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.view.View;
 
 /**
@@ -17,12 +18,7 @@ public class ClientAcker extends Thread {
     @Override
     public void run() {
         while (!view.isOnline()) {
-            try {
-                Thread.sleep(ACK_SLEEP_DELAY);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, "InterruptedException in ClientAcker: "+e.getMessage());
-            }
+            Utils.sleepABit(ACK_SLEEP_DELAY);
         }
         EventUpdater eu = view.getEventUpdater();
         do {

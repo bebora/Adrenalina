@@ -1,5 +1,7 @@
 package it.polimi.se2019.model;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 
@@ -21,14 +23,8 @@ public class DominationMatch extends Match {
     private int currentTurn = -1;
 
     /**
-     * Helper attribute that keeps track of the Domination Spawn players
-     */
-    private List<SpawnPlayer> spawnPoints;
-
-    /**
      * Create a Domination Match, using {@link #Match} constructor
      * Initializes {@link #spawnPoints}  with an ArrayList
-     *
      * @param players       players to add in the Match
      * @param boardFilename name of the Board that uses the Match
      * @param numSkulls     number of the skulls to use
@@ -59,12 +55,11 @@ public class DominationMatch extends Match {
         DominationMatch oldDominationMatch = (DominationMatch) oldMatch;
         oldDominationMatch.setCurrentTurn(currentTurn);
         super.restoreMatch(oldMatch);
-        oldDominationMatch.setSpawnPoints(spawnPoints);
     }
 
     public DominationMatch(Match match){
         super(match);
-        this.spawnPoints = match.players.stream().filter(Player::getDominationSpawn).map(p -> (SpawnPlayer) p).map(SpawnPlayer::new).peek(p->p.setMatch(this)).collect(Collectors.toList());
+        this.spawnPoints = match.players.stream().filter(Player::getDominationSpawn).map(p -> (SpawnPlayer) p).map( p -> new SpawnPlayer(p)).peek(p->p.setMatch(this)).collect(Collectors.toList());
         this.players.addAll(spawnPoints);
         this.currentTurn = ((DominationMatch) match).getCurrentTurn();
     }
@@ -93,6 +88,8 @@ public class DominationMatch extends Match {
                         stream().
                         filter(s -> s.getTile().equals(currentPlayer.getTile())).findFirst().
                         orElseThrow(UnsupportedOperationException::new);
+                Logger.log(Priority.DEBUG, "Damaging the spawn " + spawnPoint.getColor().toString());
+                Logger.log(Priority.DEBUG, spawnPoint.getColor().toString() + " has " + spawnPoint.getDamagesCount());
                 spawnPoint.setDamaged(false);
                 spawnPoint.receiveShot(currentPlayer, 1, 0, true);
                 spawnPoint.setDamaged(false);
@@ -108,6 +105,8 @@ public class DominationMatch extends Match {
         for (Player p : spawnPoints) {
             p.resetPlayer();
         }
+
+
 
         if (currentTurn == 0) {
             insertSpawnPoints();

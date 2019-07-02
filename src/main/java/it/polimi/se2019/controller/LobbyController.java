@@ -3,6 +3,7 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Mode;
 import it.polimi.se2019.model.Player;
@@ -19,7 +20,7 @@ import java.util.stream.Collectors;
 public class LobbyController{
     private List<GameController> games;
     /**
-     * List of {@link Player} waiting for relative mode
+     * List of {@link Player}, associated to the relative mode
      */
     private Map<Mode, List<Player>> waitingPlayers;
     private Map<Mode, Timer> waitingTimers;
@@ -92,6 +93,7 @@ public class LobbyController{
      * @param mode chosen mode
      */
     public synchronized void connectPlayer(String username, String password, String mode, VirtualView view) {
+        clean();
         mode = mode.toUpperCase();
         List<String> allUsername = new ArrayList<>();
         allUsername.addAll(getWaitingPlayers().values().stream().flatMap(List::stream).map(Player::getUsername).collect(Collectors.toList()));
@@ -153,13 +155,22 @@ public class LobbyController{
     }
 
     /**
+     * Cleans the offline players from the lobby
+     */
+    public synchronized void clean() {
+        for (List<Player> players : waitingPlayers.values()) {
+            players.removeIf(p -> !p.getOnline());
+        }
+    }
+
+    /**
      * Start a game using the {@link GameController}.
      * Check and remove offline players from the waiting List
      * @param mode
      */
     public synchronized void startGame(Mode mode) {
+        clean();
         List<Player> currentWaiting = waitingPlayers.get(mode);
-        currentWaiting.removeAll(currentWaiting.stream().filter(p -> !p.getOnline()).collect(Collectors.toList()));
         List<Player> playing = new ArrayList<>(currentWaiting);
         Logger.log(Priority.DEBUG, String.format("%s GAME TRYING TO START WITH %d PLAYERS", mode.name(), playing.size()));
         if (playing.size() > 5) {
@@ -183,6 +194,8 @@ public class LobbyController{
         games.add(gameController);
         playing.forEach(p -> p.getVirtualView().setGameController(gameController));
         gameController.getMatch().updateViews();
+        //Sleep to wait for clients to initialize their views
+        Utils.sleepABit(1000);
         gameController.startTurn();
     }
 

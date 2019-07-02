@@ -1,7 +1,6 @@
 package it.polimi.se2019.view.gui;
 
-import it.polimi.se2019.Logger;
-import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.view.Status;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -70,12 +69,7 @@ public class LoginScreen extends Application {
         }
 
         while(view.getStatus() == null) {
-            try {
-                Thread.sleep(10);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-            }
+            Utils.sleepABit(10);
         }
         if(view.getStatus() == Status.END){
             Alert alert = new Alert(Alert.AlertType.ERROR);

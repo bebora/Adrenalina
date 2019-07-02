@@ -470,6 +470,12 @@ public class CliInputHandler implements Runnable{
                 Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
             }
         }
+        try {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) {
+            Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+        }
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
         } else {

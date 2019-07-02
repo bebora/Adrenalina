@@ -1,6 +1,7 @@
 package it.polimi.se2019.model.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Allows the player to attack using a weapon.
@@ -23,6 +24,13 @@ public class Attack extends Action {
             movements = 1;
             alreadyUpdated = true;
         }
+    }
+
+    @Override
+    public void reset() {
+        movements = 0;
+        subActions = new ArrayList<>(Collections.singletonList(SubAction.SHOOT));
+        alreadyUpdated = false;
     }
 
     @Override

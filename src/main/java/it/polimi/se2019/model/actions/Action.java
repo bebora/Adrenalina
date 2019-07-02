@@ -48,4 +48,6 @@ public abstract class Action {
 	public int hashCode() {
 		return this.toString().hashCode();
 	}
+
+	public abstract void reset();
 }

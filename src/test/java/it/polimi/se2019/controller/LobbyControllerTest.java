@@ -35,12 +35,7 @@ class LobbyControllerTest {
         catch (RemoteException e) {
             System.out.println(e);
         }
-        try {
-            Thread.sleep(100);
-        }
-        catch (InterruptedException e){
-            assert false;
-        }
+       Utils.waitABit();
         assertEquals(0,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
     }
 
@@ -57,19 +52,9 @@ class LobbyControllerTest {
             } catch (RemoteException e) {
                 System.out.println("Error!");
             }
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e){
-                assert false;
-            }
+            Utils.waitABit();
         }
-        try {
-            Thread.sleep(100);
-        }
-        catch (InterruptedException e){
-            assert false;
-        }
+        Utils.waitABit();
         assertEquals(2, lobbyController.getGames().size());
     }
 }

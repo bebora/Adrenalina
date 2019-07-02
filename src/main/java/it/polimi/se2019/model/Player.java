@@ -212,7 +212,7 @@ public class Player {
 	/**
 	 * True if the player is in fact a spawnpoint
 	 */
-	private Boolean dominationSpawn;
+	private boolean dominationSpawn;
 
 	/**
 	 * True if player is in frenzy mode
@@ -483,6 +483,7 @@ public class Player {
 	 */
 	public void resetPlayer() {
 	    damages.clear();
+
 	}
 
 	/**

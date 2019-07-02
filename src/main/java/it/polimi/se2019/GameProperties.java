@@ -27,6 +27,7 @@ public class GameProperties extends Properties {
                 try {
                     InputStream in = GameProperties.class.getClassLoader().getResourceAsStream("game.properties");
                     instance.load(in);
+                    System.out.print(instance.get("time"));
                     in.close();
                 }
                 catch (Exception istance) {

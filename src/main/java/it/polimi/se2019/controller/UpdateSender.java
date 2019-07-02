@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
@@ -47,7 +48,7 @@ public class UpdateSender implements ViewUpdater {
      */
     class UpdatePoller extends Thread{
         private Map<String, ThreadPoolExecutor> updateExecutor;
-        private int timeout = 500;
+        private int timeout = 125;
 
         public UpdatePoller() {
             updateExecutor = new HashMap<>();
@@ -74,11 +75,7 @@ public class UpdateSender implements ViewUpdater {
                             }
                         }
                     }
-                try {
-                    sleep(timeout);
-                } catch (InterruptedException e) {
-                    Logger.log(Priority.ERROR, "interrupted update poller");
-                }
+                Utils.sleepABit(timeout);
             }
         }
     }

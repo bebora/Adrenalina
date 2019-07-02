@@ -1,6 +1,7 @@
 package it.polimi.se2019.model.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Allows movement in the board from the player.
@@ -10,6 +11,12 @@ public class Move extends Action {
         subActions = new ArrayList<>();
         subActions.add(SubAction.MOVE);
         movements = 3;
+    }
+
+    @Override
+    public void reset() {
+        movements = 3;
+        subActions = new ArrayList<>(Collections.singletonList(SubAction.MOVE));
     }
 
     /**

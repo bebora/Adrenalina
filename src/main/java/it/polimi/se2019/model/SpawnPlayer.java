@@ -12,12 +12,12 @@ public class SpawnPlayer extends Player{
     /**
      * Indicates whether the spawn is already damaged in the current turn
      */
-    private Boolean damaged;
+    private boolean damaged;
     public SpawnPlayer(Color color) {
         super(color.toString()+ "$");
         setDominationSpawn(true);
         setColor(color);
-        damaged = Boolean.FALSE;
+        damaged = false;
     }
 
     public SpawnPlayer(SpawnPlayer player) {
@@ -48,9 +48,11 @@ public class SpawnPlayer extends Player{
      */
     @Override
     public void receiveShot(Player shooter, int damage, int marks, boolean convert) {
-        if (!damaged)
+        if (!damaged && damage > 0) {
             super.getDamages().add(shooter);
-        damaged = Boolean.TRUE;
+            Logger.log(Priority.DEBUG, getColor() + " receives a damage");
+        }
+        damaged = true;
         getMatch().updateViews();
     }
 
@@ -77,7 +79,7 @@ public class SpawnPlayer extends Player{
      */
     @Override
     public void resetPlayer() {
-        damaged = Boolean.FALSE;
+        damaged = false;
     }
 
 

@@ -19,6 +19,10 @@ import static java.lang.Boolean.TRUE;
  * Abstract class, supporting common logic in the different modes.
  */
 public abstract class Match {
+	/**
+	 * Helper attribute that keeps track of the Domination Spawn players
+	 */
+	List<SpawnPlayer> spawnPoints;
 
     public Match(List<Player> players, String boardFilename, int numSkulls) {
         this.players = players;

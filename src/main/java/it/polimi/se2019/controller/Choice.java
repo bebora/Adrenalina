@@ -52,6 +52,7 @@ public class Choice extends Observer {
         }
         catch (InterruptedException e) {
             Logger.log(Priority.ERROR, "Join on Choice killed");
+            Thread.currentThread().interrupt();
         }
         this.match = match;
     }

@@ -2,6 +2,7 @@ package it.polimi.se2019.network;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.controller.VirtualView;
 
 /**
@@ -20,11 +21,7 @@ public class RMIPinger extends Thread{
         viewUpdaterRMI = (ViewUpdaterRMI) view.getViewUpdater();
         do {
             viewUpdaterRMI.sendPing();
-            try {
-                Thread.sleep(PING_SLEEP_DELAY);
-            } catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
-            }
+            Utils.sleepABit(PING_SLEEP_DELAY);
         } while (view.isOnline());
         Logger.log(Priority.DEBUG, "PLAYER DISCONNECTED (rmi) - " + view.getUsername());
     }

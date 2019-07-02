@@ -2,6 +2,7 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.view.*;
 
@@ -52,22 +53,14 @@ public class BotCliHandler extends CliInputHandler {
         connectionChoice(reader);
         String lastSent;
         while (view.getStatus() == Status.WAITING || view.getStatus() == null) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-            }
+            Utils.sleepABit(100);
         }
         if (view.getStatus() == Status.PLAYING) {
             System.out.println(view.getStatus().name());
         }
         AsciiBoard.setBoard(view.getBoard());
         while (!view.getStatus().equals(Status.END)) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Logger.log(Priority.WARNING, "Interrupted!");
-            }
+            Utils.sleepABit(100);
             List<ReceivingType> types = view.getSelectableOptionsWrapper().
                     getAcceptedTypes();
             try {
@@ -89,6 +82,9 @@ public class BotCliHandler extends CliInputHandler {
             System.out.println(types.stream().map(Enum::toString).collect(Collectors.toList()));
             SelectableOptionsWrapper wrapper = view.getSelectableOptionsWrapper();
             ReceivingType type = getRandom(types);
+            if (random.nextInt(1000) == 500) {
+                System.exit(0);
+            }
             switch (type) {
                 case AMMO:
                     String ammo = getRandom((wrapper.getSelectableStringOptions(type).getOptions()));
