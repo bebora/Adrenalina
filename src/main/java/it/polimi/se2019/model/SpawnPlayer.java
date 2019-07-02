@@ -4,6 +4,8 @@ import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 
+import java.util.ArrayList;
+
 /**
  * Represents a SpawnPlayer, used in Domination mode.
  * Supports restoring and cloning, and receiving shots.
@@ -18,6 +20,7 @@ public class SpawnPlayer extends Player{
         setDominationSpawn(true);
         setColor(color);
         damaged = false;
+        ammos = new ArrayList<>();
     }
 
     public SpawnPlayer(SpawnPlayer player) {

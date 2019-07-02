@@ -109,6 +109,8 @@ public class Player {
 		oldPlayer.actions = this.actions;
 		oldPlayer.ammos = this.ammos;
 		oldPlayer.powerUps = this.powerUps;
+		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
+		this.setMaxActions(2);
 		//sendTotalUpdate is not needed due to being already sent in match.restoreMatch()
 	}
 
@@ -164,7 +166,7 @@ public class Player {
 	 * Owned ammos by the Player; there can't be more than three for each color
 	 * No Ammo.POWERUP is allowed into the Set
 	 */
-	private List<Ammo> ammos;
+	List<Ammo> ammos;
 
 	/**
 	 * Current total score
@@ -179,7 +181,7 @@ public class Player {
 	/**
 	 * Ordered list of reward points given to other players if player dies
 	 */
-	private List<Integer> rewardPoints;
+	List<Integer> rewardPoints;
 
 	/**
 	 * Loaded and unloaded weapons owned by the Player
