@@ -85,7 +85,6 @@ public abstract class View {
 		online = false;
 		selectableOptionsWrapper = new SelectableOptionsWrapper();
 		selectableOptionsWrapper.setAcceptedTypes(new ArrayList<>());
-		networkTimeoutController = new NetworkTimeoutControllerClient(this);
 	}
 
 	public SelectableOptionsWrapper getSelectableOptionsWrapper() {
@@ -222,7 +221,8 @@ public abstract class View {
 	 * @return {@code true} if connection with server is successful
 	 */
     public boolean setupConnection(String connectionType, String username, String password, Properties connectionProperties, boolean existingGame, String gameMode){
-		String url = connectionProperties.getProperty("url");
+		networkTimeoutController = new NetworkTimeoutControllerClient(this);
+    	String url = connectionProperties.getProperty("url");
 		int port = Integer.parseInt(connectionProperties.getProperty("port"));
 		if (connectionType.equalsIgnoreCase("socket")) {
 			eventUpdater = new EventUpdaterSocket(url, port);

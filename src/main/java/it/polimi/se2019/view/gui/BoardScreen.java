@@ -226,6 +226,9 @@ public class BoardScreen extends HBox {
                     result = result.concat(selectableOptionsWrapper.getSelectableTileCoords().getPrompt() + "\n");
                     result = result.concat(selectableOptionsWrapper.getSelectableTileCoords().getNumericalCostraints() + "\n");
                     break;
+                case STOP:
+                    result = result.concat(selectableOptionsWrapper.getStopPrompt());
+                    break;
                 default:
                     for(String s: selectableOptionsWrapper.getSelectableStringOptions(r).getOptions())
                         result = result.concat(s + " ");

@@ -1,5 +1,7 @@
 package it.polimi.se2019.view.gui;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
 import it.polimi.se2019.view.Status;
 import it.polimi.se2019.view.View;
 import it.polimi.se2019.view.ViewWeapon;
@@ -22,17 +24,13 @@ public class GUIView extends View {
 
     @Override
     public synchronized void refresh() {
-        if (getPlayers()!= null && getSelf() != null && !getPlayers().isEmpty()) {
+        if (getPlayers()!= null && getSelf() != null && !getPlayers().isEmpty() && !getStatus().equals(Status.END)) {
             if (boardScreen == null) {
                 boardScreen = new BoardScreen(this);
                 Platform.runLater(() -> changeStage());
             } else
                 Platform.runLater(() -> totalUpdate());
         }
-    }
-
-    public BoardScreen getBoardScreen() {
-        return boardScreen;
     }
 
     private void changeStage(){
@@ -51,18 +49,32 @@ public class GUIView extends View {
         boardScreen.setSelectableOptionsWrapper(getSelectableOptionsWrapper());
     }
 
-    public void setCredentials(String username, String password){
+    void setCredentials(String username, String password){
         usr = username;
         passwd = password;
     }
 
-    public void setConnectionProperties(Properties connectionProperties,String connectionType){
+    void setConnectionProperties(Properties connectionProperties,String connectionType){
         this.connectionProperties = connectionProperties;
         this.connectionType = connectionType;
     }
 
-    public void reconnect(){
-        setupConnection(connectionType,usr,passwd,connectionProperties,true,getGameMode());
+    boolean reconnect(){
+        GUIView reconnectedView = new GUIView();
+        reconnectedView.setCredentials(usr,passwd);
+        reconnectedView.setConnectionProperties(connectionProperties,connectionType);
+        reconnectedView.setGameMode(getGameMode());
+        if(reconnectedView.setupConnection(connectionType,usr,passwd,connectionProperties,true,getGameMode())) {
+            while (reconnectedView.getStatus() == null) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
+                }
+            }
+            return true;
+        }else
+            return false;
     }
 
     @Override

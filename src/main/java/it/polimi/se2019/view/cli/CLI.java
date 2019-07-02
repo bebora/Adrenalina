@@ -171,7 +171,9 @@ public class CLI extends View {
         printInColor("w","Current player:");
         printInColor(getCurrentPlayer().getColor(),getCurrentPlayer().getUsername() + "  ");
         printInColor("w","Displayed player:");
-        printInColor(displayedPlayer.getColor(),displayedPlayer.getUsername());
+        printInColor(displayedPlayer.getColor(),displayedPlayer.getUsername() + " ");
+        printInColor("w", "Points:");
+        printInColor("w", String.format("%d ",getPoints()));
     }
 
     public void setDisplayedPlayer(ViewPlayer displayedPlayer){
