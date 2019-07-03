@@ -336,6 +336,7 @@ public class EffectController extends Observer {
                     }
                 }
                 else if (players.size() == 1) {
+                    skip = true;
                     updateOnPlayers(Collections.singletonList(players.get(0)));
                 }
                 else {
