@@ -1,5 +1,6 @@
 package it.polimi.se2019.network;
 
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.controller.LobbyController;
@@ -18,6 +19,9 @@ import java.util.Properties;
  */
 public class Server {
     public static void main(String[] args) {
+        if (args.length > 0) {
+            GameProperties.setDefaultPath(args[0]);
+        }
         Logger.setPrioritiesLoggingToStdout(new HashSet<>(Arrays.asList(Priority.values())));
         Properties connectionProperties = new Properties();
         InputStream fin;

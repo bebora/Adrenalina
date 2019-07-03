@@ -52,6 +52,7 @@ public class BotCliHandler extends CliInputHandler {
         BufferedReader reader = new BufferedReader(inputString);
         connectionChoice(reader);
         String lastSent;
+        view.setClean(true);
         while (view.getStatus() == Status.WAITING || view.getStatus() == null) {
             Utils.sleepABit(100);
         }
@@ -82,7 +83,7 @@ public class BotCliHandler extends CliInputHandler {
             Logger.log(Priority.DEBUG,types.stream().map(Enum::toString).collect(Collectors.toList()).toString());
             SelectableOptionsWrapper wrapper = view.getSelectableOptionsWrapper();
             ReceivingType type = getRandom(types);
-            if (random.nextInt(1000) == 500) {
+            if (random.nextInt(10000) == 500) {
                 System.exit(0);
             }
             switch (type) {

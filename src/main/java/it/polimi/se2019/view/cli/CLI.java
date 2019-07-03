@@ -15,8 +15,16 @@ public class CLI extends View {
     int skullBoardHeight = 5;
     static List<ViewWeapon> displayedWeapons;
     private ViewPlayer displayedPlayer;
+    private boolean clean = false;
 
 
+    /**
+     * Sets if the CLI needs to print the game board.
+     * @param clean
+     */
+    public void setClean(boolean clean) {
+        this.clean = clean;
+    }
 
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
@@ -181,8 +189,17 @@ public class CLI extends View {
     }
 
 
+    /**
+     * Refresh the current gameBoard.
+     * Print on the CLI:
+     * <li>the board itself</li>
+     * <li>the players</li>
+     * <li>the displayed player's powerups, weapon and ammos</li>
+     * <li>the possible options to select</li>
+     */
     @Override
     public synchronized void  refresh(){
+        if (clean) return;
         if (getPlayers() != null && !getPlayers().isEmpty() && !getStatus().equals(Status.END)) {
             displayedPlayer = getSelf();
             AsciiBoard.board = this.getBoard();
