@@ -192,7 +192,7 @@ public class EffectController extends Observer {
         } else if (curActionType == DEALDAMAGE) {
             List<Player> temp = tiles.stream()
                     .map(t -> curMatch.getPlayersInTile(t))
-                    .flatMap(List::stream).collect(Collectors.toList());
+                    .flatMap(List::stream).filter(curDealDamage.getTarget().getPlayerListFilter(player, curWeapon.getTargetPlayers(), curWeapon.getBlackListPlayers())).collect(Collectors.toList());
             temp.removeIf(p -> p.getUsername().equals(player.getUsername()));
             temp.forEach(p -> p.receiveShot(getOriginalPlayer(player), curDealDamage.getDamagesAmount(), curDealDamage.getMarksAmount(), true));
             handleTargeting(curDealDamage.getTargeting(), temp);
@@ -603,12 +603,7 @@ public class EffectController extends Observer {
             updateOnTiles(tiles);
         }
         else {
-            try {
-                acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
-            }
-            catch (Exception e) {
-                System.out.println(curMove.getPrompt());
-            }
+            acceptableTypes.setSelectableTileCoords(new SelectableOptions<>(tiles, 1, 1, curMove.getPrompt().split("\\$")[1]));
             timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
             timerConstrainedEventHandler.start();
         }
@@ -663,6 +658,8 @@ public class EffectController extends Observer {
                 receivingTypes.add(ReceivingType.POWERUP);
                 acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(discardablePowerUps, 1, 1, "Select a powerUp to discard!"));
             }
+            else if (player.getAmmos().isEmpty())
+                break;
             acceptableTypes.setSelectableAmmos(new SelectableOptions<>(ammos, 1 , 1, "Select an ammo to discard"));
             acceptableTypes.setStop(true, "Don't pay for no more powerUps!");
             Choice ammoRequest = new Choice(player.getVirtualView().getRequestDispatcher(), acceptableTypes, curMatch);

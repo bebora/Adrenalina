@@ -10,10 +10,7 @@ import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.se2019.controller.ReceivingType.STOP;
@@ -172,7 +169,7 @@ public class ActionController extends Observer {
             selectableTiles.removeIf(t -> !t.isSpawn() && t.getAmmoCard() == null);
             selectableTiles.removeIf(t -> t.isSpawn() && t.getWeapons().stream().noneMatch(weapon -> curPlayer.checkForAmmos(weapon.getCost())));
         }
-
+        selectableTiles.removeIf(Objects::isNull);
         if (selectableTiles.size() == 1) {
             updateOnTiles(selectableTiles);
         }

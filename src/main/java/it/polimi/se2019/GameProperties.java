@@ -2,7 +2,10 @@ package it.polimi.se2019;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * Singleton class defining the properties of the game.
@@ -37,4 +40,9 @@ public class GameProperties extends Properties {
         }
         return instance;
     }
+
+    public static List<Integer> toList(String string) {
+        return Arrays.stream(string.split(",")).map(Integer::parseInt).collect(Collectors.toList());
+    }
+
 }

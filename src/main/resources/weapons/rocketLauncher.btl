@@ -69,9 +69,11 @@ name:rocket launcher
        damagesAmount:1
        target:
          checkTargetList:TRUE
+         maxTargets:0
      damage:
        damagesAmount:1
        target:
+         areaDamage:TILE
          maxDistance:0
          checkTargetList:FALSE
          pointOfView:PERSPECTIVE

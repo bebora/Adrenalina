@@ -190,8 +190,7 @@ public class WeaponController extends Observer {
             }
         else {
             //Control for unit test purposes, actionController is always!=null
-            if (actionController != null)
-                askForEffect(finished);
+            askForEffect(finished);
         }
     }
 

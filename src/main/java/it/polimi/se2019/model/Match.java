@@ -1,5 +1,6 @@
 package it.polimi.se2019.model;
 
+import it.polimi.se2019.GameProperties;
 import it.polimi.se2019.controller.UpdateSender;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.BoardCreator;
@@ -152,7 +153,7 @@ public abstract class Match {
 			if (p.getDamages().isEmpty()) {
 				p.setFirstShotReward(false);
 				p.setFrenzyBoard(true);
-				p.setRewardPoints(new ArrayList<>(Arrays.asList(2, 1, 1, 1)));
+				p.setRewardPoints(GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_frenzy")));
 			}
 			else {
 				p.setFrenzyBoard(false);
@@ -199,7 +200,7 @@ public abstract class Match {
 			p.addPowerUp(board.drawPowerUp(), false);
 			// Set reward points and first shot reward to players who haven't changed it yet
 			if (finalFrenzy  && !p.isFrenzyBoard()) {
-				p.setRewardPoints(Arrays.asList(2, 1, 1, 1));
+				p.setRewardPoints(GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_frenzy")));
 				p.setFirstShotReward(false);
 				p.setFrenzyBoard(true);
 			}

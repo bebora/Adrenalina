@@ -96,6 +96,8 @@ public class PaymentController extends Observer{
             if (stillToPay.isEmpty()) {
                 observer.concludePayment();
             }
+            else
+                updateOnStopSelection(TRUE);
         } else {
             timerConstrainedEventHandler = new TimerConstrainedEventHandler(timerConstrainedEventHandler);
             timerConstrainedEventHandler.start();

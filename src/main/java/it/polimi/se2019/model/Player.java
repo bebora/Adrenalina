@@ -37,7 +37,7 @@ public class Player {
 		marks = new ArrayList<>();
 		damages = new ArrayList<>();
 		ammos = new ArrayList<>(Arrays.asList(Ammo.RED,Ammo.YELLOW,Ammo.BLUE));
-		rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+		rewardPoints = GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_normal"));
 		weapons = new ArrayList<>();
 		powerUps = new ArrayList<>();
 		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
@@ -93,7 +93,7 @@ public class Player {
 		this.damages = new ArrayList<>();
 		this.marks = new ArrayList<>();
 		this.powerUps = new ArrayList<>();
-		this.rewardPoints = new ArrayList<>(Arrays.asList(8,6,4,2,1));
+		this.rewardPoints = GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_normal"));
 		this.weapons = new ArrayList<>();
 	}
 
@@ -465,7 +465,7 @@ public class Player {
 	 */
 	public void receiveMark(Player shooter){
 		int counter = Collections.frequency(marks,shooter);
-		if(counter<3)
+		if (counter < Integer.parseInt(GameProperties.getInstance().getProperty("max_marks")))
 			marks.add(shooter);
 	}
 
@@ -474,7 +474,7 @@ public class Player {
 	 * @param ammo ammo to add in the player's {@link #ammos}
 	 */
 	public void addAmmo(Ammo ammo) {
-		if (Collections.frequency(ammos, ammo) < 3)
+		if (Collections.frequency(ammos, ammo) < Integer.parseInt(GameProperties.getInstance().getProperty("max_ammo")))
 			ammos.add(ammo);
 	}
 

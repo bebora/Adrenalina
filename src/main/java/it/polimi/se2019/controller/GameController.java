@@ -452,6 +452,7 @@ public class GameController extends Observer {
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)));
         }
         else if (skip.toBoolean() || acceptableTypes.isReverse()) {
+            match.updatePopupViews(String.format("Player %s didn't complete his action fully, so RESET occurred! Read the rules!", currentPlayer.getUsername()));
             if(action)
                 actionCounter++;
             actionController = null;
