@@ -551,12 +551,15 @@ public class Player {
 	 * <li>{@link #powerUps} size is less than three</li>
 	 * @param powerUp powerup to add
 	 * @param limit if limiting or not to three the size of {@link #powerUps}
+	 * @return true if the powerup is added, false if it gets discarded
 	 */
-	public void addPowerUp(PowerUp powerUp, boolean limit) {
-		if (!(limit && powerUps.size() >= 3)) {
+	public boolean addPowerUp(PowerUp powerUp, boolean limit) {
+		if (!limit || powerUps.size() < 3) {
 			powerUps.add(powerUp);
 			sendTotalUpdate();
+			return true;
 		}
+		else return false;
 	}
 
 	/**
@@ -566,7 +569,7 @@ public class Player {
 	 */
 	public void discardPowerUp(PowerUp powerUp, boolean award) {
 		powerUps.remove(powerUp);
-		match.getBoard().getPowerUps().addToDiscarded(powerUp);
+		match.getBoard().discardPowerUp(powerUp);
 		if (award)
 			addAmmo(powerUp.getDiscardAward());
 		sendTotalUpdate();
@@ -580,7 +583,7 @@ public class Player {
 	 */
 	public boolean hasPowerUp(Moment applicability){
 		for(PowerUp p: powerUps)
-			if(p.getApplicability() == applicability)
+			if(p.getApplicability().equals(applicability))
 				return true;
 		return false;
 	}

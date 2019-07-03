@@ -43,6 +43,7 @@ public class Choice extends Observer {
         timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerConstrainedEventHandler.start();
         if (timerConstrainedEventHandler.isError()) {
+            Logger.log(Priority.DEBUG, "Stopped execution of choice");
             updateOnStopSelection(TRUE);
             return;
         }

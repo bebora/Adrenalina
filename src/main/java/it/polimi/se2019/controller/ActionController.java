@@ -7,6 +7,7 @@ import it.polimi.se2019.model.actions.SubAction;
 import it.polimi.se2019.model.ammos.Ammo;
 import it.polimi.se2019.model.ammos.AmmoCard;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
 import it.polimi.se2019.view.SelectableOptions;
 
@@ -237,7 +238,11 @@ public class ActionController extends Observer {
                     filter(a -> a.equals(Ammo.POWERUP)).
                     collect(Collectors.toList());
             ammos.forEach(a -> curPlayer.addAmmo(a));
-            powerUps.forEach(p -> curPlayer.addPowerUp(sandboxMatch.getBoard().drawPowerUp(), true));
+            for (Ammo ammo : powerUps) {
+                PowerUp powerUp = sandboxMatch.getBoard().drawPowerUp();
+                if (!curPlayer.addPowerUp(powerUp, true))
+                    sandboxMatch.getBoard().discardPowerUp(powerUp);
+            }
             sandboxMatch.getBoard().discardAmmoCard(ammoCard);
             updateOnConclusion();
         }

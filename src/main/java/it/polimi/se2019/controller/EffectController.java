@@ -71,6 +71,13 @@ public class EffectController extends Observer {
     private TimerConstrainedEventHandler timerConstrainedEventHandler;
     private AcceptableTypes acceptableTypes;
 
+    /**
+     * Indicates whether the player choosing powerUps stopped because afk
+     */
+    private boolean skip = false;
+
+    private CountDownLatch countDownLatch;
+
     EffectController(Effect curEffect, Weapon weapon, Match match, Player player, List<Player> originalPlayers, Observer controller) {
         this.curMatch = match;
         this.curEffect = curEffect;
@@ -508,28 +515,7 @@ public class EffectController extends Observer {
      * @param players
      */
     private void checkPowerUps(List<Player> players){
-        CountDownLatch countDownLatch;
         List<ReceivingType> receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.POWERUP));
-        //Checks DAMAGING PowerUps
-        for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
-            if (curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
-                currentEnemy = p;
-                List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
-                acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Select from 0 to %d PowerUp!, to use against %s", selectablePowerUps.size(), p.getUsername())));
-                timerConstrainedEventHandler = new TimerConstrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
-                countDownLatch = new CountDownLatch(1);
-                timerConstrainedEventHandler.start();
-                try {
-                    countDownLatch.await();
-                }
-                catch (Exception e) {
-                    Logger.log(Priority.DEBUG, "Ended handler powerup damaging");
-                }
-            }
-            else break;
-        }
-
         //Handles damaged players that have a DAMAGED powerup
         List<Player> damagedPlayers = players.stream().filter(p -> p.getOnline() && p.hasPowerUp(Moment.DAMAGED)).collect(Collectors.toList());
         countDownLatch = new CountDownLatch(damagedPlayers.size());
@@ -546,6 +532,26 @@ public class EffectController extends Observer {
         }
         catch (Exception e) {
             Logger.log(Priority.DEBUG, "Ended handler powerup damaged");
+        }
+
+        //Checks DAMAGING PowerUps
+        for (Player p : players.stream().filter(p -> !p.getDominationSpawn()).collect(Collectors.toList())) {
+            if (!skip && curDealDamage.getDamagesAmount() != 0 && player.hasPowerUp(Moment.DAMAGING) && !player.getAmmos().isEmpty()) {
+                currentEnemy = p;
+                List<PowerUp> selectablePowerUps= player.getPowerUps().stream().filter(pUp -> pUp.getApplicability().equals(Moment.DAMAGING)).collect(Collectors.toList());
+                acceptableTypes = new AcceptableTypes(receivingTypes);
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps, selectablePowerUps.size(), 0, String.format("Select from 0 to %d PowerUp!, to use against %s", selectablePowerUps.size(), p.getUsername())));
+                timerConstrainedEventHandler = new TimerConstrainedEventHandler( this, player.getVirtualView().getRequestDispatcher(), acceptableTypes);
+                countDownLatch = new CountDownLatch(1);
+                timerConstrainedEventHandler.start();
+                try {
+                    countDownLatch.await();
+                }
+                catch (Exception e) {
+                    Logger.log(Priority.DEBUG, "Ended handler powerup damaging");
+                }
+            }
+            else break;
         }
     }
 
@@ -671,6 +677,8 @@ public class EffectController extends Observer {
             switch (ammoRequest.getReceivingType()) {
                 case STOP:
                     if (ammoRequest.getStop().equals(TRUE)) {
+                        skip = true;
+                        countDownLatch.countDown();
                         updateOnStopSelection(TRUE);
                         return;
                     }
@@ -686,6 +694,8 @@ public class EffectController extends Observer {
                     player.getAmmos().remove(toPay);
                     break;
                 default:
+                    skip = true;
+                    countDownLatch.countDown();
                     updateOnStopSelection(TRUE);
                     return;
             }
@@ -701,7 +711,8 @@ public class EffectController extends Observer {
                 break;
             }
         }
-        nextStep();
+        countDownLatch.countDown();
+
     }
 
     /**

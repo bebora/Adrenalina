@@ -3,6 +3,7 @@ import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
+import it.polimi.se2019.model.cards.PowerUp;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,11 @@ public class SpawnPlayer extends Player{
         super(player);
         setDominationSpawn(true);
         damaged = player.getDamaged();
+    }
+
+    @Override
+    public boolean addPowerUp(PowerUp powerUp, boolean limit) {
+        throw new UnsupportedOperationException();
     }
 
     /**

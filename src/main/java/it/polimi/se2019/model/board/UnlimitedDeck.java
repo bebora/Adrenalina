@@ -1,5 +1,8 @@
 package it.polimi.se2019.model.board;
 
+import it.polimi.se2019.Logger;
+import it.polimi.se2019.Priority;
+
 import java.util.*;
 
 /**
@@ -39,6 +42,8 @@ public class UnlimitedDeck<T> implements Deck<T>{
      */
     @Override
     public T draw() {
+        if (remainingCards.isEmpty() && discardedCards.isEmpty())
+            Logger.log(Priority.WARNING, "ERROR IN DRAWING");
         if (remainingCards.isEmpty()) {
             List<T> tempArray = new ArrayList<>(discardedCards);
             Collections.shuffle(tempArray);

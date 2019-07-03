@@ -280,8 +280,8 @@ public abstract class Match {
 	 * @return List of players in Room
 	 */
 	public List<Player> getPlayersInRoom(Color room){
-		return this.getPlayers().stream()
-				.filter(p -> p.getTile().getRoom() == room)
+		return players.stream()
+				.filter(p -> p.getTile() != null && p.getTile().getRoom() == room)
 				.collect(Collectors.toList());
 	}
 

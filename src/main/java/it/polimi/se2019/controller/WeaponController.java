@@ -144,9 +144,7 @@ public class WeaponController extends Observer {
             PaymentController paymentController = new PaymentController(this, stillToPay, curPlayer);
             paymentController.startPaying();
         } else {
-            timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, curPlayer.getVirtualView().getRequestDispatcher(), acceptableTypes);
-            timerConstrainedEventHandler.start();
-            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("The effect you sent doesn't exist!");
+            updateOnStopSelection(ThreeState.TRUE);
         }
     }
 

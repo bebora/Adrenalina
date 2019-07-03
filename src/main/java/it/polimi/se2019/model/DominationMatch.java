@@ -163,11 +163,16 @@ public class DominationMatch extends Match {
                 scoreSpawnPoint(p);
             }
         }
-        int maxPoints = getPlayers().stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints();
-        return getPlayers().
-                stream().
-                filter(p -> p.getPoints() == maxPoints && p.getOnline() && !p.getDominationSpawn()).
-                collect(Collectors.toList());
+        Player maxPointPlayer = getPlayers().stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).orElse(null);
+        if (maxPointPlayer != null) {
+            int maxPoints = maxPointPlayer.getPoints();
+            return getPlayers().
+                    stream().
+                    filter(p -> p.getPoints() == maxPoints && p.getOnline() && !p.getDominationSpawn()).
+                    collect(Collectors.toList());
+        }
+        else
+            return new ArrayList<>();
     }
 
 
