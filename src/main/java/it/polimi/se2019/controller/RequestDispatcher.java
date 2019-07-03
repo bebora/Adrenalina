@@ -239,7 +239,7 @@ public class RequestDispatcher extends UnicastRemoteObject implements RequestDis
             try {
                 lastRequest = System.nanoTime();
                 if (observerTypes.keySet().contains(ReceivingType.PLAYERS)) {
-                    List<Player> relatedPlayers = eventHelper.getPlayersFromId(players);
+                    List<Player> relatedPlayers = eventHelper.getPlayersFromUsername(players);
                     EventHandler eventHandler = observerTypes.get(ReceivingType.PLAYERS);
                     eventHandler.receivePlayer(relatedPlayers);
                 } else {

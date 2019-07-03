@@ -77,8 +77,7 @@ public class RocketLauncherInteractionTest extends EffectControllerFramework {
         assertEquals(2, notCurrentPlayers.get(0).getDamagesCount());
         assertEquals(0, notCurrentPlayers.get(1).getDamagesCount());
         Mockito.verify(requestDispatcher, times(1)).addReceivingType(ArgumentMatchers.argThat(arg -> arg.contains(ReceivingType.EFFECT)), any(TimerConstrainedEventHandler.class));
-
-        //Verify warhead works as expected
+        //Verify warhead BotMainworks as expected
         eventHandler = requestDispatcher.getObserverTypes().get(ReceivingType.EFFECT);
         eventHandler.receiveEffect(testWeapon.getEffects().get(2).getName());
         Utils.waitABit();

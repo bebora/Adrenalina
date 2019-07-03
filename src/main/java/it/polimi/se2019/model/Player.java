@@ -97,6 +97,10 @@ public class Player {
 		this.weapons = new ArrayList<>();
 	}
 
+	/**
+	 * Restore the {@code oldPlayer}, updating the values with the current ones
+	 * @param oldPlayer player that needs to be updated
+	 */
 	void restorePlayer(Player oldPlayer){
 		oldPlayer.alive = this.getAlive();
 		oldPlayer.setTile(this.getTile());
@@ -109,8 +113,6 @@ public class Player {
 		oldPlayer.actions = this.actions;
 		oldPlayer.ammos = this.ammos;
 		oldPlayer.powerUps = this.powerUps;
-		actions = new ArrayList<>(Arrays.asList(new Move(),new Grab(),new Attack()));
-		this.setMaxActions(2);
 		//sendTotalUpdate is not needed due to being already sent in match.restoreMatch()
 	}
 
@@ -565,7 +567,8 @@ public class Player {
 	public void discardPowerUp(PowerUp powerUp, boolean award) {
 		powerUps.remove(powerUp);
 		match.getBoard().getPowerUps().addToDiscarded(powerUp);
-		if (award) addAmmo(powerUp.getDiscardAward());
+		if (award)
+			addAmmo(powerUp.getDiscardAward());
 		sendTotalUpdate();
 	}
 

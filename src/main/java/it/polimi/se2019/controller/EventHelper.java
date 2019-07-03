@@ -38,12 +38,12 @@ public class EventHelper {
     /**
      * Return a Player with the given id.
      * If there is no corresponding player in the current match return null.
-     * @param id a String representing a Player Id to be parsed
+     * @param username a String representing a Player Id to be parsed
      * @return a Player with the corresponding id if exists, null otherwise.
      */
-    private Player getSinglePlayerFromId(String id){
+    private Player getSinglePlayerFromUsername(String username){
         return match.getPlayers().stream()
-                .filter(p -> p.getUsername().equals(id))
+                .filter(p -> p.getUsername().equals(username))
                 .findAny()
                 .orElse(null);
     }
@@ -65,15 +65,15 @@ public class EventHelper {
      * Return a list of Player corresponding to the given ids.
      * This method is used to parse the player from a SelectPlayers event.
      * If there is no valid id signals the problem to the client.
-     * @param id a list of Player Id to be parsed
+     * @param usernames a list of Player username to be parsed
      * @return  a list of Player with the corresponding ids,
      * an empty list if there are no valid players
      */
-    public List<Player> getPlayersFromId(List<String> id){
+    public List<Player> getPlayersFromUsername(List<String> usernames){
         List<Player> temp = new ArrayList<>();
-        id.forEach(i -> temp.add(getSinglePlayerFromId(i)));
+        usernames.forEach(i -> temp.add(getSinglePlayerFromUsername(i)));
         temp.removeAll(Collections.singleton(null));
-        if(temp.size() != id.size() || temp.contains(null))
+        if(temp.size() != usernames.size() || temp.contains(null))
             throw new IncorrectEventException("Player ID not correct");
         return temp;
     }
@@ -109,7 +109,7 @@ public class EventHelper {
                 .findAny().orElse(
                         curPlayer.getTile().getWeapons().stream()
                         .filter(w -> w.getName().equals(weapon))
-                        .findAny().orElse(null));
+                        .findFirst().orElse(null));
         if(realWeapon == null){
             throw new IncorrectEventException("Weapon is not present!");
         }

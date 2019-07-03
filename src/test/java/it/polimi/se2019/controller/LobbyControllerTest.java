@@ -43,7 +43,7 @@ class LobbyControllerTest {
     void checkStartedGames() {
         LobbyController lobbyController = new LobbyController(new ArrayList<>(Collections.singleton(Mode.NORMAL)));
         List<View> views = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
             View view = new CLI();
             views.add(view);
@@ -55,7 +55,7 @@ class LobbyControllerTest {
             Utils.waitABit();
         }
         Utils.waitABit();
-        assertEquals(2, lobbyController.getGames().size());
+        assertEquals(1, lobbyController.getGames().size());
     }
 }
 
