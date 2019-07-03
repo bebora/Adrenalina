@@ -38,8 +38,6 @@ class PlayerTest {
         assertEquals(11,testPlayer.getDamages().size());
         assertEquals(1, testPlayer.getMarks().stream().filter(p->p.getId().equals(enemyPlayer.getId())).count());
         assertEquals(2, testPlayer.getMarks().stream().filter(p->p.getId().equals(thirdPlayer.getId())).count());
-
-
     }
 
     @Test
@@ -66,7 +64,6 @@ class PlayerTest {
         assertTrue(Player.checkForAmmos(testWeapon.getCost(),testPlayer.getAmmos()));
 
         assertFalse(Player.checkForAmmos(testWeapon.getCost(),enemyPlayer.getAmmos()));
-
     }
 
     @Test
@@ -152,5 +149,62 @@ class PlayerTest {
         //Cost should be empty because "award" was true
         assertTrue(fire.getPowerUps().isEmpty());
         assertEquals(1, fire.getAmmos().size());
+    }
+
+    @Test
+    void updateOnHealthActionsTest() {
+        Player qubes = new Player("Os");
+        Player yubi = new Player("key");
+        assertEquals(3, qubes.getActions().size());
+        assertEquals(0, qubes.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
+        assertEquals(1, qubes.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
+        assertEquals(3, qubes.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+        qubes.receiveShot(yubi, 3, 0, true);
+        //Adrenaline actions should be enabled fo grab
+        assertEquals(0, qubes.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
+        assertEquals(2, qubes.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
+        assertEquals(3, qubes.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+        qubes.receiveShot(yubi, 3, 0, true);
+        //Adrenaline actions should be enabled fro grab and attack
+        assertEquals(1, qubes.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
+        assertEquals(2, qubes.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
+        assertEquals(3, qubes.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+    }
+
+    @Test
+    void updateOnDeathActionsTest() {
+        Player ope = new Player("ratore");
+        Player problema = new Player("sussiste");
+        ope.receiveShot(problema, 11, 0, true);
+        assertEquals(1, ope.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
+        assertEquals(2, ope.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
+        assertEquals(3, ope.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+        //Respawn player
+        ope.setAlive(ThreeState.TRUE);
+        ope.resetPlayer();
+        //Actions should be the initial ones, see previous test
+        assertEquals(0, ope.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
+        assertEquals(1, ope.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
+        assertEquals(3, ope.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+    }
+
+    @Test
+    void updateOnFrenzyActionsTest() {
+        Player voda = new Player("fone");
+        Player tele = new Player("com");
+        voda.receiveShot(tele, 1, 0, true);
+        voda.notifyFrenzy(false);
+        tele.notifyFrenzy(true);
+        //Actions should be updated on everyone
+        assertEquals(4, voda.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
+        assertEquals(3, voda.getActions().size());
+        assertEquals(2, voda.getMaxActions());
+        assertEquals(2, tele.getActions().size());
+        assertEquals(1, tele.getMaxActions());
+        voda.receiveShot(tele, 10, 0, true);
+        voda.setAlive(ThreeState.TRUE);
+        voda.resetPlayer();
+        //Actions do not change after death in frenzy
+        assertEquals(4, voda.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
     }
 }

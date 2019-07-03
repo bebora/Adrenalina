@@ -147,18 +147,6 @@ public abstract class Match {
 				p.notifyFrenzy(true);
 			}
 		}
-		// Update reward points for players with no damage
-		for (Player p : toUpdate) {
-			p.setFrenzyActions(true);
-			if (p.getDamages().isEmpty()) {
-				p.setFirstShotReward(false);
-				p.setFrenzyBoard(true);
-				p.setRewardPoints(GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_frenzy")));
-			}
-			else {
-				p.setFrenzyBoard(false);
-			}
-		}
 		updateViews();
 		updatePopupViews("Frenzy started!");
 		firstPlayer = currentPlayer;

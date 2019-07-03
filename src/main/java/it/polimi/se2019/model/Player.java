@@ -481,11 +481,16 @@ public class Player {
 
 	/**
 	 * Reset Player when {@link #alive} is False
-	 * Clear the damages
+	 * Clear the damages and reset adrenaline actions
+	 * Frenzy actions should not change after being set
 	 */
 	public void resetPlayer() {
 	    damages.clear();
-
+	    if (!frenzyActions){
+			for (Action a: actions){
+				a.reset();
+			}
+		}
 	}
 
 	/**
@@ -493,6 +498,16 @@ public class Player {
 	 * @param afterFirst indicates if the current Player has its turn after or before the {@link Match#firstPlayer} in the last turn
 	 */
 	public void notifyFrenzy(Boolean afterFirst){
+		frenzyActions = true;
+		// Update reward points for players with no damage
+		if (damages.isEmpty()) {
+			firstShotReward = false;
+			frenzyBoard = true;
+			rewardPoints = GameProperties.toList(GameProperties.getInstance().getProperty("reward_points_frenzy"));
+		}
+		else {
+			frenzyBoard = false;
+		}
 		if (afterFirst) {
 			this.setMaxActions(1);
 			//Remove one of the actions as by rules
@@ -520,8 +535,11 @@ public class Player {
 	public void notifyHealthChange(){
 		if(damages.size() >= 11)
 			alive = ThreeState.FALSE;
-		for(Action a: actions)
-			a.updateOnHealth(damages.size());
+		//Actions do not change after being set in frenzy
+		if (!frenzyActions){
+			for(Action a: actions)
+				a.updateOnHealth(damages.size());
+		}
 		sendTotalUpdate();
 	}
 

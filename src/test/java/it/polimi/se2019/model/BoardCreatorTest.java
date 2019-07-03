@@ -30,6 +30,5 @@ class BoardCreatorTest {
         assertEquals(test.getTiles().get(0).get(1).isSpawn(), Boolean.FALSE);
 
         assertEquals("B3",test.getName());
-
-        }
+    }
 }

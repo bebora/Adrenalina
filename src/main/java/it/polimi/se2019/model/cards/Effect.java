@@ -143,24 +143,12 @@ public class Effect {
 		return moves;
 	}
 
-	public void setMoves(List<Move> moves) {
-		this.moves = moves;
-	}
-
 	public List<DealDamage> getDamages() {
 		return damages;
 	}
 
-	public void setDamages(List<DealDamage> damages) {
-		this.damages = damages;
-	}
-
 	public List<ActionType> getOrder() {
 		return order;
-	}
-
-	public void setOrder(List<ActionType> order) {
-		this.order = order;
 	}
 
 	public Boolean getActivated() {
@@ -175,16 +163,8 @@ public class Effect {
 		return cost;
 	}
 
-	public void setCost(List<Ammo> cost) {
-		this.cost = cost;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Direction getDirection() {
@@ -199,19 +179,7 @@ public class Effect {
 		return desc;
 	}
 
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
-
-	public void setAbsolutePriority(int absolutePriority) {
-		this.absolutePriority = absolutePriority;
-	}
-
 	public int getAbsolutePriority(){ return absolutePriority; }
-
-	public void setRelativePriority(List<Integer> relativePriority) {
-		this.relativePriority = relativePriority;
-	}
 
 	public List<Integer> getRelativePriority(){ return this.relativePriority;}
 }
