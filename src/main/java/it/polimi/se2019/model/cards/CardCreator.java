@@ -16,6 +16,10 @@ import static it.polimi.se2019.model.ThreeState.OPTIONAL;
  */
 public class CardCreator {
     /**
+     * Hides the public constructor
+     */
+    private CardCreator() {}
+    /**
      * Returns a PowerUp object after parsing its configuration from a btl file.
      * The file must be in the resource folder.
      * The param filename must include the file extension.

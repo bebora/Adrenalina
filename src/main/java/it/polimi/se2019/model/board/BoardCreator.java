@@ -22,6 +22,10 @@ import java.util.stream.Collectors;
  */
 public class BoardCreator {
     /**
+     * Hide the public constructor
+     */
+    private BoardCreator() {}
+    /**
      * It parses a board in the format .btlb.
      * It adds to the decks of the Board the parsed weapons and powerUps and AmmoCards.
      * @param filename name of the board to parse

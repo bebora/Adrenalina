@@ -23,11 +23,7 @@ public class ClientAcker extends Thread {
         EventUpdater eu = view.getEventUpdater();
         do {
             eu.sendAck();
-            try {
-                Thread.sleep(ACK_SLEEP_DELAY);
-            } catch (InterruptedException e) {
-                Logger.log(Priority.ERROR, "Interrupted by " + e.getMessage());
-            }
+            Utils.sleepABit(ACK_SLEEP_DELAY);
         } while (view.isOnline());
         Logger.log(Priority.DEBUG, "Broken connection with server");
     }

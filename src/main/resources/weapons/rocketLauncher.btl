@@ -75,5 +75,6 @@ name:rocket launcher
        target:
          areaDamage:TILE
          maxDistance:0
+         maxTargets:0
          checkTargetList:FALSE
          pointOfView:PERSPECTIVE

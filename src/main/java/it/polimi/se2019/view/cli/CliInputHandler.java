@@ -2,6 +2,7 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import it.polimi.se2019.view.*;
@@ -355,12 +356,7 @@ public class CliInputHandler implements Runnable{
             int retryTime = 5; //seconds
             while (!view.setupConnection(connectionType, username, pw, connectionProperties, Boolean.parseBoolean(existingGame), gameMode)){
                 Logger.log(Priority.INFO, String.format("Can't connect to server! Retrying in %d seconds", retryTime));
-                try {
-                    Thread.sleep(retryTime*1000);
-                }
-                catch (InterruptedException e) {
-                    Logger.log(Priority.ERROR, "Interrupted ");
-                }
+                Utils.sleepABit(retryTime*1000);
             }
             Logger.log(Priority.DEBUG, "Connected succesfully to server");
             eventUpdater = view.getEventUpdater();
@@ -463,19 +459,9 @@ public class CliInputHandler implements Runnable{
             return;
         }
         while(view.getStatus() == null || view.getStatus()==Status.WAITING) {
-            try {
-                Thread.sleep(100);
-            }
-            catch (InterruptedException e) {
-                Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-            }
+            Utils.sleepABit(100);
         }
-        try {
-            Thread.sleep(1000);
-        }
-        catch (InterruptedException e) {
-            Logger.log(Priority.DEBUG, "Interrupted for " + e.getMessage());
-        }
+        Utils.sleepABit(100);
         if(view.getStatus()==Status.PLAYING){
             System.out.println(view.getStatus().name());
         } else {

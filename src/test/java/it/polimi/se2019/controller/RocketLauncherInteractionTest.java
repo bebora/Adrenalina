@@ -82,9 +82,6 @@ public class RocketLauncherInteractionTest extends EffectControllerFramework {
         eventHandler = requestDispatcher.getObserverTypes().get(ReceivingType.EFFECT);
         eventHandler.receiveEffect(testWeapon.getEffects().get(2).getName());
         Utils.waitABit();
-        eventHandler = requestDispatcher.getObserverTypes().get(ReceivingType.TILES);
-        eventHandler.receiveTiles(Collections.singletonList(sandboxMatch.getBoard().getTile(0,1)));
-        Utils.waitABit();
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(3, notCurrentPlayers.get(0).getDamagesCount());
         assertEquals(1, notCurrentPlayers.get(1).getDamagesCount());

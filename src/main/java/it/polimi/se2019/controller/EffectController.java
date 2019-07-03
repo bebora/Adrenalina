@@ -296,8 +296,11 @@ public class EffectController extends Observer {
             case TILE:
                 List<Tile> selectableTiles = tileTargets(curDealDamage.getTarget());
                 if (selectableTiles.isEmpty()) {
-                    updateOnStopSelection(OPTIONAL);
                     skip = true;
+                    if (min != 0)
+                        updateOnStopSelection(OPTIONAL);
+                    else
+                        nextStep();
                 }
                 else if (max == 0) {
                     updateOnTiles(selectableTiles);
@@ -335,9 +338,10 @@ public class EffectController extends Observer {
                         updateOnStopSelection(OPTIONAL);
                     }
                 }
-                else if (players.size() == 1) {
+                //Check if max = 0, or if one player is in the list and min is different from 0
+                else if (max == 0 || (players.size() == 1 && min != 0)) {
                     skip = true;
-                    updateOnPlayers(Collections.singletonList(players.get(0)));
+                    updateOnPlayers(players);
                 }
                 else {
                     receivingTypes = new ArrayList<>(Collections.singleton(ReceivingType.PLAYERS));

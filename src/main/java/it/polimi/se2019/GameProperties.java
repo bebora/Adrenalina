@@ -14,15 +14,19 @@ import java.util.stream.Collectors;
  */
 public class GameProperties extends Properties {
     private static GameProperties instance = null;
-
+    private static String defaultPath = "./game.properties";
     private GameProperties() {
+    }
+
+    public static void setDefaultPath(String path) {
+        defaultPath = path;
     }
 
     public static GameProperties getInstance() {
         if (instance == null) {
             try {
                 instance = new GameProperties();
-                FileInputStream in = new FileInputStream("./game.properties");
+                FileInputStream in = new FileInputStream(defaultPath);
                 instance.load(in);
                 in.close();
             } catch (Exception e) {
@@ -30,7 +34,6 @@ public class GameProperties extends Properties {
                 try {
                     InputStream in = GameProperties.class.getClassLoader().getResourceAsStream("game.properties");
                     instance.load(in);
-                    System.out.print(instance.get("time"));
                     in.close();
                 }
                 catch (Exception istance) {

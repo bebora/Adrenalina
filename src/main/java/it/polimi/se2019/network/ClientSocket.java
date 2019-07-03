@@ -112,6 +112,7 @@ public class ClientSocket extends Thread{
                 }
                 catch (InterruptedException e) {
                     Logger.log(Priority.DEBUG, "Queue interrupted");
+                    Thread.currentThread().interrupt();
                 }
                 catch (IOException e) {
                     Logger.log(Priority.DEBUG, "IOException sending event");

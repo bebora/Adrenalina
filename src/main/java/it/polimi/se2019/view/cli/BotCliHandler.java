@@ -71,7 +71,7 @@ public class BotCliHandler extends CliInputHandler {
             }
         }
         if (view.getStatus().equals(Status.END)) {
-            System.out.println("Finished with " + view.getReceivingTypes());
+            Logger.log(Priority.DEBUG,"Finished with " + view.getReceivingTypes());
         }
         System.exit(0);
     }
@@ -79,7 +79,7 @@ public class BotCliHandler extends CliInputHandler {
     public void selectRandom(List<ReceivingType> types) {
         if (!types.isEmpty()) {
             Logger.log(Priority.DEBUG, "Trying to choose an action");
-            System.out.println(types.stream().map(Enum::toString).collect(Collectors.toList()));
+            Logger.log(Priority.DEBUG,types.stream().map(Enum::toString).collect(Collectors.toList()).toString());
             SelectableOptionsWrapper wrapper = view.getSelectableOptionsWrapper();
             ReceivingType type = getRandom(types);
             if (random.nextInt(1000) == 500) {
