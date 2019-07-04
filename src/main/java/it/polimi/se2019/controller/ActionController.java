@@ -114,7 +114,7 @@ public class ActionController extends Observer {
                 }
                 toDiscard = null;
                 selectedWeapon = weapon;
-                stillToPay.add(weapon.getCost().get(0));
+                stillToPay = weapon.getGrabCost();
                 startPayingProcess();
             }
         } else if (curSubAction == SubAction.SHOOT) {
@@ -209,7 +209,7 @@ public class ActionController extends Observer {
                         getTile().
                         getWeapons().
                         stream().
-                        filter(p -> curPlayer.checkForAmmos(Collections.singletonList(p.getCost().get(0)))). // Filter costly weapons
+                        filter(w -> curPlayer.checkForAmmos(w.getGrabCost())). // Filter costly weapons
                         collect(Collectors.toList());
                 prompt = "Select a weapon to grab!";
             } //Discard weapon first, then grab

@@ -290,7 +290,7 @@ public abstract class Match {
 	 * @return True if need to start frenzy, false otherwise
 	 */
 	public boolean checkFrenzy() {
-		return getBoard().getKillShotTrack().size() >= Integer.parseInt(GameProperties.getInstance().getProperty("skulls")) * 2;
+		return getBoard().getKillShotTrack().size() >= board.getOriginalSkulls() * 2;
 	}
 
 	public abstract List<Player> getWinners();

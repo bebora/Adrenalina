@@ -57,6 +57,12 @@ public class TimerConstrainedEventHandler extends Thread implements EventHandler
         this.notifyOnEnd = timerConstrainedEventHandler.notifyOnEnd;
     }
 
+    /**
+     * Creates the class, setting the parameters to use during {@link #run()}.
+     * @param observer to notify on the receive of actions
+     * @param requestDispatcher to add the supported events to
+     * @param acceptableTypes accepted options from the client
+     */
     public TimerConstrainedEventHandler(Observer observer, RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes) {
         time = Integer.parseInt(GameProperties.getInstance().getProperty("time"));
         active = true;

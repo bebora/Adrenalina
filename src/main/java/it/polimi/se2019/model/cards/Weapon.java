@@ -82,6 +82,10 @@ public class Weapon {
 		return cost;
 	}
 
+	public List<Ammo> getGrabCost() {
+		return cost.subList(1,cost.size());
+	}
+
 	public List<Player> getTargetPlayers() {
 		return targetPlayers;
 	}

@@ -733,6 +733,13 @@ public class EffectController extends Observer {
                 .filter(p -> p.getId().equals(originalTargetPlayer.getId()))
                 .findAny().orElse(null);
     }
+
+    /**
+     * Get a list of sandboxPlayers, starting from a list of original Players.
+     * It uses {@link #getSandboxPlayers(List)}.
+     * @param originalTargetPlayers
+     * @return a list of players in the {@link #curMatch}
+     */
     private List<Player> getSandboxPlayers(List<Player> originalTargetPlayers){
         return originalTargetPlayers.stream()
                 .map(this::getSandboxPlayer)

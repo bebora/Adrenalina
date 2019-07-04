@@ -30,6 +30,12 @@ public class PaymentController extends Observer{
         return observer.getMatch();
     }
 
+    /**
+     * Handles the creation of the class
+     * @param observer the notified observer when the payment gets concluded or fails
+     * @param toPay ammos to pay
+     * @param curPlayer player that needs to pay
+     */
     public PaymentController(Observer observer, List<Ammo> toPay, Player curPlayer) {
         this.observer = observer;
         this.stillToPay = toPay;

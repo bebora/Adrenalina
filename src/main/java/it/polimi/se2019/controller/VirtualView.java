@@ -72,7 +72,7 @@ public class VirtualView extends View {
 
     /**
      * It sets the requestDispatcher, setting a related view.
-     * @param requestDispatcher
+     * @param requestDispatcher that need to be updated with the new view
      */
     public void setRequestDispatcher(RequestDispatcher requestDispatcher) {
         this.requestDispatcher = requestDispatcher;

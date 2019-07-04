@@ -166,7 +166,21 @@ public class ModelToViewConverter {
         return ret;
     }
 
-    //TODO add javadoc
+    /**
+     * Gets a selectableOptionsWrapper from {@link AcceptableTypes}.
+     * It supports the conversion of:
+     * <li>Action to string</li>
+     * <li>Effect to string</li>
+     * <li>List of players to list of string</li>
+     * <li>List of powerups to list of {@link ViewPowerUp}</li>
+     * <li>List of tiles to list of {@link ViewTileCoords}</li>
+     * <li>Direction to string</li>
+     * <li>Ammo to string</li>
+     * <li>Weapon to string</li>
+     * It saves the same receiving type.
+     * @param acceptableTypes to be converted
+     * @return selectableOptionsWrapper equal to the {@code acceptableTypes}
+     */
     public static SelectableOptionsWrapper fromAcceptableTypes(AcceptableTypes acceptableTypes) {
         SelectableOptionsWrapper ret = new SelectableOptionsWrapper();
         ret.setAcceptedTypes(acceptableTypes.getAcceptedTypes());

@@ -63,32 +63,31 @@ public class ActionControllerTest {
     @Test
     void testGrabWeapon(){
         //Set the tile to allow the grab
+        Utils.addFullAmmos(currentPlayer);
         currentPlayer.setTile(board.getTile(0,2));
         actionController.updateOnAction(currentPlayer.getActions().get(1));
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
-        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(w.getGrabCost())).findAny().get();
         //Test the choosing of the weapon to grab and its grab
         actionController.updateOnWeapon(grabbableWeapon);
+        Utils.waitABit();
         assertEquals(grabbableWeapon, currentPlayer.getWeapons().get(0));
-        assertEquals(2, currentPlayer.getAmmos().size());
+        assertEquals(currentPlayer.getAmmos().size() - grabbableWeapon.getGrabCost().size(), currentPlayer.getAmmos().size());
         assertEquals(2, currentPlayer.getTile().getWeapons().size());
     }
 
     @Test
     void testReloadWeaponOnce() {
         //Add  munitions required to pay for the reload
-        for (int i = 0; i < 3; i++) {
-            currentPlayer.addAmmo(Ammo.RED);
-            currentPlayer.addAmmo(Ammo.BLUE);
-            currentPlayer.addAmmo(Ammo.YELLOW);
-        }
+        Utils.addFullAmmos(currentPlayer);
         Mockito.doNothing().when(actionController).updateOnStopSelection(any());
         //Test it stops the action once no weapon can be no more reload, and it reloads one
         currentPlayer.setTile(board.getTile(0,2));
-        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(w.getGrabCost())).findAny().get();
         currentPlayer.addWeapon(grabbableWeapon);
         grabbableWeapon.setLoaded(false);
         Action reload = new Reload();
+        Utils.addFullAmmos(currentPlayer);
         //Test the reload of the weapon
         currentPlayer.getActions().add(reload);
         actionController.updateOnAction(reload);
@@ -100,11 +99,7 @@ public class ActionControllerTest {
     @Test
     void testReloadMoreWeapons() {
         //Add munitions required to pay for the reload
-        for (int i = 0; i < 3; i++) {
-            currentPlayer.addAmmo(Ammo.RED);
-            currentPlayer.addAmmo(Ammo.BLUE);
-            currentPlayer.addAmmo(Ammo.YELLOW);
-        }
+        Utils.addFullAmmos(currentPlayer);
         Mockito.doNothing().when(actionController).updateOnStopSelection(any());
         //Test it stops the action once no weapon can be no more reload, and it reloads one
         currentPlayer.setTile(board.getTile(0,2));
@@ -117,11 +112,7 @@ public class ActionControllerTest {
         Action reload = new Reload();
         currentPlayer.getActions().add(reload);
         //Add munitions required to pay for the reload
-        for (int i = 0; i < 3; i++) {
-            currentPlayer.addAmmo(Ammo.RED);
-            currentPlayer.addAmmo(Ammo.BLUE);
-            currentPlayer.addAmmo(Ammo.YELLOW);
-        }
+        Utils.addFullAmmos(currentPlayer);
         actionController.updateOnAction(reload);
         Utils.waitABit();
         //Test the player have the weapon reloaded and that stop is called if no weapon can be reloaded again
@@ -152,7 +143,8 @@ public class ActionControllerTest {
     void testDiscardWeapon() {
         //Set the player tile, grab a weapon and update with a grab action
         currentPlayer.setTile(board.getTile(0,2));
-        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        Utils.addFullAmmos(currentPlayer);
+        Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(w.getGrabCost())).findAny().get();
         for (int i = 0; i < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")); i++) {
             currentPlayer.addWeapon(grabbableWeapon);
         }
@@ -161,7 +153,7 @@ public class ActionControllerTest {
         //Test discarding of a weapon
         actionController.updateOnAction(currentPlayer.getActions().get(1));
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
-        grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(w.getGrabCost())).findAny().get();
         actionController.updateOnWeapon(grabbableWeapon);
         assertEquals(2, currentPlayer.getWeapons().size());
         //Test get weapon
@@ -172,6 +164,7 @@ public class ActionControllerTest {
 
     @Test
     void testAttack(){
+        Utils.addFullAmmos(currentPlayer);
         //Test the correct resetting of the controllers
         currentPlayer.addWeapon(CardCreator.parseWeapon("cyberblade.btl"));
         actionController.updateOnAction(currentPlayer.getActions().get(2));

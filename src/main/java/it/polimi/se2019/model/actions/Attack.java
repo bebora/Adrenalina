@@ -17,6 +17,10 @@ public class Attack extends Action {
         subActions.add(SubAction.SHOOT);
     }
 
+    /**
+     * If damages are higher than 5, add a move before the attack
+     * @param damage current damage of the player of which action is updated
+     */
     @Override
     public void updateOnHealth(int damage) {
         if(damage > 5 && !alreadyUpdated) {
@@ -26,6 +30,9 @@ public class Attack extends Action {
         }
     }
 
+    /**
+     * Reset the action at its starting point
+     */
     @Override
     public void reset() {
         movements = 0;
@@ -33,6 +40,10 @@ public class Attack extends Action {
         alreadyUpdated = false;
     }
 
+    /**
+     * Update the action for when the frenzy mode is on
+     * @param afterFirst if the player is after or before the first
+     */
     @Override
     public void updateOnFrenzy(Boolean afterFirst) {
         if (!alreadyUpdated)

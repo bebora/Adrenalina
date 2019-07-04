@@ -30,6 +30,12 @@ public class Board {
 	 * Adjacency list of doors between tiles
 	 */
 	private List<Door> doors;
+
+	/**
+	 * Number of skulls at the start of the match
+	 */
+	private int originalSkulls;
+
 	/**
 	 * Number of skulls remaining on the Board
 	 */
@@ -122,6 +128,7 @@ public class Board {
 		this.tiles = builder.tiles;
 		this.doors = builder.doors;
 		this.skulls = builder.skulls;
+		this.originalSkulls = builder.skulls;
 		this.weaponsDeck = builder.weaponsDeck;
 		this.killShotTrack = builder.killShotTrack;
 		this.powerUps = builder.powerUps;
@@ -130,6 +137,10 @@ public class Board {
 		this.killShotReward = new ArrayList<>(Arrays.asList(8, 6, 4, 2, 1));
 		refreshWeapons();
 		refreshAmmos();
+	}
+
+	public int getOriginalSkulls() {
+		return originalSkulls;
 	}
 
 	/**
