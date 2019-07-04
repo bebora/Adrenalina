@@ -2,6 +2,9 @@ package it.polimi.se2019.view.cli;
 
 import it.polimi.se2019.view.ViewTile;
 
+/**
+ * Handles the drawing of a single tile, and its related info.
+ */
 class AsciiTile {
     private static final String UP = "\u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2510";
     private static final String MIDDLE = "\u2502      \u2502";
@@ -12,6 +15,12 @@ class AsciiTile {
     static final String unicodeAmmo = "☐";
     static final String unicodePowerUp = "\uD83C\uDCA0";
 
+    /**
+     * Draw the tile in the terminal
+     * @param tile to draw
+     * @param offsetX to avoid overwriting in horizontal
+     * @param offsetY to avoid overwriting in vertical
+     */
     static void drawTile(ViewTile tile, int offsetX, int offsetY){
         int x = tile.getCoords().getPosx()*X_SIZE + offsetX;
         int y = tile.getCoords().getPosy()* Y_SIZE + offsetY;
@@ -31,6 +40,14 @@ class AsciiTile {
         }
     }
 
+    /**
+     * Display the info of the tile, and what it contains, such as:
+     * <li>Weapons</li>
+     * <li>AmmoCard</li>
+     * @param tile to display info of
+     * @param offsetX to avoid overwriting in horizontal
+     * @param offsetY to avoid overwriting in vertical
+     */
     static void drawTileInfo(ViewTile tile, int offsetX, int offsetY){
         int x = AsciiBoard.boardRightBorder;
         int y = offsetY;

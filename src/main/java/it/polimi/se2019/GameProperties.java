@@ -44,6 +44,11 @@ public class GameProperties extends Properties {
         return instance;
     }
 
+    /**
+     * Convert a string with "," separator to a list of integers
+     * @param string string to convert
+     * @return list of integers converted
+     */
     public static List<Integer> toList(String string) {
         return Arrays.stream(string.split(",")).map(Integer::parseInt).collect(Collectors.toList());
     }

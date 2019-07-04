@@ -1,18 +1,22 @@
 package it.polimi.se2019.network;
 
 import it.polimi.se2019.controller.ModelToViewConverter;
-import it.polimi.se2019.network.updatemessage.TotalUpdate;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.cards.PowerUp;
 import it.polimi.se2019.model.cards.Weapon;
+import it.polimi.se2019.network.updatemessage.TotalUpdate;
 import it.polimi.se2019.view.InvalidUpdateException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Creates an update message for a specific player
+ */
 public class UpdateMessageCreator {
+    private UpdateMessageCreator() {}
     /**
      * Build the total upgrade with all the required attributes that
      * the player must have to start or resume the game

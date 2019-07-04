@@ -17,6 +17,9 @@ public class Reload extends Action{
         }
     }
 
+    /**
+     * Reset the action at its starting point
+     */
     @Override
     public void reset() {
         //Doesn't update, so no reset is needed

@@ -17,6 +17,13 @@ import java.util.stream.Collectors;
 
 import static java.util.Map.entry;
 
+/**
+ * Handles the input from the client in command line interface, supporting:
+ * <li>Choosing between CLI or GUI</li>
+ * <li>Connection to the server and logging in</li>
+ * <li>Selecting an options allowed from the backend</li>
+ * <li>Showing info about the current state of the game, such as display another player's info</li>
+ */
 public class CliInputHandler implements Runnable{
     private InputStreamReader inputStreamReader = new InputStreamReader(System.in);
     private BufferedReader input = new BufferedReader(inputStreamReader);
@@ -46,6 +53,10 @@ public class CliInputHandler implements Runnable{
         this.args = args;
     }
 
+    /**
+     * Starts a mode where it's possible to ask for info on a tile, showing the weapons and ammoCard that it contains.
+     * @param input input that should the coordinate for a tile to display
+     */
     private void tileInfoMode(BufferedReader input){
         String tileIn = "InitialValue";
         String[] inSplit;
@@ -72,6 +83,10 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Show the info on a weapon, selected using the relative index
+     * @param i index of the weapon
+     */
     private void infoWeapon(int i){
         if(i < view.getDisplayedWeapons().size()){
             AsciiWeapon.drawWeaponInfo(i,view.getDisplayedWeapons());
@@ -80,6 +95,11 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Show the info of a player, specifying if it's a spawn and what color it needs to be shown
+     * @param color color on which shows info
+     * @param spawn indicates whether the player is a spawn or not
+     */
     private void infoPlayer(String color,boolean spawn){
         List<String> possibleColors = view.getPlayers().stream()
                 .map(ViewPlayer::getColor)
@@ -98,6 +118,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage("No valid player", "R");
     }
 
+    /**
+     * Parse an ammo to send to the backend using {@link #eventUpdater}
+     * @param ammo string of the ammo to send to the backend
+     */
     void parseAmmo(String ammo)  {
         if(view.getSelectableOptionsWrapper().getSelectableAmmos().getOptions().contains(ammo))
             eventUpdater.sendAmmo(ammo);
@@ -105,6 +129,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage("Wrong input","R");
     }
 
+    /**
+     * Parse the selection from the client, selecting the chosen receivingTypes and parsing it
+     * @param inSplit array of strings containing the type and the chosen element
+     */
     void parseSelection(String[] inSplit){
         String error = "This is not something you can select!";
         String[] selectedElements = new String[inSplit.length-2];
@@ -155,6 +183,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage(error, "R");
     }
 
+    /**
+     * Parse a list of players from an array of strings, using {@link #selectFromOptions(String[], List, SelectableOptions)}.
+     * @param players array of string containing indexes of the player selected
+     */
     void parsePlayers(String[] players) {
         List<String> selectedViewPlayers = new ArrayList<>();
         SelectableOptions<String> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePlayers();
@@ -169,6 +201,10 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Parse the weapon using the selected index, sending the related event to the backend.
+     * @param weaponIndex index of the weapon to send
+     */
     private void parseWeapon(String weaponIndex){
         String selectedWeapon = null;
         if(weaponIndex.matches("\\d")){
@@ -182,6 +218,10 @@ public class CliInputHandler implements Runnable{
 
     }
 
+    /**
+     * Parse the effect using the selected index, sending the related event to the backend.
+     * @param effectIndex index of the effect to send
+     */
     private void parseEffect(String effectIndex){
         String selectedEffect = null;
         if(effectIndex.matches("\\d")){
@@ -195,6 +235,14 @@ public class CliInputHandler implements Runnable{
 
     }
 
+    /**
+     * Edit a list of Objects, adding a list of T, using an array of string to be parsed, related to a {@code selectableOptions}
+     * @param toBeParsed array of string containing chosen indexes
+     * @param selected list to add the parsed element to
+     * @param selectableOptions options to use to parse the element
+     * @param <T> Element that contains the {@code selected} and will be parsed
+     * @return whether the input is right or not
+     */
     private <T> boolean selectFromOptions(String[] toBeParsed, List<T> selected,SelectableOptions<T> selectableOptions){
         T singleParsed;
         String temp = toBeParsed[0];

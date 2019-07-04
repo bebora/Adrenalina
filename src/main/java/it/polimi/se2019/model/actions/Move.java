@@ -13,6 +13,9 @@ public class Move extends Action {
         movements = 3;
     }
 
+    /**
+     * Reset the action at its starting point
+     */
     @Override
     public void reset() {
         movements = 3;

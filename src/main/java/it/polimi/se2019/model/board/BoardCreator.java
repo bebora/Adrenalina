@@ -40,7 +40,7 @@ public class BoardCreator {
         Deck<Weapon> weaponsDeck;
         Deck<PowerUp> powerUps;
         List<Tile> temp;
-        Deck <AmmoCard> ammoCards;
+        Deck<AmmoCard> ammoCards;
         try (InputStream input = classloader.getResourceAsStream("boards/"+filename);
              BufferedReader bufRead = new BufferedReader(new InputStreamReader(input));
         ) {
@@ -126,7 +126,7 @@ public class BoardCreator {
      * @param weaponPath containing the weapons
      * @return a Deck containing weapons.
      */
-    public static Deck parseWeapons(ClassLoader classloader, String weaponPath) {
+    public static Deck<Weapon> parseWeapons(ClassLoader classloader, String weaponPath) {
         List<Weapon> weapons = new ArrayList<>();
         List<String> weaponNames = listIndex(classloader, weaponPath);
         for (String weapon : weaponNames)
@@ -143,7 +143,7 @@ public class BoardCreator {
      * @param powerUpsPath containing the powerUps
      * @return a Deck containing powerUps.
      */
-    public static Deck parsePowerUps(ClassLoader classloader, String powerUpsPath) {
+    public static Deck<PowerUp> parsePowerUps(ClassLoader classloader, String powerUpsPath) {
         List<PowerUp> powerUps = new ArrayList<>();
         List<String> powerUpsNames = listIndex(classloader, powerUpsPath);
         for (String powerUp : powerUpsNames)
@@ -161,7 +161,7 @@ public class BoardCreator {
      * Creates ammo generating them using the Adrenalina's game rules directions.
      * @return a deck containing the ammoCards.
      */
-    public static Deck generateAmmos() {
+    public static Deck<AmmoCard> generateAmmos() {
         List <AmmoCard> ammoCards = new ArrayList<>();
         List <Ammo> ammosColor = new ArrayList<>(Arrays.asList(Ammo.RED, Ammo.BLUE, Ammo.YELLOW));
         // Create ammosCards according to the game mechanics

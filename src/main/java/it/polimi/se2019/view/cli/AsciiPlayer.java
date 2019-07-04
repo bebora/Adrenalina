@@ -8,8 +8,17 @@ import it.polimi.se2019.view.ViewWeapon;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Handles the drawing of the information about the displayed player
+ */
 public class AsciiPlayer {
+    private AsciiPlayer() {}
     static final int playerInfoHeight = 8;
+
+    /**
+     * Print the marks that the player received, in the color of the player that marked him
+     * @param player whose marks need to be printed
+     */
     static void printMarks(ViewPlayer player){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+2);
         CLI.printInColor("w","Marks:\n");
@@ -19,6 +28,10 @@ public class AsciiPlayer {
         CLI.printInColor("red","\n");
     }
 
+    /**
+     * Print the damages that the player received, in the color of the player that damaged him
+     * @param player whose damages need to be printed
+     */
     static void printDamages(ViewPlayer player){
         CLI.printInColor("w","Damages:\n");
         for(String d: player.getDamages())
@@ -26,6 +39,10 @@ public class AsciiPlayer {
         CLI.printInColor("red","\n");
     }
 
+    /**
+     * Print the current ammos that the displayed player possess
+     * @param player whose ammos need to be printed
+     */
     static void printAmmos(ViewPlayer player){
         CLI.moveCursor(12*2, AsciiBoard.boardBottomBorder + 2);
         CLI.printInColor("w","Ammos:");
@@ -35,6 +52,11 @@ public class AsciiPlayer {
             CLI.printInColor(a,	"\u2610 ");
     }
 
+    /**
+     * Print the weapons that the player possess, differentiating between unloaded(visible to everyone) and loaded(hidden) weapons
+     * @param unloadedWeapons weapons that need to be reloaded before use
+     * @param loadedWeapons weapons that can be used
+     */
     static void printWeapons(List<ViewWeapon> unloadedWeapons, List<ViewWeapon> loadedWeapons){
         int i = 1;
         CLI.moveCursor(48,AsciiBoard.boardBottomBorder + 4);
@@ -55,6 +77,10 @@ public class AsciiPlayer {
         CLI.displayedWeapons = allWeapons;
     }
 
+    /**
+     * Print the current powerups(hidden from other players) that the displayed player possess
+     * @param view relative to the player whose powerups needs to be printed
+     */
     static void printPowerUps(View view){
         CLI.moveCursor(48,AsciiBoard.boardBottomBorder + 2);
         CLI.saveCursorPosition();
@@ -66,6 +92,10 @@ public class AsciiPlayer {
         }
     }
 
+    /**
+     * Print the current reward points that the displayed player possess
+     * @param viewPlayer whose reward points need to be printed
+     */
     static void printRewardPoint(ViewPlayer viewPlayer){
         CLI.restoreCursorPosition();
         CLI.shiftCursorDown(1);
@@ -77,6 +107,12 @@ public class AsciiPlayer {
         }
     }
 
+    /**
+     * Print the current powerups(hidden from other players) that the displayed player possess
+     * @param player whose info needs to be displayed
+     * @param loadedWeapons to display (present only if the displayed player is the same as the client's player)
+     * @param unloadedWeapons to display
+     */
     static void drawPlayerInfo(ViewPlayer player,List<ViewWeapon> loadedWeapons, List<ViewWeapon> unloadedWeapons){
         CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         CLI.clearUntilEndOfLine(AsciiBoard.boardBottomBorder + 1,AsciiBoard.boardBottomBorder + 6, AsciiBoard.offsetX);

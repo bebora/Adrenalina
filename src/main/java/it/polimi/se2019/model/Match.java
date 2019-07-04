@@ -53,7 +53,7 @@ public abstract class Match {
 	/**
 	 * Clones the match, creating a new one to save progress.
 	 * Used in {@link it.polimi.se2019.controller.ActionController#sandboxMatch}.
-	 * @param originalMatch
+	 * @param originalMatch match to copy data from
 	 */
 	public Match(Match originalMatch){
     	this.currentPlayer = originalMatch.getCurrentPlayer();

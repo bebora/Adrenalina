@@ -67,9 +67,9 @@ public class Board {
 	 */
 	private List<Player> killShotTrack;
 
-
-
-
+    /**
+     * Builder class to build {@link Board}
+     */
 	public static class Builder {
 
 		private List<List<Tile>> tiles;

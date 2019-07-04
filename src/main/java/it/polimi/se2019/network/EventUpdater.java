@@ -20,13 +20,13 @@ public interface EventUpdater {
 
     /**
      * Sends the chosen action that need to be executed.
-     * @param action
+     * @param action to send
      */
     void sendAction(String action);
 
     /**
      * Sends direction the player wants to target
-     * @param direction
+     * @param direction to send
      */
     void sendDirection(String direction);
     /**
@@ -37,32 +37,32 @@ public interface EventUpdater {
 
     /**
      * Sends a list of players that will be targets of the current effect
-     * @param players
+     * @param players chosen
      */
     void sendPlayers(List<String> players);
 
     /**
      * Sends a list of powerups that will be chosen.
-     * @param powerUp
+     * @param powerUp chosen
      * @param discard @deprecated
      */
     void sendPowerUp(List<ViewPowerUp> powerUp, boolean discard);
 
     /**
      * Sends the chosen room for the current effect.
-     * @param room
+     * @param room to send
      */
     void sendRoom(String room);
 
     /**
      * Sends the chosen tiles for the current effect
-     * @param tiles
+     * @param tiles to send
      */
     void sendTiles(List<ViewTileCoords> tiles);
 
     /**
      * Sends the chosen weapon to use in a shoot action.
-     * @param weapon
+     * @param weapon to send
      */
     void sendWeapon(String weapon);
 
@@ -73,7 +73,7 @@ public interface EventUpdater {
 
     /**
      * Sends ammo used to pay a special cost.
-     * @param ammo
+     * @param ammo to send
      */
     void sendAmmo(String ammo);
     /**

@@ -9,6 +9,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Command Line Interface to display the View on the terminal
+ */
 public class CLI extends View {
     static final String ANSI_RESET = "\u001B[0m";
     static final char escCode = 0x1B;
@@ -26,25 +29,57 @@ public class CLI extends View {
         this.clean = clean;
     }
 
+    /**
+     * Print the text using the specified color
+     * @param color to print the text to
+     * @param text to print
+     */
     static void printInColor(String color, String text){
         Color trueColor = Color.initialToColor(color.charAt(0));
         System.out.print(Color.getANSIColor(trueColor) + text + ANSI_RESET);
     }
 
+    /**
+     * Move the cursor to a particular position
+     * @param posX coordinate of the cursor
+     * @param posY coordinate of the cursor
+     */
     static void moveCursor(int posX,int posY){
         System.out.print(String.format("%c[%d;%df",escCode,posY,posX));
     }
 
+    /**
+     * Shift the cursor down
+     * @param rows to shift the cursor down
+     */
     static void shiftCursorDown(int rows){System.out.print(String.format("%c[%dB",escCode,rows));}
 
+    /**
+     * Shift the cursor right
+     * @param columns to shift the cursor right
+     */
     static void shiftCursorRight(int columns){System.out.print(String.format("%c[%dC",escCode,columns));}
 
+    /**
+     * Save the cursor position using escape code
+     */
     static void saveCursorPosition(){System.out.print(escCode + "[s");}
 
+    /**
+     * Restore cursor position, after saving it
+     */
     static void restoreCursorPosition(){System.out.print(escCode + "[u");}
 
+    /**
+     * Clean the current row with escape code
+     */
     static void cleanRow(){System.out.print(escCode + "[2K");}
 
+    /**
+     * Print a text with a fixed width
+     * @param width max width of the text
+     * @param text to print
+     */
     static void fixedWidthPrint(int width, String text){
         int relativePos = 0;
         saveCursorPosition();
@@ -60,6 +95,12 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Clear the command line until the end of the line
+     * @param rowBegin to start cleaning
+     * @param rowEnd to finish cleaning
+     * @param column to clean
+     */
     static void clearUntilEndOfLine(int rowBegin, int rowEnd, int column){
         for(int i = rowBegin; i < rowEnd; i++){
             moveCursor(column,i);
@@ -68,16 +109,28 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Print a message in color
+     * @param message to print
+     * @param color to use to print the message
+     */
     static void printMessage(String message,String color){
         moveCursor(1, AsciiBoard.boardBottomBorder + 7);
         cleanRow();
         printInColor(color, message);
     }
 
+    /**
+     * Get the weapons that are currently being displayed
+     * @return list of weapons displayed
+     */
     public List<ViewWeapon> getDisplayedWeapons() {
         return displayedWeapons;
     }
 
+    /**
+     * Display the messages, taking them from the {@link View}
+     */
     private void displayMessages() {
         int x = AsciiBoard.boardRightBorder + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY + skullBoardHeight;
@@ -92,6 +145,9 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Display the skulls remaining, and if necessary print the killshot track
+     */
     private void displaySkullBoard(){
         int x = AsciiBoard.boardRightBorder  + AsciiBoard.infoBoxWidth;
         int y = AsciiBoard.offsetY;
@@ -111,7 +167,11 @@ public class CLI extends View {
                 printInColor(killshotTrack.get(i),"\uD83E\uDE78 ");
     }
 
-
+    /**
+     * Display the selectable options, allowing the client to choose between from different events to send.
+     * Supports the displaying of PowerUp in their color and tiles as coordinates
+     * Prints the other options using string methods.
+     */
     private void displaySelectableOptions(){
         int x = AsciiBoard.offsetX;
         int y = AsciiBoard.boardBottomBorder +AsciiPlayer.playerInfoHeight;
@@ -150,6 +210,10 @@ public class CLI extends View {
        }
     }
 
+    /**
+     * Display the powerUps that can be selected, in their respective color
+     * @param selectablePowerUps indicates what powerups can be chosen and in what quantity
+     */
     private void displaySelectablePowerUps(SelectableOptions<ViewPowerUp> selectablePowerUps){
         int index = 0;
         for(ViewPowerUp v: selectablePowerUps.getOptions()){
@@ -158,12 +222,20 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Display the tiles that can be selected, as coordinates
+     * @param selectableTileCoords indicates what tiles can be chosen and in what quantity
+     */
     private void displaySelectableCoords(SelectableOptions<ViewTileCoords> selectableTileCoords){
         for(ViewTileCoords v: selectableTileCoords.getOptions()){
             printInColor("w",v.toString() + " ");
         }
     }
 
+    /**
+     * Prints the options as strings in the terminal
+     * @param selectableOptions to print as strings
+     */
     private void displayStringSelectable(SelectableOptions selectableOptions){
         int index = 0;
         for(Object o : selectableOptions.getOptions()){
@@ -172,6 +244,12 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Display the info of the current turn:
+     * <li>Current player and respective color</li>
+     * <li>Client's username and respective color</li>
+     * <li>Client's points</li>
+     */
     void displayTurnInfo(){
         moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+1);
         printInColor("w","You:");
@@ -184,13 +262,17 @@ public class CLI extends View {
         printInColor("w", String.format("%d ",getPoints()));
     }
 
+    /**
+     * Set the displayed player, to display infos about other players
+     * @param displayedPlayer player that need to have his info displayed
+     */
     public void setDisplayedPlayer(ViewPlayer displayedPlayer){
         this.displayedPlayer = displayedPlayer;
     }
 
 
     /**
-     * Refresh the current gameBoard.
+     * Refresh the current gameBoard, if clean is false.
      * Print on the CLI:
      * <li>the board itself</li>
      * <li>the players</li>
@@ -214,6 +296,12 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Print the message inside blocks, using a specified color
+     * @param color to print the message in
+     * @param text to print
+     * @param blocks number of blocks to surround the message
+     */
     public void printInBlocks(String color, String text, int blocks) {
         int firstBlocks = (blocks - text.length()) / 2;
         printInColor("w", String.join("", Collections.nCopies(firstBlocks, "\uD83E\uDC1A")));
@@ -222,6 +310,10 @@ public class CLI extends View {
 
     }
 
+    /**
+     * Print a message to indicates to the player his status of disconnected from the game.
+     * Set the status to END to notify the handler and communicate the possibility of a reconnection
+     */
     @Override
     public void disconnect() {
         if (!getStatus().equals(Status.END)) {
@@ -234,6 +326,10 @@ public class CLI extends View {
         }
     }
 
+    /**
+     * Print the winners once the game ended.
+     * @param winners list of winners to print
+     */
     @Override
     public void printWinners(List<String> winners) {
         if (!getStatus().equals(Status.END)) {

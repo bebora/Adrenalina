@@ -79,7 +79,10 @@ public class NormalMatch extends Match {
 			return new ArrayList<>();
 		}
 		//Get max points across all players who can win (they can't be offline)
-		int bestPoints = players.stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).get().getPoints();
+		Player bestPointsPlayer = players.stream().filter(Player::getOnline).max(Comparator.comparing(Player::getPoints)).orElse(null);
+		if (bestPointsPlayer == null)
+			return new ArrayList<>();
+		int bestPoints = bestPointsPlayer.getPoints();
 		//Get players who have those points
 		List<Player> maxPlayers = players.stream().filter(p -> p.getOnline() && p.getPoints() == bestPoints).collect(Collectors.toList());
 		if (maxPlayers.size() <= 1) {

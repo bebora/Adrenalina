@@ -33,17 +33,7 @@ public class ClientSocket extends Thread{
     private BufferedReader jsonReader;
     private OutputStreamWriter jsonSender;
     private ThreadPoolExecutor updateExecutor;
-
-    Gson gson;
-
-    public void closeSocket() {
-        try {
-            socket.close();
-        }
-        catch (IOException e) {
-            Logger.log(Priority.DEBUG, "Can't close the socket");
-        }
-    }
+    private Gson gson;
 
     /**
      * Creates the socket, sends a {@code connectionRequest}.

@@ -5,7 +5,20 @@ import it.polimi.se2019.view.ViewWeapon;
 
 import java.util.List;
 
+/**
+ * Handles the drawing of a weapon, and its info.
+ */
 public class AsciiWeapon {
+    private AsciiWeapon () {}
+
+    /**
+     * Draws the info of a particular weapon:
+     * <li>Name</li>
+     * <li>Cost</li>
+     * <lI>Effects name and cost</lI>
+     * @param weaponIndex of the weapon to draw
+     * @param displayedWeapons list of the weapon, containing the weapon to draw
+     */
     public static void drawWeaponInfo(int weaponIndex, List<ViewWeapon> displayedWeapons){
         ViewWeapon weapon = displayedWeapons.get(weaponIndex);
         CLI.clearUntilEndOfLine(AsciiBoard.offsetY,AsciiBoard.offsetY+AsciiBoard.boardBottomBorder,AsciiBoard.offsetX);
@@ -29,6 +42,10 @@ public class AsciiWeapon {
         drawEffectsDesc(weapon);
     }
 
+    /**
+     * Draw the description of the effects of the weapon
+     * @param weapon that needs his effects displayed
+     */
     public static void drawEffectsDesc(ViewWeapon weapon){
         int x = 40;
         int y = AsciiBoard.offsetY;
