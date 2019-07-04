@@ -262,6 +262,10 @@ public class CliInputHandler implements Runnable{
         return true;
     }
 
+    /**
+     * Parse a list of tiles using the selected coordinates, sending the related event to the backend.
+     * @param tiles coordinates to parse
+     */
     private void parseTiles(String[] tiles){
         List<ViewTileCoords> selectedCoords = new ArrayList<>();
         int x;
@@ -284,6 +288,10 @@ public class CliInputHandler implements Runnable{
             eventUpdater.sendTiles(selectedCoords);
     }
 
+    /**
+     * Parse the room using the given string, sending the related event to the backend.
+     * @param room string indicating the color of the room
+     */
     private void parseRoom(String room){
         if(view.getSelectableOptionsWrapper().getSelectableRooms().getOptions().contains(room))
             eventUpdater.sendRoom(room);
@@ -291,6 +299,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage("Wrong input","R");
     }
 
+    /**
+     * Parse the direction using the given string, sending the related event to the backend.
+     * @param direction string indicating the direction
+     */
     private void parseDirection(String direction){
         List<String> possibleDirections = Arrays.asList("NORTH", "SOUTH", "WEST", "EAST");
         if(possibleDirections.contains(direction))
@@ -299,6 +311,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage(WRONGINPUT,"R");
     }
 
+    /**
+     * Parse the action using the selected index, sending the related event to the backend.
+     * @param action index of the action to send
+     */
     private void parseAction(String action){
         String selectedOption = null;
         if(action.matches("\\d"))
@@ -309,6 +325,10 @@ public class CliInputHandler implements Runnable{
             CLI.printMessage(WRONGINPUT, "R");
     }
 
+    /**
+     * Parse a list of powerUps using the selected indexes, sending the related event to the backend.
+     * @param powerUps indexes to parse
+     */
     private void parsePowerUps(String[] powerUps){
         SelectableOptions<ViewPowerUp> selectableOptions = view.getSelectableOptionsWrapper().getSelectablePowerUps();
         List<ViewPowerUp> selectedPowerUps = new ArrayList<>();
@@ -426,7 +446,8 @@ public class CliInputHandler implements Runnable{
     }
 
     /**
-     * @return cli selected or not, asking to the player via stdin
+     * Handles the selectio of the cli or the gui
+     * @return whether the cli is selected
      */
     private boolean viewChoice(){
         try {
@@ -446,6 +467,16 @@ public class CliInputHandler implements Runnable{
         }
     }
 
+    /**
+     * Handles the input, parsing the parsed string till "quit" is read.
+     * Supports different modes:
+     * <li>Select mode, where user select an object to send to the server</li>
+     * <li>Tile info mode, where user can request info about tiles</li>
+     * <li>Player info mode, where users can request info about a player</li>
+     * <li>Spawn info mode, where users can request info about a spawn</li>
+     * <li>Weapon info mode, where users can request info about a weapon</li>
+
+     */
     private void handleInput() {
         while(!in.equals("quit") && !view.getStatus().equals(Status.END)){
             CLI.moveCursor(AsciiBoard.offsetX,AsciiBoard.boardBottomBorder+6);
@@ -497,6 +528,14 @@ public class CliInputHandler implements Runnable{
         dv = defaultValues;
     }
 
+    /**
+     * Starts the CLI.
+     * It handles, in order:
+     * <li>Selecting CLI or GUI</li>
+     * <li>Logging in</li>
+     * <li>Handles input using {@link #handleInput()}</li>
+     * <li>Restarting the CLI if the connection did not go as expected</li>
+     */
     public void run(){
         boolean cliSelected = viewChoice();
         Map<String, String> selectedValues;

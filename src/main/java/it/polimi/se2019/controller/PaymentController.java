@@ -84,7 +84,8 @@ public class PaymentController extends Observer{
                     observer.concludePayment();
                 }
                 else {
-                    assert false;
+                    //Shouldn't start to pay a weapon he can't acquire
+                    updateOnStopSelection(TRUE);
                 }
             }
         }

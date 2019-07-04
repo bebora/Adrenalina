@@ -160,7 +160,7 @@ public class Effect {
 	}
 
 	public List<Ammo> getCost() {
-		return cost;
+		return new ArrayList<>(cost);
 	}
 
 	public String getName() {

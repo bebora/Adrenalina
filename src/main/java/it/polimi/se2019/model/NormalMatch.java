@@ -25,7 +25,8 @@ public class NormalMatch extends Match {
 	@Override
 	public void scoreDeadShot(Player player) {
 		board.addToKillShot(player.getDamages().get(10));
-		player.getRewardPoints().remove(0);
+		if (!player.getRewardPoints().isEmpty())
+			player.getRewardPoints().remove(0);
 		if (player.getDamages().size() == 12) {
 			board.addToKillShot(player.getDamages().get(11));
 			player.getDamages().get(11).receiveMark(player);

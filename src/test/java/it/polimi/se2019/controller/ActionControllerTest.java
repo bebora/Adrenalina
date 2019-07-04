@@ -72,7 +72,7 @@ public class ActionControllerTest {
         actionController.updateOnWeapon(grabbableWeapon);
         Utils.waitABit();
         assertEquals(grabbableWeapon, currentPlayer.getWeapons().get(0));
-        assertEquals(currentPlayer.getAmmos().size() - grabbableWeapon.getGrabCost().size(), currentPlayer.getAmmos().size());
+        assertEquals(9 - grabbableWeapon.getGrabCost().size(), currentPlayer.getAmmos().size());
         assertEquals(2, currentPlayer.getTile().getWeapons().size());
     }
 

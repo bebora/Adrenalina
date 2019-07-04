@@ -114,7 +114,7 @@ public class ActionController extends Observer {
                 }
                 toDiscard = null;
                 selectedWeapon = weapon;
-                stillToPay = weapon.getGrabCost();
+                stillToPay = new ArrayList<>(weapon.getGrabCost());
                 startPayingProcess();
             }
         } else if (curSubAction == SubAction.SHOOT) {
@@ -124,7 +124,7 @@ public class ActionController extends Observer {
             weaponController = new WeaponController(sandboxMatch, weapon, originalMatch.getPlayers(), this);
         } else if (curSubAction == RELOAD && curPlayer.getWeapons().contains(weapon)) {
             selectedWeapon = weapon;
-            stillToPay.addAll(weapon.getCost());
+            stillToPay = new ArrayList<>(weapon.getCost());
             startPayingProcess();
         }
     }

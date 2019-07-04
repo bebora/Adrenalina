@@ -99,6 +99,11 @@ public class SelectableOptions<T> implements Serializable {
         this.minSelectables = minSelectables;
         this.prompt = prompt;
     }
+
+    /**
+     * Creates a selectable options, copying constraints and the prompt from another {@code selectableOptions}
+     * @param selectableOptions a selectable options to copy parameters
+     */
     public SelectableOptions(SelectableOptions selectableOptions) {
         this.minSelectables = selectableOptions.getMinSelectables();
         this.maxSelectables = selectableOptions.getMaxSelectables();

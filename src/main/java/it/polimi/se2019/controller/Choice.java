@@ -49,6 +49,7 @@ public class Choice extends Observer {
      */
     public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes, Match match) {
         receivingType = ReceivingType.NULL;
+        countDownLatch = new CountDownLatch(1);
         timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerConstrainedEventHandler.start();
         Utils.sleepABit(100);
@@ -57,7 +58,6 @@ public class Choice extends Observer {
             updateOnStopSelection(TRUE);
             return;
         }
-        countDownLatch = new CountDownLatch(1);
         try {
             countDownLatch.await();
         }

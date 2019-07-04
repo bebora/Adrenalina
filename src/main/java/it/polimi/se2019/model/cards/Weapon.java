@@ -79,11 +79,11 @@ public class Weapon {
 	}
 
 	public List<Ammo> getCost() {
-		return cost;
+		return new ArrayList<>(cost);
 	}
 
 	public List<Ammo> getGrabCost() {
-		return cost.subList(1,cost.size());
+		return new ArrayList<>(cost.subList(1,cost.size()));
 	}
 
 	public List<Player> getTargetPlayers() {
