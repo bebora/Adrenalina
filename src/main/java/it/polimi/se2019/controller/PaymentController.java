@@ -52,20 +52,19 @@ public class PaymentController extends Observer{
         //Handles the payment using powerups and/or ammos.
         else {
             Set<Ammo> toPay = new HashSet<>(stillToPay);
-            stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
             if (curPlayer.canDiscardPowerUp(new ArrayList<>(toPay))) {
                 List<PowerUp> selectablePowerUps = curPlayer.
                         getPowerUps().
                         stream().
                         filter(p -> toPay.contains(p.getDiscardAward())).collect(Collectors.toList());
                 List<ReceivingType> receivingTypes = new ArrayList<>(Arrays.asList(ReceivingType.POWERUP));
-                if (stillToPay.isEmpty()) {
+                if (curPlayer.checkForAmmos(stillToPay)) {
                     prompt = "Select a powerUp to discard if you want!";
                 }
                 else
                     prompt = "Select the powerUps you need to pay the remaining cost!";
                 acceptableTypes = new AcceptableTypes(receivingTypes);
-                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,selectablePowerUps.size(), 0, prompt));
+                acceptableTypes.setSelectablePowerUps(new SelectableOptions<>(selectablePowerUps,Math.min(selectablePowerUps.size(), stillToPay.size()), 0, prompt));
 
                 timerConstrainedEventHandler = new TimerConstrainedEventHandler(
                         this,
@@ -73,11 +72,14 @@ public class PaymentController extends Observer{
                         acceptableTypes);
                 timerConstrainedEventHandler.start();
             }
-            else if (stillToPay.isEmpty()) {
-                observer.concludePayment();
-            }
             else {
-                assert false;
+                stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
+                if (stillToPay.isEmpty()) {
+                    observer.concludePayment();
+                }
+                else {
+                    assert false;
+                }
             }
         }
     }
@@ -90,18 +92,16 @@ public class PaymentController extends Observer{
      */
     @Override
     public void updateOnPowerUps(List<PowerUp> powerUps) {
-        if (PowerUp.checkCompatibility(powerUps, stillToPay)) {
+        if (PowerUp.checkCompatibility(curPlayer, powerUps, stillToPay)) {
             powerUps.forEach(p -> curPlayer.discardPowerUp(p, true));
-            curPlayer.getAmmos().removeIf(a -> stillToPay.remove(a));
+            stillToPay.removeIf(a -> curPlayer.getAmmos().remove(a));
             if (stillToPay.isEmpty()) {
                 observer.concludePayment();
             }
             else
                 updateOnStopSelection(TRUE);
         } else {
-            timerConstrainedEventHandler = new TimerConstrainedEventHandler(timerConstrainedEventHandler);
-            timerConstrainedEventHandler.start();
-            curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("Not enough powerups! Give me more!");
+            updateOnStopSelection(TRUE);
         }
     }
 

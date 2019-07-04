@@ -4,8 +4,7 @@ package it.polimi.se2019.model.cards;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ammos.Ammo;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -99,8 +98,13 @@ public class PowerUp {
 	 * @param ammos remaining ammo to pay
 	 * @return
 	 */
-	public static boolean checkCompatibility(List<PowerUp> powerUps, List<Ammo> ammos) {
+	public static boolean checkCompatibility(Player player, List<PowerUp> powerUps, List<Ammo> ammos) {
 		List<Ammo> relatedAmmos = powerUps.stream().map(PowerUp::getDiscardAward).collect(Collectors.toList());
+		Set<Ammo> ammoSet = new HashSet<>(relatedAmmos);
+		for (Ammo ammo : ammoSet)
+			if (Collections.frequency(relatedAmmos, ammo) > Collections.frequency(ammos, ammo))
+				return false;
+		relatedAmmos.addAll(player.getAmmos());
 		return Player.checkForAmmos(ammos, relatedAmmos);
 	}
 

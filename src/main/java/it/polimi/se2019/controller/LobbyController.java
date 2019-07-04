@@ -116,7 +116,6 @@ public class LobbyController{
         } else {
             Logger.log(Priority.DEBUG, "PLAYER CONNECTED: "+username);
             modeWaiting.add(player);
-
             view.getViewUpdater().sendPopupMessage("SUCCESS");
             if (modeWaiting.size() == 3) {
                 Timer timer = new Timer();

@@ -27,4 +27,5 @@ effects:
 				damagesAmount:2
 				target:
 					maxDistance:0
+					maxTargets:0
 					areaDamage:tile
