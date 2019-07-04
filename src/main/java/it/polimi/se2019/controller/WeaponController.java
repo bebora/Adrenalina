@@ -187,7 +187,6 @@ public class WeaponController extends Observer {
                 actionController.updateOnStopSelection(ThreeState.OPTIONAL);
             }
         else {
-            //Control for unit test purposes, actionController is always!=null
             askForEffect(finished);
         }
     }
@@ -208,9 +207,11 @@ public class WeaponController extends Observer {
                     && weapon.getEffects().get(0).getAbsolutePriority() == weapon.getEffects().get(1).getAbsolutePriority()
                     && (weapon.getEffects().get(0).getActivated() || weapon.getEffects().get(1).getActivated());
             if (weapon.getEffects().get(0).getActivated() || modalWeaponActivated) {
+                weapon.setLoaded(false);
                 actionController.updateOnConclusion();
             } else {
-                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You must use the basic effect!");
+                curPlayer.getVirtualView().getViewUpdater().sendPopupMessage("You must use the basic effect! Resetting action");
+                updateOnStopSelection(ThreeState.OPTIONAL);
             }
         }
     }

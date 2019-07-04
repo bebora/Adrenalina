@@ -20,42 +20,91 @@ import java.util.stream.Collectors;
  */
 public abstract class View {
 
+	/**
+	 * Indicates the status of the view
+	 */
 	private Status status;
 
+	/**
+	 * List of messages received and displayed
+	 */
 	private List<String> messages;
 
+	/**
+	 * Current player playing the turn
+	 */
 	private ViewPlayer currentPlayer;
 
+	/**
+	 * Interface used to communicate chosen events to the backend
+	 */
 	private EventUpdater eventUpdater;
 
+	/**
+	 * Username of the current client
+	 */
 	private String username;
 
+	/**
+	 * Current board used during the game
+	 */
 	private ViewBoard board;
 
+	/**
+	 * List of the players in the game, including spawnpoints
+	 */
 	private List<ViewPlayer> players;
 
+	/**
+	 * Id of the view
+	 */
 	private String idView;
 
+	/**
+	 * Number of the points of the user playing with the client
+	 */
 	private int points;
 
+	/**
+	 * List of the powerUps of the user playing with the client
+	 */
 	private List<ViewPowerUp> powerUps;
 
+	/**
+	 * List of the loaded weapons of the user playing with the client
+	 */
 	private List<ViewWeapon> loadedWeapons;
 
+	/**
+	 * Perspective of the user
+	 */
 	private ViewTile perspective;
 
+	/**
+	 * Receiver interface, handling updates from the backend.
+	 */
 	protected ViewReceiverInterface receiver;
 
+	/**
+	 * Whether the current view is online or not
+	 */
 	private boolean online;
 
-	private GameController gameController;
-
+	/**
+	 * Indicates the millis (passed after the OS dawn of time) of the last request
+	 */
 	private long lastRequest;
 
 	private NetworkTimeoutControllerClient networkTimeoutController;
 
+	/**
+	 * Contains the options selectable from the user
+	 */
 	private SelectableOptionsWrapper selectableOptionsWrapper;
 
+	/**
+	 * Indicates what gameMode is currently being played
+	 */
 	private String gameMode;
 
 	public void setOnline(boolean online) {
@@ -66,13 +115,6 @@ public abstract class View {
 		return online;
 	}
 
-	public void setGameController(GameController gameController) {
-		this.gameController = gameController;
-	}
-
-	public GameController getGameController() {
-		return gameController;
-	}
 
 	public View() {
 		try {

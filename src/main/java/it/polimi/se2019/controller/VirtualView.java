@@ -18,6 +18,7 @@ public class VirtualView extends View {
     private LobbyController lobbyController;
     private ViewUpdater viewUpdater;
     private RequestDispatcher requestDispatcher;
+    private GameController gameController;
 
     public VirtualView (LobbyController lobbyController) {
         super();
@@ -25,6 +26,13 @@ public class VirtualView extends View {
     }
 
 
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public void setGameController(GameController gameController) {
+        this.gameController = gameController;
+    }
 
     public VirtualView() {
         super();

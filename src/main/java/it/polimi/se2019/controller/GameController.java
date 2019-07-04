@@ -3,7 +3,6 @@ package it.polimi.se2019.controller;
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
 import it.polimi.se2019.Utils;
-import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.model.*;
 import it.polimi.se2019.model.actions.Action;
 import it.polimi.se2019.model.actions.Reload;
@@ -11,6 +10,7 @@ import it.polimi.se2019.model.board.Color;
 import it.polimi.se2019.model.board.Tile;
 import it.polimi.se2019.model.cards.Moment;
 import it.polimi.se2019.model.cards.PowerUp;
+import it.polimi.se2019.network.events.IncorrectEventException;
 import it.polimi.se2019.view.SelectableOptions;
 
 import java.util.ArrayList;
@@ -452,9 +452,10 @@ public class GameController extends Observer {
             updateOnPowerUps(Arrays.asList(acceptableTypes.getSelectablePowerUps().getOptions().stream().findAny().orElse(null)));
         }
         else if (skip.toBoolean() || acceptableTypes.isReverse()) {
-            match.updatePopupViews(String.format("Player %s didn't complete his action fully, so RESET occurred! Read the rules!", currentPlayer.getUsername()));
             if(action)
                 actionCounter++;
+            if (actionCounter != currentPlayer.getMaxActions() +1 || skip == TRUE)
+                match.updatePopupViews(String.format("Player %s didn't complete his action fully, so a RESET occurred! Read the rules!", currentPlayer.getUsername()));
             actionController = null;
             if (skip.toSkip() || checkEndTurn()) {
                 endTurn(skip.toSkip());
