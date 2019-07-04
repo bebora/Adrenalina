@@ -41,6 +41,7 @@ effects:
         visibility:TRUE
     damage:
       marksAmount:2
+      target:
         areaDamage:TILE
         maxDistance:0
         pointOfView:LASTPLAYER

@@ -132,7 +132,7 @@ public class SelectableOptionsWrapper implements Serializable {
      * @return
      */
     public SelectableOptions<String> getSelectableStringOptions(ReceivingType selected) {
-        List<ReceivingType> types = Arrays.asList(AMMO, ROOM, WEAPON, ACTION, EFFECT, DIRECTION);
+        List<ReceivingType> types = Arrays.asList(AMMO, ROOM, WEAPON, ACTION, EFFECT, DIRECTION,PLAYERS);
         if (types.contains(selected)) {
             return getSelectableOptions(selected);
         }

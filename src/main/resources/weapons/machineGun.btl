@@ -20,7 +20,6 @@ effects:
   desc:Deal 1 additional damage to one of those targets.
   relativePriority:
     +1
-    +3
   order:
     DEALDAMAGE
   cost:
