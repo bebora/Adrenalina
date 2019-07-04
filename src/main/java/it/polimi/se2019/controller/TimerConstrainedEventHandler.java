@@ -44,6 +44,7 @@ public class TimerConstrainedEventHandler extends Thread implements EventHandler
 
     /**
      * Constructor used to resume a Timer after it has been blocked.
+     * Not used in the current implementation.
      * @param timerConstrainedEventHandler blocked timer, that contains the elapsed after after its start.
      */
     public TimerConstrainedEventHandler(TimerConstrainedEventHandler timerConstrainedEventHandler) {

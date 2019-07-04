@@ -2,6 +2,7 @@ package it.polimi.se2019.controller;
 
 import it.polimi.se2019.Logger;
 import it.polimi.se2019.Priority;
+import it.polimi.se2019.Utils;
 import it.polimi.se2019.model.Match;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
@@ -38,10 +39,19 @@ public class Choice extends Observer {
     private CountDownLatch countDownLatch;
     private Match match;
 
+    /**
+     * Create the object and joins on the answer from timerCostrainedEventHandler.
+     * <li>It checks if the timer is blocked from the block of requestDispatcher</li>
+     * <li>It waits for the response from the {@link RequestDispatcher}</li>
+     * @param requestDispatcher
+     * @param acceptableTypes
+     * @param match
+     */
     public Choice(RequestDispatcher requestDispatcher, AcceptableTypes acceptableTypes, Match match) {
         receivingType = ReceivingType.NULL;
         timerConstrainedEventHandler = new TimerConstrainedEventHandler(this, requestDispatcher, acceptableTypes);
         timerConstrainedEventHandler.start();
+        Utils.sleepABit(100);
         if (timerConstrainedEventHandler.isError()) {
             Logger.log(Priority.DEBUG, "Stopped execution of choice");
             updateOnStopSelection(TRUE);

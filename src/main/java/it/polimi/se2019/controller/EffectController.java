@@ -171,10 +171,8 @@ public class EffectController extends Observer {
                 updateDealDamageOnPlayers(players);
             }
         }
-        //Restart the timer at the time it stopped if the check fails
         else {
-            timerConstrainedEventHandler = new TimerConstrainedEventHandler(timerConstrainedEventHandler);
-            timerConstrainedEventHandler.start();
+            updateOnStopSelection(TRUE);
         }
     }
 
