@@ -15,6 +15,9 @@ import javafx.stage.Stage;
 
 import java.util.Properties;
 
+/**
+ * A login screen used to start a new game.
+ */
 public class LoginScreen extends Application {
     @FXML ComboBox<String> connectionType;
     @FXML Button loginButton;
@@ -26,9 +29,12 @@ public class LoginScreen extends Application {
     @FXML ComboBox<String> mode;
     GUIView view;
 
+    /**
+     * The main Stage used by this application, it is saved here to be used by other classes.
+     */
     private static Stage primaryStage;
 
-    public static Stage getPrimaryStage(){
+    static Stage getPrimaryStage(){
         return primaryStage;
     }
 
@@ -49,6 +55,10 @@ public class LoginScreen extends Application {
     }
 
 
+    /**
+     * Creates a new GUIView and try to log in. If the log in doesn't
+     * go as expected it shows a corresponding Alert to the user.
+     */
     public void login(){
         view = new GUIView();
         Properties connectionProperties = new Properties();
@@ -81,10 +91,16 @@ public class LoginScreen extends Application {
         }
     }
 
+    /**
+     * Closes the application.
+     */
     private void concludeGame(){
         Platform.exit();
     }
 
+    /**
+     * Overrides the default stop method to close also non JavaFX related threads
+     */
     @Override
     public void stop(){
         System.exit(0);

@@ -16,10 +16,23 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.List;
 
-public class FinalScreen extends Pane {
+/**
+ * The final screen shown to the players after the game ended
+ */
+class FinalScreen extends Pane {
     @FXML
     private ImageView loseView;
-    public FinalScreen(boolean lose, Stage primaryStage, List<String> winners){
+
+    /**
+     * Create a final screen and display an animation if the player lost
+     * the game. It also adds a new EventHandler to display the list of winners by pressing
+     * spacebar
+     * @param lose <code>true</code> if the player lost
+     *             <code>false</code> otherwise
+     * @param primaryStage the current Stage of the application
+     * @param winners a list of the winning players
+     */
+     FinalScreen(boolean lose, Stage primaryStage, List<String> winners){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "fxml/FinalScreen.fxml"));
         fxmlLoader.setController(this);

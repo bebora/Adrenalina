@@ -7,19 +7,31 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class TextScreen extends AnchorPane {
+/**
+ * Screen used for displaying a message to the player
+ * during loading
+ */
+public class TextScreen extends Pane {
     @FXML
-    Text text;
+    private Text text;
 
     @FXML
-    ProgressIndicator progress;
+    private ProgressIndicator progress;
 
-    public TextScreen(Stage primaryStage,String message){
+    /**
+     * Creates a new TextScreen with the given message and
+     * a set a new scene in the given stage
+     * @param primaryStage used for displaying this screen
+     * @param message the displayed message
+     */
+    TextScreen(Stage primaryStage,String message){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "fxml/LoadingScreen.fxml"));
         fxmlLoader.setController(this);
@@ -29,9 +41,11 @@ public class TextScreen extends AnchorPane {
         } catch (IOException exception) {
             Logger.log(Priority.DEBUG, exception.getMessage());
         }
+        this.setStyle("-fx-background-color: white");
         text.setText(message);
         GuiHelper.resizeToScreenSize(this);
         Scene scene = new Scene(this);
+        scene.setFill(Color.WHITE);
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
     }

@@ -18,12 +18,22 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a box containing all the weapons that the player
+ * currently owns and contains the methods used to highlight and
+ * select them.
+ */
 public class WeaponsBox extends HBox {
-    List<String> weapons;
-    SelectableOptions<String> selectableEffects;
-    EventUpdater eventUpdater;
+    private List<String> weapons;
+    private SelectableOptions<String> selectableEffects;
+    private EventUpdater eventUpdater;
 
-    public WeaponsBox(EventUpdater eventUpdater){
+    /**
+     * Creates a new <code>WeaponsBox</code> with the specified eventUpdater used
+     * to send selected powerUps to the server.
+     * @param eventUpdater an eventUpdater used to communicate with the backend
+     */
+    WeaponsBox(EventUpdater eventUpdater){
         this.eventUpdater = eventUpdater;
     }
     public void setWeapons(List<ViewWeapon> viewWeapons){
@@ -42,7 +52,13 @@ public class WeaponsBox extends HBox {
         }
     }
 
-    public void highlightSelectableWeapons(SelectableOptions<String> selectableOptions){
+    /**
+     * Highlight the weapons that the player can currently select according to
+     * the current selectableOptionWrapper. Associates each <code>ImageView<\code> with
+     * selectWeapon to allow selection.
+     * @param selectableOptions options about the selectable weapons
+     */
+    void highlightSelectableWeapons(SelectableOptions<String> selectableOptions){
         List<String> selectableWeapons = selectableOptions.getOptions();
         for(String w: selectableWeapons){
             for(int i = 0; i < weapons.size(); i++){
@@ -59,6 +75,11 @@ public class WeaponsBox extends HBox {
         }
     }
 
+    /**
+     * Selects the weapon corresponding to the clicked <code>ImageView</code>
+     * and send it to the server.
+     * @param mouseEvent the mouse click registered by the weapon <code>ImageView</code>
+     */
     private void selectWeapon(MouseEvent mouseEvent){
         ImageView selectedView = (ImageView)mouseEvent.getSource();
         selectedView.setScaleX(0.75);
@@ -67,6 +88,11 @@ public class WeaponsBox extends HBox {
         eventUpdater.sendWeapon(weapons.get(selectedIndex));
     }
 
+    /**
+     * Set the <code>SelectableOptions</code> related to the effects after a weapon selection
+     * and shows them to the player.
+     * @param selectableEffects options about the effects that can be selected
+     */
     public void setSelectableEffects(SelectableOptions<String> selectableEffects) {
         if(this.selectableEffects == null || !this.selectableEffects.equals(selectableEffects)) {
             this.selectableEffects = selectableEffects;
@@ -74,6 +100,10 @@ public class WeaponsBox extends HBox {
         }
     }
 
+    /**
+     * Create a <code>ChoiceDialog</code> with the effects that the player can
+     * select and sends the selected one to the server using the eventUpdater.
+     */
     private void showSelectableEffects(){
         ChoiceDialog<String> dialog = new ChoiceDialog<>(null,selectableEffects.getOptions());
         dialog.setTitle("Select effect:");

@@ -15,7 +15,12 @@ import javafx.scene.layout.TilePane;
 import java.io.IOException;
 import java.util.List;
 
-public class DominationBoardFX extends Pane {
+/**
+ * Represents a domination board used in domination mode.
+ * It shows the damages of the spawn point and the skulls
+ * that are still on the board.
+ */
+class DominationBoardFX extends Pane {
     @FXML private TilePane skullsPane;
     @FXML private HBox blueSpawnBox;
     @FXML private HBox redSpawnBox;
@@ -26,6 +31,10 @@ public class DominationBoardFX extends Pane {
     @FXML private ImageView alternateFrenzyTrigger;
     private Image drop;
 
+    /**
+     * Creates a new DominationBoardFX by loading the corresponding
+     * fxml file and assigning this as root.
+     */
     DominationBoardFX() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource(
                 "fxml/DominationBoardFX.fxml"));
@@ -41,11 +50,19 @@ public class DominationBoardFX extends Pane {
         ));
     }
 
+    /**
+     * Updates the skulls displayed on the domination board
+     * @param skulls the number of skulls remaining on the board
+     */
     void updateSkulls(int skulls){
         for(int i = 0; i < skullsPane.getChildren().size() -skulls ; i++)
             skullsPane.getChildren().get(i).setVisible(false);
     }
 
+    /**
+     * Updates the damages on each of the spawns
+     * @param players a list of SpawnPlayers representing the spawns
+     */
     void updateSpawns(List<ViewPlayer> players){
         int overDamagedSpawns = 0;
         for(ViewPlayer s: players){
@@ -72,6 +89,13 @@ public class DominationBoardFX extends Pane {
             alternateFrenzyTrigger.setVisible(false);
     }
 
+    /**
+     *Updates the damages displayed on a spawnBox.
+     * The first 8 damages are already present and are just made
+     * visible.
+     * @param spawnBox the HBox that displays the damages
+     * @param damages the damages of the corresponding spawn
+     */
     private void updateDamages(HBox spawnBox, List<String> damages){
         spawnBox.getChildren().forEach(c->c.setVisible(false));
         for(int i = 0; i < damages.size() && i < spawnBox.getChildren().size(); i++){
@@ -82,6 +106,13 @@ public class DominationBoardFX extends Pane {
         }
     }
 
+    /**
+     * Displays the damages after the 8th damage.
+     * The damages are created dynamically since they can be technically
+     * infinite.
+     * @param excessDamageBox the HBox used to display the damages
+     * @param damages a list of the damages on the corresponding spawn
+     */
     private void updateExcessDamage(HBox excessDamageBox, List<String> damages) {
         excessDamageBox.getChildren().clear();
         for (int i = 8; i < damages.size(); i++) {

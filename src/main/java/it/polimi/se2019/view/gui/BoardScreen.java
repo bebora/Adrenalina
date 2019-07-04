@@ -16,23 +16,35 @@ import javafx.stage.Screen;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Represent the main screen visualized during the game
+ * and allow communication between the view and the various graphical
+ * elements that compose this screen.
+ */
+class BoardScreen extends HBox {
+    private BoardFX boardFX;
+    private PlayerBoardFX clientPlayer;
+    private ActionButtons actionButtons;
+    private PowerUpsBox powerUpsBox;
+    private WeaponsBox weaponsBox;
+    private VBox playerBoardZone;
+    private VBox playerBoardBox;
+    private DominationBoardFX dominationBoardFX;
+    private ScrollPane playerBoardScroller;
+    private SelectableOptionsWrapper selectableOptionsWrapper;
+    private View guiView;
+    private ListView<String> messageBox;
+    private ChoiceDialog<String> ammoChoice;
+    private Text points;
 
-public class BoardScreen extends HBox {
-    BoardFX boardFX;
-    PlayerBoardFX clientPlayer;
-    ActionButtons actionButtons;
-    PowerUpsBox powerUpsBox;
-    WeaponsBox weaponsBox;
-    VBox playerBoardZone;
-    VBox playerBoardBox;
-    DominationBoardFX dominationBoardFX;
-    ScrollPane playerBoardScroller;
-    SelectableOptionsWrapper selectableOptionsWrapper;
-    SelectableOptionsWrapper oldSelectable;
-    View guiView;
-    ListView<String> messageBox;
-    ChoiceDialog<String> ammoChoice;
-    Text points;
+    /**
+     * Creates a BoardScreen with the elements that the user of the view
+     * can visualize. Uses BoardFX to represent the board and
+     * PlayerBoardFX to represent the players boards.
+     * The elements are placed dynamically and the result is
+     * scaled to fit the whole screen.
+     * @param GUIView the view containing all the information about the player
+     */
     BoardScreen(View GUIView){
         guiView = GUIView;
         boardFX = new BoardFX();
@@ -48,7 +60,7 @@ public class BoardScreen extends HBox {
         VBox boardZone = new VBox();
         boardZone.setSpacing(2);
         actionButtons = new ActionButtons(GUIView.getEventUpdater());
-        powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater(),actionButtons.getSenderButton());
+        powerUpsBox = new PowerUpsBox(GUIView.getEventUpdater());
         boardFX.setSenderButton(actionButtons.getSenderButton());
         weaponsBox = new WeaponsBox(GUIView.getEventUpdater());
         messageBox = new ListView<>();
@@ -104,6 +116,11 @@ public class BoardScreen extends HBox {
         this.setStyle("-fx-background-color: black");
     }
 
+    /**
+     * Updates all the PlayerBoardFXs and the BoardFX after a total update.
+     * @param viewBoard the updated board received in the totalUpdate
+     * @param players the players of the match received in the totalupdate
+     */
     void updateBoard(ViewBoard viewBoard,List<ViewPlayer> players){
         boardFX.updateBoard(viewBoard);
         boardFX.clearPlayers();
@@ -126,6 +143,13 @@ public class BoardScreen extends HBox {
         }
     }
 
+    /**
+     * Updates a playerBoardFX after a totalUpdate.
+     * @param p the player corresponding to the playerBoard
+     * @param i the index of the player in the match's player list
+     * @return <code>true</code> if the player is not a spawn and not the user
+     *         <code>false</code> otherwise
+     */
     private boolean updatePlayer(ViewPlayer p,int i){
         if(!p.getDominationSpawn()){
             if(!p.getUsername().equals(guiView.getSelf().getUsername())){
@@ -147,9 +171,12 @@ public class BoardScreen extends HBox {
         return false;
     }
 
+    /**
+     * Sets the SelectableOptionsWrapper and displays to the player
+     * the possible options that can be selected.
+     * @param selectableOptionsWrapper a SelectableOptionsWrapper containing the current selectable options
+     */
     void setSelectableOptionsWrapper(SelectableOptionsWrapper selectableOptionsWrapper) {
-        if(this.selectableOptionsWrapper != null)
-            oldSelectable = this.selectableOptionsWrapper;
         this.selectableOptionsWrapper = selectableOptionsWrapper;
         actionButtons.clearPossibleActions();
         for(ReceivingType ac: selectableOptionsWrapper.getAcceptedTypes()){
@@ -163,7 +190,8 @@ public class BoardScreen extends HBox {
                     break;
                 case POWERUP:
                     powerUpsBox.highlightSelectablePowerUps(selectableOptionsWrapper.getSelectablePowerUps());
-                    actionButtons.getSenderButton().setPowerUps(new ArrayList<>());
+                    if(selectableOptionsWrapper.getSelectablePowerUps().getMinSelectables() == 0)
+                        actionButtons.getSenderButton().setPowerUps(new ArrayList<>());
                     break;
                 case WEAPON:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
@@ -171,6 +199,8 @@ public class BoardScreen extends HBox {
                     break;
                 case PLAYERS:
                     boardFX.setSelectableOptionsWrapper(selectableOptionsWrapper);
+                    if(selectableOptionsWrapper.getSelectablePlayers().getMinSelectables() == 0)
+                        actionButtons.getSenderButton().setPlayers(new ArrayList<>());
                     break;
                 case AMMO:
                     showAmmoChoice(selectableOptionsWrapper.getSelectableAmmos().getOptions());
@@ -195,6 +225,14 @@ public class BoardScreen extends HBox {
         actionButtons.getInfo().setDisable(false);
     }
 
+    /**
+     * Returns a list of the weapons belonging to a spawn point
+     * of a specific color.
+     * @param color the color of the spawn point to get the weapon from
+     * @param viewBoard the board containing the spawn point
+     * @return a list of the weapons in the spawnpoint
+     */
+
     private List<String> getWeaponsFromColor(String color, ViewBoard viewBoard){
         return viewBoard.getTiles().stream()
                 .flatMap(Collection::stream)
@@ -206,22 +244,47 @@ public class BoardScreen extends HBox {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Updates the ImageViews of the powerUps
+     * in the powerUpsBox after a totalUpdate.
+     * @param viewPowerUps a list of ViewPowerups that the user owns
+     */
     void updatePowerUps(List<ViewPowerUp> viewPowerUps){
         powerUpsBox.setPowerUps(viewPowerUps);
     }
 
+    /**
+     * Updates the ImageViews of the weapons in the weaponsBox
+     * after a totalUpdate
+     * @param weapons the ViewWeapons that the user currently owns
+     */
     void updateWeapons(List<ViewWeapon> weapons){
         weaponsBox.setWeapons(weapons);
     }
 
+    /**
+     * Updates the messages in the messages ListView
+     * after receiving a new message
+     * @param messages the new messages that must be displayed to the player
+     */
     void updateMessages(List<String> messages){
         messageBox.setItems(FXCollections.observableList(messages));
     }
 
+    /**
+     * Updates the TextField that displays the points that the user
+     * currently have
+     * @param pts the point that the user currently haves
+     */
     void updatePoints(int pts) {
         points.setText(String.format(" You have %s points", pts));
     }
 
+    /**
+     * Displays a dialog with the possible ammo that the
+     * user cas choose
+     * @param ammoChoiceOptions a list of the possible ammo that the user can choose
+     */
     private void showAmmoChoice(List<String> ammoChoiceOptions){
         if(ammoChoice == null || !ammoChoice.isShowing()) {
             ammoChoice = new ChoiceDialog<>(null, ammoChoiceOptions);
@@ -236,6 +299,11 @@ public class BoardScreen extends HBox {
     }
 
 
+    /**
+     * Transforms the SelectableOptions into a string that can be displayed
+     * to the user through a dialog.
+     * @return a String containing all the SelectableOptions informations
+     */
     private String formatSelectableOptions(){
         String result = "";
         for(ReceivingType r: selectableOptionsWrapper.getAcceptedTypes()){

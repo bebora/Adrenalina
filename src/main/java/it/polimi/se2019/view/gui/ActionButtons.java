@@ -1,7 +1,5 @@
 package it.polimi.se2019.view.gui;
 
-import it.polimi.se2019.controller.AcceptableTypes;
-import it.polimi.se2019.controller.ReceivingType;
 import it.polimi.se2019.network.EventUpdater;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -10,26 +8,28 @@ import javafx.scene.layout.HBox;
 
 import java.util.List;
 
+/**
+ * Buttons that allow choosing actions or requesting info during the game.
+ */
 public class ActionButtons extends HBox {
-    Button attack;
-    Button move;
-    Button grab;
-    Button reload;
-    Button stop;
-    Button info;
-    SenderButton send;
+    private Button attack;
+    private Button move;
+    private Button grab;
+    private Button reload;
+    private Button stop;
+    private Button info;
+    private SenderButton send;
 
-    public List<String> possibleActions;
-    EventUpdater eventUpdater;
-    ReceivingType receivingType;
+    private List<String> possibleActions;
+    private EventUpdater eventUpdater;
 
     /**
-     * Buttons that allow choosing actions or requesting info during the game.
+     * Create ActionButtons with all the possible player actions.
      * The parameter is the eventUpdater of the corresponding view and
      * its used to send the selected actions.
-     * @param eventUpdater the eventUpdter of the corresponding view
+     * @param eventUpdater the eventUpdater of the corresponding view
      */
-    public ActionButtons(EventUpdater eventUpdater) {
+     ActionButtons(EventUpdater eventUpdater) {
         this.eventUpdater = eventUpdater;
         attack = new Button();
         attack.setText("ATTACK");
@@ -62,7 +62,7 @@ public class ActionButtons extends HBox {
     /**
      * Gets the corresponding action from the button.
      * Each button contains the corresponding action name as text.
-     * @param mouseEvent
+     * @param mouseEvent event representing the mouse click to select an action
      */
     private void onClick(MouseEvent mouseEvent){
         Button source = (Button)mouseEvent.getSource();
@@ -71,7 +71,10 @@ public class ActionButtons extends HBox {
         }
     }
 
-    public void clearPossibleActions(){
+    /**
+     * Disables all buttons.
+     */
+    void clearPossibleActions(){
         for(Node n: this.getChildren()){
             n.setDisable(true);
         }
@@ -79,10 +82,10 @@ public class ActionButtons extends HBox {
 
     /**
      * Enables only the buttons corresponding to the actions
-     * that the player can currently use
+     * that the player can currently use.
      * @param possibleActions a list of actions that the player can use at the moment
      */
-    public void setPossibleActions(List<String> possibleActions) {
+    void setPossibleActions(List<String> possibleActions) {
         this.possibleActions = possibleActions;
         for (String s : possibleActions) {
             switch (s) {
@@ -105,12 +108,12 @@ public class ActionButtons extends HBox {
     }
 
 
-    public void enableStop(){
+    void enableStop(){
         stop.setDisable(false);
         stop.setOnMouseClicked(e->eventUpdater.sendStop());
     }
 
-    public SenderButton getSenderButton(){
+    SenderButton getSenderButton(){
         return send;
     }
 

@@ -6,9 +6,12 @@ import java.util.Map;
  * An utility class containing all the maps related to the assets
  * used in the game
  */
-public class AssetMaps {
+class AssetMaps {
     private AssetMaps(){}
 
+    /**
+     * Maps the weapon names into their asserts
+     */
     static final Map<String,String> weaponsAssetsMap = Map.ofEntries(
             Map.entry("sledgehammer","AD_weapons_IT_022.png"),
             Map.entry("cyberblade","AD_weapons_IT_023.png"),
@@ -33,6 +36,9 @@ public class AssetMaps {
             Map.entry("electroscythe","AD_weapons_IT_0222.png")
     );
 
+    /**
+     * Maps player colors into their board
+     */
     static final Map<String,String> colorToPlayerBoard = Map.of(
             "RED","yellow_player_board.png",
             "BLUE","blue_player_board.png",
@@ -42,6 +48,9 @@ public class AssetMaps {
             "YELLOW","yellow_player_board.png"
     );
 
+    /**
+     * Maps each color to the corresponding frenzy_actions
+     */
     static final Map<String,String> colorToFrenzyActions = Map.of(
             "RED","yellow_player_frenzy_actions.png",
             "BLUE","blue_player_frenzy_actions.png",
@@ -51,6 +60,9 @@ public class AssetMaps {
             "YELLOW","yellow_player_frenzy_actions.png"
     );
 
+    /**
+     * Maps powerUp names followed by their reward color into their assets
+     */
     static final Map<String,String> powerUpsAssets = Map.ofEntries(
             Map.entry("tagback grenadeRED","AD_powerups_IT_023.png"),
             Map.entry("tagback grenadeBLUE","AD_powerups_IT_022.png"),
@@ -66,6 +78,9 @@ public class AssetMaps {
             Map.entry("teleporterYELLOW","AD_powerups_IT_0213.png")
     );
 
+    /**
+     * Maps different ammo order into their ammo tiles
+     */
     static Map<String,String> ammoCardAssets = Map.of(
             "PBY","PYB",
             "PBR","PRB",

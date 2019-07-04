@@ -163,103 +163,103 @@
                <children>
                   <VBox prefHeight="61.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="53.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="96.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="139.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="182.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="225.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                   <VBox layoutX="268.0" layoutY="10.0" prefHeight="100.0" prefWidth="43.0">
                      <children>
-                        <ImageView fitHeight="75.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="80.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../assets/skull.png" />
                            </image>
                            <VBox.margin>
-                              <Insets top="20.0" />
+                              <Insets top="25.0" />
                            </VBox.margin>
                         </ImageView>
                      </children>
                   </VBox>
                </children>
                <padding>
-                  <Insets left="-4.0" />
+                  <Insets left="4.0" />
                </padding>
             </HBox>
          </children>

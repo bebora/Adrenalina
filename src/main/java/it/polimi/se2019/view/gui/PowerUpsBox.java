@@ -13,17 +13,31 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a box containing all the powerUps that the player
+ * currently owns and contains the methods used to highlight and
+ * select them.
+ */
 public class PowerUpsBox extends HBox {
-    List<ViewPowerUp> powerUps;
-    List<ViewPowerUp> selectedPowerUp;
-    SelectableOptions<ViewPowerUp> powerUpSelectableOptions;
-    EventUpdater eventUpdater;
-    SenderButton senderButton;
+    private List<ViewPowerUp> powerUps;
+    private List<ViewPowerUp> selectedPowerUp;
+    private SelectableOptions<ViewPowerUp> powerUpSelectableOptions;
+    private EventUpdater eventUpdater;
 
-    public PowerUpsBox(EventUpdater eventUpdater,SenderButton senderButton){
-        this.senderButton = senderButton;
+    /**
+     * Creates a new PowerUpsBox with the specified eventUpdater used
+     * to send selected powerUps to the server.
+     * @param eventUpdater an eventUpdater used to communicate with the backend
+     */
+    PowerUpsBox(EventUpdater eventUpdater){
         this.eventUpdater = eventUpdater;
     }
+
+    /**
+     * Updates the displayed powerUps to show the powerUp that the player
+     * currently has.
+     * @param powerUps a list of <code>ViewPowerUp</code> owned by the player
+     */
     public void setPowerUps(List<ViewPowerUp> powerUps){
         this.powerUps = powerUps;
         this.getChildren().clear();
@@ -40,7 +54,13 @@ public class PowerUpsBox extends HBox {
         }
     }
 
-    public void highlightSelectablePowerUps(SelectableOptions<ViewPowerUp> powerUpSelectableOptions){
+    /**
+     * Highlight the powerUps that the player can currently select according to
+     * the current selectableOptionWrapper. Associates each <code>ImageView<\code> with selectPowerUp
+     * correct method to allow selection.
+     * @param powerUpSelectableOptions the SelectableOptions regarding powerUps
+     */
+    void highlightSelectablePowerUps(SelectableOptions<ViewPowerUp> powerUpSelectableOptions){
         this.powerUpSelectableOptions = powerUpSelectableOptions;
         List<ViewPowerUp> selectablePowerUps = powerUpSelectableOptions.getOptions();
         selectedPowerUp = new ArrayList<>();
@@ -59,6 +79,11 @@ public class PowerUpsBox extends HBox {
         }
     }
 
+    /**
+     * Selects the powerUp corresponding to the clicked <code>ImageView</code>
+     * and send it to the server.
+     * @param mouseEvent the mouse click registered by the powerUp <code>ImageView</code>
+     */
     private void selectPowerUp(MouseEvent mouseEvent){
         ImageView selectedView = (ImageView)mouseEvent.getSource();
         selectedView.setScaleX(0.75);
