@@ -46,15 +46,16 @@ effects:
         objectToMove:SELF
         targetDestination:
           maxDistance:1
-          minDistance:1
+          minDistance:0
           throughWalls:FALSE
           cardinal:TRUE
     damages:
       damage:
         damagesAmount:2
+        targeting:TRUE
         target:
           maxDistance:0
-          minTargets:0
+          minTargets:1
           maxTargets:1
       damage:
         damagesAmount:2
@@ -62,3 +63,4 @@ effects:
           maxDistance:0
           minTargets:0
           maxTargets:1
+          checkTargetList:FALSE

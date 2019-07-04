@@ -483,15 +483,15 @@ public class BoardFX extends StackPane {
             VBox sameShot = (VBox) killshotDamageBox.getChildren().get(i);
             sameShot.getChildren().clear();
         }
-        for(int i = 0; i < viewBoard.getKillShotTrack().size(); i++){
+        for(int i = 0; i < killshotDamageBox.getChildren().size() - viewBoard.getSkulls(); i++){
             for(int j = 0; j < 2; j++){
                 VBox sameShot = (VBox)killshotDamageBox.getChildren().get(i);
                 ImageView dropView = new ImageView(drop);
                 dropView.setFitWidth(23);
                 dropView.setFitHeight(32);
-                if(viewBoard.getKillShotTrack().get(i) != null) {
+                if(viewBoard.getKillShotTrack().get(2*i + j) != null) {
                     ColorAdjust colorAdjust = new ColorAdjust();
-                    GuiHelper.hueShifter(viewBoard.getKillShotTrack().get(i),colorAdjust);
+                    GuiHelper.hueShifter(viewBoard.getKillShotTrack().get(2*i + j),colorAdjust);
                     dropView.setEffect(colorAdjust);
                     sameShot.getChildren().addAll(dropView);
                 }

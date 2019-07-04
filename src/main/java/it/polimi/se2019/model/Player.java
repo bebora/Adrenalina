@@ -284,7 +284,7 @@ public class Player {
 		List<Player> unrelatedMarks = this.marks.stream().
                 filter(m -> !m.getId().equals(player.getId())).
                 collect(Collectors.toList());
-		for (int i = 0; i < this.marks.size() - unrelatedMarks.size() && damages.size() < 13; i++) {
+		for (int i = 0; i < this.marks.size() - unrelatedMarks.size() && damages.size() < 12; i++) {
 		    damages.add(player);
         }
         marks = unrelatedMarks;
@@ -307,7 +307,7 @@ public class Player {
 			Logger.log(Priority.DEBUG, "Receiving damage from spawnpoint");
 			shooterName = this.tile.getRoom().name() + " spawnpoint";
 		}
-		while (temp > 0 && damages.size() < 13) {
+		while (temp > 0 && damages.size() < 12) {
 			damages.add(shooter);
 			temp--;
 		}
