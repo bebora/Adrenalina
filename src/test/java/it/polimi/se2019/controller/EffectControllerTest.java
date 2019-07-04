@@ -23,6 +23,7 @@ public class EffectControllerTest extends EffectControllerFramework {
     }
     @Test
     void testCorrectTarget(){
+        //
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
         EffectController ec = wp.getEffectController();
         List<Player> notCurrentPlayer = sandboxMatch.getPlayers().stream()
@@ -31,11 +32,12 @@ public class EffectControllerTest extends EffectControllerFramework {
         Player originalNotCurrentPlayer = testMatch.getPlayers().stream()
                 .filter(p -> p.getId().equals(notCurrentPlayer.get(0).getId()))
                 .findAny().orElse(null);
-        //player satisfy the target condition
+        //Player satisfy the target condition
         currentPlayer.setTile(testMatch.getBoard().getTile(0,0));
         notCurrentPlayer.get(0).setTile(testMatch.getBoard().getTile(0,0));
         ec.updateOnPlayers(Arrays.asList(originalNotCurrentPlayer));
         sandboxMatch.restoreMatch(testMatch);
+        //Set the target has been damaged
         assertEquals(2,notCurrentPlayer.get(0).getDamagesCount());
         assertEquals(testMatch.getPlayers().get(testMatch.getCurrentPlayer()),originalNotCurrentPlayer.getDamages().get(0));
         assertEquals(2,notCurrentPlayer.get(0).getDamagesCount());
@@ -43,11 +45,13 @@ public class EffectControllerTest extends EffectControllerFramework {
 
     @Test
     void testWrongTarget(){
+        //Setup an enemy player
         Player enemy = new Player("nemico");
         testMatch.addPlayer(enemy);
         sandboxMatch = new NormalMatch(testMatch);
         wp.setMatch(sandboxMatch);
         testWeapon.getEffects().get(0).setActivated(false);
+        //Test that damages weren't made to the enemy after the effect
         enemy.setTile(testMatch.getBoard().getTile(1,0));
         wp.updateOnEffect(testWeapon.getEffects().get(0).getName());
         wp.getEffectController().updateOnPlayers(Arrays.asList(enemy));
@@ -56,6 +60,7 @@ public class EffectControllerTest extends EffectControllerFramework {
 
     @Test
     void testMultipleEffects(){
+        //Setup the players
         Player firstEnemy = new Player("nemico");
         Player secondEnemy = new Player("nemicoCattivo");
         testMatch.addPlayer(firstEnemy);
@@ -65,6 +70,7 @@ public class EffectControllerTest extends EffectControllerFramework {
         wp.setMatch(sandboxMatch);
         wp.setOriginalPlayers(testMatch.getPlayers());
         testWeapon.getEffects().get(0).setActivated(false);
+        //Test the use of multiple effects, related to the cyberblade
         secondEnemy.setTile(testMatch.getBoard().getTile(1,0));
         currentPlayer.setTile(testMatch.getBoard().getTile(1,0));
         firstEnemy.setTile(testMatch.getBoard().getTile(1,0));
@@ -72,6 +78,7 @@ public class EffectControllerTest extends EffectControllerFramework {
         wp.getEffectController().updateOnPlayers(Arrays.asList(firstEnemy));
         wp.updateOnEffect(testWeapon.getEffects().get(2).getName());
         wp.getEffectController().updateOnPlayers(Arrays.asList(secondEnemy));
+        //test that damages were made
         sandboxMatch.restoreMatch(testMatch);
         assertEquals(2,firstEnemy.getDamagesCount());
         assertEquals(2,secondEnemy.getDamagesCount());

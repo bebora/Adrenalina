@@ -12,6 +12,7 @@ effects:
 				damagesAmount:1
 				target:
 					maxDistance:0
+					maxTargets:0
 					areaDamage:tile
 		name:in reaper mode
 		absolutePriority:1

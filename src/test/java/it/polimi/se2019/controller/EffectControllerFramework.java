@@ -34,6 +34,7 @@ public class EffectControllerFramework {
 
     /**
      * Utility method to setup the game to for further interactions
+     * Sets the player, the gameController and the actionController
      * @param weapon
      */
     public void prepareWeapon(String weapon) throws RemoteException{
@@ -61,6 +62,10 @@ public class EffectControllerFramework {
         wp.updateOnWeapon(testWeapon);
     }
 
+    /**
+     * Utility method to set the requestDispatcher, to allow testing of the interaction
+     * @throws RemoteException
+     */
     void setupRequestDispatcher() throws RemoteException{
         requestDispatcher = new RequestDispatcher(mock(ViewUpdater.class), mock(VirtualView.class));
         requestDispatcher = spy(requestDispatcher);

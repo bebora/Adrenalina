@@ -21,7 +21,8 @@ class SocketServerTest {
         view = new CLI();
     }
     @Test
-    void initizializeSocket() {
+    void initializeSocket() {
+        //Create the socket server
         SocketServer socketServer = new SocketServer(65535, lobbyController);
         socketServer.start();
         try {
@@ -30,6 +31,7 @@ class SocketServerTest {
         catch (InterruptedException e) {
             System.out.print("interrputed");
         }
+        //Setup the event updater and login, verifying there are 1 user connected to the lobby
         EventUpdater eventUpdater = new EventUpdaterSocket("0.0.0.0", 65535);
         try {
             eventUpdater.login(view, "ciao", "ciao", false, "normal");

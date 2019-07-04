@@ -6,9 +6,7 @@ import it.polimi.se2019.model.cards.CardCreator;
 import it.polimi.se2019.model.cards.PowerUp;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
@@ -21,14 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.spy;
 
-@RunWith(MockitoJUnitRunner.class)
 class DamagedControllerTest {
-    DamagedController damagedController;
-    PowerUp p1, p2;
-    Player damaging, damaged1, damaged2;
+    private DamagedController damagedController;
+    private PowerUp p1, p2;
+    private Player damaging, damaged1, damaged2;
+
 
     @BeforeEach
     void prepare() {
+        //Setup the sy players and the powerups
         damaged1 = spy(new Player("d1$"));
         Mockito.doNothing().when(damaged1).discardPowerUp(any(PowerUp.class), any(boolean.class));
         damaged2 = spy(new Player("d1$"));

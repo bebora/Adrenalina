@@ -24,6 +24,7 @@ public class RMIServerTest {
 
     @Test
     void initizializeRMI() {
+        //Initialize the RMI server
         RMIServer rmiServer = new RMIServer(lobbyController);
         rmiServer.start();
         try {
@@ -32,6 +33,7 @@ public class RMIServerTest {
         catch (InterruptedException e) {
             System.out.print("Interrupted");
         }
+        //Initialize the eventupdater and login, verifying there is one user in the lobby
         EventUpdater eventUpdater = new EventUpdaterRMI("localhost", 1099);
         try {
             eventUpdater.login(view, "ciao", "ciao", false, "normal");

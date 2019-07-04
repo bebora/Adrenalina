@@ -1,17 +1,12 @@
 package it.polimi.se2019.model.cards;
 
-import it.polimi.se2019.Logger;
 import it.polimi.se2019.model.Player;
 import it.polimi.se2019.model.ThreeState;
 import it.polimi.se2019.model.board.Board;
 import it.polimi.se2019.model.board.Tile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import static it.polimi.se2019.Priority.ERROR;
 
 public class Target {
 
@@ -375,18 +370,7 @@ public class Target {
 	 * @return
 	 */
 	public Predicate<Tile> getFilterRoom(Board board, Tile tile){
-		List<Predicate> predicates  = new ArrayList<>();
-		List<Tile> sameRoomTiles = new ArrayList<>();
-		try {
-			sameRoomTiles = board.getTiles().stream().flatMap(List::stream).filter(t -> t != null && t.getRoom() == tile.getRoom()).collect(Collectors.toList());
-		}
-		catch (NullPointerException e) {
-			Logger.log(ERROR, "What the fuck");
-		}
-		for (Tile t : sameRoomTiles) {
-			predicates.add(getVisibilityFilter(board, t));
-		}
-		Predicate<Tile> tilesRoom = predicates.stream().reduce(Predicate::or).orElse(x->true);
+		Predicate<Tile> tilesRoom = getVisibilityFilter(board, tile);
 		return tilesRoom.
 				and(getSamePlayerRoomFilter(tile));
 	}

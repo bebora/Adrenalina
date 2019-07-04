@@ -15,13 +15,14 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertEquals;
 
 class EventHelperTest {
-    Match match;
-    Player testPlayer;
-    Player enemy;
-    EventHelper eventHelper;
+    private Match match;
+    private Player testPlayer;
+    private Player enemy;
+    private EventHelper eventHelper;
 
     @BeforeEach
     void setUp() {
+        //Set the player and an enemy in the match
         testPlayer = new Player("foo");
         enemy = new Player("poo");
         match = new NormalMatch(Arrays.asList(testPlayer, enemy), "board1.btlb", 8);
@@ -30,6 +31,7 @@ class EventHelperTest {
 
     @Test
     void getPlayersFromUsernames() {
+        //Test the player's username gets parsed correctly
         List<String> usernames = match.getPlayers().stream().map(Player::getUsername).collect(Collectors.toList());
         List<Player> players = eventHelper.getPlayersFromUsername(usernames);
         assertEquals(players, match.getPlayers());
@@ -38,6 +40,7 @@ class EventHelperTest {
 
     @Test
     void getWeaponFromString() {
+        //Test the weapon name gets parsed correctly from the helper
         Weapon testWeapon = CardCreator.parseWeapon("furnace.btl");
         testPlayer.addWeapon(testWeapon);
         testPlayer.setTile(match.getBoard().getTile(0, 0));

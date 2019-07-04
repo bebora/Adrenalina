@@ -21,6 +21,7 @@ class LobbyControllerTest {
      */
     @Test
     void checkWaitingPlayer() {
+        //Test the login of players in a lobbycontroller
         LobbyController lobbyController = new LobbyController(Arrays.asList(Mode.NORMAL));
         VirtualView vv = new VirtualView(lobbyController);
         EventUpdater eventUpdater = new EventUpdaterRMI(lobbyController);
@@ -35,7 +36,8 @@ class LobbyControllerTest {
         catch (RemoteException e) {
             System.out.println(e);
         }
-       Utils.waitABit();
+        Utils.waitABit();
+        //Test that there is no waiting players because the match started
         assertEquals(0,lobbyController.getWaitingPlayers().get(Mode.NORMAL).size());
     }
 

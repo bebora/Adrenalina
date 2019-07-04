@@ -41,7 +41,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void checkEndGame() {
+    void checkEndGame() {
         players.get(0).receiveShot(players.get(1), 12, 0, true);
         doNothing().when(gc).sendWinners();
         doNothing().when(gc).startSpawning();
@@ -66,7 +66,7 @@ public class GameControllerTest {
     }
 
     @Test
-    public void spawningOfflineTest() {
+    void spawningOfflineTest() {
         players.forEach(p -> {
             VirtualView vw = p.getVirtualView();
             when(vw.isOnline()).thenReturn(false);

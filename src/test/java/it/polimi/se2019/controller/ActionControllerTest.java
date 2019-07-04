@@ -35,6 +35,7 @@ public class ActionControllerTest {
 
     @BeforeEach
     void beforeEach() {
+        //Set the gameController and the current player
         gameController = Mockito.spy(new GameController(Arrays.asList(new
                 Player("Nicola"),new Player("Rosetti")),"board3.btlb",8,false, null));
         currentPlayer = gameController.getMatch().getPlayers().get(gameController.getMatch().getCurrentPlayer());
@@ -61,10 +62,12 @@ public class ActionControllerTest {
 
     @Test
     void testGrabWeapon(){
+        //Set the tile to allow the grab
         currentPlayer.setTile(board.getTile(0,2));
         actionController.updateOnAction(currentPlayer.getActions().get(1));
         actionController.updateOnTiles(Collections.singletonList(currentPlayer.getTile()));
         Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
+        //Test the choosing of the weapon to grab and its grab
         actionController.updateOnWeapon(grabbableWeapon);
         assertEquals(grabbableWeapon, currentPlayer.getWeapons().get(0));
         assertEquals(2, currentPlayer.getAmmos().size());
@@ -73,6 +76,7 @@ public class ActionControllerTest {
 
     @Test
     void testReloadWeaponOnce() {
+        //Add  munitions required to pay for the reload
         for (int i = 0; i < 3; i++) {
             currentPlayer.addAmmo(Ammo.RED);
             currentPlayer.addAmmo(Ammo.BLUE);
@@ -85,6 +89,7 @@ public class ActionControllerTest {
         currentPlayer.addWeapon(grabbableWeapon);
         grabbableWeapon.setLoaded(false);
         Action reload = new Reload();
+        //Test the reload of the weapon
         currentPlayer.getActions().add(reload);
         actionController.updateOnAction(reload);
         actionController.updateOnWeapon(grabbableWeapon);
@@ -94,6 +99,7 @@ public class ActionControllerTest {
 
     @Test
     void testReloadMoreWeapons() {
+        //Add munitions required to pay for the reload
         for (int i = 0; i < 3; i++) {
             currentPlayer.addAmmo(Ammo.RED);
             currentPlayer.addAmmo(Ammo.BLUE);
@@ -110,6 +116,7 @@ public class ActionControllerTest {
         }
         Action reload = new Reload();
         currentPlayer.getActions().add(reload);
+        //Add munitions required to pay for the reload
         for (int i = 0; i < 3; i++) {
             currentPlayer.addAmmo(Ammo.RED);
             currentPlayer.addAmmo(Ammo.BLUE);
@@ -117,6 +124,7 @@ public class ActionControllerTest {
         }
         actionController.updateOnAction(reload);
         Utils.waitABit();
+        //Test the player have the weapon reloaded and that stop is called if no weapon can be reloaded again
         actionController.updateOnWeapon(grabbableWeapon);
         if (currentPlayer.getWeapons().stream().noneMatch(w -> !w.getLoaded() && currentPlayer.checkForAmmos(w.getCost())))
             Mockito.verify(actionController, times(1)).updateOnStopSelection(any());
@@ -127,6 +135,7 @@ public class ActionControllerTest {
 
     @Test
     void testGrabPowerUp(){
+        //Set the player's tile, grab a powerUp
         currentPlayer.setTile(board.getTile(0,0));
         AmmoCard grabbableAmmocard = currentPlayer.getTile().getAmmoCard();
         actionController.updateOnAction(currentPlayer.getActions().get(1));
@@ -134,12 +143,14 @@ public class ActionControllerTest {
         currentPlayer.getAmmos().remove(Ammo.RED);
         currentPlayer.getAmmos().remove(Ammo.YELLOW);
         currentPlayer.getAmmos().remove(Ammo.BLUE);
+        //Test the powerup is grabbed and the tile has no ammocard
         assertEquals(grabbableAmmocard.getAmmos().stream().filter(p -> !p.equals(Ammo.POWERUP)).collect(Collectors.toList()), currentPlayer.getAmmos());
         assertNull(currentPlayer.getTile().getAmmoCard());
     }
 
     @Test
     void testDiscardWeapon() {
+        //Set the player tile, grab a weapon and update with a grab action
         currentPlayer.setTile(board.getTile(0,2));
         Weapon grabbableWeapon = currentPlayer.getTile().getWeapons().stream().filter(w -> currentPlayer.checkForAmmos(Collections.singletonList(w.getCost().get(0)))).findAny().get();
         for (int i = 0; i < Integer.parseInt(GameProperties.getInstance().getProperty("max_weapons")); i++) {
@@ -161,6 +172,7 @@ public class ActionControllerTest {
 
     @Test
     void testAttack(){
+        //Test the correct resetting of the controllers
         currentPlayer.addWeapon(CardCreator.parseWeapon("cyberblade.btl"));
         actionController.updateOnAction(currentPlayer.getActions().get(2));
         actionController.updateOnWeapon(currentPlayer.getWeapons().get(0));

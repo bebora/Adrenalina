@@ -41,7 +41,7 @@ public class FurnaceInteractionTest extends EffectControllerFramework{
     }
 
     @Test
-    void testBasic() throws InterruptedException {
+    void testBasic(){
         //Set the player in a valid position for basic effect
         notCurrentPlayers.get(1).setTile(testMatch.getBoard().getTile(1,0));
         notCurrentPlayers.get(0).setTile(testMatch.getBoard().getTile(1,1));
