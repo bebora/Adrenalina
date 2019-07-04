@@ -9,8 +9,19 @@ import it.polimi.se2019.view.View;
  * Class used by client controller to send ack periodically to the server
  */
 public class ClientAcker extends Thread {
+    /**
+     * Associated view, who contains if the client is online or not so that the Acker can start
+     */
     private View view;
+    /**
+     * Time for which the Acker sleeps after sending the previous ack
+     */
     private int ACK_SLEEP_DELAY = 500;
+
+    /**
+     * Creates the Acker with the associated view to check
+     * @param linkedView view that the Acker checks
+     */
     public ClientAcker(View linkedView) {
         this.view = linkedView;
     }

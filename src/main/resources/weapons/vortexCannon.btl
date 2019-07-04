@@ -51,6 +51,7 @@ effects:
         maxDistance:1
         pointOfView:PERSPECTIVE
         throughWalls:FALSE
+        checkTargetList:FALSE
       targetDestination:
         maxDistance:0
         pointOfView:PERSPECTIVE
@@ -58,4 +59,5 @@ effects:
     damage:
       damagesAmount:1
       target:
+        maxTargets:0
         checkBlackList:TRUE

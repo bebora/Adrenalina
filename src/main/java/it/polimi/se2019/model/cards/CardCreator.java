@@ -128,7 +128,7 @@ public class CardCreator {
         List<Integer> relativePriority = null;
         Boolean empty = Boolean.TRUE;
         while(true){
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine();
             if(curLine != null)
                 splitLine = curLine.trim().split(":");
@@ -205,7 +205,7 @@ public class CardCreator {
         String curLine = bufRead.readLine().trim();
         while (!curLine.contains(":")) {
             temp.add(Integer.parseInt(curLine));
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine().trim();
         }
         bufRead.reset();
@@ -219,7 +219,7 @@ public class CardCreator {
         curLine = bufRead.readLine().trim();
         while(!curLine.contains(":")){
             temp.add(Ammo.valueOf(curLine.toUpperCase()));
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine().trim();
         }
         bufRead.reset();
@@ -244,7 +244,7 @@ public class CardCreator {
         ThreeState targeting = OPTIONAL;
         Target target = new Target.Builder().build();
         while(true){
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine();
             if(curLine != null)
                 splitLine = curLine.trim().split(":");
@@ -318,7 +318,7 @@ public class CardCreator {
         ThreeState checkBlackList = OPTIONAL;
 
         while(true){
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine();
             if(curLine != null)
                 splitLine = curLine.trim().split(":");
@@ -404,7 +404,7 @@ public class CardCreator {
         String prompt = null;
         Boolean empty = Boolean.TRUE;
         while(true){
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine();
             if(curLine == null) {
                 bufRead.reset();
@@ -474,7 +474,7 @@ public class CardCreator {
         String curLine = bufRead.readLine().trim();
         while(!curLine.contains(":")) {
             order.add(ActionType.valueOf(curLine.toUpperCase()));
-            bufRead.mark(20);
+            bufRead.mark(50);
             curLine = bufRead.readLine().trim();
         }
         bufRead.reset();

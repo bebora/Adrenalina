@@ -121,5 +121,4 @@ import javafx.stage.Screen;
          scale.setY(primaryScreenBounds.getMaxY()/pane.getPrefHeight());
          pane.getTransforms().addAll(scale);
      }
-
 }
