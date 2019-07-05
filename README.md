@@ -27,9 +27,14 @@ java -jar server.jar
 External configurations can be added in the same folder before running:
 -  game.properties
 ```
-time=100000 
+time=30000
 max_weapons=3
-lobby_time=5000
+lobby_time=20000
+skulls=8
+max_marks=3
+max_ammo=3
+reward_points_normal=8,6,4,2,1
+reward_points_frenzy=2,1,1,1
 ```
 - connection.properties
 ```
