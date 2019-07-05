@@ -80,7 +80,7 @@ public class BotCliHandler extends CliInputHandler {
         }
         AsciiBoard.setBoard(view.getBoard());
         while (!view.getStatus().equals(Status.END)) {
-            Utils.sleepABit(1000);
+            Utils.sleepABit(100);
             List<ReceivingType> types = view.getSelectableOptionsWrapper().
                     getAcceptedTypes();
             try {

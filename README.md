@@ -9,7 +9,15 @@
   + Partite multiple
   + Modalità dominazione
 # Introduction
-The binaries that are discussed below can be found in the Release page.
+The Javadoc can be found in docs/.
+
+The jars for the server, the client and the bot can be generated in target/assembly using 
+```
+clean mvn package
+```
+
+The latest jars that are discussed below can be found in the Release page, or in the target/ directory.
+
 *TESTED WITH JAVA 12*
 # Server
 The *server* package will need no external dependencies, and it can be run with:
