@@ -1,0 +1,13 @@
+it.polimi.se2019
+it.polimi.se2019.controller
+it.polimi.se2019.model
+it.polimi.se2019.model.actions
+it.polimi.se2019.model.ammos
+it.polimi.se2019.model.board
+it.polimi.se2019.model.cards
+it.polimi.se2019.network
+it.polimi.se2019.network.events
+it.polimi.se2019.network.updatemessage
+it.polimi.se2019.view
+it.polimi.se2019.view.cli
+it.polimi.se2019.view.gui
