@@ -23,7 +23,7 @@ public class DominationMatch extends Match {
     private int currentTurn = -1;
 
     /**
-     * Create a Domination Match, using {@link #Match} constructor
+     * Create a Domination Match, using {@link Match} constructor
      * Initializes {@link #spawnPoints}  with an ArrayList
      * @param players       players to add in the Match
      * @param boardFilename name of the Board that uses the Match

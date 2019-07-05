@@ -37,11 +37,9 @@ public class NormalMatch extends Match {
 
 	/**
 	 * Parse the winners of the current Game, at the end of it.
-	 * <p><ul>
-	 *    * <li>It scores the players in the game.
-	 *    * <li>It scores the killShotTrack, sorting looking at the players that gave the more shots.
-	 *    * <li>It checks the online players, and the order of the killings to create the list of winners.
-	 *    * </ul><p>
+	 * <li>It scores the players in the game. </li>
+	 * <li>It scores the killShotTrack, sorting looking at the players that gave the more shots.</li>
+	 * <li>It checks the online players, and the order of the killings to create the list of winners.</li>
 	 * @return winning players
 	 */
 	@Override

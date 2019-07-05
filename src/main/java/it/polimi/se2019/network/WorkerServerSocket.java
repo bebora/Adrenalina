@@ -188,7 +188,7 @@ public class WorkerServerSocket extends Thread {
      * Utility class to ping the view every {@link #PING_SLEEP_DELAY}.
      */
     private class Ping extends Thread {
-        private int PING_SLEEP_DELAY = 1000;
+        private int PING_SLEEP_DELAY = 250;
         @Override
         public void run() {
             UpdateVisitable ping = new PingUpdate();

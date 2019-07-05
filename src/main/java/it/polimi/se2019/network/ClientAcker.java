@@ -16,7 +16,7 @@ public class ClientAcker extends Thread {
     /**
      * Time for which the Acker sleeps after sending the previous ack
      */
-    private int ACK_SLEEP_DELAY = 500;
+    private int ACK_SLEEP_DELAY = 250;
 
     /**
      * Creates the Acker with the associated view to check
