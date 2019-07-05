@@ -14,15 +14,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+/**
+ * Handles the creation of a fake player that choose randomly between the options that the server propose him.
+ * It supports random exits, choosing more items in a list, connecting with both RMI and SOCKET.
+ */
 public class BotCliHandler extends CliInputHandler {
     Random random = new Random();
 
+    /**
+     * Get a random element from a list
+     * @param elements list of elements to choose from
+     * @param <T> type of the list
+     * @return a random element from the list
+     */
     public <T> T getRandom(List<T> elements) {
         int rnd = random.nextInt(elements.size());
         Logger.log(Priority.DEBUG, "Chose " + elements.get(rnd));
         return elements.get(rnd);
     }
 
+    /**
+     * Get a random list of elements from a selectable option
+     * @param selectableOptions options to choose from, parsing constraints
+     * @param <T> type of the list
+     * @return a random list of element from the list
+     */
     public <T> List<T> getRandomList(SelectableOptions<T> selectableOptions) {
         List<T> elements = new ArrayList<>();
         int min = selectableOptions.getMinSelectables();
@@ -37,6 +53,9 @@ public class BotCliHandler extends CliInputHandler {
         return elements;
     }
 
+    /**
+     * Handles the logging and the random choosing from the bot
+     */
     @Override
     public void run() {
         int rnd = random.nextInt(2);
@@ -51,7 +70,6 @@ public class BotCliHandler extends CliInputHandler {
         Reader inputString = new StringReader(string);
         BufferedReader reader = new BufferedReader(inputString);
         connectionChoice(reader);
-        String lastSent;
         view.setClean(true);
         while (view.getStatus() == Status.WAITING || view.getStatus() == null) {
             Utils.sleepABit(100);
@@ -77,13 +95,17 @@ public class BotCliHandler extends CliInputHandler {
         System.exit(0);
     }
 
+    /**
+     * Select a random element, or list of element, between the given types (if not empty), sending it to the server
+     * @param types list of types accepted from the backend
+     */
     public void selectRandom(List<ReceivingType> types) {
         if (!types.isEmpty()) {
             Logger.log(Priority.DEBUG, "Trying to choose an action");
             Logger.log(Priority.DEBUG,types.stream().map(Enum::toString).collect(Collectors.toList()).toString());
             SelectableOptionsWrapper wrapper = view.getSelectableOptionsWrapper();
             ReceivingType type = getRandom(types);
-            if (random.nextInt(10000) == 500) {
+            if (random.nextInt(100000) == 314) {
                 System.exit(0);
             }
             switch (type) {

@@ -2,6 +2,9 @@ package it.polimi.se2019.view;
 
 import java.io.Serializable;
 
+/**
+ * Represent a door between two tiles.
+ */
 public class ViewDoor implements Serializable {
     private ViewTile tile1;
 

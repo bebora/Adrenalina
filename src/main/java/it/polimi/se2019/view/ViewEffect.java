@@ -3,12 +3,24 @@ package it.polimi.se2019.view;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represent an effect of a {@link ViewWeapon}
+ */
 public class ViewEffect implements Serializable {
 
+    /**
+     * List of ammos to pay to use the effect
+     */
     private List<String> cost;
 
+    /**
+     * Description of the effect
+     */
     private String desc;
 
+    /**
+     * Name of the effect
+     */
     private String name;
 
     public List<String> getCost() {

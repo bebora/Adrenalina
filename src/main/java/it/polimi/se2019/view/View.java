@@ -116,6 +116,9 @@ public abstract class View {
 	}
 
 
+	/**
+	 * Construct a View and the related {@link ConcreteViewReceiver}.
+	 */
 	public View() {
 		try {
 			this.receiver = new ConcreteViewReceiver(this);
@@ -247,10 +250,6 @@ public abstract class View {
 	public EventUpdater getEventUpdater() {
 		return eventUpdater;
 	}
-
-	public synchronized void update() {
-
-    }
 
 	/**
 	 * Setup the connection

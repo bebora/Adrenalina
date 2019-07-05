@@ -56,7 +56,7 @@ public class SpawnPlayer extends Player{
      * @param convert
      */
     @Override
-    public void receiveShot(Player shooter, int damage, int marks, boolean convert) {
+    public synchronized void receiveShot(Player shooter, int damage, int marks, boolean convert) {
         if (!damaged && damage > 0) {
             super.getDamages().add(shooter);
             Logger.log(Priority.DEBUG, getColor() + " receives a damage");
