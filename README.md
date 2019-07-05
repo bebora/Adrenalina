@@ -16,7 +16,7 @@ The jars for the server, the client and the bot can be generated in target/assem
 clean mvn package
 ```
 
-The latest jars that are discussed below can be found in the Release page, or in the target/ directory.
+The latest jars that are discussed below can be found in the Release page, or in the jar/ directory.
 
 *TESTED WITH JAVA 12*
 # Server
