@@ -468,5 +468,4 @@ public class GameController extends Observer {
             endTurn(false);
         }
     }
-
 }

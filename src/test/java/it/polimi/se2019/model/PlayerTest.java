@@ -165,7 +165,7 @@ class PlayerTest {
         assertEquals(2, qubes.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
         assertEquals(3, qubes.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());
         qubes.receiveShot(yubi, 3, 0, true);
-        //Adrenaline actions should be enabled fro grab and attack
+        //Adrenaline actions should be enabled for grab and attack
         assertEquals(1, qubes.getActions().stream().filter(a -> a.toString().equals("ATTACK")).findAny().get().getMovements());
         assertEquals(2, qubes.getActions().stream().filter(a -> a.toString().equals("GRAB")).findAny().get().getMovements());
         assertEquals(3, qubes.getActions().stream().filter(a -> a.toString().equals("MOVE")).findAny().get().getMovements());

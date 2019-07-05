@@ -106,8 +106,6 @@ public class DominationMatch extends Match {
             p.resetPlayer();
         }
 
-
-
         if (currentTurn == 0) {
             insertSpawnPoints();
             currentTurn++;

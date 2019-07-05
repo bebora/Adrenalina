@@ -73,14 +73,14 @@ public class BotCliHandler extends CliInputHandler {
         connectionChoice(reader);
         view.setClean(true);
         while (view.getStatus() == Status.WAITING || view.getStatus() == null) {
-            Utils.sleepABit(100);
+            Utils.sleepABit(1000);
         }
         if (view.getStatus() == Status.PLAYING) {
             System.out.println(view.getStatus().name());
         }
         AsciiBoard.setBoard(view.getBoard());
         while (!view.getStatus().equals(Status.END)) {
-            Utils.sleepABit(100);
+            Utils.sleepABit(1000);
             List<ReceivingType> types = view.getSelectableOptionsWrapper().
                     getAcceptedTypes();
             try {

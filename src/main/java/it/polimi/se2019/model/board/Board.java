@@ -284,10 +284,6 @@ public class Board {
 		return killShotTrack;
 	}
 
-	public void setKillShotTrack(List<Player> killShotTrack) {
-		this.killShotTrack = killShotTrack;
-	}
-
 	/**
 	 * Refresh the weapons, adding weapons to empty spawns, till the weapons can be added.
 	 */

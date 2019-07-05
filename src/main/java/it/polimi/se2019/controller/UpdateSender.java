@@ -136,6 +136,7 @@ public class UpdateSender implements ViewUpdater {
 
     }
 
+    @Override
     public void sendAcceptableType(AcceptableTypes acceptableTypes) {
         throw new UnsupportedOperationException("Not supported");
     }

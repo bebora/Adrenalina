@@ -214,6 +214,7 @@ public class TimerConstrainedEventHandler extends Thread implements EventHandler
         }
     }
 
+    @Override
     public synchronized void receiveStop() {
         if (active){
             endHandler();
