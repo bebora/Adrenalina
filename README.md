@@ -11,9 +11,11 @@
 # Introduction
 The Javadoc can be found in docs/.
 
+The slides used during the presentation can be found [here](https://github.com/bebora/sweng-pres).
+
 The jars for the server, the client and the bot can be generated in target/assembly using 
 ```
-clean mvn package
+mvn clean package
 ```
 
 The latest jars that are discussed below can be found in the Release page, or in the jar/ directory.
