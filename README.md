@@ -1,13 +1,7 @@
-# ing-sw-2019-39
-## Funzionalità sviluppate
-- Regole Complete
-- CLI 
-- GUI 
-- Socket 
-- RMI 
-- 2 Funzionalità avanzate:
-  + Partite multiple
-  + Modalità dominazione
+# Adrenalina - ing-sw-2019-39
+First-person shooter table-game adapted for your computer: grab some ammo, grab a gun, and start shooting. Build up an arsenal for a killer turn. Combat resolution is quick and diceless. And if you get shot, you get faster!
+
+Project work for "085923 - PROVA FINALE (INGEGNERIA DEL SOFTWARE)" - Politecnico di Milano.
 # Introduction
 The Javadoc can be found in docs/.
 
@@ -20,7 +14,16 @@ mvn clean package
 
 The latest jars that are discussed below can be found in the Release page, or in the jar/ directory.
 
-*TESTED WITH JAVA 12*
+*TESTED WITH JAVA >=11*
+## Features
+- Complete rules
+- CLI 
+- GUI 
+- Socket 
+- RMI 
+- 2 Advanced Features:
+  + Multiple matches
+  + Domination Mode
 # Server
 The *server* package will need no external dependencies, and it can be run with:
 ```
